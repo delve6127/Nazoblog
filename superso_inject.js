@@ -231,14 +231,12 @@
     if (!lb || !img) return;
     img.src = url;
     lb.classList.add('nz-lightbox-active');
-    document.body.style.overflow = 'hidden'; // 스크롤 잠금
   }
 
   function nzLightboxClose() {
     var lb = document.getElementById('nz-lightbox');
     if (!lb) return;
     lb.classList.remove('nz-lightbox-active');
-    document.body.style.overflow = '';
   }
 
   // ── 메인 렌더링 ───────────────────────────────────────

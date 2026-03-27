@@ -212,18 +212,30 @@
 
 /* 라이트박스 */
 #nz-lightbox {
-  display: none;
+  display: flex;
   position: fixed;
   inset: 0;
   z-index: 9999;
   align-items: center;
   justify-content: center;
+  visibility: hidden;
+  pointer-events: none;
 }
 #nz-lightbox.nz-lightbox-active {
-  display: flex;
+  visibility: visible;
+  pointer-events: auto;
+}
+#nz-lightbox-content {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+#nz-lightbox.nz-lightbox-active #nz-lightbox-content {
+  opacity: 1;
+  transform: scale(1);
 }
 #nz-lightbox-backdrop {
-  position: absolute;
+  position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.75);
 }
