@@ -229,14 +229,42 @@
     var lb = document.getElementById('nz-lightbox');
     var img = document.getElementById('nz-lightbox-img');
     if (!lb || !img) return;
+
+    function showLightbox() {
+      var content = document.getElementById('nz-lightbox-content');
+      lb.classList.add('nz-lightbox-active');
+      document.body.style.overflow = 'hidden';
+      if (!content) return;
+
+      // JS rAF 애니메이션 (CSS keyframe 캐시 문제 없음)
+      var start = null;
+      var duration = 300;
+      content.style.opacity = '0';
+      content.style.transform = 'translateY(20px) scale(0.95)';
+
+      function animate(ts) {
+        if (!start) start = ts;
+        var p = Math.min((ts - start) / duration, 1);
+        var e = 1 - Math.pow(1 - p, 3); // ease-out cubic
+        content.style.opacity = e;
+        content.style.transform = 'translateY(' + (20 * (1 - e)) + 'px) scale(' + (0.95 + 0.05 * e) + ')';
+        if (p < 1) requestAnimationFrame(animate);
+        else { content.style.opacity = '1'; content.style.transform = ''; }
+      }
+      requestAnimationFrame(animate);
+    }
+
+    img.onload = showLightbox;
+    img.onerror = showLightbox;
     img.src = url;
-    lb.classList.add('nz-lightbox-active');
+    if (img.complete) { img.onload = null; img.onerror = null; showLightbox(); }
   }
 
   function nzLightboxClose() {
     var lb = document.getElementById('nz-lightbox');
     if (!lb) return;
     lb.classList.remove('nz-lightbox-active');
+    document.body.style.overflow = '';
   }
 
   // ── 메인 렌더링 ───────────────────────────────────────
@@ -503,32 +531,4 @@
     tryRender();
   }
 
-})();
-
-// ── 상단으로 버튼 ─────────────────────────────────────
-(function () {
-  var btn = document.createElement('button');
-  btn.id = 'nz-scroll-top';
-  btn.innerHTML = '↑';
-  btn.setAttribute('aria-label', '상단으로');
-  document.body.appendChild(btn);
-
-  function getScrollY() {
-    return window.scrollY || window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-  }
-
-  function onScroll() {
-    if (getScrollY() > 300) {
-      btn.classList.add('nz-scroll-top-visible');
-    } else {
-      btn.classList.remove('nz-scroll-top-visible');
-    }
-  }
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-  document.addEventListener('scroll', onScroll, { passive: true });
-
-  btn.addEventListener('click', function () {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
 })();
