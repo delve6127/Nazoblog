@@ -292,3 +292,34 @@
 }
 .nz-desc p { margin: 0 0 4px; }
 .nz-desc p:last-child { margin-bottom: 0; }
+
+/* 상단으로 버튼 */
+#nz-scroll-top {
+  position: fixed;
+  bottom: 28px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #888780;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 999;
+}
+#nz-scroll-top.nz-scroll-top-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+#nz-scroll-top:hover {
+  transform: translateY(-2px);
+  background: #6b6965;
+}
