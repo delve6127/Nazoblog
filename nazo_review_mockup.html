@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>나조토키 리뷰 페이지 시안</title>
+<style>
+  body {
+    background: #f1efe8;
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    margin: 0;
+  }
+  .wrap {
+    background: #f1efe8;
+    padding: 16px;
+    border-radius: 12px;
+    max-width: 390px;
+    width: 100%;
+  }
+  .cover {
+    background: #d4d0c8;
+    border-radius: 12px 12px 0 0;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-size: 13px;
+  }
+  .card {
+    background: #ffffff;
+    border-radius: 0 0 12px 12px;
+    padding: 16px;
+    border: 0.5px solid rgba(0,0,0,0.12);
+  }
+  .section {
+    border-top: 0.5px solid rgba(0,0,0,0.12);
+    padding-top: 12px;
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: 10px;
+    font-weight: 500;
+    color: #888780;
+    margin: 0 0 8px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .cell {
+    background: #f1efe8;
+    border-radius: 8px;
+    padding: 8px 10px;
+  }
+  .cell-label {
+    font-size: 10px;
+    color: #888780;
+    margin: 0 0 6px;
+  }
+  .cell-value {
+    font-size: 12px;
+    font-weight: 500;
+    color: #2c2c2a;
+    margin: 0;
+  }
+  .badge {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    display: inline-block;
+  }
+  .badge-red { background: #F5C4B3; color: #993C1D; }
+  .badge-blue { background: #B5D4F4; color: #185FA5; }
+  .badge-green { background: #C0DD97; color: #3B6D11; }
+  .badge-purple { background: #EEEDFE; color: #3C3489; }
+  .badge-gray {
+    background: #f1efe8;
+    border: 0.5px solid rgba(0,0,0,0.12);
+    color: #5F5E5A;
+  }
+  .badge-yellow { background: #FDF3C0; color: #8A6A00; }
+  .badge-orange { background: #FDDCB5; color: #9A4500; }
+  .badge-lg {
+    font-size: 15px;
+    padding: 6px 14px;
+  }
+  .badges { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  /* 체감 난이도 5단계 인디케이터 */
+  .difficulty-steps {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+  .diff-step {
+    flex: 1;
+    text-align: center;
+    font-size: 9px;
+    padding: 4px 2px;
+    border-radius: 6px;
+    color: #b0ada6;
+    background: #ebe9e2;
+    white-space: nowrap;
+    line-height: 1.3;
+  }
+  .diff-step.active {
+    background: #EEEDFE;
+    color: #3C3489;
+    font-weight: 600;
+  }
+  .title-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .title-main { font-size: 24px; font-weight: 500; color: #2c2c2a; }
+  .title-sub { font-size: 13px; font-weight: 500; color: #888780; }
+  .header { margin-bottom: 16px; }
+  .desc { font-size: 13px; color: #5F5E5A; margin: 0; line-height: 1.6; }
+  .photo-placeholder {
+    background: #f1efe8;
+    border-radius: 8px;
+    height: 90px;
+  }
+
+  /* 플레이 일기 섹션 - 카드 바깥 영역 */
+  .diary-section {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 16px;
+    border: 0.5px solid rgba(0,0,0,0.12);
+    margin-top: 8px;
+  }
+  .diary-title {
+    font-size: 10px;
+    font-weight: 500;
+    color: #888780;
+    margin: 0 0 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .diary-text {
+    font-size: 13px;
+    color: #2c2c2a;
+    line-height: 1.8;
+    margin: 0;
+    white-space: pre-wrap;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="cover">커버 이미지</div>
+  <div class="card">
+
+    <!-- 제목 -->
+    <div class="header">
+      <div class="title-row">
+        <span class="title-main">26</span>
+        <span class="title-sub">#3</span>
+      </div>
+      <div class="badges">
+        <span class="badge badge-red">TUMBLEWEED</span>
+        <span class="badge badge-blue">강력추천</span>
+      </div>
+    </div>
+
+    <!-- 난이도 -->
+    <div class="section">
+      <p class="section-title">난이도</p>
+      <div class="grid2">
+        <div class="cell" style="display:flex; flex-direction:column; justify-content:center;">
+          <p class="cell-label">공식 난이도</p>
+          <span class="badge badge-orange badge-lg">★7/10</span>
+        </div>
+        <div class="cell">
+          <p class="cell-label">체감 난이도</p>
+          <div class="difficulty-steps">
+            <div class="diff-step">아주<br>쉬움</div>
+            <div class="diff-step">쉬움</div>
+            <div class="diff-step">보통</div>
+            <div class="diff-step active">어려움</div>
+            <div class="diff-step">아주<br>어려움</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 점수 분석 (5축: 만족도/문제/기믹/연출/언어장벽) -->
+    <div class="section">
+      <p class="section-title">점수 분석</p>
+      <svg viewBox="0 0 300 290" width="100%" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(150,150)">
+          <!-- 그리드 링 (5각형, r=18~90) -->
+          <polygon fill="none" stroke="rgba(0,0,0,0.15)" stroke-width="0.5" points="0,-90 85.6,-27.8 52.9,72.8 -52.9,72.8 -85.6,-27.8"/>
+          <polygon fill="none" stroke="rgba(0,0,0,0.15)" stroke-width="0.5" points="0,-72 68.5,-22.2 42.3,58.2 -42.3,58.2 -68.5,-22.2"/>
+          <polygon fill="none" stroke="rgba(0,0,0,0.15)" stroke-width="0.5" points="0,-54 51.4,-16.7 31.8,43.7 -31.8,43.7 -51.4,-16.7"/>
+          <polygon fill="none" stroke="rgba(0,0,0,0.15)" stroke-width="0.5" points="0,-36 34.3,-11.1 21.2,29.1 -21.2,29.1 -34.3,-11.1"/>
+          <polygon fill="none" stroke="rgba(0,0,0,0.15)" stroke-width="0.5" points="0,-18 17.1,-5.6 10.6,14.6 -10.6,14.6 -17.1,-5.6"/>
+          <!-- 축 -->
+          <line x1="0" y1="0" x2="0" y2="-90" stroke="rgba(0,0,0,0.1)" stroke-width="0.5"/>
+          <line x1="0" y1="0" x2="85.6" y2="-27.8" stroke="rgba(0,0,0,0.1)" stroke-width="0.5"/>
+          <line x1="0" y1="0" x2="52.9" y2="72.8" stroke="rgba(0,0,0,0.1)" stroke-width="0.5"/>
+          <line x1="0" y1="0" x2="-52.9" y2="72.8" stroke="rgba(0,0,0,0.1)" stroke-width="0.5"/>
+          <line x1="0" y1="0" x2="-85.6" y2="-27.8" stroke="rgba(0,0,0,0.1)" stroke-width="0.5"/>
+          <!-- 데이터: 만족도=5, 문제=4.5, 기믹=5, 연출=4, 언어장벽=4 -->
+          <polygon points="0,-90 77.0,-25.0 52.9,72.8 -42.3,58.2 -68.5,-22.2" fill="#AFA9EC" fill-opacity="0.35" stroke="#7F77DD" stroke-width="2"/>
+          <circle cx="0" cy="-90" r="4" fill="#7F77DD"/>
+          <circle cx="77.0" cy="-25.0" r="4" fill="#7F77DD"/>
+          <circle cx="52.9" cy="72.8" r="4" fill="#7F77DD"/>
+          <circle cx="-42.3" cy="58.2" r="4" fill="#7F77DD"/>
+          <circle cx="-68.5" cy="-22.2" r="4" fill="#7F77DD"/>
+          <!-- 축 레이블 -->
+          <text font-size="11" fill="#444441" font-family="sans-serif" x="0" y="-100" text-anchor="middle">만족도</text>
+          <text font-size="11" fill="#444441" font-family="sans-serif" x="97" y="-23" text-anchor="start">문제</text>
+          <text font-size="11" fill="#444441" font-family="sans-serif" x="60" y="88" text-anchor="middle">기믹</text>
+          <text font-size="11" fill="#444441" font-family="sans-serif" x="-60" y="88" text-anchor="middle">연출/디자인</text>
+          <text font-size="11" fill="#444441" font-family="sans-serif" x="-97" y="-23" text-anchor="end">언어장벽</text>
+          <!-- 점수 레이블 -->
+          <text font-size="11" font-weight="500" fill="#534AB7" font-family="sans-serif" x="8" y="-80" text-anchor="start">5</text>
+          <text font-size="11" font-weight="500" fill="#534AB7" font-family="sans-serif" x="66" y="-14" text-anchor="start">4.5</text>
+          <text font-size="11" font-weight="500" fill="#534AB7" font-family="sans-serif" x="38" y="62" text-anchor="start">5</text>
+          <text font-size="11" font-weight="500" fill="#534AB7" font-family="sans-serif" x="-50" y="48" text-anchor="end">4</text>
+          <text font-size="11" font-weight="500" fill="#534AB7" font-family="sans-serif" x="-56" y="-12" text-anchor="end">4</text>
+          <!-- 그리드 숫자 -->
+          <text font-size="9" fill="#888780" font-family="sans-serif" x="3" y="-16">1</text>
+          <text font-size="9" fill="#888780" font-family="sans-serif" x="3" y="-34">2</text>
+          <text font-size="9" fill="#888780" font-family="sans-serif" x="3" y="-52">3</text>
+          <text font-size="9" fill="#888780" font-family="sans-serif" x="3" y="-70">4</text>
+          <text font-size="9" fill="#888780" font-family="sans-serif" x="3" y="-88">5</text>
+        </g>
+      </svg>
+    </div>
+
+    <!-- 플레이 기록 -->
+    <div class="section">
+      <p class="section-title">플레이 기록</p>
+      <div class="grid2">
+        <div class="cell">
+          <p class="cell-label">플레이 날짜</p>
+          <p class="cell-value">2026년 3월 18일</p>
+        </div>
+        <div class="cell">
+          <p class="cell-label">참여 인원</p>
+          <p class="cell-value">2명</p>
+        </div>
+        <div class="cell">
+          <p class="cell-label">공식 소요시간</p>
+          <p class="cell-value">90~180분</p>
+        </div>
+        <div class="cell">
+          <p class="cell-label">실제 소요시간</p>
+          <p class="cell-value">4시간 28분</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 추가 정보 : O=파란색(badge-blue), X=빨간색(badge-red) -->
+    <div class="section">
+      <p class="section-title">추가 정보</p>
+      <div class="badges">
+        <!-- LINE 사용 여부: X → badge-red -->
+        <span class="badge badge-red">LINE 미사용</span>
+        <!-- WEB 사용 여부: O → badge-blue -->
+        <span class="badge badge-blue">WEB 사용</span>
+        <!-- 재활용 가능 여부: X → badge-red -->
+        <span class="badge badge-red">재활용 불가</span>
+      </div>
+    </div>
+
+    <!-- 나조 설명 -->
+    <div class="section">
+      <p class="section-title">나조 설명</p>
+      <p class="desc">나조에 대한 간단한 소개 설명이 여기에 들어가요. 작품 소개, 분위기, 특징 등을 간결하게 적는 공간이에요.</p>
+    </div>
+
+    <!-- 플레이 사진 -->
+    <div class="section">
+      <p class="section-title">플레이 사진</p>
+      <div class="grid2">
+        <div class="photo-placeholder"></div>
+        <div class="photo-placeholder"></div>
+      </div>
+    </div>
+
+  </div><!-- /card -->
+
+  <!-- 플레이 일기 : 카드 바깥, 별도 섹션 -->
+  <div class="diary-section">
+    <p class="diary-title">플레이 일기</p>
+    <p class="diary-text">여기에 개인 리뷰 일기를 자유롭게 길게 작성할 수 있어요.
+
+줄글로 쭉 이어서 쓸 수 있는 공간이에요. 문단 구분도 가능하고, 플레이하면서 느낀 점이나 인상 깊었던 장면 등을 마음껏 적을 수 있어요.</p>
+  </div>
+
+</div><!-- /wrap -->
+</body>
+</html>

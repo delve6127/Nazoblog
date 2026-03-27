@@ -1,0 +1,294 @@
+/* =====================================================
+   나조토키 리뷰 커스텀 레이아웃 — Super.so CSS 인젝션
+   ===================================================== */
+
+.nz-review-wrap {
+  max-width: 390px;
+  margin: 0 auto;
+  padding: 0 0 24px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.nz-card {
+  background: #ffffff;
+  border-radius: 0 0 12px 12px;
+  padding: 16px;
+  border: 0.5px solid rgba(0,0,0,0.12);
+  border-top: none;
+}
+
+/* 헤더 */
+.nz-header { margin-bottom: 16px; }
+
+.nz-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.nz-title-main { font-size: 24px; font-weight: 500; color: #2c2c2a; }
+.nz-title-sub  { font-size: 13px; font-weight: 500; color: #888780; }
+
+/* 섹션 */
+.nz-section {
+  border-top: 0.5px solid rgba(0,0,0,0.12);
+  padding-top: 12px;
+  margin-bottom: 12px;
+}
+.nz-section-title {
+  font-size: 10px;
+  font-weight: 500;
+  color: #888780;
+  margin: 0 0 8px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* 그리드 */
+.nz-grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+/* 셀 */
+.nz-cell {
+  background: #f1efe8;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+.nz-cell-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.nz-cell-center .badge {
+  display: block;
+  text-align: center;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.nz-cell-label {
+  font-size: 10px;
+  color: #888780;
+  margin: 0 0 6px;
+}
+.nz-cell-value {
+  font-size: 12px;
+  font-weight: 500;
+  color: #2c2c2a;
+  margin: 0;
+}
+
+/* 뱃지 — .nz-review-wrap 안에서만 적용 */
+.nz-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.nz-review-wrap .badge {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  display: inline-block;
+  font-weight: 500;
+}
+.nz-review-wrap .badge-lg   { font-size: 15px; padding: 6px 14px; }
+.nz-review-wrap .badge-red    { background: #F5C4B3; color: #993C1D; }
+.nz-review-wrap .badge-blue   { background: #B5D4F4; color: #185FA5; }
+.nz-review-wrap .badge-green  { background: #C0DD97; color: #3B6D11; }
+.nz-review-wrap .badge-purple { background: #EEEDFE; color: #3C3489; }
+.nz-review-wrap .badge-orange { background: #FDDCB5; color: #9A4500; }
+.nz-review-wrap .badge-yellow { background: #FDF3C0; color: #8A6A00; }
+.nz-review-wrap .badge-pink   { background: #F9D0E0; color: #8A2044; }
+.nz-review-wrap .badge-gray {
+  background: #f1efe8;
+  border: 0.5px solid rgba(0,0,0,0.12);
+  color: #5F5E5A;
+}
+
+/* 체감 난이도 5단계 */
+.nz-diff-steps {
+  display: flex;
+  gap: 3px;
+  align-items: stretch;
+}
+.nz-diff-step {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 9px;
+  padding: 4px 2px;
+  border-radius: 6px;
+  color: #b0ada6;
+  background: #ebe9e2;
+  line-height: 1.3;
+}
+/* active 색상은 Notion Select 색상을 inline style로 적용 */
+
+/* 커버 이미지 높이 */
+.notion-header__cover.has-cover {
+  height: 290px !important;
+}
+
+/* 커버 아래 타이틀 영역 제거 */
+.notion-header__content.has-cover {
+  display: none !important;
+}
+
+/* 플레이 일기 박스 */
+.nz-diary-box {
+  max-width: 390px;
+  margin: 8px auto 24px;
+  background: #f1efe8;
+  border-radius: 12px;
+  padding: 16px;
+}
+.nz-diary-title {
+  font-size: 10px;
+  font-weight: 600;
+  color: #888780;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.nz-diary-content {
+  font-size: 14px;
+  line-height: 1.85;
+  color: #3c3c3a;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.nz-diary-content p { margin: 0 0 10px; }
+.nz-diary-content p:last-child { margin: 0; }
+
+/* ── PC 2단 레이아웃 (768px 이상) ── */
+.nz-pc-layout {
+  display: block;
+}
+.nz-col-left, .nz-col-right {
+  /* 모바일: 기본 블록 */
+}
+
+@media (min-width: 768px) {
+  .nz-review-wrap {
+    max-width: 800px;
+  }
+
+  .nz-diary-box {
+    max-width: 800px;
+  }
+
+  .notion-header__cover.has-cover {
+    height: 360px !important;
+  }
+
+  .nz-pc-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    align-items: start;
+  }
+
+  .nz-col-left {
+    padding-right: 20px;
+    border-right: 0.5px solid rgba(0,0,0,0.1);
+  }
+
+  .nz-col-right {
+    padding-left: 20px;
+  }
+
+  /* 오른쪽 첫 섹션 상단 구분선 제거 */
+  .nz-col-right .nz-section:first-child {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  /* PC에서 사진 그리드 칸 크기 확대 */
+  .nz-photos-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}
+
+/* 라이트박스 */
+#nz-lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+#nz-lightbox.nz-lightbox-active {
+  display: flex;
+}
+#nz-lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+}
+#nz-lightbox-content {
+  position: relative;
+  z-index: 1;
+  max-width: 92vw;
+  max-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#nz-lightbox-img {
+  max-width: 92vw;
+  max-height: 88vh;
+  border-radius: 10px;
+  object-fit: contain;
+  display: block;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+}
+#nz-lightbox-close {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.9);
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  line-height: 1;
+  padding: 0;
+}
+#nz-lightbox-close:hover {
+  background: #fff;
+}
+
+/* 푸터 홈 로고 버튼 숨기기 */
+.super-footer__logo { display: none !important; }
+
+/* 플레이 사진 그리드 */
+.nz-photos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 6px;
+}
+.nz-photos-grid img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+}
+
+/* 나조 설명 */
+.nz-desc {
+  font-size: 13px;
+  color: #5F5E5A;
+  line-height: 1.7;
+}
+.nz-desc p { margin: 0 0 4px; }
+.nz-desc p:last-child { margin-bottom: 0; }
