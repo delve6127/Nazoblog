@@ -532,3 +532,75 @@
   }
 
 })();
+
+// ── 갤러리 검색 ───────────────────────────────────────
+(function () {
+  'use strict';
+
+  var GALLERY_SEL = '.notion-collection-gallery';
+  var CARD_SEL    = '.notion-collection-card.gallery';
+  var TITLE_SEL   = '.notion-property__title';
+  var COMPANY_SEL = '.property-5667463f';
+
+  // 외국어 나조 한국어 발음 맵핑
+  var PHONETIC_MAP = {
+    'one operation':     ['원 오퍼레이션', '원오페', '원오퍼'],
+    'twelve trick tiles':['트웰브 트릭 타일즈', '트웰브 트릭 타일스', '12 타일즈', '12 tiles', '12 타일스'],
+    '26':                ['twenty six', '이십육', '트웬티 식스']
+  };
+
+  // 브랜드 한국어/영어 발음 맵핑
+  var COMPANY_MAP = {
+    'tumbleweed': ['텀블위드', '탐블위도', '탐블위드'],
+    '키이스케이프': ['keyescape']
+  };
+
+  function runSearch(q) {
+    var cards = document.querySelectorAll(CARD_SEL);
+    var visible = 0;
+    cards.forEach(function (card) {
+      var title   = (card.querySelector(TITLE_SEL)   || { textContent: '' }).textContent.trim().toLowerCase();
+      var company = (card.querySelector(COMPANY_SEL) || { textContent: '' }).textContent.toLowerCase();
+      var phonetics = PHONETIC_MAP[title] || [];
+      var companyPhonetics = COMPANY_MAP[company.trim()] || [];
+      var match = !q
+        || title.indexOf(q) > -1
+        || company.indexOf(q) > -1
+        || phonetics.some(function (p) { return p.indexOf(q) > -1; })
+        || companyPhonetics.some(function (p) { return p.indexOf(q) > -1; });
+      card.style.display = match ? '' : 'none';
+      if (match) visible++;
+    });
+    var countEl = document.getElementById('nz-search-count');
+    if (countEl) countEl.textContent = q ? visible + '개' : '';
+  }
+
+  function buildSearch() {
+    if (document.getElementById('nz-search-wrap')) return;
+    var gallery = document.querySelector(GALLERY_SEL);
+    if (!gallery) return;
+
+    var wrap = document.createElement('div');
+    wrap.id = 'nz-search-wrap';
+    wrap.innerHTML =
+      '<span id="nz-search-icon">🔍</span>'
+      + '<input id="nz-search" type="text" placeholder="나조 이름 또는 브랜드로 검색">'
+      + '<span id="nz-search-count"></span>';
+    gallery.parentNode.insertBefore(wrap, gallery);
+
+    document.getElementById('nz-search').addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter') return;
+      runSearch(this.value.trim().toLowerCase());
+    });
+  }
+
+  // 갤러리 등장을 MutationObserver로 감지 (초기 로드 + SPA 재진입)
+  var searchObserver = new MutationObserver(function () {
+    if (document.querySelector(GALLERY_SEL) && !document.getElementById('nz-search-wrap')) {
+      buildSearch();
+    }
+  });
+  searchObserver.observe(document.body, { childList: true, subtree: true });
+
+  if (document.querySelector(GALLERY_SEL)) buildSearch();
+})();
