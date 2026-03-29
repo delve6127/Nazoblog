@@ -75,6 +75,15 @@
     return { text: pill.textContent.trim(), cls: pill.className };
   }
 
+  // Multi-select 속성값 읽기 (배열로 반환)
+  function getMultiSelectVals(id) {
+    var el = getEl(id);
+    if (!el) return [];
+    return Array.from(el.querySelectorAll('.notion-pill')).map(function (pill) {
+      return { text: pill.textContent.trim(), cls: pill.className };
+    });
+  }
+
   // 숫자 속성값 읽기 (점수 1~5)
   function getNumVal(id) {
     var el = document.querySelector('.' + id + ' .notion-property__number__progress-value');
@@ -118,14 +127,14 @@
   }
 
   // ── 체감 난이도 5단계 인디케이터 ────────────────────
-  var DIFF_STEPS = ['아주쉬움', '쉬움', '보통', '어려움', '아주어려움'];
+  var DIFF_STEPS = ['아주 쉬움', '쉬움', '보통', '어려움', '아주 어려움'];
 
   function buildDiffSteps(selected, badgeColorCls) {
     var c = BADGE_COLORS[badgeColorCls] || BADGE_COLORS['badge-purple'];
     return DIFF_STEPS.map(function (s) {
       var isActive = s === selected;
-      var label = s === '아주쉬움'   ? '아주<br>쉬움'
-                : s === '아주어려움' ? '아주<br>어려움'
+      var label = s === '아주 쉬움'   ? '아주<br>쉬움'
+                : s === '아주 어려움' ? '아주<br>어려움'
                 : s;
       var style = isActive
         ? ' style="background:' + c.bg + ';color:' + c.color + ';font-weight:600;"'
@@ -276,7 +285,7 @@
     var mNum         = getTextVal(ID.mNumber);
     var company      = getTextVal(ID.company);
     var playDate     = getDateVal(ID.playDate);
-    var officialDiff = getSelectVal(ID.officialDiff);
+    var officialDiffs = getMultiSelectVals(ID.officialDiff);
     var personalDiff = getSelectVal(ID.personalDiff);
     var recommend    = getSelectVal(ID.recommend);
     var officialTime = getTextVal(ID.officialTime);
@@ -328,8 +337,12 @@
       +   '<div class="nz-grid2">'
       +     '<div class="nz-cell nz-cell-center">'
       +       '<p class="nz-cell-label">공식 난이도</p>'
-      +       (officialDiff.text
-               ? '<span class="badge badge-lg ' + pillToColor(officialDiff.cls) + '">' + officialDiff.text + '</span>'
+      +       (officialDiffs.length
+               ? '<div class="nz-official-diff-wrap' + (officialDiffs.length > 1 ? ' nz-official-diff-wrap--multi' : '') + '">'
+                 + officialDiffs.map(function (d) {
+                     return '<span class="badge badge-lg ' + pillToColor(d.cls) + '">' + d.text + '</span>';
+                   }).join('')
+                 + '</div>'
                : '<span class="nz-cell-value">-</span>')
       +     '</div>'
       +     '<div class="nz-cell">'

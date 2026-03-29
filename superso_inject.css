@@ -296,6 +296,26 @@
 .nz-desc p { margin: 0 0 4px; }
 .nz-desc p:last-child { margin-bottom: 0; }
 
+/* 공식 난이도 뱃지 */
+.nz-official-diff-wrap {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.nz-official-diff-wrap .badge {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+.nz-official-diff-wrap--multi {
+  display: flex;
+  gap: 4px;
+}
+.nz-official-diff-wrap--multi .badge {
+  flex: 1;
+  width: auto;
+  white-space: nowrap;
+}
+
 /* ── 갤러리 검색 ── */
 #nz-search-wrap {
   display: flex;
