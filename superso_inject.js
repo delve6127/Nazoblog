@@ -112,7 +112,7 @@
     var color = isO ? 'badge-blue' : 'badge-red';
     var label = type === 'line'    ? (isO ? 'LINE 사용'   : 'LINE 미사용')
               : type === 'web'     ? (isO ? 'WEB 사용'    : 'WEB 미사용')
-              : type === 'audio'   ? (isO ? '듣기 필요'   : '듣기 불필요')
+              : type === 'audio'   ? (isO ? '음성 듣기 필요'   : '음성 듣기 불필요')
               :                      (isO ? '재활용 가능' : '재활용 불가');
     return '<span class="badge ' + color + '">' + label + '</span>';
   }
@@ -142,7 +142,7 @@
       { label: '문제',        ux:  0.9511,  uy: -0.3090 },
       { label: '기믹',        ux:  0.5878,  uy:  0.8090 },
       { label: '연출/디자인', ux: -0.5878,  uy:  0.8090 },
-      { label: '언어장벽',    ux: -0.9511,  uy: -0.3090 }
+      { label: '언어접근성',   ux: -0.9511,  uy: -0.3090 }
     ];
     var vals = [s.satisfaction, s.puzzle, s.gimmick, s.design, s.language];
     var MAX_R = 90; // 점수 5 = 반지름 90 (18 * 5)
