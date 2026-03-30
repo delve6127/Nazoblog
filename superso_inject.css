@@ -1,3 +1,28 @@
+/* ── 메인 페이지 타이틀 이미지 ── */
+.nz-title-img-wrap {
+  text-align: center;
+  padding: 0 16px;
+  margin-top: -120px;
+  margin-bottom: -120px;
+}
+.nz-title-img-wrap img {
+  max-width: 590px;
+  width: 100%;
+  height: auto;
+  display: inline-block;
+}
+@media (max-width: 768px) {
+  .nz-title-img-wrap {
+    padding: 0 12px;
+    margin-top: -80px;
+    margin-bottom: -90px;
+  }
+  .nz-title-img-wrap img {
+    max-width: 500px;
+    width: 100%;
+  }
+}
+
 a.notion-page[href="/나조토키謎解き란"] {
   display: none !important;
 }

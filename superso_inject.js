@@ -17,6 +17,33 @@ setTimeout(convertDates, 1000);
 setTimeout(convertDates, 2000);
 setTimeout(convertDates, 3000);
 
+// ── 메인 페이지 타이틀을 이미지로 교체 ──
+function replaceMainTitle() {
+  // 메인 페이지(홈)에서만 실행
+  if (window.location.pathname !== '/' && window.location.pathname !== '') return;
+
+  var titleEl = document.querySelector('.notion-header__title');
+  if (!titleEl || titleEl.dataset.nzReplaced) return;
+
+  titleEl.dataset.nzReplaced = 'true';
+  titleEl.style.display = 'none';
+
+  var wrap = document.createElement('div');
+  wrap.className = 'nz-title-img-wrap';
+
+  var img = document.createElement('img');
+  img.src = 'https://images.spr.so/cdn-cgi/imagedelivery/j42No7y-dcokJuNgXeA0ig/14d7b453-161f-42ba-afe1-b0cf8b388744/_-_-_-2/w=1920,quality=90,fit=scale-down';
+  img.alt = '몬빵의 나조토키 다락방';
+  img.draggable = false;
+  wrap.appendChild(img);
+
+  titleEl.parentNode.insertBefore(wrap, titleEl);
+}
+
+setTimeout(replaceMainTitle, 300);
+setTimeout(replaceMainTitle, 800);
+setTimeout(replaceMainTitle, 1500);
+
 //여기 밑으로 붙여넣기
 
 (function () {
