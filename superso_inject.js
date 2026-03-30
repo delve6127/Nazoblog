@@ -680,14 +680,10 @@
     var wrap = document.createElement('div');
     wrap.id = 'nz-sort-wrap';
 
-    var icon = document.createElement('span');
-    icon.id = 'nz-sort-icon';
-    icon.textContent = '↕';
-
     var select = document.createElement('select');
     select.id = 'nz-sort-select';
     [
-      ['', '정렬 기준 선택'],
+      ['', '기본순'],
       ['num', '나조 번호'],
       ['date', '플레이 날짜'],
       ['satisfaction', '개인 만족도'],
@@ -719,7 +715,6 @@
       applySort();
     });
 
-    wrap.appendChild(icon);
     wrap.appendChild(select);
     wrap.appendChild(btn);
 
