@@ -620,3 +620,123 @@
 
   if (document.querySelector(GALLERY_SEL)) buildSearch();
 })();
+
+// ── 갤러리 정렬 ───────────────────────────────────────
+(function () {
+  'use strict';
+
+  var GALLERY_SEL = '.notion-collection-gallery';
+  var CARD_SEL    = '.notion-collection-card.gallery';
+  var TITLE_SEL   = '.notion-property__title';
+
+  var SORT_DATA = {
+    '무비무드 디저트 퍼즐 팩': { num: 1, date: '2026-03-07', diff: 2, satisfaction: 3,   puzzle: 3.5, gimmick: 3,   design: 3,   language: 4.5 },
+    'Twelve Trick Tiles':      { num: 2, date: '2026-03-18', diff: 3, satisfaction: 5,   puzzle: 3.5, gimmick: 5,   design: 3.5, language: 2.5 },
+    '26':                      { num: 3, date: '2026-03-22', diff: 4, satisfaction: 5,   puzzle: 4.5, gimmick: 5,   design: 3,   language: 2   },
+    'ONE OPERATION':           { num: 4, date: '2026-03-25', diff: 3, satisfaction: 5,   puzzle: 4,   gimmick: 5,   design: 4.5, language: 2   },
+    'sQuare mAze':             { num: 5, date: '2026-03-27', diff: 2, satisfaction: 4,   puzzle: 4.5, gimmick: 4.5, design: 3.5, language: 3.5 },
+    'sQuare mAze -another-':   { num: 6, date: '2026-03-28', diff: 3, satisfaction: 4,   puzzle: 4,   gimmick: 4,   design: 3,   language: 3   },
+    'sQuare mAze -cosmos-':    { num: 7, date: '2026-03-28', diff: 5, satisfaction: 4.5, puzzle: 4.5, gimmick: 4.5, design: 3.7, language: 2.5 },
+    'HIRAMEKI TRUMP GOLD':     { num: 8, date: '2026-03-29', diff: 4, satisfaction: 4,   puzzle: 4,   gimmick: 4,   design: 3.5, language: 3.5 }
+  };
+
+  var sortField = '';
+  var sortDesc = true;
+  var originalOrder = null;
+
+  function getCardTitle(card) {
+    var el = card.querySelector(TITLE_SEL);
+    return el ? el.textContent.trim() : '';
+  }
+
+  function applySort() {
+    var gallery = document.querySelector(GALLERY_SEL);
+    if (!gallery) return;
+    var cards = Array.from(gallery.querySelectorAll(CARD_SEL));
+    if (!cards.length) return;
+
+    if (!originalOrder) originalOrder = cards.slice();
+
+    var sorted = !sortField ? originalOrder.slice() : cards.slice().sort(function (a, b) {
+      var ta = getCardTitle(a), tb = getCardTitle(b);
+      var da = SORT_DATA[ta], db = SORT_DATA[tb];
+      var va = da ? da[sortField] : null;
+      var vb = db ? db[sortField] : null;
+      if (va === null && vb === null) return 0;
+      if (va === null) return 1;
+      if (vb === null) return -1;
+      if (typeof va === 'string') return sortDesc ? vb.localeCompare(va) : va.localeCompare(vb);
+      return sortDesc ? vb - va : va - vb;
+    });
+
+    sorted.forEach(function (card) { gallery.appendChild(card); });
+  }
+
+  function buildSort() {
+    if (document.getElementById('nz-sort-wrap')) return;
+    var gallery = document.querySelector(GALLERY_SEL);
+    if (!gallery) return;
+
+    var wrap = document.createElement('div');
+    wrap.id = 'nz-sort-wrap';
+
+    var icon = document.createElement('span');
+    icon.id = 'nz-sort-icon';
+    icon.textContent = '↕';
+
+    var select = document.createElement('select');
+    select.id = 'nz-sort-select';
+    [
+      ['', '정렬 기준 선택'],
+      ['num', '나조 번호'],
+      ['date', '플레이 날짜'],
+      ['satisfaction', '개인 만족도'],
+      ['diff', '체감 난이도'],
+      ['puzzle', '문제'],
+      ['gimmick', '기믹'],
+      ['design', '연출/디자인'],
+      ['language', '언어접근성']
+    ].forEach(function (opt) {
+      var o = document.createElement('option');
+      o.value = opt[0]; o.textContent = opt[1];
+      select.appendChild(o);
+    });
+
+    var btn = document.createElement('button');
+    btn.id = 'nz-sort-dir';
+    btn.textContent = '▼';
+    btn.disabled = true;
+
+    select.addEventListener('change', function () {
+      sortField = this.value;
+      btn.disabled = !sortField;
+      applySort();
+    });
+
+    btn.addEventListener('click', function () {
+      sortDesc = !sortDesc;
+      btn.textContent = sortDesc ? '▼' : '▲';
+      applySort();
+    });
+
+    wrap.appendChild(icon);
+    wrap.appendChild(select);
+    wrap.appendChild(btn);
+
+    var searchWrap = document.getElementById('nz-search-wrap');
+    if (searchWrap && searchWrap.parentNode) {
+      searchWrap.parentNode.insertBefore(wrap, searchWrap.nextSibling);
+    } else {
+      gallery.parentNode.insertBefore(wrap, gallery);
+    }
+  }
+
+  var sortObserver = new MutationObserver(function () {
+    if (document.querySelector(GALLERY_SEL) && !document.getElementById('nz-sort-wrap')) {
+      originalOrder = null;
+      buildSort();
+    }
+  });
+  sortObserver.observe(document.body, { childList: true, subtree: true });
+  if (document.querySelector(GALLERY_SEL)) buildSort();
+})();
