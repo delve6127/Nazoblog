@@ -22,7 +22,8 @@
     language:     'property-4c61545a',
     design:       'property-5f3d7a66',
     photo:        'property-3e44474d',
-    purchase:     'property-48527e3b'
+    purchase:     'property-48527e3b',
+    pad:          'property-46464855'
   };
 
   // ── 값 읽기 헬퍼 ─────────────────────────────────────
@@ -295,6 +296,7 @@
     var web          = getSelectVal(ID.web);
     var recycle      = getSelectVal(ID.recycle);
     var audio        = getSelectVal(ID.audio);
+    var pad          = getSelectVal(ID.pad);
     var purchase     = getSelectVal(ID.purchase);
     if (!purchase.text) purchase = { text: getTextVal(ID.purchase), cls: '' };
     var scores = {
@@ -382,6 +384,7 @@
       +     usageBadge('web', web)
       +     usageBadge('audio', audio)
       +     usageBadge('recycle', recycle)
+      +     (pad.text.trim() === 'O' ? '<span class="badge badge-blue">패드 사용 권장</span>' : '')
       +   '</div>'
       + '</div>'
 
