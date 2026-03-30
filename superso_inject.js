@@ -1,3 +1,24 @@
+<script>
+function convertDates() {
+  document.querySelectorAll(".notion-property__date .date").forEach(function(el) {
+    const text = el.innerText.trim();
+    const date = new Date(text);
+    if (!isNaN(date)) {
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+      el.innerText = year + "년 " + month + "월 " + day + "일";
+    }
+  });
+}
+
+setTimeout(convertDates, 500);
+setTimeout(convertDates, 1000);
+setTimeout(convertDates, 2000);
+setTimeout(convertDates, 3000);
+
+//여기 밑으로 붙여넣기
+
 (function () {
   'use strict';
 
@@ -549,14 +570,16 @@
 
 })();
 
-// ── 갤러리 검색 ───────────────────────────────────────
+// ── 갤러리 검색 / 필터 / 정렬 ────────────────────────
 (function () {
   'use strict';
 
-  var GALLERY_SEL = '.notion-collection-gallery';
-  var CARD_SEL    = '.notion-collection-card.gallery';
-  var TITLE_SEL   = '.notion-property__title';
-  var COMPANY_SEL = '.property-5667463f';
+  var GALLERY_SEL  = '.notion-collection-gallery';
+  var CARD_SEL     = '.notion-collection-card.gallery';
+  var TITLE_SEL    = '.notion-property__title';
+  var COMPANY_SEL  = '.property-5667463f';
+  var DIFF_SEL     = '.property-47784163';
+  var RECOMMEND_SEL= '.property-646a6749';
 
   // 외국어 나조 한국어 발음 맵핑
   var PHONETIC_MAP = {
@@ -571,26 +594,119 @@
     '키이스케이프': ['keyescape']
   };
 
-  function runSearch(q) {
-    var cards = document.querySelectorAll(CARD_SEL);
-    var visible = 0;
-    cards.forEach(function (card) {
-      var title   = (card.querySelector(TITLE_SEL)   || { textContent: '' }).textContent.trim().toLowerCase();
-      var company = (card.querySelector(COMPANY_SEL) || { textContent: '' }).textContent.toLowerCase();
-      var phonetics = PHONETIC_MAP[title] || [];
-      var companyPhonetics = COMPANY_MAP[company.trim()] || [];
-      var match = !q
-        || title.indexOf(q) > -1
-        || company.indexOf(q) > -1
-        || phonetics.some(function (p) { return p.indexOf(q) > -1; })
-        || companyPhonetics.some(function (p) { return p.indexOf(q) > -1; });
-      card.style.display = match ? '' : 'none';
-      if (match) visible++;
-    });
-    var countEl = document.getElementById('nz-search-count');
-    if (countEl) countEl.textContent = q ? visible + '개' : '';
+  var SORT_DATA = {
+    '무비무드 디저트 퍼즐 팩': { num: 1, date: '2026-03-07', diff: 2, satisfaction: 3,   puzzle: 3.5, gimmick: 3,   design: 3,   language: 4.5 },
+    'Twelve Trick Tiles':      { num: 2, date: '2026-03-18', diff: 3, satisfaction: 5,   puzzle: 3.5, gimmick: 5,   design: 3.5, language: 2.5 },
+    '26':                      { num: 3, date: '2026-03-22', diff: 4, satisfaction: 5,   puzzle: 4.5, gimmick: 5,   design: 3,   language: 2   },
+    'ONE OPERATION':           { num: 4, date: '2026-03-25', diff: 3, satisfaction: 5,   puzzle: 4,   gimmick: 5,   design: 4.5, language: 2   },
+    'sQuare mAze':             { num: 5, date: '2026-03-27', diff: 2, satisfaction: 4,   puzzle: 4.5, gimmick: 4.5, design: 3.5, language: 3.5 },
+    'sQuare mAze -another-':   { num: 6, date: '2026-03-28', diff: 3, satisfaction: 4,   puzzle: 4,   gimmick: 4,   design: 3,   language: 3   },
+    'sQuare mAze -cosmos-':    { num: 7, date: '2026-03-28', diff: 5, satisfaction: 4.5, puzzle: 4.5, gimmick: 4.5, design: 3.7, language: 2.5 },
+    'HIRAMEKI TRUMP GOLD':     { num: 8, date: '2026-03-29', diff: 4, satisfaction: 4,   puzzle: 4,   gimmick: 4,   design: 3.5, language: 3.5 }
+  };
+
+  // ── 공유 상태 ──
+  var state = {
+    searchQ:   '',
+    filterCompany:   '',
+    filterDiff:      '',
+    filterRecommend: '',
+    sortField: '',
+    sortDesc:  true,
+    originalOrder: null
+  };
+
+  // ── 카드에서 값 읽기 헬퍼 ──
+  function getCardTitle(card) {
+    var el = card.querySelector(TITLE_SEL);
+    return el ? el.textContent.trim() : '';
+  }
+  function getCardCompanies(card) {
+    var el = card.querySelector(COMPANY_SEL);
+    if (!el) return [];
+    var pills = el.querySelectorAll('.notion-pill');
+    if (pills.length) return Array.from(pills).map(function (p) { return p.textContent.trim(); });
+    return [el.textContent.trim()];
+  }
+  function getCardDiff(card) {
+    var el = card.querySelector(DIFF_SEL);
+    return el ? el.textContent.trim() : '';
+  }
+  function getCardRecommend(card) {
+    var el = card.querySelector(RECOMMEND_SEL);
+    return el ? el.textContent.trim() : '';
   }
 
+  // ── 카드 표시/숨김 적용 ──
+  function applyVisibility() {
+    var cards = document.querySelectorAll(CARD_SEL);
+    var visible = 0;
+    var q = state.searchQ;
+
+    cards.forEach(function (card) {
+      var title    = getCardTitle(card).toLowerCase();
+      var companies = getCardCompanies(card);
+      var companiesLower = companies.map(function (c) { return c.toLowerCase(); });
+      var companyText = companiesLower.join(' ');
+      var diff     = getCardDiff(card);
+      var recommend= getCardRecommend(card);
+
+      // 검색 매칭
+      var phonetics = PHONETIC_MAP[title] || [];
+      var companyPhonetics = [];
+      companiesLower.forEach(function (c) {
+        var pm = COMPANY_MAP[c.trim()] || [];
+        companyPhonetics = companyPhonetics.concat(pm);
+      });
+      var searchMatch = !q
+        || title.indexOf(q) > -1
+        || companyText.indexOf(q) > -1
+        || phonetics.some(function (p) { return p.indexOf(q) > -1; })
+        || companyPhonetics.some(function (p) { return p.indexOf(q) > -1; });
+
+      // 필터 매칭
+      var companyMatch   = !state.filterCompany   || companies.some(function (c) { return c === state.filterCompany; });
+      var diffMatch      = !state.filterDiff      || diff      === state.filterDiff;
+      var recommendMatch = !state.filterRecommend || recommend === state.filterRecommend;
+
+      var show = searchMatch && companyMatch && diffMatch && recommendMatch;
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+
+    var countEl = document.getElementById('nz-search-count');
+    if (countEl) {
+      var isFiltered = q || state.filterCompany || state.filterDiff || state.filterRecommend;
+      countEl.textContent = isFiltered ? visible + '개' : '';
+    }
+  }
+
+  // ── 정렬 적용 ──
+  function applySort() {
+    var gallery = document.querySelector(GALLERY_SEL);
+    if (!gallery) return;
+    var cards = Array.from(gallery.querySelectorAll(CARD_SEL));
+    if (!cards.length) return;
+
+    if (!state.originalOrder) state.originalOrder = cards.slice();
+
+    var sorted = !state.sortField ? state.originalOrder.slice() : cards.slice().sort(function (a, b) {
+      var ta = getCardTitle(a), tb = getCardTitle(b);
+      var da = SORT_DATA[ta], db = SORT_DATA[tb];
+      var va = da ? da[state.sortField] : null;
+      var vb = db ? db[state.sortField] : null;
+      if (va === null && vb === null) return 0;
+      if (va === null) return 1;
+      if (vb === null) return -1;
+      if (typeof va === 'string') return state.sortDesc ? vb.localeCompare(va) : va.localeCompare(vb);
+      return state.sortDesc ? vb - va : va - vb;
+    });
+
+    sorted.forEach(function (card) { gallery.appendChild(card); });
+    applyVisibility();
+  }
+
+  // ── 검색 바 ──
   function buildSearch() {
     if (document.getElementById('nz-search-wrap')) return;
     var gallery = document.querySelector(GALLERY_SEL);
@@ -606,72 +722,80 @@
 
     document.getElementById('nz-search').addEventListener('keydown', function (e) {
       if (e.key !== 'Enter') return;
-      runSearch(this.value.trim().toLowerCase());
+      state.searchQ = this.value.trim().toLowerCase();
+      applyVisibility();
     });
   }
 
-  // 갤러리 등장을 MutationObserver로 감지 (초기 로드 + SPA 재진입)
-  var searchObserver = new MutationObserver(function () {
-    if (document.querySelector(GALLERY_SEL) && !document.getElementById('nz-search-wrap')) {
-      buildSearch();
-    }
-  });
-  searchObserver.observe(document.body, { childList: true, subtree: true });
-
-  if (document.querySelector(GALLERY_SEL)) buildSearch();
-})();
-
-// ── 갤러리 정렬 ───────────────────────────────────────
-(function () {
-  'use strict';
-
-  var GALLERY_SEL = '.notion-collection-gallery';
-  var CARD_SEL    = '.notion-collection-card.gallery';
-  var TITLE_SEL   = '.notion-property__title';
-
-  var SORT_DATA = {
-    '무비무드 디저트 퍼즐 팩': { num: 1, date: '2026-03-07', diff: 2, satisfaction: 3,   puzzle: 3.5, gimmick: 3,   design: 3,   language: 4.5 },
-    'Twelve Trick Tiles':      { num: 2, date: '2026-03-18', diff: 3, satisfaction: 5,   puzzle: 3.5, gimmick: 5,   design: 3.5, language: 2.5 },
-    '26':                      { num: 3, date: '2026-03-22', diff: 4, satisfaction: 5,   puzzle: 4.5, gimmick: 5,   design: 3,   language: 2   },
-    'ONE OPERATION':           { num: 4, date: '2026-03-25', diff: 3, satisfaction: 5,   puzzle: 4,   gimmick: 5,   design: 4.5, language: 2   },
-    'sQuare mAze':             { num: 5, date: '2026-03-27', diff: 2, satisfaction: 4,   puzzle: 4.5, gimmick: 4.5, design: 3.5, language: 3.5 },
-    'sQuare mAze -another-':   { num: 6, date: '2026-03-28', diff: 3, satisfaction: 4,   puzzle: 4,   gimmick: 4,   design: 3,   language: 3   },
-    'sQuare mAze -cosmos-':    { num: 7, date: '2026-03-28', diff: 5, satisfaction: 4.5, puzzle: 4.5, gimmick: 4.5, design: 3.7, language: 2.5 },
-    'HIRAMEKI TRUMP GOLD':     { num: 8, date: '2026-03-29', diff: 4, satisfaction: 4,   puzzle: 4,   gimmick: 4,   design: 3.5, language: 3.5 }
-  };
-
-  var sortField = '';
-  var sortDesc = true;
-  var originalOrder = null;
-
-  function getCardTitle(card) {
-    var el = card.querySelector(TITLE_SEL);
-    return el ? el.textContent.trim() : '';
+  // ── 필터 바 ──
+  function getUniqueVals(sel, multi) {
+    var vals = [];
+    document.querySelectorAll(CARD_SEL).forEach(function (card) {
+      var el = card.querySelector(sel);
+      if (!el) return;
+      if (multi) {
+        el.querySelectorAll('.notion-pill').forEach(function (p) {
+          var t = p.textContent.trim();
+          if (t && vals.indexOf(t) === -1) vals.push(t);
+        });
+      } else {
+        var t = el.textContent.trim();
+        if (t && vals.indexOf(t) === -1) vals.push(t);
+      }
+    });
+    return vals;
   }
 
-  function applySort() {
+  function buildFilterSelect(id, placeholder, values, onChange) {
+    var sel = document.createElement('select');
+    sel.id = id;
+    sel.className = 'nz-filter-select';
+    var defaultOpt = document.createElement('option');
+    defaultOpt.value = ''; defaultOpt.textContent = placeholder;
+    sel.appendChild(defaultOpt);
+    values.forEach(function (v) {
+      var o = document.createElement('option');
+      o.value = v; o.textContent = v;
+      sel.appendChild(o);
+    });
+    sel.addEventListener('change', function () { onChange(this.value); applyVisibility(); });
+    return sel;
+  }
+
+  var DIFF_ORDER = ['아주 쉬움', '쉬움', '보통', '어려움', '아주 어려움'];
+
+  function buildFilter() {
+    if (document.getElementById('nz-filter-wrap')) return;
     var gallery = document.querySelector(GALLERY_SEL);
     if (!gallery) return;
-    var cards = Array.from(gallery.querySelectorAll(CARD_SEL));
-    if (!cards.length) return;
 
-    if (!originalOrder) originalOrder = cards.slice();
-
-    var sorted = !sortField ? originalOrder.slice() : cards.slice().sort(function (a, b) {
-      var ta = getCardTitle(a), tb = getCardTitle(b);
-      var da = SORT_DATA[ta], db = SORT_DATA[tb];
-      var va = da ? da[sortField] : null;
-      var vb = db ? db[sortField] : null;
-      if (va === null && vb === null) return 0;
-      if (va === null) return 1;
-      if (vb === null) return -1;
-      if (typeof va === 'string') return sortDesc ? vb.localeCompare(va) : va.localeCompare(vb);
-      return sortDesc ? vb - va : va - vb;
+    var companies = getUniqueVals(COMPANY_SEL, true).sort();
+    var diffs = getUniqueVals(DIFF_SEL, false).sort(function (a, b) {
+      return DIFF_ORDER.indexOf(a) - DIFF_ORDER.indexOf(b);
     });
+    var recommends = getUniqueVals(RECOMMEND_SEL, false);
 
-    sorted.forEach(function (card) { gallery.appendChild(card); });
+    var wrap = document.createElement('div');
+    wrap.id = 'nz-filter-wrap';
+
+    wrap.appendChild(buildFilterSelect('nz-filter-company', '제작사 전체', companies, function (v) { state.filterCompany = v; }));
+    wrap.appendChild(buildFilterSelect('nz-filter-diff',    '난이도 전체',  diffs,     function (v) { state.filterDiff = v; }));
+    wrap.appendChild(buildFilterSelect('nz-filter-recommend','추천 전체',   recommends,function (v) { state.filterRecommend = v; }));
+
+    var sortWrap = document.getElementById('nz-sort-wrap');
+    if (sortWrap && sortWrap.parentNode) {
+      sortWrap.parentNode.insertBefore(wrap, sortWrap.nextSibling);
+    } else {
+      var searchWrap = document.getElementById('nz-search-wrap');
+      if (searchWrap && searchWrap.parentNode) {
+        searchWrap.parentNode.insertBefore(wrap, searchWrap.nextSibling);
+      } else {
+        gallery.parentNode.insertBefore(wrap, gallery);
+      }
+    }
   }
 
+  // ── 정렬 바 ──
   function buildSort() {
     if (document.getElementById('nz-sort-wrap')) return;
     var gallery = document.querySelector(GALLERY_SEL);
@@ -704,14 +828,14 @@
     btn.disabled = true;
 
     select.addEventListener('change', function () {
-      sortField = this.value;
-      btn.disabled = !sortField;
+      state.sortField = this.value;
+      btn.disabled = !state.sortField;
       applySort();
     });
 
     btn.addEventListener('click', function () {
-      sortDesc = !sortDesc;
-      btn.textContent = sortDesc ? '▼' : '▲';
+      state.sortDesc = !state.sortDesc;
+      btn.textContent = state.sortDesc ? '▼' : '▲';
       applySort();
     });
 
@@ -726,12 +850,24 @@
     }
   }
 
-  var sortObserver = new MutationObserver(function () {
-    if (document.querySelector(GALLERY_SEL) && !document.getElementById('nz-sort-wrap')) {
-      originalOrder = null;
-      buildSort();
+  // ── 갤러리 등장 감지 ──
+  function buildAll() {
+    buildSearch();
+    buildSort();
+    buildFilter();
+  }
+
+  var galleryObserver = new MutationObserver(function () {
+    var gallery = document.querySelector(GALLERY_SEL);
+    if (gallery && !document.getElementById('nz-search-wrap')) {
+      state.originalOrder = null;
+      buildAll();
     }
   });
-  sortObserver.observe(document.body, { childList: true, subtree: true });
-  if (document.querySelector(GALLERY_SEL)) buildSort();
+  galleryObserver.observe(document.body, { childList: true, subtree: true });
+
+  if (document.querySelector(GALLERY_SEL)) buildAll();
 })();
+
+
+</script>

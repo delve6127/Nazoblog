@@ -1,3 +1,100 @@
+a.notion-page[href="/나조토키謎解き란"] {
+  display: none !important;
+}
+
+a.notion-page[href="/리뷰-예정-목록"] {
+  display: none !important;
+}
+
+.notion-collection__header {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  /* 갤러리 2칸 */
+  .notion-collection-gallery {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+ 
+  /* 카드 커버 이미지 높이 조절 */
+  .notion-collection-card__cover,
+  .notion-collection-card__cover.medium,
+  img.notion-collection-card__cover.medium {
+    height: 170px !important;
+    max-height: 170px !important;
+    min-height: unset !important;
+    width: 100% !important;
+  }
+
+  /* 페이지 제목 */
+  .notion-header__title {
+    font-size: 2rem !important;
+  }
+
+  /* 카드 제목 */
+  .notion-property__title {
+    font-size: 0.95rem !important;
+  }
+
+  /* 카드 속성 태그 */
+  .notion-pill {
+    font-size: 0.8rem !important;
+  }
+  
+  /*모바일 환경 표 각 칸 너비 조절*/
+   .notion-collection-table__head-cell.title,
+  .notion-collection-table__cell.title {
+    width: 40% !important;
+  }
+
+  .notion-collection-table__head-cell.multi_select,
+  .notion-collection-table__cell.multi_select {
+    width: 30% !important;
+  }
+
+  .notion-collection-table__head-cell.select,
+  .notion-collection-table__cell.select {
+    width: 26% !important;
+  }
+  
+  /*표의 선택 옵션들 글자 길면 두줄로*/
+  .notion-collection-table__cell .notion-pill {
+    white-space: normal !important;
+    word-break: break-all !important;
+    height: auto !important;
+  }
+  
+}
+
+.notion-collection-card__property-list {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+}
+
+.notion-property__title {
+  width: 100% !important;
+}
+
+.notion-property__select {
+  width: auto !important;
+  margin-right: 4px !important;
+}
+
+/* 제작사만 항상 새 줄로 */
+.property-5667463f {
+  width: 100% !important;
+}
+
+.notion-pill {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1.37 !important;
+  padding-top: 1px !important;
+}
+
 /* =====================================================
    나조토키 리뷰 커스텀 레이아웃 — Super.so CSS 인젝션
    ===================================================== */
@@ -389,3 +486,27 @@
   opacity: 0.35;
   cursor: default;
 }
+
+/* ── 갤러리 필터 ── */
+#nz-filter-wrap {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 16px;
+  flex-wrap: wrap;
+}
+.nz-filter-select {
+  flex: 1;
+  min-width: 120px;
+  padding: 8px 14px;
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 10px;
+  font-size: 14px;
+  color: #2c2c2a;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  cursor: pointer;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.nz-filter-select:focus { border-color: rgba(0,0,0,0.25); }
