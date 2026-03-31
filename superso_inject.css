@@ -5,7 +5,13 @@
   margin-top: -120px;
   margin-bottom: -120px;
 }
+
+/* 원래 Notion 제목 영역이 클릭을 가로채지 않도록 */
+.notion-header__title-wrapper {
+  pointer-events: none !important;
+}
 .nz-title-img-wrap img {
+  pointer-events: none;
   max-width: 590px;
   width: 100%;
   height: auto;
@@ -443,7 +449,7 @@ a.notion-page[href="/리뷰-예정-목록"] {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 0 0 16px;
+  margin: 0 0 8px;
   padding: 10px 14px;
   background: #ffffff;
   border: 1px solid rgba(0,0,0,0.12);
@@ -470,13 +476,48 @@ a.notion-page[href="/리뷰-예정-목록"] {
   color: #888780;
   flex-shrink: 0;
 }
+#nz-filter-toggle {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #f1efe8;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #5F5E5A;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+#nz-filter-toggle:hover {
+  background: #e8e6df;
+}
+#nz-filter-toggle.nz-toggle-active {
+  background: #4A4035;
+  color: #ffffff;
+}
+
+/* ── 필터/정렬 통합 패널 ── */
+#nz-filter-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, margin 0.3s ease;
+  margin-bottom: 0;
+}
+#nz-filter-panel.nz-panel-open {
+  max-height: 300px;
+  margin-bottom: 8px;
+  overflow: visible;
+}
 
 /* ── 갤러리 정렬 ── */
 #nz-sort-wrap {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 0 0 16px;
+  margin: 0 0 8px;
   padding: 8px 14px;
   background: #ffffff;
   border: 1px solid rgba(0,0,0,0.12);
@@ -515,23 +556,83 @@ a.notion-page[href="/리뷰-예정-목록"] {
 /* ── 갤러리 필터 ── */
 #nz-filter-wrap {
   display: flex;
-  gap: 8px;
-  margin: 0 0 16px;
-  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
 }
-.nz-filter-select {
+.nz-filter-group {
   flex: 1;
-  min-width: 120px;
-  padding: 8px 14px;
+  position: relative;
+}
+.nz-filter-btn {
+  width: 100%;
+  padding: 8px 10px;
   background: #ffffff;
   border: 1px solid rgba(0,0,0,0.12);
   border-radius: 10px;
-  font-size: 14px;
+  font-size: 13px;
   color: #2c2c2a;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   cursor: pointer;
-  outline: none;
-  -webkit-appearance: none;
-  appearance: none;
+  text-align: left;
+  white-space: nowrap;
+  transition: border-color 0.2s;
 }
-.nz-filter-select:focus { border-color: rgba(0,0,0,0.25); }
+.nz-filter-btn:hover {
+  border-color: rgba(0,0,0,0.25);
+}
+.nz-filter-group-open .nz-filter-btn {
+  border-color: #4A4035;
+}
+.nz-filter-arrow {
+  font-size: 10px;
+  color: #888780;
+  display: inline-block;
+  transition: transform 0.2s;
+}
+.nz-filter-group-open .nz-filter-arrow {
+  transform: rotate(180deg);
+}
+.nz-filter-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 160px;
+  max-height: 0;
+  overflow: hidden;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  z-index: 100;
+  transition: max-height 0.25s ease, padding 0.25s ease;
+  padding: 0;
+}
+.nz-filter-group-open .nz-filter-list {
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 6px 0;
+}
+.nz-filter-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  font-size: 13px;
+  color: #2c2c2a;
+  cursor: pointer;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  transition: background 0.15s;
+}
+.nz-filter-item:hover {
+  background: #f5f3ee;
+}
+.nz-filter-item input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: #4A4035;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.nz-filter-item span {
+  white-space: nowrap;
+}

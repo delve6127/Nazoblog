@@ -635,9 +635,9 @@ setTimeout(replaceMainTitle, 1500);
   // ── 공유 상태 ──
   var state = {
     searchQ:   '',
-    filterCompany:   '',
-    filterDiff:      '',
-    filterRecommend: '',
+    filterCompany:   [],
+    filterDiff:      [],
+    filterRecommend: [],
     sortField: '',
     sortDesc:  true,
     originalOrder: null
@@ -692,9 +692,9 @@ setTimeout(replaceMainTitle, 1500);
         || companyPhonetics.some(function (p) { return p.indexOf(q) > -1; });
 
       // 필터 매칭
-      var companyMatch   = !state.filterCompany   || companies.some(function (c) { return c === state.filterCompany; });
-      var diffMatch      = !state.filterDiff      || diff      === state.filterDiff;
-      var recommendMatch = !state.filterRecommend || recommend === state.filterRecommend;
+      var companyMatch   = !state.filterCompany.length   || companies.some(function (c) { return state.filterCompany.indexOf(c) > -1; });
+      var diffMatch      = !state.filterDiff.length      || state.filterDiff.indexOf(diff) > -1;
+      var recommendMatch = !state.filterRecommend.length || state.filterRecommend.indexOf(recommend) > -1;
 
       var show = searchMatch && companyMatch && diffMatch && recommendMatch;
       card.style.display = show ? '' : 'none';
@@ -703,7 +703,7 @@ setTimeout(replaceMainTitle, 1500);
 
     var countEl = document.getElementById('nz-search-count');
     if (countEl) {
-      var isFiltered = q || state.filterCompany || state.filterDiff || state.filterRecommend;
+      var isFiltered = q || state.filterCompany.length || state.filterDiff.length || state.filterRecommend.length;
       countEl.textContent = isFiltered ? visible + '개' : '';
     }
   }
@@ -744,13 +744,21 @@ setTimeout(replaceMainTitle, 1500);
     wrap.innerHTML =
       '<span id="nz-search-icon">🔍</span>'
       + '<input id="nz-search" type="text" placeholder="나조 이름 또는 브랜드로 검색">'
-      + '<span id="nz-search-count"></span>';
+      + '<span id="nz-search-count"></span>'
+      + '<button id="nz-filter-toggle" type="button" aria-label="필터/정렬 열기">⚙</button>';
     gallery.parentNode.insertBefore(wrap, gallery);
 
     document.getElementById('nz-search').addEventListener('keydown', function (e) {
       if (e.key !== 'Enter') return;
       state.searchQ = this.value.trim().toLowerCase();
       applyVisibility();
+    });
+
+    document.getElementById('nz-filter-toggle').addEventListener('click', function () {
+      var panel = document.getElementById('nz-filter-panel');
+      if (!panel) return;
+      var isOpen = panel.classList.toggle('nz-panel-open');
+      this.classList.toggle('nz-toggle-active', isOpen);
     });
   }
 
@@ -773,28 +781,62 @@ setTimeout(replaceMainTitle, 1500);
     return vals;
   }
 
-  function buildFilterSelect(id, placeholder, values, onChange) {
-    var sel = document.createElement('select');
-    sel.id = id;
-    sel.className = 'nz-filter-select';
-    var defaultOpt = document.createElement('option');
-    defaultOpt.value = ''; defaultOpt.textContent = placeholder;
-    sel.appendChild(defaultOpt);
+  function buildFilterGroup(id, label, values, stateKey) {
+    var group = document.createElement('div');
+    group.className = 'nz-filter-group';
+    group.id = id;
+
+    var btn = document.createElement('button');
+    btn.className = 'nz-filter-btn';
+    btn.type = 'button';
+    btn.innerHTML = '<span class="nz-filter-arrow">▾</span> ' + label;
+    btn.setAttribute('data-label', label);
+    group.appendChild(btn);
+
+    var list = document.createElement('div');
+    list.className = 'nz-filter-list';
+
     values.forEach(function (v) {
-      var o = document.createElement('option');
-      o.value = v; o.textContent = v;
-      sel.appendChild(o);
+      var item = document.createElement('label');
+      item.className = 'nz-filter-item';
+      var cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.value = v;
+      cb.addEventListener('change', function () {
+        if (this.checked) {
+          state[stateKey].push(v);
+        } else {
+          state[stateKey] = state[stateKey].filter(function (x) { return x !== v; });
+        }
+        var count = state[stateKey].length;
+        btn.innerHTML = '<span class="nz-filter-arrow">▾</span> ' + label + (count ? ' (' + count + ')' : '');
+        applyVisibility();
+      });
+      var span = document.createElement('span');
+      span.textContent = v;
+      item.appendChild(cb);
+      item.appendChild(span);
+      list.appendChild(item);
     });
-    sel.addEventListener('change', function () { onChange(this.value); applyVisibility(); });
-    return sel;
+
+    group.appendChild(list);
+
+    btn.addEventListener('click', function () {
+      var isOpen = group.classList.toggle('nz-filter-group-open');
+      // 다른 그룹 닫기
+      var siblings = group.parentNode.querySelectorAll('.nz-filter-group');
+      siblings.forEach(function (g) {
+        if (g !== group) g.classList.remove('nz-filter-group-open');
+      });
+    });
+
+    return group;
   }
 
   var DIFF_ORDER = ['아주 쉬움', '쉬움', '보통', '어려움', '아주 어려움'];
 
   function buildFilter() {
     if (document.getElementById('nz-filter-wrap')) return;
-    var gallery = document.querySelector(GALLERY_SEL);
-    if (!gallery) return;
 
     var companies = getUniqueVals(COMPANY_SEL, true).sort();
     var diffs = getUniqueVals(DIFF_SEL, false).sort(function (a, b) {
@@ -805,28 +847,16 @@ setTimeout(replaceMainTitle, 1500);
     var wrap = document.createElement('div');
     wrap.id = 'nz-filter-wrap';
 
-    wrap.appendChild(buildFilterSelect('nz-filter-company', '제작사 전체', companies, function (v) { state.filterCompany = v; }));
-    wrap.appendChild(buildFilterSelect('nz-filter-diff',    '난이도 전체',  diffs,     function (v) { state.filterDiff = v; }));
-    wrap.appendChild(buildFilterSelect('nz-filter-recommend','추천 전체',   recommends,function (v) { state.filterRecommend = v; }));
+    wrap.appendChild(buildFilterGroup('nz-filter-company',   '제작사', companies, 'filterCompany'));
+    wrap.appendChild(buildFilterGroup('nz-filter-diff',      '난이도', diffs,     'filterDiff'));
+    wrap.appendChild(buildFilterGroup('nz-filter-recommend', '추천',   recommends,'filterRecommend'));
 
-    var sortWrap = document.getElementById('nz-sort-wrap');
-    if (sortWrap && sortWrap.parentNode) {
-      sortWrap.parentNode.insertBefore(wrap, sortWrap.nextSibling);
-    } else {
-      var searchWrap = document.getElementById('nz-search-wrap');
-      if (searchWrap && searchWrap.parentNode) {
-        searchWrap.parentNode.insertBefore(wrap, searchWrap.nextSibling);
-      } else {
-        gallery.parentNode.insertBefore(wrap, gallery);
-      }
-    }
+    return wrap;
   }
 
   // ── 정렬 바 ──
   function buildSort() {
     if (document.getElementById('nz-sort-wrap')) return;
-    var gallery = document.querySelector(GALLERY_SEL);
-    if (!gallery) return;
 
     var wrap = document.createElement('div');
     wrap.id = 'nz-sort-wrap';
@@ -869,24 +899,49 @@ setTimeout(replaceMainTitle, 1500);
     wrap.appendChild(select);
     wrap.appendChild(btn);
 
+    return wrap;
+  }
+
+  // ── 필터/정렬 통합 패널 ──
+  function buildFilterPanel() {
+    if (document.getElementById('nz-filter-panel')) return;
     var searchWrap = document.getElementById('nz-search-wrap');
-    if (searchWrap && searchWrap.parentNode) {
-      searchWrap.parentNode.insertBefore(wrap, searchWrap.nextSibling);
-    } else {
-      gallery.parentNode.insertBefore(wrap, gallery);
-    }
+    if (!searchWrap) return;
+    var gallery = document.querySelector(GALLERY_SEL);
+    if (!gallery) return;
+
+    var panel = document.createElement('div');
+    panel.id = 'nz-filter-panel';
+
+    var sortEl = buildSort();
+    if (sortEl) panel.appendChild(sortEl);
+
+    var filterEl = buildFilter();
+    if (filterEl) panel.appendChild(filterEl);
+
+    searchWrap.parentNode.insertBefore(panel, searchWrap.nextSibling);
   }
 
   // ── 갤러리 등장 감지 ──
+  function destroyAll() {
+    ['nz-search-wrap', 'nz-filter-panel'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.parentNode.removeChild(el);
+    });
+  }
+
   function buildAll() {
     buildSearch();
-    buildSort();
-    buildFilter();
+    buildFilterPanel();
   }
 
   var galleryObserver = new MutationObserver(function () {
     var gallery = document.querySelector(GALLERY_SEL);
-    if (gallery && !document.getElementById('nz-search-wrap')) {
+    if (!gallery) return;
+    var searchWrap = document.getElementById('nz-search-wrap');
+    // 검색창이 없거나, 갤러리와 같은 부모에 있지 않으면 다시 빌드
+    if (!searchWrap || searchWrap.parentNode !== gallery.parentNode) {
+      destroyAll();
       state.originalOrder = null;
       buildAll();
     }
