@@ -1,4 +1,41 @@
 <script>
+// ── 로딩 스크린 ──
+function showLoader() {
+  if (document.getElementById('nz-loader')) return;
+  document.body.classList.add('nz-loading');
+  var loader = document.createElement('div');
+  loader.id = 'nz-loader';
+  loader.innerHTML = '<div id="nz-loader-lemon"><img src="https://assets.super.so/b529abf1-8288-44d9-87eb-38228677c041/images/bcc6ec8e-275b-4bfc-b598-b2108922863e/noname.png" alt="lemon" /></div><div id="nz-loader-spinner"></div>';
+  document.body.appendChild(loader);
+}
+
+function hideLoader() {
+  var loader = document.getElementById('nz-loader');
+  if (!loader) return;
+  document.body.classList.remove('nz-loading');
+  loader.classList.add('nz-loader-hide');
+  setTimeout(function() {
+    if (loader.parentNode) loader.parentNode.removeChild(loader);
+  }, 500);
+}
+
+function waitAndHideLoader() {
+  var maxWait = setTimeout(hideLoader, 3000);
+  var checkReady = setInterval(function() {
+    var content = document.querySelector('.notion-collection-gallery') || document.querySelector('.super-content');
+    if (content) {
+      clearInterval(checkReady);
+      clearTimeout(maxWait);
+      setTimeout(hideLoader, 200);
+    }
+  }, 100);
+}
+
+// 최초 로드 시 로딩 표시
+showLoader();
+waitAndHideLoader();
+
+// ── 날짜 변환 ──
 function convertDates() {
   document.querySelectorAll(".notion-property__date .date").forEach(function(el) {
     const text = el.innerText.trim();
@@ -12,18 +49,16 @@ function convertDates() {
   });
 }
 
-setTimeout(convertDates, 500);
-setTimeout(convertDates, 1000);
-setTimeout(convertDates, 2000);
-setTimeout(convertDates, 3000);
-
 // ── 메인 페이지 타이틀을 이미지로 교체 ──
 function replaceMainTitle() {
-  // 메인 페이지(홈)에서만 실행
   if (window.location.pathname !== '/' && window.location.pathname !== '') return;
 
+  // 이전 이미지가 남아있으면 제거
+  var oldWrap = document.querySelector('.nz-title-img-wrap');
+  if (oldWrap) oldWrap.parentNode.removeChild(oldWrap);
+
   var titleEl = document.querySelector('.notion-header__title');
-  if (!titleEl || titleEl.dataset.nzReplaced) return;
+  if (!titleEl) return;
 
   titleEl.dataset.nzReplaced = 'true';
   titleEl.style.display = 'none';
@@ -40,12 +75,57 @@ function replaceMainTitle() {
   titleEl.parentNode.insertBefore(wrap, titleEl);
 }
 
+// ── SPA 네비게이션 감지 ──
+(function() {
+  var lastUrl = location.href;
+
+  function onNavigate() {
+    showLoader();
+    setTimeout(convertDates, 500);
+    setTimeout(convertDates, 1500);
+    setTimeout(replaceMainTitle, 300);
+    setTimeout(replaceMainTitle, 800);
+    setTimeout(replaceMainTitle, 1500);
+    waitAndHideLoader();
+  }
+
+  // popstate (뒤로/앞으로 가기)
+  window.addEventListener('popstate', function() {
+    if (location.href !== lastUrl) {
+      lastUrl = location.href;
+      onNavigate();
+    }
+  });
+
+  // pushState/replaceState 가로채기 (SPA 링크 클릭)
+  var origPush = history.pushState;
+  var origReplace = history.replaceState;
+  history.pushState = function() {
+    origPush.apply(this, arguments);
+    if (location.href !== lastUrl) {
+      lastUrl = location.href;
+      onNavigate();
+    }
+  };
+  history.replaceState = function() {
+    origReplace.apply(this, arguments);
+    if (location.href !== lastUrl) {
+      lastUrl = location.href;
+      onNavigate();
+    }
+  };
+})();
+
+// 최초 로드 시 실행
+setTimeout(convertDates, 500);
+setTimeout(convertDates, 1000);
+setTimeout(convertDates, 2000);
+setTimeout(convertDates, 3000);
 setTimeout(replaceMainTitle, 300);
 setTimeout(replaceMainTitle, 800);
 setTimeout(replaceMainTitle, 1500);
 
-//여기 밑으로 붙여넣기
-
+// ── 리뷰 상세 페이지 레이아웃 ──
 (function () {
   'use strict';
 
@@ -75,23 +155,19 @@ setTimeout(replaceMainTitle, 1500);
   };
 
   // ── 값 읽기 헬퍼 ─────────────────────────────────────
-
-  // 속성 ID로 notion-property 엘리먼트 가져오기
   function getEl(id) {
     return document.querySelector('.' + id);
   }
 
-  // 텍스트 속성값 읽기 (M번째나조, 제작사, 소요시간)
   function getTextVal(id) {
     var el = getEl(id);
     if (!el) return '';
-    // 텍스트 속성은 notion-property div 안에 값이 바로 있거나 자식 span에 있음
     var inner = el.querySelector('span, p, div:not([class*="notion-page__property-icon"])');
     var val = inner ? inner.textContent.trim() : el.textContent.trim();
     return val;
   }
 
-  // 날짜 속성값 읽기 → "2026년 3월 22일" 형식으로 변환
+  // 날짜 → "2026년 3월 22일" 형식 변환
   var MONTHS = { Jan:1, Feb:2, Mar:3, Apr:4, May:5, Jun:6,
                  Jul:7, Aug:8, Sep:9, Oct:10, Nov:11, Dec:12 };
 
@@ -102,12 +178,10 @@ setTimeout(replaceMainTitle, 1500);
     var raw = timeEl
       ? (timeEl.getAttribute('datetime') || timeEl.textContent.trim())
       : (el.querySelector('span') || el).textContent.trim();
-    // ISO 형식: 2026-03-22
     var isoMatch = raw.match(/(\d{4})-(\d{2})-(\d{2})/);
     if (isoMatch) {
       return isoMatch[1] + '년 ' + parseInt(isoMatch[2]) + '월 ' + parseInt(isoMatch[3]) + '일';
     }
-    // "Mar 25, 2026" 형식
     var engMatch = raw.match(/([A-Za-z]+)\s+(\d+),\s*(\d{4})/);
     if (engMatch && MONTHS[engMatch[1]]) {
       return engMatch[3] + '년 ' + MONTHS[engMatch[1]] + '월 ' + parseInt(engMatch[2]) + '일';
@@ -115,7 +189,6 @@ setTimeout(replaceMainTitle, 1500);
     return raw;
   }
 
-  // Select 속성값 읽기 (텍스트 + 색상 클래스)
   function getSelectVal(id) {
     var el = getEl(id);
     if (!el) return { text: '', cls: '' };
@@ -124,7 +197,6 @@ setTimeout(replaceMainTitle, 1500);
     return { text: pill.textContent.trim(), cls: pill.className };
   }
 
-  // Multi-select 속성값 읽기 (배열로 반환)
   function getMultiSelectVals(id) {
     var el = getEl(id);
     if (!el) return [];
@@ -133,7 +205,6 @@ setTimeout(replaceMainTitle, 1500);
     });
   }
 
-  // 숫자 속성값 읽기 (점수 1~5)
   function getNumVal(id) {
     var el = document.querySelector('.' + id + ' .notion-property__number__progress-value');
     return el ? (parseFloat(el.textContent.trim()) || 0) : 0;
@@ -151,7 +222,7 @@ setTimeout(replaceMainTitle, 1500);
     return 'badge-gray';
   }
 
-  // ── badge 색상 클래스 → 실제 색상값 ──────────────────
+  // ── badge 색상값 매핑 ─────────────────────────────────
   var BADGE_COLORS = {
     'badge-red':    { bg: '#F5C4B3', color: '#993C1D' },
     'badge-blue':   { bg: '#B5D4F4', color: '#185FA5' },
@@ -273,11 +344,8 @@ setTimeout(replaceMainTitle, 1500);
       + '</div>';
     document.body.appendChild(lb);
 
-    // 배경 또는 닫기 버튼 클릭 시 닫기
     document.getElementById('nz-lightbox-backdrop').addEventListener('click', nzLightboxClose);
     document.getElementById('nz-lightbox-close').addEventListener('click', nzLightboxClose);
-
-    // ESC 키로 닫기
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') nzLightboxClose();
     });
@@ -294,7 +362,6 @@ setTimeout(replaceMainTitle, 1500);
       document.body.style.overflow = 'hidden';
       if (!content) return;
 
-      // JS rAF 애니메이션 (CSS keyframe 캐시 문제 없음)
       var start = null;
       var duration = 300;
       content.style.opacity = '0';
@@ -361,15 +428,10 @@ setTimeout(replaceMainTitle, 1500);
     );
     var nazoTitle = titleEl ? titleEl.textContent.trim() : '';
 
-    // HTML 조립
     var html = ''
       + '<div class="nz-review-wrap"><div class="nz-card">'
       + '<div class="nz-pc-layout">'
-
-      // ── 왼쪽 컬럼 (헤더 + 난이도) ──
       + '<div class="nz-col-left">'
-
-      // 헤더
       + '<div class="nz-header">'
       +   '<div class="nz-title-row">'
       +     '<span class="nz-title-main">' + nazoTitle + '</span>'
@@ -381,7 +443,6 @@ setTimeout(replaceMainTitle, 1500);
       +   '</div>'
       + '</div>'
 
-      // 난이도
       + '<div class="nz-section">'
       +   '<p class="nz-section-title">난이도</p>'
       +   '<div class="nz-grid2">'
@@ -402,7 +463,6 @@ setTimeout(replaceMainTitle, 1500);
       +   '</div>'
       + '</div>'
 
-      // 플레이 기록
       + '<div class="nz-section">'
       +   '<p class="nz-section-title">플레이 기록</p>'
       +   '<div class="nz-grid2">'
@@ -413,18 +473,13 @@ setTimeout(replaceMainTitle, 1500);
       +   '</div>'
       + '</div>'
 
-      + '</div>' // nz-col-left
-
-      // ── 오른쪽 컬럼 (점수 분석 + 추가 정보) ──
+      + '</div>'
       + '<div class="nz-col-right">'
-
-      // 점수 분석
       + '<div class="nz-section">'
       +   '<p class="nz-section-title">점수 분석</p>'
       +   buildRadar(scores)
       + '</div>'
 
-      // 추가 정보
       + '<div class="nz-section">'
       +   '<p class="nz-section-title">추가 정보</p>'
       +   '<div class="nz-badges">'
@@ -436,7 +491,6 @@ setTimeout(replaceMainTitle, 1500);
       +   '</div>'
       + '</div>'
 
-      // 구입처
       + '<div class="nz-section">'
       +   '<p class="nz-section-title">구입처</p>'
       +   '<div class="nz-badges">'
@@ -444,11 +498,10 @@ setTimeout(replaceMainTitle, 1500);
       +   '</div>'
       + '</div>'
 
-      + '</div>' // nz-col-right
-      + '</div>' // nz-pc-layout
-      + '</div></div>'; // nz-card / nz-review-wrap
+      + '</div>'
+      + '</div>'
+      + '</div></div>';
 
-    // 속성 컨테이너 찾기
     var propsContainer = document.querySelector(
       '.notion-page__properties, [class*="notion-page__properties"]'
     );
@@ -457,18 +510,12 @@ setTimeout(replaceMainTitle, 1500);
       return;
     }
 
-    // 커스텀 카드 삽입
     var wrapper = document.createElement('div');
     wrapper.innerHTML = html;
     propsContainer.parentNode.insertBefore(wrapper, propsContainer);
-
-    // 기본 속성 목록 숨기기
     propsContainer.style.display = 'none';
-
-    // 원본 타이틀 숨기기 (카드 헤더에 포함됐으므로)
     if (titleEl) titleEl.style.display = 'none';
 
-    // 나조 설명 (콜아웃) → 카드 안으로 이동
     var calloutEl = document.querySelector('.notion-callout');
     if (calloutEl) {
       var contentEl = calloutEl.querySelector('.notion-callout__content');
@@ -485,7 +532,6 @@ setTimeout(replaceMainTitle, 1500);
       calloutEl.style.display = 'none';
     }
 
-    // 플레이 사진
     var photoEl = document.querySelector('.' + ID.photo);
     if (photoEl) {
       var photoLinks = photoEl.querySelectorAll('a[href]');
@@ -510,7 +556,6 @@ setTimeout(replaceMainTitle, 1500);
       }
     }
 
-    // 라이트박스 초기화 (한 번만)
     nzLightboxInit();
 
     console.log('[나조토키] 리뷰 레이아웃 적용 완료');
@@ -548,7 +593,7 @@ setTimeout(replaceMainTitle, 1500);
     propsEl.parentNode.appendChild(box);
   }
 
-  // ── Super.so hydration 이후에도 레이아웃 유지 ──────────
+  // ── DOM 변경 감지 (hydration 대응) ─────────────────────
   var nzObserver = null;
   var nzRendering = false;
   var nzDebounceTimer = null;
@@ -557,10 +602,8 @@ setTimeout(replaceMainTitle, 1500);
     if (nzObserver) nzObserver.disconnect();
 
     nzObserver = new MutationObserver(function () {
-      // 디바운스: 마지막 DOM 변경 후 200ms 뒤에 한 번만 실행
       if (nzDebounceTimer) clearTimeout(nzDebounceTimer);
       nzDebounceTimer = setTimeout(function () {
-        // 우리 레이아웃이 사라졌고, Notion 속성이 다시 나타난 경우 → 재적용
         if (!document.querySelector('.nz-review-wrap') &&
             document.querySelector('.' + ID.satisfaction) &&
             !nzRendering) {
@@ -569,7 +612,7 @@ setTimeout(replaceMainTitle, 1500);
           render();
           wrapDiary();
           nzRendering = false;
-          startObserver(); // 다시 감시 시작
+          startObserver();
         }
       }, 200);
     });
@@ -608,14 +651,12 @@ setTimeout(replaceMainTitle, 1500);
   var DIFF_SEL     = '.property-47784163';
   var RECOMMEND_SEL= '.property-646a6749';
 
-  // 외국어 나조 한국어 발음 맵핑
   var PHONETIC_MAP = {
     'one operation':     ['원 오퍼레이션', '원오페', '원오퍼'],
     'twelve trick tiles':['트웰브 트릭 타일즈', '트웰브 트릭 타일스', '12 타일즈', '12 tiles', '12 타일스'],
     '26':                ['twenty six', '이십육', '트웬티 식스']
   };
 
-  // 브랜드 한국어/영어 발음 맵핑
   var COMPANY_MAP = {
     'tumbleweed': ['텀블위드', '탐블위도', '탐블위드'],
     '키이스케이프': ['keyescape']
@@ -632,7 +673,6 @@ setTimeout(replaceMainTitle, 1500);
     'HIRAMEKI TRUMP GOLD':     { num: 8, date: '2026-03-29', diff: 4, satisfaction: 4,   puzzle: 4,   gimmick: 4,   design: 3.5, language: 3.5 }
   };
 
-  // ── 공유 상태 ──
   var state = {
     searchQ:   '',
     filterCompany:   [],
@@ -643,7 +683,6 @@ setTimeout(replaceMainTitle, 1500);
     originalOrder: null
   };
 
-  // ── 카드에서 값 읽기 헬퍼 ──
   function getCardTitle(card) {
     var el = card.querySelector(TITLE_SEL);
     return el ? el.textContent.trim() : '';
@@ -742,10 +781,10 @@ setTimeout(replaceMainTitle, 1500);
     var wrap = document.createElement('div');
     wrap.id = 'nz-search-wrap';
     wrap.innerHTML =
-      '<span id="nz-search-icon">🔍</span>'
+      '<img id="nz-search-icon" src="https://images.spr.so/cdn-cgi/imagedelivery/j42No7y-dcokJuNgXeA0ig/61d6e642-6df3-462b-b543-05804774285c/search_-1/w=1920,quality=90,fit=scale-down" alt="검색">'
       + '<input id="nz-search" type="text" placeholder="나조 이름 또는 브랜드로 검색">'
       + '<span id="nz-search-count"></span>'
-      + '<button id="nz-filter-toggle" type="button" aria-label="필터/정렬 열기">⚙</button>';
+      + '<button id="nz-filter-toggle" type="button" aria-label="필터/정렬 열기"><img src="https://images.spr.so/cdn-cgi/imagedelivery/j42No7y-dcokJuNgXeA0ig/0ae160ac-3c90-47e2-b9a5-f3600549997a/sliders-horizontal_-2/w=1920,quality=90,fit=scale-down" alt="필터" id="nz-filter-toggle-icon"></button>';
     gallery.parentNode.insertBefore(wrap, gallery);
 
     document.getElementById('nz-search').addEventListener('keydown', function (e) {

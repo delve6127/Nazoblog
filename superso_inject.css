@@ -1,3 +1,53 @@
+/* ── 로딩 스크린 ── */
+#nz-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #FAF7F2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  transition: opacity 0.4s ease;
+}
+#nz-loader.nz-loader-hide {
+  opacity: 0;
+  pointer-events: none;
+}
+#nz-loader-lemon {
+  width: 48px;
+  height: 48px;
+  animation: nz-bounce 1s ease-in-out infinite;
+}
+#nz-loader-lemon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+#nz-loader-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #E8E0D5;
+  border-top-color: #C8B888;
+  border-radius: 50%;
+  animation: nz-spin 0.7s linear infinite;
+}
+@keyframes nz-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes nz-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 로딩 중 본문 숨김 */
+body.nz-loading #__next,
+body.nz-loading .super-root,
+body.nz-loading .notion-app {
+  opacity: 0;
+}
+
 /* ── 메인 페이지 타이틀 이미지 ── */
 .nz-title-img-wrap {
   text-align: center;
@@ -456,8 +506,10 @@ a.notion-page[href="/리뷰-예정-목록"] {
   border-radius: 10px;
 }
 #nz-search-icon {
-  font-size: 14px;
+  width: 18px;
+  height: 18px;
   flex-shrink: 0;
+  opacity: 0.4;
 }
 #nz-search {
   flex: 1;
@@ -483,20 +535,25 @@ a.notion-page[href="/리뷰-예정-목록"] {
   border: none;
   background: #f1efe8;
   border-radius: 8px;
-  font-size: 15px;
-  color: #5F5E5A;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s, color 0.2s;
+  transition: background 0.2s, opacity 0.2s;
+  padding: 0;
+}
+#nz-filter-toggle-icon {
+  width: 18px;
+  height: 18px;
 }
 #nz-filter-toggle:hover {
   background: #e8e6df;
 }
 #nz-filter-toggle.nz-toggle-active {
-  background: #4A4035;
-  color: #ffffff;
+  background: #e8e2d4;
+}
+#nz-filter-toggle.nz-toggle-active #nz-filter-toggle-icon {
+  opacity: 1;
 }
 
 /* ── 필터/정렬 통합 패널 ── */
