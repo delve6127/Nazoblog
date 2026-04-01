@@ -466,7 +466,7 @@ setTimeout(replaceMainTitle, 1500);
       + '<div class="nz-section">'
       +   '<p class="nz-section-title">플레이 기록</p>'
       +   '<div class="nz-grid2">'
-      +     '<div class="nz-cell"><p class="nz-cell-label">플레이 날짜</p><p class="nz-cell-value">' + (playDate || '-') + '</p></div>'
+      +     '<div class="nz-cell"><p class="nz-cell-label">클리어 날짜</p><p class="nz-cell-value">' + (playDate || '-') + '</p></div>'
       +     '<div class="nz-cell"><p class="nz-cell-label">참여 인원</p><p class="nz-cell-value">' + (players || '-') + '</p></div>'
       +     '<div class="nz-cell"><p class="nz-cell-label">공식 소요시간</p><p class="nz-cell-value">' + (officialTime || '-') + '</p></div>'
       +     '<div class="nz-cell"><p class="nz-cell-label">실제 소요시간</p><p class="nz-cell-value">' + (actualTime || '-') + '</p></div>'
@@ -905,7 +905,7 @@ setTimeout(replaceMainTitle, 1500);
     [
       ['', '기본순'],
       ['num', '나조 번호'],
-      ['date', '플레이 날짜'],
+      ['date', '클리어 날짜'],
       ['satisfaction', '개인 만족도'],
       ['diff', '체감 난이도'],
       ['puzzle', '문제'],
