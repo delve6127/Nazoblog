@@ -241,8 +241,9 @@ setTimeout(replaceMainTitle, 1500);
     var color = isO ? 'badge-blue' : 'badge-red';
     var label = type === 'line'    ? (isO ? 'LINE 사용'   : 'LINE 미사용')
               : type === 'web'     ? (isO ? 'WEB 사용'    : 'WEB 미사용')
-              : type === 'audio'   ? (isO ? '음성 듣기 필요'   : '음성 듣기 불필요')
+              : type === 'audio'   ? (isO ? '음성 듣기 필요'   : '')
               :                      (isO ? '재활용 가능' : '재활용 불가');
+    if (!label) return '';
     return '<span class="badge ' + color + '">' + label + '</span>';
   }
 
