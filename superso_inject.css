@@ -494,6 +494,86 @@ a.notion-page[href="/리뷰-예정-목록"] {
   white-space: nowrap;
 }
 
+/* ── 갤러리 카드 커스텀 ── */
+.nz-card-custom .notion-collection-card__property-list > *:not(.notion-property__title) {
+  display: none !important;
+}
+.nz-card-custom .notion-collection-card__property-list {
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+}
+.nz-card-custom .notion-property__title {
+  height: auto !important;
+  min-height: unset !important;
+}
+.nz-card-props {
+  padding: 0 12px 12px;
+  margin-top: -8px;
+}
+.nz-card-maker {
+  font-size: 13px;
+  color: #9ca3af;
+  margin-bottom: 6px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.nz-card-rec {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  display: inline-block;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.nz-card-rec--strong  { background: #3b82f6; color: #fff; font-weight: 700; }
+.nz-card-rec--rec     { background: #dbeafe; color: #1d4ed8; }
+.nz-card-rec--ok      { background: #e8e0d5; color: #78716c; }
+.nz-card-rec--meh     { background: #e5e7eb; color: #6b7280; font-weight: 500; }
+.nz-card-bottom {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.nz-card-diff {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: transparent;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.nz-card-official-group {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.nz-card-official {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #f5f5f4;
+  color: #57534e;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.nz-card-official--none {
+  font-size: 12px;
+  font-weight: 400;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #fafaf9;
+  color: #d6d3d1;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .nz-card-maker { font-size: 12px; margin-bottom: 4px; }
+  .nz-card-rec { font-size: 11px; padding: 2px 8px; }
+  .nz-card-diff { font-size: 11px; padding: 2px 6px; }
+  .nz-card-official { font-size: 11px; padding: 2px 6px; }
+  .nz-card-official--none { font-size: 11px; padding: 2px 6px; }
+}
+
 /* ── 갤러리 검색 ── */
 #nz-search-wrap {
   display: flex;

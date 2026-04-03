@@ -656,12 +656,122 @@ setTimeout(replaceMainTitle, 1500);
 (function () {
   'use strict';
 
-  var GALLERY_SEL  = '.notion-collection-gallery';
-  var CARD_SEL     = '.notion-collection-card.gallery';
-  var TITLE_SEL    = '.notion-property__title';
-  var COMPANY_SEL  = '.property-5667463f';
-  var DIFF_SEL     = '.property-47784163';
-  var RECOMMEND_SEL= '.property-646a6749';
+  var GALLERY_SEL   = '.notion-collection-gallery';
+  var CARD_SEL      = '.notion-collection-card.gallery';
+  var TITLE_SEL     = '.notion-property__title';
+  var COMPANY_SEL   = '.property-5667463f';
+  var DIFF_SEL      = '.property-47784163';
+  var RECOMMEND_SEL = '.property-646a6749';
+  var OFFICIAL_SEL  = '.property-6d44666a';
+
+  // ── 체감 난이도 색상 매핑 ──
+  var DIFF_COLORS = {
+    '아주 쉬움':   '#06b6d4',
+    '쉬움':       '#22c55e',
+    '보통':       '#eab308',
+    '어려움':     '#f97316',
+    '아주 어려움': '#ef4444'
+  };
+
+  // ── 추천도 CSS 클래스 매핑 ──
+  var REC_CLASS = {
+    '강력추천': 'nz-card-rec--strong',
+    '추천':    'nz-card-rec--rec',
+    '괜찮음':  'nz-card-rec--ok',
+    '음..':    'nz-card-rec--meh'
+  };
+
+  // ── 카드 커스텀 레이아웃 적용 ──
+  function customizeCards() {
+    var cards = document.querySelectorAll(CARD_SEL);
+    cards.forEach(function (card) {
+      if (card.classList.contains('nz-card-custom')) return;
+
+      var companyEl   = card.querySelector(COMPANY_SEL);
+      var recommendEl = card.querySelector(RECOMMEND_SEL);
+      var diffEl      = card.querySelector(DIFF_SEL);
+      var officialEl  = card.querySelector(OFFICIAL_SEL);
+
+      // 제작사 읽기
+      var companies = [];
+      if (companyEl) {
+        var pills = companyEl.querySelectorAll('.notion-pill');
+        if (pills.length) {
+          Array.from(pills).forEach(function (p) { companies.push(p.textContent.trim()); });
+        } else {
+          var t = companyEl.textContent.trim();
+          if (t) companies.push(t);
+        }
+      }
+
+      // 추천도 읽기
+      var recText = '';
+      if (recommendEl) {
+        var recPill = recommendEl.querySelector('.notion-pill');
+        recText = recPill ? recPill.textContent.trim() : recommendEl.textContent.trim();
+      }
+
+      // 체감 난이도 읽기
+      var diffText = '';
+      if (diffEl) {
+        var diffPill = diffEl.querySelector('.notion-pill');
+        diffText = diffPill ? diffPill.textContent.trim() : diffEl.textContent.trim();
+      }
+
+      // 공식 난이도 읽기 (다중선택)
+      var officials = [];
+      if (officialEl) {
+        var oPills = officialEl.querySelectorAll('.notion-pill');
+        if (oPills.length) {
+          Array.from(oPills).forEach(function (p) { officials.push(p.textContent.trim()); });
+        } else {
+          var oText = officialEl.textContent.trim();
+          if (oText) officials.push(oText);
+        }
+      }
+
+      // 새 레이아웃 조립
+      var html = '';
+
+      // 제작사
+      if (companies.length) {
+        html += '<div class="nz-card-maker">' + companies.join(' · ') + '</div>';
+      }
+
+      // 추천도 + 난이도 + 공식점수 행
+      var bottomParts = [];
+      if (recText) {
+        var recCls = REC_CLASS[recText] || 'nz-card-rec--meh';
+        bottomParts.push('<span class="nz-card-rec ' + recCls + '">' + recText + '</span>');
+      }
+      if (diffText) {
+        var dc = DIFF_COLORS[diffText] || '#78716c';
+        bottomParts.push('<span class="nz-card-diff" style="color:' + dc + '; border:1.5px solid ' + dc + ';">' + diffText + '</span>');
+      }
+      if (officials.length) {
+        var officialHtml = officials.map(function (o) {
+          return '<span class="nz-card-official">' + o + '</span>';
+        }).join('');
+        if (officials.length > 1) {
+          officialHtml = '<span class="nz-card-official-group">' + officialHtml + '</span>';
+        }
+        bottomParts.push(officialHtml);
+      } else if (officialEl) {
+        bottomParts.push('<span class="nz-card-official--none">표기 없음</span>');
+      }
+
+      if (bottomParts.length) {
+        html += '<div class="nz-card-bottom">' + bottomParts.join('') + '</div>';
+      }
+
+      // 삽입
+      var propsDiv = document.createElement('div');
+      propsDiv.className = 'nz-card-props';
+      propsDiv.innerHTML = html;
+      card.appendChild(propsDiv);
+      card.classList.add('nz-card-custom');
+    });
+  }
 
   var PHONETIC_MAP = {
     'one operation':     ['원 오퍼레이션', '원오페', '원오퍼'],
@@ -979,23 +1089,32 @@ setTimeout(replaceMainTitle, 1500);
       var el = document.getElementById(id);
       if (el) el.parentNode.removeChild(el);
     });
+    document.querySelectorAll('.nz-card-props').forEach(function (el) {
+      el.parentNode.removeChild(el);
+    });
+    document.querySelectorAll('.nz-card-custom').forEach(function (el) {
+      el.classList.remove('nz-card-custom');
+    });
   }
 
   function buildAll() {
     buildSearch();
     buildFilterPanel();
+    customizeCards();
   }
 
   var galleryObserver = new MutationObserver(function () {
     var gallery = document.querySelector(GALLERY_SEL);
     if (!gallery) return;
     var searchWrap = document.getElementById('nz-search-wrap');
-    // 검색창이 없거나, 갤러리와 같은 부모에 있지 않으면 다시 빌드
     if (!searchWrap || searchWrap.parentNode !== gallery.parentNode) {
       destroyAll();
       state.originalOrder = null;
       buildAll();
     }
+    // 새 카드가 추가된 경우 커스텀 적용
+    var uncustomized = gallery.querySelector(CARD_SEL + ':not(.nz-card-custom)');
+    if (uncustomized) customizeCards();
   });
   galleryObserver.observe(document.body, { childList: true, subtree: true });
 
