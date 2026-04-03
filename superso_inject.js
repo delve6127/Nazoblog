@@ -624,6 +624,7 @@ setTimeout(replaceMainTitle, 1500);
   // ── 초기 실행 ─────────────────────────────────────────
   function tryRender(attempt) {
     attempt = attempt || 0;
+    if (document.querySelector('.nz-review-wrap')) return; // 이미 적용됨
     if (document.querySelector('.' + ID.satisfaction)) {
       render();
       wrapDiary();
@@ -632,6 +633,16 @@ setTimeout(replaceMainTitle, 1500);
       setTimeout(function () { tryRender(attempt + 1); }, 300);
     }
   }
+
+  // SPA 네비게이션 감지 → URL 변경 시 tryRender 재실행
+  var lastUrl = location.href;
+  var spaObserver = new MutationObserver(function () {
+    if (location.href !== lastUrl) {
+      lastUrl = location.href;
+      tryRender();
+    }
+  });
+  spaObserver.observe(document.body, { childList: true, subtree: true });
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () { tryRender(); });
