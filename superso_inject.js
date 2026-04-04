@@ -1121,5 +1121,225 @@ setTimeout(replaceMainTitle, 1500);
   if (document.querySelector(GALLERY_SEL)) buildAll();
 })();
 
+// ── 구매처 정보 페이지 커스터마이징 ────────────────────────
+(function () {
+  'use strict';
+
+  var PURCHASE_PATH = '%ea%b5%ac%eb%a7%a4%ec%b2%98';
+  var LINK_ICON_SVG = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3H3v10h10v-3M9 1h6v6M15 1L7 9"/></svg>';
+
+  // 태그 자동 분류 키워드
+  var TAG_KEYWORDS = {
+    ship:  ['배송', '배대지'],
+    merit: ['가격', '종류', '많음', '갠춘', '갠찮'],
+    warn:  ['비싸', '미엄', '보통', '주의']
+  };
+
+  // 예외 태그 오버라이드
+  var TAG_OVERRIDE = {
+    '#배송비보통': 'warn',
+    '#나조종류적음': 'warn',
+    '#단종나조발견가능': 'merit'
+  };
+
+  function isPurchasePage() {
+    return decodeURIComponent(location.pathname).indexOf('구매처') !== -1;
+  }
+
+  function classifyTag(text) {
+    text = text.trim();
+    if (TAG_OVERRIDE[text]) return TAG_OVERRIDE[text];
+    for (var cat in TAG_KEYWORDS) {
+      var keywords = TAG_KEYWORDS[cat];
+      for (var i = 0; i < keywords.length; i++) {
+        if (text.indexOf(keywords[i]) !== -1) return cat;
+      }
+    }
+    return 'brand';
+  }
+
+  function extractDomain(url) {
+    try {
+      var a = document.createElement('a');
+      a.href = url;
+      return a.hostname.replace(/^www\./, '');
+    } catch (e) { return url; }
+  }
+
+  function customizeCallout(callout, sectionNum) {
+    if (callout.dataset.nzDone) return;
+    callout.dataset.nzDone = '1';
+
+    var content = callout.querySelector('.notion-callout__content');
+    if (!content) return;
+
+    // H3 (샵 이름) 추출
+    var h3 = content.querySelector('h3');
+    var shopName = h3 ? h3.textContent.trim() : '';
+
+    // URL 및 태그가 있는 P 찾기
+    var paragraphs = content.querySelectorAll('p.notion-text');
+    var urlParagraph = null;
+    var shopUrl = '';
+    var tags = [];
+
+    for (var i = 0; i < paragraphs.length; i++) {
+      var p = paragraphs[i];
+      var link = p.querySelector('a.notion-link');
+      var codes = p.querySelectorAll('code.code');
+      if (link && codes.length > 0) {
+        urlParagraph = p;
+        shopUrl = link.href;
+        codes.forEach(function (c) {
+          var t = c.textContent.trim();
+          if (t.charAt(0) === '#') tags.push(t);
+        });
+        break;
+      }
+      if (link && p.textContent.indexOf('URL') !== -1) {
+        urlParagraph = p;
+        shopUrl = link.href;
+      }
+      if (!link && codes && codes.length > 0) {
+        codes.forEach(function (c) {
+          var t = c.textContent.trim();
+          if (t.charAt(0) === '#') tags.push(t);
+        });
+        if (!urlParagraph) urlParagraph = p;
+      }
+    }
+
+    // 헤더 구성 (이름 + 링크 버튼)
+    if (h3 && shopUrl) {
+      var header = document.createElement('div');
+      header.className = 'nz-shop-header';
+      h3.parentNode.insertBefore(header, h3);
+      header.appendChild(h3);
+
+      var domain = extractDomain(shopUrl);
+      var linkBtn = document.createElement('a');
+      linkBtn.href = shopUrl;
+      linkBtn.target = '_blank';
+      linkBtn.rel = 'noopener noreferrer';
+      linkBtn.className = 'nz-shop-link';
+      linkBtn.innerHTML = LINK_ICON_SVG + '<span class="nz-shop-link-text">' + domain + '</span>';
+      header.appendChild(linkBtn);
+    }
+
+    // 태그 행 구성
+    if (tags.length > 0) {
+      var tagsDiv = document.createElement('div');
+      tagsDiv.className = 'nz-shop-tags';
+      tags.forEach(function (t) {
+        var cat = classifyTag(t);
+        var span = document.createElement('span');
+        span.className = 'nz-shop-tag nz-shop-tag--' + cat;
+        span.textContent = t;
+        tagsDiv.appendChild(span);
+      });
+      var insertAfter = content.querySelector('.nz-shop-header') || h3;
+      if (insertAfter && insertAfter.nextSibling) {
+        insertAfter.parentNode.insertBefore(tagsDiv, insertAfter.nextSibling);
+      } else {
+        content.appendChild(tagsDiv);
+      }
+    }
+
+    // 원본 URL+태그 행 숨김
+    if (urlParagraph) {
+      urlParagraph.classList.add('nz-shop-url-row');
+    }
+  }
+
+  function customizeSectionHeadings() {
+    if (document.querySelector('.nz-section-heading')) return;
+    var headings = document.querySelectorAll('h2.notion-heading');
+    headings.forEach(function (h2) {
+      var text = h2.textContent.trim();
+      var match = text.match(/^(\d+)\.\s*(.+)/);
+      if (match) {
+        var num = match[1];
+        var title = match[2];
+        h2.className += ' nz-section-heading';
+        h2.innerHTML = '<span class="nz-section-num">' + num + '</span>' + title;
+      }
+    });
+  }
+
+  function run() {
+    if (!isPurchasePage()) {
+      document.body.classList.remove('nz-purchase-page');
+      return;
+    }
+    document.body.classList.add('nz-purchase-page');
+
+    // 서브타이틀 삽입
+    if (!document.querySelector('.nz-purchase-subtitle')) {
+      var title = document.querySelector('h1.notion-header__title');
+      if (title) {
+        var subtitle = document.createElement('p');
+        subtitle.className = 'nz-purchase-subtitle';
+        subtitle.textContent = '어디서 나조토키를 살 수 있을까?';
+        title.parentNode.insertBefore(subtitle, title.nextSibling);
+      }
+    }
+
+    customizeSectionHeadings();
+
+    var currentSection = '1';
+    var headings = document.querySelectorAll('h2.notion-heading');
+    var callouts = document.querySelectorAll('.notion-callout');
+
+    // 각 callout에 해당 섹션 번호 매핑
+    var allElements = document.querySelectorAll('h2.notion-heading, .notion-callout');
+    allElements.forEach(function (el) {
+      if (el.tagName === 'H2') {
+        var match = el.textContent.trim().match(/^(\d+)/);
+        if (match) currentSection = match[1];
+      } else {
+        customizeCallout(el, currentSection);
+      }
+    });
+  }
+
+  function needsRun() {
+    return isPurchasePage() &&
+      document.querySelector('.notion-callout') &&
+      !document.querySelector('[data-nz-done]');
+  }
+
+  function tryRun(attempt) {
+    attempt = attempt || 0;
+    if (!isPurchasePage()) return;
+    if (document.querySelector('.notion-callout')) {
+      run();
+    } else if (attempt < 20) {
+      setTimeout(function () { tryRun(attempt + 1); }, 300);
+    }
+  }
+
+  // SPA 감지 + 하이드레이션 후 재적용
+  var lastUrl = location.href;
+  var debounceTimer = null;
+  var purchaseObserver = new MutationObserver(function () {
+    if (location.href !== lastUrl) {
+      lastUrl = location.href;
+      tryRun();
+      return;
+    }
+    if (debounceTimer) return;
+    debounceTimer = setTimeout(function () {
+      debounceTimer = null;
+      if (needsRun()) run();
+    }, 200);
+  });
+  purchaseObserver.observe(document.body, { childList: true, subtree: true });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { tryRun(); });
+  } else {
+    tryRun();
+  }
+})();
 
 </script>

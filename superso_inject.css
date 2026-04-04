@@ -581,6 +581,163 @@ a.notion-page[href="/리뷰-예정-목록"] {
   .nz-card-official--none { font-size: 11px; padding: 2px 6px; }
 }
 
+/* ── 구매처 정보 페이지 ── */
+.nz-purchase-subtitle {
+  text-align: center;
+  font-size: 14px;
+  color: #a8a29e;
+  font-weight: 400;
+  margin: 4px 0 0 0;
+  padding-bottom: 8px;
+}
+.nz-purchase-page .notion-callout {
+  background: #fff !important;
+  border: 1px solid #f0eeec !important;
+  border-radius: 14px !important;
+  padding: 0 !important;
+  margin-bottom: 12px !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.02);
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+  position: relative;
+}
+.nz-purchase-page .notion-callout:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04);
+}
+.nz-purchase-page .notion-callout__icon { display: none !important; }
+.nz-purchase-page .notion-callout__content {
+  padding: 22px 18px 18px !important;
+}
+.nz-purchase-page .notion-callout .notion-callout__content h3.notion-heading {
+  margin-top: 0 !important;
+  margin-bottom: 8px !important;
+}
+
+/* 샵 헤더 (이름 + 링크) */
+.nz-shop-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.nz-purchase-page .notion-callout h3 {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: #1c1917 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  letter-spacing: -0.01em;
+  flex: 1;
+  min-width: 0;
+}
+.nz-shop-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #3b82f6;
+  text-decoration: none;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: #eff6ff;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.nz-shop-link:hover { background: #dbeafe; }
+.nz-shop-link svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+/* 태그 행 */
+.nz-shop-tags {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin: -4px 0 10px 0;
+}
+.nz-shop-tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  display: inline-block;
+}
+.nz-shop-tag--ship { background: #dbeafe; color: #1d4ed8; }
+.nz-shop-tag--merit { background: #dcfce7; color: #166534; }
+.nz-shop-tag--brand { background: #ede9fe; color: #5b21b6; }
+.nz-shop-tag--warn { background: #fef3c7; color: #92400e; }
+
+/* 원본 URL 행 & 해시태그 숨김 */
+.nz-purchase-page .notion-callout .nz-shop-url-row { display: none !important; }
+
+/* 설명 텍스트 */
+.nz-purchase-page .notion-callout .notion-text {
+  font-size: 13.5px !important;
+  line-height: 1.75 !important;
+  color: #57534e !important;
+}
+
+/* 섹션 헤딩 */
+.nz-purchase-page .notion-heading:not(.notion-callout .notion-heading) {
+  position: relative;
+}
+.nz-section-heading {
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  color: #1c1917 !important;
+  margin: 28px 0 14px !important;
+  padding-bottom: 10px !important;
+  border-bottom: 2px solid #e8e0d5;
+}
+.nz-section-num {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #3b82f6;
+  color: #fff;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+/* 모바일 */
+@media (max-width: 768px) {
+  .nz-purchase-page .notion-callout__content {
+    padding: 20px 14px 16px !important;
+  }
+  .nz-purchase-page .notion-callout h3 {
+    font-size: 15px !important;
+  }
+  .nz-shop-link-text { display: none; }
+  .nz-shop-link {
+    padding: 5px 7px;
+  }
+  .nz-shop-link svg { width: 13px; height: 13px; }
+  .nz-shop-tags { gap: 4px; margin-bottom: 8px; }
+  .nz-shop-tag { font-size: 10px; padding: 2px 8px; }
+  .nz-purchase-page .notion-callout .notion-text {
+    font-size: 13px !important;
+    line-height: 1.7 !important;
+  }
+  .nz-section-heading {
+    font-size: 15px !important;
+    margin: 24px 0 10px !important;
+    gap: 8px;
+    padding-bottom: 8px !important;
+  }
+  .nz-section-num {
+    width: 24px; height: 24px;
+    font-size: 11px; border-radius: 6px;
+  }
+}
+
 /* ── 갤러리 검색 ── */
 #nz-search-wrap {
   display: flex;
