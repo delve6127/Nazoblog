@@ -276,7 +276,7 @@ a.notion-page[href="/리뷰-예정-목록"] {
   align-items: center;
   font-weight: 500;
 }
-.nz-review-wrap .badge-lg           { font-size: 15px; padding: 6px 14px; }
+.nz-review-wrap .badge-lg           { font-size: 15px; padding: 6px 14px; line-height: 1.4; }
 .nz-review-wrap .badge-lg.badge-pink   { border: 1.5px solid #f0b4d0; }
 .nz-review-wrap .badge-lg.badge-yellow { border: 1.5px solid #f0d87a; }
 .nz-review-wrap .badge-lg.badge-gray   { border: 1.5px solid #d6d3d1; }
@@ -514,7 +514,7 @@ a.notion-page[href="/리뷰-예정-목록"] {
   text-align: center;
   justify-content: center;
 }
-.nz-review-wrap .badge-lg-sm  { font-size: 12px; padding: 6px 6px; }
+.nz-review-wrap .badge-lg-sm  { font-size: 12px; padding: 6px 6px; line-height: 1.4; }
 
 /* ── 갤러리 카드 커스텀 ── */
 .nz-card-custom .notion-collection-card__property-list > *:not(.notion-property__title) {

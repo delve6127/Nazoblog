@@ -1390,7 +1390,7 @@ setTimeout(replaceMainTitle, 1500);
       if (title) {
         var subtitle = document.createElement('p');
         subtitle.className = 'nz-review-subtitle';
-        subtitle.textContent = '플레이 후 리뷰를 준비 중인 나조토키들';
+        subtitle.textContent = '언젠가 플레이하여 리뷰 예정인 나조토키들';
         title.parentNode.insertBefore(subtitle, title.nextSibling);
       }
     }
@@ -1399,7 +1399,7 @@ setTimeout(replaceMainTitle, 1500);
   function needsRun() {
     return isReviewListPage() &&
       document.querySelector('.notion-collection-table') &&
-      !document.body.classList.contains('nz-review-list-page');
+      !document.querySelector('.nz-review-subtitle');
   }
 
   function tryRun(attempt) {
