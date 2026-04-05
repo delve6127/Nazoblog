@@ -905,9 +905,12 @@ a.notion-page[href="/리뷰-예정-목록"] {
   gap: 8px;
   margin: 0 0 8px;
   padding: 10px 14px;
+  padding-right: 52px;
   background: #ffffff;
   border: 1px solid rgba(0,0,0,0.12);
   border-radius: 10px;
+  position: relative;
+  min-height: 52px;
 }
 #nz-search-icon {
   width: 18px;
@@ -933,7 +936,10 @@ a.notion-page[href="/리뷰-예정-목록"] {
   flex-shrink: 0;
 }
 #nz-filter-toggle {
-  flex-shrink: 0;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
   width: 32px;
   height: 32px;
   border: none;
