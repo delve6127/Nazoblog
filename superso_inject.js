@@ -219,26 +219,45 @@ setTimeout(replaceMainTitle, 1500);
     if (cls.indexOf('pill-orange') > -1) return 'badge-orange';
     if (cls.indexOf('pill-yellow') > -1) return 'badge-yellow';
     if (cls.indexOf('pill-pink')   > -1) return 'badge-pink';
+    if (cls.indexOf('pill-brown')  > -1) return 'badge-brown';
     return 'badge-gray';
   }
 
-  // ── badge 색상값 매핑 ─────────────────────────────────
+  // ── badge 색상값 매핑 (파스텔) ──────────────────────────
   var BADGE_COLORS = {
-    'badge-red':    { bg: '#F5C4B3', color: '#993C1D' },
-    'badge-blue':   { bg: '#B5D4F4', color: '#185FA5' },
-    'badge-green':  { bg: '#C0DD97', color: '#3B6D11' },
-    'badge-purple': { bg: '#EEEDFE', color: '#3C3489' },
-    'badge-orange': { bg: '#FDDCB5', color: '#9A4500' },
-    'badge-yellow': { bg: '#FDF3C0', color: '#8A6A00' },
-    'badge-pink':   { bg: '#F9D0E0', color: '#8A2044' },
-    'badge-gray':   { bg: '#f1efe8', color: '#5F5E5A' }
+    'badge-red':    { bg: '#fde8e8', color: '#c05050' },
+    'badge-blue':   { bg: '#dbeafe', color: '#2563a0' },
+    'badge-green':  { bg: '#dcfce7', color: '#3a7a55' },
+    'badge-purple': { bg: '#ede9fe', color: '#7c5db0' },
+    'badge-orange': { bg: '#fed7aa', color: '#b06830' },
+    'badge-yellow': { bg: '#fef3c7', color: '#92700e' },
+    'badge-pink':   { bg: '#fce7f3', color: '#b04880' },
+    'badge-gray':   { bg: '#f0eeec', color: '#78716c' },
+    'badge-brown':  { bg: '#f2e8e0', color: '#8a6a50' }
+  };
+
+  // ── 추천도 색상 매핑 ─────────────────────────────────
+  var REC_COLORS = {
+    '강력추천': { bg: '#3b82f6', color: '#fff', weight: '700' },
+    '추천':     { bg: '#dbeafe', color: '#1d4ed8', weight: '600' },
+    '괜찮음':   { bg: '#e8e0d5', color: '#78716c', weight: '600' },
+    '음..':     { bg: '#f0eeec', color: '#78716c', weight: '600' }
+  };
+
+  // ── 체감 난이도 단계별 색상 ──────────────────────────
+  var DIFF_STEP_COLORS = {
+    '아주 쉬움':  { bg: '#ccfbf1', color: '#0d7377', border: '#7eddd0' },
+    '쉬움':       { bg: '#dcfce7', color: '#166534', border: '#86e5a0' },
+    '보통':       { bg: '#fef3c7', color: '#92700e', border: '#f0d87a' },
+    '어려움':     { bg: '#fed7aa', color: '#9a3412', border: '#f0b080' },
+    '아주 어려움': { bg: '#fde8e8', color: '#c05050', border: '#f0a0a0' }
   };
 
   // ── O/X 사용여부 뱃지 생성 ───────────────────────────
   function usageBadge(type, val) {
     if (!val.text) return '';
     var isO = val.text.trim() === 'O';
-    var color = isO ? 'badge-blue' : 'badge-red';
+    var color = isO ? 'badge-teal' : 'badge-red';
     var label = type === 'line'    ? (isO ? 'LINE 사용'   : '')
               : type === 'web'     ? (isO ? 'WEB 사용'    : 'WEB 미사용')
               : type === 'audio'   ? (isO ? '음성 듣기 필요'   : '')
@@ -250,15 +269,15 @@ setTimeout(replaceMainTitle, 1500);
   // ── 체감 난이도 5단계 인디케이터 ────────────────────
   var DIFF_STEPS = ['아주 쉬움', '쉬움', '보통', '어려움', '아주 어려움'];
 
-  function buildDiffSteps(selected, badgeColorCls) {
-    var c = BADGE_COLORS[badgeColorCls] || BADGE_COLORS['badge-purple'];
+  function buildDiffSteps(selected) {
     return DIFF_STEPS.map(function (s) {
       var isActive = s === selected;
       var label = s === '아주 쉬움'   ? '아주<br>쉬움'
                 : s === '아주 어려움' ? '아주<br>어려움'
                 : s;
-      var style = isActive
-        ? ' style="background:' + c.bg + ';color:' + c.color + ';font-weight:600;"'
+      var c = DIFF_STEP_COLORS[s];
+      var style = isActive && c
+        ? ' style="background:' + c.bg + ';color:' + c.color + ';font-weight:600;border:1.5px solid ' + c.border + ';"'
         : '';
       return '<div class="nz-diff-step"' + style + '>' + label + '</div>';
     }).join('');
@@ -400,7 +419,8 @@ setTimeout(replaceMainTitle, 1500);
 
     // 값 읽기
     var mNum         = getTextVal(ID.mNumber);
-    var company      = getTextVal(ID.company);
+    var company      = getSelectVal(ID.company);
+    if (!company.text) company = { text: getTextVal(ID.company), cls: '' };
     var playDate     = getDateVal(ID.playDate);
     var officialDiffs = getMultiSelectVals(ID.officialDiff);
     var personalDiff = getSelectVal(ID.personalDiff);
@@ -439,8 +459,13 @@ setTimeout(replaceMainTitle, 1500);
       +     (mNum ? '<span class="nz-title-sub">' + mNum + '</span>' : '')
       +   '</div>'
       +   '<div class="nz-badges">'
-      +     (company ? '<span class="badge badge-red">' + company + '</span>' : '')
-      +     (recommend.text ? '<span class="badge ' + pillToColor(recommend.cls) + '">' + recommend.text + '</span>' : '')
+      +     (company.text ? '<span class="badge ' + pillToColor(company.cls) + '">' + company.text + '</span>' : '')
+      +     (function() {
+              if (!recommend.text) return '';
+              var rc = REC_COLORS[recommend.text];
+              if (rc) return '<span class="badge" style="background:' + rc.bg + ';color:' + rc.color + ';font-weight:' + rc.weight + ';">' + recommend.text + '</span>';
+              return '<span class="badge ' + pillToColor(recommend.cls) + '">' + recommend.text + '</span>';
+            })()
       +   '</div>'
       + '</div>'
 
@@ -459,7 +484,7 @@ setTimeout(replaceMainTitle, 1500);
       +     '</div>'
       +     '<div class="nz-cell">'
       +       '<p class="nz-cell-label">체감 난이도</p>'
-      +       '<div class="nz-diff-steps">' + buildDiffSteps(personalDiff.text, pillToColor(personalDiff.cls)) + '</div>'
+      +       '<div class="nz-diff-steps">' + buildDiffSteps(personalDiff.text) + '</div>'
       +     '</div>'
       +   '</div>'
       + '</div>'
@@ -488,7 +513,7 @@ setTimeout(replaceMainTitle, 1500);
       +     usageBadge('web', web)
       +     usageBadge('audio', audio)
       +     usageBadge('recycle', recycle)
-      +     (pad.text.trim() === 'O' ? '<span class="badge badge-blue">패드 사용 권장</span>' : '')
+      +     (pad.text.trim() === 'O' ? '<span class="badge badge-teal">패드 사용 권장</span>' : '')
       +   '</div>'
       + '</div>'
 

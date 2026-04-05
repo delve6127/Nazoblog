@@ -209,7 +209,7 @@ a.notion-page[href="/리뷰-예정-목록"] {
   display: flex;
   align-items: baseline;
   gap: 8px;
-  margin-bottom: 6px;
+  margin-bottom: 12px;
 }
 .nz-title-main { font-size: 24px; font-weight: 500; color: #2c2c2a; }
 .nz-title-sub  { font-size: 13px; font-weight: 500; color: #888780; }
@@ -272,22 +272,34 @@ a.notion-page[href="/리뷰-예정-목록"] {
   font-size: 11px;
   padding: 3px 10px;
   border-radius: 20px;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   font-weight: 500;
 }
-.nz-review-wrap .badge-lg   { font-size: 15px; padding: 6px 14px; }
-.nz-review-wrap .badge-red    { background: #F5C4B3; color: #993C1D; }
-.nz-review-wrap .badge-blue   { background: #B5D4F4; color: #185FA5; }
-.nz-review-wrap .badge-green  { background: #C0DD97; color: #3B6D11; }
-.nz-review-wrap .badge-purple { background: #EEEDFE; color: #3C3489; }
-.nz-review-wrap .badge-orange { background: #FDDCB5; color: #9A4500; }
-.nz-review-wrap .badge-yellow { background: #FDF3C0; color: #8A6A00; }
-.nz-review-wrap .badge-pink   { background: #F9D0E0; color: #8A2044; }
+.nz-review-wrap .badge-lg           { font-size: 15px; padding: 6px 14px; }
+.nz-review-wrap .badge-lg.badge-pink   { border: 1.5px solid #f0b4d0; }
+.nz-review-wrap .badge-lg.badge-yellow { border: 1.5px solid #f0d87a; }
+.nz-review-wrap .badge-lg.badge-gray   { border: 1.5px solid #d6d3d1; }
+.nz-review-wrap .badge-lg.badge-red    { border: 1.5px solid #f0a0a0; }
+.nz-review-wrap .badge-lg.badge-blue   { border: 1.5px solid #93b8e0; }
+.nz-review-wrap .badge-lg.badge-green  { border: 1.5px solid #86e5a0; }
+.nz-review-wrap .badge-lg.badge-purple { border: 1.5px solid #c4b5f0; }
+.nz-review-wrap .badge-lg.badge-orange { border: 1.5px solid #f0b080; }
+.nz-review-wrap .badge-lg.badge-brown  { border: 1.5px solid #d4c0b0; }
+.nz-review-wrap .badge-red      { background: #fde8e8; color: #c05050; }
+.nz-review-wrap .badge-blue     { background: #dbeafe; color: #2563a0; }
+.nz-review-wrap .badge-green    { background: #dcfce7; color: #3a7a55; }
+.nz-review-wrap .badge-purple   { background: #ede9fe; color: #7c5db0; }
+.nz-review-wrap .badge-orange   { background: #fed7aa; color: #b06830; }
+.nz-review-wrap .badge-yellow   { background: #fef3c7; color: #92700e; }
+.nz-review-wrap .badge-pink     { background: #fce7f3; color: #b04880; }
+.nz-review-wrap .badge-brown    { background: #f2e8e0; color: #8a6a50; }
 .nz-review-wrap .badge-gray {
-  background: #f1efe8;
+  background: #f0eeec;
   border: 0.5px solid rgba(0,0,0,0.12);
-  color: #5F5E5A;
+  color: #78716c;
 }
+.nz-review-wrap .badge-teal     { background: #ccfbf1; color: #0d7377; }
 
 /* 체감 난이도 5단계 */
 .nz-diff-steps {
