@@ -232,7 +232,7 @@ a.notion-page[href="/리뷰-예정-목록"] {
 /* 그리드 */
 .nz-grid2 {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 6px;
 }
 
@@ -510,7 +510,12 @@ a.notion-page[href="/리뷰-예정-목록"] {
 .nz-official-diff-wrap--multi .badge {
   flex: 1;
   width: auto;
+  min-width: 0;
+  font-size: clamp(10px, 3.5vw, 15px);
+  padding: 4px 6px;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* ── 갤러리 카드 커스텀 ── */
