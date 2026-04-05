@@ -511,12 +511,10 @@ a.notion-page[href="/리뷰-예정-목록"] {
   flex: 1;
   width: auto;
   min-width: 0;
-  font-size: clamp(10px, 3.5vw, 15px);
-  padding: 4px 6px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  text-align: center;
+  justify-content: center;
 }
+.nz-review-wrap .badge-lg-sm  { font-size: 12px; padding: 6px 6px; }
 
 /* ── 갤러리 카드 커스텀 ── */
 .nz-card-custom .notion-collection-card__property-list > *:not(.notion-property__title) {
