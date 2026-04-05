@@ -1342,4 +1342,70 @@ setTimeout(replaceMainTitle, 1500);
   }
 })();
 
+// ── 리뷰 예정 목록 페이지 커스터마이징 ────────────────────────
+(function () {
+  'use strict';
+
+  function isReviewListPage() {
+    return decodeURIComponent(location.pathname).indexOf('리뷰-예정-목록') !== -1;
+  }
+
+  function run() {
+    if (!isReviewListPage()) {
+      document.body.classList.remove('nz-review-list-page');
+      return;
+    }
+    document.body.classList.add('nz-review-list-page');
+
+    // 서브타이틀 삽입
+    if (!document.querySelector('.nz-review-subtitle')) {
+      var title = document.querySelector('h1.notion-header__title');
+      if (title) {
+        var subtitle = document.createElement('p');
+        subtitle.className = 'nz-review-subtitle';
+        subtitle.textContent = '플레이 후 리뷰를 준비 중인 나조토키들';
+        title.parentNode.insertBefore(subtitle, title.nextSibling);
+      }
+    }
+  }
+
+  function needsRun() {
+    return isReviewListPage() &&
+      document.querySelector('.notion-collection-table') &&
+      !document.body.classList.contains('nz-review-list-page');
+  }
+
+  function tryRun(attempt) {
+    attempt = attempt || 0;
+    if (!isReviewListPage()) return;
+    if (document.querySelector('.notion-collection-table')) {
+      run();
+    } else if (attempt < 20) {
+      setTimeout(function () { tryRun(attempt + 1); }, 300);
+    }
+  }
+
+  var lastUrl = location.href;
+  var debounceTimer = null;
+  var reviewObserver = new MutationObserver(function () {
+    if (location.href !== lastUrl) {
+      lastUrl = location.href;
+      tryRun();
+      return;
+    }
+    if (debounceTimer) return;
+    debounceTimer = setTimeout(function () {
+      debounceTimer = null;
+      if (needsRun()) run();
+    }, 200);
+  });
+  reviewObserver.observe(document.body, { childList: true, subtree: true });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { tryRun(); });
+  } else {
+    tryRun();
+  }
+})();
+
 </script>
