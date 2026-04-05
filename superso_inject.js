@@ -1394,12 +1394,41 @@ setTimeout(replaceMainTitle, 1500);
         title.parentNode.insertBefore(subtitle, title.nextSibling);
       }
     }
+
+    // 제작사 열 → 제목 셀 아래로 병합 (2열화)
+    if (!document.querySelector('[data-nz-2col]')) {
+      var rows = document.querySelectorAll('.notion-collection-table tbody tr');
+      rows.forEach(function (row) {
+        var titleCell = row.querySelector('.notion-collection-table__cell.title');
+        var makerCell = row.querySelector('.notion-collection-table__cell.multi_select');
+        if (!titleCell || !makerCell) return;
+        var pills = makerCell.querySelectorAll('.notion-pill');
+        if (pills.length === 0) return;
+        var makerRow = document.createElement('div');
+        makerRow.className = 'nz-maker-row';
+        pills.forEach(function (p) {
+          makerRow.appendChild(p.cloneNode(true));
+        });
+        var innerDiv = titleCell.querySelector('div');
+        if (innerDiv) {
+          innerDiv.style.flexDirection = 'column';
+          innerDiv.style.alignItems = 'flex-start';
+          innerDiv.style.gap = '4px';
+          innerDiv.appendChild(makerRow);
+        } else {
+          titleCell.appendChild(makerRow);
+        }
+      });
+      // 제작사 헤더 + 셀 숨기기
+      var table = document.querySelector('.notion-collection-table');
+      if (table) table.setAttribute('data-nz-2col', '1');
+    }
   }
 
   function needsRun() {
     return isReviewListPage() &&
       document.querySelector('.notion-collection-table') &&
-      !document.querySelector('.nz-review-subtitle');
+      (!document.querySelector('.nz-review-subtitle') || !document.querySelector('[data-nz-2col]'));
   }
 
   function tryRun(attempt) {

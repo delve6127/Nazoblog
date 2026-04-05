@@ -793,7 +793,7 @@ a.notion-page[href="/리뷰-예정-목록"] {
   display: none !important;
 }
 
-/* 열 비율 5:3:2 */
+/* PC: 열 비율 45:35:20 (3열 유지) */
 .nz-review-list-page .notion-collection-table__head-cell.title,
 .nz-review-list-page .notion-collection-table__cell.title {
   width: 45% !important;
@@ -807,6 +807,12 @@ a.notion-page[href="/리뷰-예정-목록"] {
 .nz-review-list-page .notion-collection-table__cell.select {
   width: 20% !important;
   padding: 8px !important;
+}
+/* 제작사 pill 행 (PC에서는 숨김) */
+.nz-maker-row {
+  display: none;
+  gap: 4px;
+  flex-wrap: wrap;
 }
 
 /* 바디 행 */
@@ -826,6 +832,24 @@ a.notion-page[href="/리뷰-예정-목록"] {
   display: flex !important;
   align-items: center !important;
   min-width: 0 !important;
+}
+.nz-review-list-page .notion-collection-table__cell.title > div {
+  align-items: flex-start !important;
+}
+/* 제목 셀: 좌측 정렬 */
+.nz-review-list-page .notion-collection-table__cell.title,
+.nz-review-list-page .notion-collection-table__cell.title div,
+.nz-review-list-page .notion-collection-table__cell.title a,
+.nz-review-list-page .notion-collection-table__cell.title span {
+  text-align: left !important;
+  justify-content: flex-start !important;
+}
+/* 제작사, 상태 셀: 가운데 정렬 */
+.nz-review-list-page .notion-collection-table__cell.multi_select > div,
+.nz-review-list-page .notion-collection-table__cell.select > div {
+  justify-content: center !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }
 .nz-review-list-page .notion-collection-table__cell .notion-pill {
   flex-shrink: 0 !important;
@@ -887,17 +911,21 @@ a.notion-page[href="/리뷰-예정-목록"] {
     font-size: 10.5px !important;
     padding: 2px 8px !important;
   }
-  .nz-review-list-page .notion-collection-table__head-cell.title,
-  .nz-review-list-page .notion-collection-table__cell.title {
-    width: 40% !important;
-  }
+  /* 모바일: 제작사 열 숨기고 2열화 */
   .nz-review-list-page .notion-collection-table__head-cell.multi_select,
   .nz-review-list-page .notion-collection-table__cell.multi_select {
-    width: 38% !important;
+    display: none !important;
+  }
+  .nz-review-list-page .notion-collection-table__head-cell.title,
+  .nz-review-list-page .notion-collection-table__cell.title {
+    width: 65% !important;
   }
   .nz-review-list-page .notion-collection-table__head-cell.select,
   .nz-review-list-page .notion-collection-table__cell.select {
-    width: 22% !important;
+    width: 35% !important;
+  }
+  .nz-maker-row {
+    display: flex !important;
   }
 }
 
