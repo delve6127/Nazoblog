@@ -829,7 +829,9 @@ setTimeout(replaceMainTitle, 1500);
     filterRecommend: [],
     sortField: '',
     sortDesc:  true,
-    originalOrder: null
+    originalOrder: null,
+    page: 1,
+    perPage: 10
   };
 
   function getCardTitle(card) {
@@ -852,11 +854,11 @@ setTimeout(replaceMainTitle, 1500);
     return el ? el.textContent.trim() : '';
   }
 
-  // ── 카드 표시/숨김 적용 ──
+  // ── 카드 표시/숨김 적용 (페이지네이션 통합) ──
   function applyVisibility() {
     var cards = document.querySelectorAll(CARD_SEL);
-    var visible = 0;
     var q = state.searchQ;
+    var matched = [];
 
     cards.forEach(function (card) {
       var title    = getCardTitle(card).toLowerCase();
@@ -885,16 +887,86 @@ setTimeout(replaceMainTitle, 1500);
       var recommendMatch = !state.filterRecommend.length || state.filterRecommend.indexOf(recommend) > -1;
 
       var show = searchMatch && companyMatch && diffMatch && recommendMatch;
-      card.style.display = show ? '' : 'none';
-      if (show) visible++;
+      if (show) {
+        matched.push(card);
+      }
+      card.style.display = 'none';
     });
 
+    // 페이지네이션 계산
+    var totalPages = Math.max(1, Math.ceil(matched.length / state.perPage));
+    if (state.page > totalPages) state.page = totalPages;
+    var startIdx = (state.page - 1) * state.perPage;
+    var endIdx = startIdx + state.perPage;
+
+    for (var i = 0; i < matched.length; i++) {
+      if (i >= startIdx && i < endIdx) {
+        matched[i].style.display = '';
+      }
+    }
+
+    // 카드 수 표시
     var countEl = document.getElementById('nz-search-count');
     if (countEl) {
       var isFiltered = q || state.filterCompany.length || state.filterDiff.length || state.filterRecommend.length;
-      countEl.textContent = isFiltered ? visible + '개' : '';
+      countEl.textContent = isFiltered ? matched.length + '개' : '';
     }
+
+    // 페이지네이션 UI 업데이트
+    renderPagination(matched.length, totalPages);
   }
+
+  // ── 페이지네이션 UI ──
+  function renderPagination(totalItems, totalPages) {
+    var existing = document.getElementById('nz-pagination');
+    if (existing) existing.remove();
+
+    if (totalPages <= 1) return;
+
+    var gallery = document.querySelector(GALLERY_SEL);
+    if (!gallery) return;
+
+    var wrap = document.createElement('div');
+    wrap.id = 'nz-pagination';
+
+    // 이전 버튼
+    var prevBtn = document.createElement('button');
+    prevBtn.className = 'nz-page-btn' + (state.page <= 1 ? ' nz-page-disabled' : '');
+    prevBtn.textContent = '‹';
+    prevBtn.addEventListener('click', function () {
+      if (state.page > 1) { state.page--; applyVisibility(); }
+    });
+    wrap.appendChild(prevBtn);
+
+    // 페이지 번호
+    var startPage = Math.max(1, state.page - 2);
+    var endPage = Math.min(totalPages, startPage + 4);
+    if (endPage - startPage < 4) startPage = Math.max(1, endPage - 4);
+
+    for (var i = startPage; i <= endPage; i++) {
+      (function (pageNum) {
+        var btn = document.createElement('button');
+        btn.className = 'nz-page-btn' + (pageNum === state.page ? ' nz-page-active' : '');
+        btn.textContent = pageNum;
+        btn.addEventListener('click', function () {
+          state.page = pageNum; applyVisibility();
+        });
+        wrap.appendChild(btn);
+      })(i);
+    }
+
+    // 다음 버튼
+    var nextBtn = document.createElement('button');
+    nextBtn.className = 'nz-page-btn' + (state.page >= totalPages ? ' nz-page-disabled' : '');
+    nextBtn.textContent = '›';
+    nextBtn.addEventListener('click', function () {
+      if (state.page < totalPages) { state.page++; applyVisibility(); }
+    });
+    wrap.appendChild(nextBtn);
+
+    gallery.parentNode.insertBefore(wrap, gallery.nextSibling);
+  }
+
 
   // ── 정렬 적용 ──
   function applySort() {
@@ -939,6 +1011,7 @@ setTimeout(replaceMainTitle, 1500);
     document.getElementById('nz-search').addEventListener('keydown', function (e) {
       if (e.key !== 'Enter') return;
       state.searchQ = this.value.trim().toLowerCase();
+      state.page = 1;
       applyVisibility();
     });
 
@@ -998,6 +1071,7 @@ setTimeout(replaceMainTitle, 1500);
         }
         var count = state[stateKey].length;
         btn.innerHTML = '<span class="nz-filter-arrow">▾</span> ' + label + (count ? ' (' + count + ')' : '');
+        state.page = 1;
         applyVisibility();
       });
       var span = document.createElement('span');
@@ -1075,12 +1149,14 @@ setTimeout(replaceMainTitle, 1500);
     select.addEventListener('change', function () {
       state.sortField = this.value;
       btn.disabled = !state.sortField;
+      state.page = 1;
       applySort();
     });
 
     btn.addEventListener('click', function () {
       state.sortDesc = !state.sortDesc;
       btn.textContent = state.sortDesc ? '▼' : '▲';
+      state.page = 1;
       applySort();
     });
 
@@ -1128,6 +1204,7 @@ setTimeout(replaceMainTitle, 1500);
     buildSearch();
     buildFilterPanel();
     customizeCards();
+    applyVisibility();
   }
 
   var galleryObserver = new MutationObserver(function () {

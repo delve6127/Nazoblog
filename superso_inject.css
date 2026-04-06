@@ -929,6 +929,45 @@ a.notion-page[href="/리뷰-예정-목록"] {
   }
 }
 
+/* ── 페이지네이션 ── */
+#nz-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  margin: 16px 0 8px;
+}
+.nz-page-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #e8e6e1;
+  background: #fff;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #78716c;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.nz-page-btn:hover {
+  background: #f5f3ee;
+  border-color: #d6d3d1;
+}
+.nz-page-btn.nz-page-active {
+  background: #796d5f;
+  color: #fff;
+  border-color: #796d5f;
+}
+.nz-page-btn.nz-page-disabled {
+  opacity: 0.3;
+  cursor: default;
+  pointer-events: none;
+}
+
 /* ── 갤러리 검색 ── */
 #nz-search-wrap {
   display: flex;
