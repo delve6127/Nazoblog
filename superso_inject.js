@@ -1224,6 +1224,7 @@ setTimeout(replaceMainTitle, 1500);
     applyVisibility();
   }
 
+  var galleryDebounce = null;
   var galleryObserver = new MutationObserver(function () {
     var gallery = document.querySelector(GALLERY_SEL);
     if (!gallery) return;
@@ -1233,11 +1234,14 @@ setTimeout(replaceMainTitle, 1500);
       state.originalOrder = null;
       buildAll();
     }
-    // 새 카드가 추가된 경우 커스텀 적용 + 페이지네이션 갱신
+    // 새 카드가 추가된 경우 커스텀 적용 + 페이지네이션 갱신 (디바운스)
     var uncustomized = gallery.querySelector(CARD_SEL + ':not(.nz-card-custom)');
     if (uncustomized) {
       customizeCards();
-      applyVisibility();
+      if (galleryDebounce) clearTimeout(galleryDebounce);
+      galleryDebounce = setTimeout(function () {
+        applyVisibility();
+      }, 150);
     }
   });
   galleryObserver.observe(document.body, { childList: true, subtree: true });

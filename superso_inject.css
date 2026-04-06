@@ -929,6 +929,12 @@ a.notion-page[href="/리뷰-예정-목록"] {
   }
 }
 
+/* ── 숨김 페이지 (링크 자체만 숨김) ── */
+a[href*="점수-조절용-페이지"],
+a[href*="%EC%A0%90%EC%88%98-%EC%A1%B0%EC%A0%88%EC%9A%A9-%ED%8E%98%EC%9D%B4%EC%A7%80"] {
+  display: none !important;
+}
+
 /* ── 페이지네이션 ── */
 #nz-pagination {
   display: flex;
