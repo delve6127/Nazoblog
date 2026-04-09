@@ -1565,4 +1565,42 @@ setTimeout(replaceMainTitle, 1500);
   }
 })();
 
+// ── 갤러리 카드 NEW 뱃지 (작성일 7일 이내) ──
+(function () {
+  'use strict';
+  var DATE_SEL = '.property-57636b4d';
+  var CARD_SEL = '.notion-collection-card';
+  var NEW_DAYS = 7;
+  var MARKER  = 'data-nz-new';
+
+  function addNewBadges() {
+    var cards = document.querySelectorAll(CARD_SEL);
+    if (!cards.length) return;
+    var now = new Date();
+    cards.forEach(function (card) {
+      if (card.hasAttribute(MARKER)) return;
+      card.setAttribute(MARKER, '');
+      var dateEl = card.querySelector(DATE_SEL);
+      if (!dateEl) return;
+      var dateText = dateEl.textContent.trim();
+      var parsed = new Date(dateText);
+      if (isNaN(parsed.getTime())) return;
+      var diff = (now - parsed) / (1000 * 60 * 60 * 24);
+      if (diff <= NEW_DAYS) {
+        var coverImg = card.querySelector('img.notion-collection-card__cover');
+        var container = coverImg ? coverImg.parentElement : card;
+        container.style.position = 'relative';
+        var badge = document.createElement('span');
+        badge.className = 'nz-new-badge';
+        badge.textContent = 'NEW';
+        container.appendChild(badge);
+      }
+    });
+  }
+
+  var newObserver = new MutationObserver(function () { addNewBadges(); });
+  newObserver.observe(document.body, { childList: true, subtree: true });
+  addNewBadges();
+})();
+
 </script>

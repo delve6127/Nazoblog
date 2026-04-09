@@ -55,6 +55,37 @@ a.notion-page[href="/테스트용-페이지"] {
   display: none !important;
 }
 
+/* ── 갤러리 카드 작성일 숨김 (NEW 뱃지 판별용으로 DOM에만 유지) ── */
+.notion-collection-card .property-57636b4d {
+  display: none !important;
+}
+
+/* ── 갤러리 카드 NEW 뱃지 ── */
+.nz-new-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #FF3B30;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
+  z-index: 1;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  pointer-events: none;
+}
+@media (max-width: 768px) {
+  .nz-new-badge {
+    top: 6px;
+    left: 6px;
+    font-size: 9px;
+    padding: 2px 7px;
+    border-radius: 10px;
+  }
+}
+
 /* ── 메인 페이지 타이틀 이미지 ── */
 .nz-title-img-wrap {
   text-align: center;
