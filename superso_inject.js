@@ -20,13 +20,15 @@ function hideLoader() {
 }
 
 function waitAndHideLoader() {
-  var maxWait = setTimeout(hideLoader, 3000);
+  var maxWait = setTimeout(hideLoader, 4000);
   var checkReady = setInterval(function() {
     var content = document.querySelector('.notion-collection-gallery') || document.querySelector('.super-content');
     if (content) {
       clearInterval(checkReady);
       clearTimeout(maxWait);
-      setTimeout(hideLoader, 200);
+      // 타이틀 이미지 + 카운터 준비 후 로딩 해제
+      replaceMainTitle();
+      setTimeout(hideLoader, 300);
     }
   }, 100);
 }
@@ -73,6 +75,45 @@ function replaceMainTitle() {
   wrap.appendChild(img);
 
   titleEl.parentNode.insertBefore(wrap, titleEl);
+
+  // 카운터 생성/재삽입
+  var oldCounter = document.getElementById('nz-review-counter');
+  if (oldCounter) {
+    wrap.parentNode.insertBefore(oldCounter, wrap.nextSibling);
+  } else {
+    var counterTry = 0;
+    var counterInterval = setInterval(function () {
+      counterTry++;
+      if (document.getElementById('nz-review-counter') || counterTry > 30) {
+        clearInterval(counterInterval);
+        return;
+      }
+      var cards = document.querySelectorAll('.notion-collection-card');
+      if (!cards.length) return;
+      clearInterval(counterInterval);
+      var dateSel = '.property-57636b4d';
+      var latestDate = null;
+      cards.forEach(function (card) {
+        var dateEl = card.querySelector(dateSel);
+        if (!dateEl) return;
+        var parsed = new Date(dateEl.textContent.trim());
+        if (!isNaN(parsed.getTime()) && (!latestDate || parsed > latestDate)) latestDate = parsed;
+      });
+      var dateStr = '';
+      if (latestDate) {
+        var y = latestDate.getFullYear();
+        var m = ('0' + (latestDate.getMonth() + 1)).slice(-2);
+        var d = ('0' + latestDate.getDate()).slice(-2);
+        dateStr = y + '.' + m + '.' + d;
+      }
+      var el = document.createElement('div');
+      el.id = 'nz-review-counter';
+      el.innerHTML = '지금까지 <strong>' + cards.length + ' 작품</strong>을 풀고 기록했어요'
+        + (dateStr ? ' · 마지막 업데이트 ' + dateStr : '');
+      var w = document.querySelector('.nz-title-img-wrap');
+      if (w) w.parentNode.insertBefore(el, w.nextSibling);
+    }, 200);
+  }
 }
 
 // ── SPA 네비게이션 감지 ──

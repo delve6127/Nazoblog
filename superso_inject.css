@@ -55,6 +55,23 @@ a.notion-page[href="/테스트용-페이지"] {
   display: none !important;
 }
 
+/* ── 리뷰 카운터 + 마지막 업데이트 ── */
+#nz-review-counter {
+  text-align: center;
+  font-size: 13px;
+  color: #888;
+  margin: 32px 0 -20px;
+}
+@media (max-width: 768px) {
+  #nz-review-counter {
+    margin: 48px 0 -32px;
+  }
+}
+#nz-review-counter strong {
+  color: #333;
+  font-size: 15px;
+}
+
 /* ── 갤러리 카드 작성일 숨김 (NEW 뱃지 판별용으로 DOM에만 유지) ── */
 .notion-collection-card .property-57636b4d {
   display: none !important;
