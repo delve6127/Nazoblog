@@ -1611,7 +1611,7 @@ setTimeout(replaceMainTitle, 1500);
   'use strict';
   var DATE_SEL = '.property-57636b4d';
   var CARD_SEL = '.notion-collection-card';
-  var NEW_DAYS = 7;
+  var NEW_DAYS = 5;
   var MARKER  = 'data-nz-new';
 
   function addNewBadges() {
