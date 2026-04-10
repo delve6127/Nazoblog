@@ -870,14 +870,23 @@ setTimeout(replaceMainTitle, 1500);
   };
 
   var SORT_DATA = {
-    '무비무드 디저트 퍼즐 팩': { num: 1, date: '2026-03-07', diff: 2, satisfaction: 3,   puzzle: 3.5, gimmick: 3,   design: 3,   language: 4.5 },
-    'Twelve Trick Tiles':      { num: 2, date: '2026-03-18', diff: 3, satisfaction: 5,   puzzle: 3.5, gimmick: 5,   design: 3.5, language: 2.5 },
-    '26':                      { num: 3, date: '2026-03-22', diff: 4, satisfaction: 5,   puzzle: 4.5, gimmick: 5,   design: 3,   language: 2   },
-    'ONE OPERATION':           { num: 4, date: '2026-03-25', diff: 3, satisfaction: 5,   puzzle: 4,   gimmick: 5,   design: 4.5, language: 2   },
-    'sQuare mAze':             { num: 5, date: '2026-03-27', diff: 2, satisfaction: 4,   puzzle: 4.5, gimmick: 4.5, design: 3.5, language: 3.5 },
-    'sQuare mAze -another-':   { num: 6, date: '2026-03-28', diff: 3, satisfaction: 4,   puzzle: 4,   gimmick: 4,   design: 3,   language: 3   },
-    'sQuare mAze -cosmos-':    { num: 7, date: '2026-03-28', diff: 5, satisfaction: 4.5, puzzle: 4.5, gimmick: 4.5, design: 3.7, language: 2.5 },
-    'HIRAMEKI TRUMP GOLD':     { num: 8, date: '2026-03-29', diff: 4, satisfaction: 4,   puzzle: 4,   gimmick: 4,   design: 3.5, language: 3.5 }
+    '무비무드 디저트 퍼즐 팩': { num: 1,  date: '2026-03-07', diff: 1, satisfaction: 3,   puzzle: 3.5, gimmick: 3,   design: 3,   language: 4.5, brand: '키이스케이프',    url: '/나조토키-리뷰모음/무비무드-디저트-퍼즐-팩' },
+    'Twelve Trick Tiles':      { num: 2,  date: '2026-03-18', diff: 3, satisfaction: 5,   puzzle: 3.5, gimmick: 5,   design: 3.7, language: 2.5, brand: 'Tumbleweed',      url: '/나조토키-리뷰모음/twelve-trick-tiles' },
+    '26':                      { num: 3,  date: '2026-03-22', diff: 4, satisfaction: 5,   puzzle: 4.5, gimmick: 5,   design: 3,   language: 2.5, brand: 'Tumbleweed',      url: '/나조토키-리뷰모음/26' },
+    'ONE OPERATION':           { num: 4,  date: '2026-03-25', diff: 3, satisfaction: 5,   puzzle: 4,   gimmick: 4,   design: 4.5, language: 2,   brand: 'Tumbleweed',      url: '/나조토키-리뷰모음/one-operation' },
+    'sQuare mAze':             { num: 5,  date: '2026-03-27', diff: 3, satisfaction: 4,   puzzle: 4.5, gimmick: 4,   design: 3.5, language: 3.5, brand: 'NAZOxNAZO劇団',   url: '/나조토키-리뷰모음/square-maze' },
+    'sQuare mAze -another-':   { num: 6,  date: '2026-03-28', diff: 2, satisfaction: 4,   puzzle: 4,   gimmick: 4,   design: 3,   language: 3,   brand: 'NAZOxNAZO劇団',   url: '/나조토키-리뷰모음/square-maze-another' },
+    'sQuare mAze -cosmos-':    { num: 7,  date: '2026-03-28', diff: 5, satisfaction: 5,   puzzle: 4.5, gimmick: 4.5, design: 3.7, language: 2.5, brand: 'NAZOxNAZO劇団',   url: '/나조토키-리뷰모음/square-maze-cosmos' },
+    'HIRAMEKI TRUMP GOLD':     { num: 8,  date: '2026-03-29', diff: 4, satisfaction: 4,   puzzle: 4,   gimmick: 4,   design: 3.5, language: 3,   brand: 'Tumbleweed',      url: '/나조토키-리뷰모음/hirameki-trump-gold' },
+    'アルティメットナゾトキショウ (얼티밋 나조토키쇼)': { num: 9,  date: '2026-04-01', diff: 3, satisfaction: 4,   puzzle: 4,   gimmick: 4,   design: 4,   language: 1.5, brand: 'Tumbleweed',      url: '/나조토키-리뷰모음/アルティメットナゾトキショウ' },
+    'Quick+lazy':              { num: 10, date: '2026-04-02', diff: 4, satisfaction: 2.5, puzzle: 2.5, gimmick: 3.5, design: 3.5, language: 3,   brand: 'ぐずりあ',         url: '/나조토키-리뷰모음/quicklazy' },
+    'HIRAMEKI TRUMP SILVER':   { num: 11, date: '2026-04-04', diff: 5, satisfaction: 4.5, puzzle: 4.5, gimmick: 4,   design: 3.5, language: 2.5, brand: 'Tumbleweed',      url: '/나조토키-리뷰모음/hirameki-trump-silver' },
+    'CATEGORY':                { num: 12, date: '2026-04-05', diff: 3, satisfaction: 4.5, puzzle: 4,   gimmick: 4.5, design: 3.5, language: 2.5, brand: 'NAZOxNAZO劇団',   url: '/나조토키-리뷰모음/category' },
+    'マスターからの挑戦錠':      { num: 13, date: '2026-04-05', diff: 1, satisfaction: 2.5, puzzle: 2.5, gimmick: 3,   design: 2.5, language: 3.5, brand: '時解き',           url: '/나조토키-리뷰모음/マスターからの挑戦錠' },
+    'WHITE PAPER':             { num: 14, date: '2026-04-05', diff: 2, satisfaction: 3.5, puzzle: 3.5, gimmick: 3,   design: 3,   language: 3.5, brand: 'Mystery Lunch',    url: '/나조토키-리뷰모음/white-paper' },
+    '魔法の喫茶 épeler':        { num: 15, date: '2026-04-06', diff: 2, satisfaction: 4,   puzzle: 4,   gimmick: 3.5, design: 3.5, language: 3.5, brand: 'ぐずりあ',         url: '/나조토키-리뷰모음/魔法の喫茶-peler' },
+    'シッソウ迷宮リドレール (질주 미궁 리드레일)': { num: 16, date: '2026-04-07', diff: 2, satisfaction: 3.7, puzzle: 3.5, gimmick: 3.7, design: 3.5, language: 3.8, brand: 'Tumbleweed', url: '/나조토키-리뷰모음/シッソウ迷宮リドレール-질주-미궁-리드레일' },
+    'テストプレイお願いします':  { num: 17, date: '2026-04-10', diff: 5, satisfaction: 4,   puzzle: 4,   gimmick: 4,   design: 3.5, language: 1.5, brand: 'Tumbleweed',      url: '/나조토키-리뷰모음/テストプレイお願いします' }
   };
 
   var state = {
