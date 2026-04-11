@@ -1,4 +1,3 @@
-<script>
 // ── 로딩 스크린 ──
 function showLoader() {
   if (document.getElementById('nz-loader')) return;
@@ -662,6 +661,101 @@ setTimeout(replaceMainTitle, 1500);
     propsEl.parentNode.appendChild(box);
   }
 
+  // ── 브랜드 다른 리뷰 표시 ──────────────────────────────
+  function renderBrandReviews() {
+    if (document.querySelector('.nz-brand-reviews')) return;
+
+    // 현재 페이지 타이틀로 SORT_DATA에서 현재 리뷰 찾기
+    var currentTitle = null;
+    var currentData = null;
+    var pageTitle = document.querySelector('.nz-title-main');
+    if (!pageTitle) return;
+    var pageTitleText = pageTitle.textContent.trim();
+
+    // SORT_DATA에서 매칭
+    for (var key in SORT_DATA) {
+      if (key === pageTitleText || pageTitleText.indexOf(key) > -1 || key.indexOf(pageTitleText) > -1) {
+        currentTitle = key;
+        currentData = SORT_DATA[key];
+        break;
+      }
+    }
+
+    // DOM에서 제작사 읽기 (fallback)
+    var brand = currentData ? currentData.brand : null;
+    if (!brand) {
+      var companyEl = document.querySelector('.nz-badges .badge');
+      if (companyEl) brand = companyEl.textContent.trim();
+    }
+    if (!brand) return;
+
+    // 같은 브랜드의 다른 리뷰 수집 (현재 리뷰 제외)
+    var others = [];
+    var currentDiff = currentData ? currentData.diff : 3;
+    for (var key in SORT_DATA) {
+      if (key === currentTitle) continue;
+      var d = SORT_DATA[key];
+      if (d.brand === brand && d.url) {
+        others.push({ title: key, data: d });
+      }
+    }
+
+    if (others.length === 0) return;
+
+    // 정렬: 추천도 높은 순 → 체감 난이도 비슷한 순
+    others.sort(function (a, b) {
+      var satDiff = b.data.satisfaction - a.data.satisfaction;
+      if (satDiff !== 0) return satDiff;
+      return Math.abs(a.data.diff - currentDiff) - Math.abs(b.data.diff - currentDiff);
+    });
+
+    var totalCount = others.length;
+    var maxShow = 5;
+    var shown = others.slice(0, maxShow);
+    var overflow = totalCount - shown.length;
+
+    // HTML 생성
+    var box = document.createElement('div');
+    box.className = 'nz-brand-reviews';
+
+    var title = document.createElement('div');
+    title.className = 'nz-br-title';
+    title.innerHTML = '<span class="nz-br-bullet">&#8226;</span>' + brand + '의 다른 리뷰 <span class="nz-br-count">(' + totalCount + ')</span>';
+    box.appendChild(title);
+
+    var pills = document.createElement('div');
+    pills.className = 'nz-br-pills';
+    shown.forEach(function (item) {
+      var a = document.createElement('a');
+      a.href = item.data.url;
+      a.textContent = item.title;
+      pills.appendChild(a);
+    });
+    box.appendChild(pills);
+
+    if (overflow > 0) {
+      var more = document.createElement('a');
+      more.className = 'nz-br-more';
+      more.href = '/?search=' + encodeURIComponent(brand);
+      more.textContent = '외 ' + overflow + '개 더보기 →';
+      box.appendChild(more);
+    }
+
+    // 삽입 위치: 플레이 일기 박스 바로 뒤
+    var diaryBox = document.querySelector('.nz-diary-box');
+    if (diaryBox) {
+      diaryBox.parentNode.insertBefore(box, diaryBox.nextSibling);
+    } else {
+      // 플레이 일기가 없으면 페이지 마지막에 추가
+      var propsEl = document.querySelector('.notion-page__properties');
+      if (propsEl && propsEl.parentNode) {
+        propsEl.parentNode.appendChild(box);
+      }
+    }
+
+    console.log('[나조토키] 브랜드 다른 리뷰 표시: ' + brand + ' (' + totalCount + '개)');
+  }
+
   // ── DOM 변경 감지 (hydration 대응) ─────────────────────
   var nzObserver = null;
   var nzRendering = false;
@@ -680,6 +774,7 @@ setTimeout(replaceMainTitle, 1500);
           nzObserver.disconnect();
           render();
           wrapDiary();
+          renderBrandReviews();
           nzRendering = false;
           startObserver();
         }
@@ -696,6 +791,7 @@ setTimeout(replaceMainTitle, 1500);
     if (document.querySelector('.' + ID.satisfaction)) {
       render();
       wrapDiary();
+      renderBrandReviews();
       startObserver();
     } else if (attempt < 30) {
       setTimeout(function () { tryRender(attempt + 1); }, 300);
