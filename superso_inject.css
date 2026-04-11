@@ -1231,3 +1231,69 @@ a[href*="%EC%A0%90%EC%88%98-%EC%A1%B0%EC%A0%88%EC%9A%A9-%ED%8E%98%EC%9D%B4%EC%A7
 .nz-filter-item span {
   white-space: nowrap;
 }
+
+/* ── 브랜드 다른 리뷰 ── */
+.nz-brand-reviews {
+  margin: 0 auto;
+  max-width: 390px;
+  padding: 16px 0 0;
+  border-top: 1px solid #e8e0d5;
+}
+.nz-brand-reviews .nz-br-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 10px;
+}
+.nz-brand-reviews .nz-br-title .nz-br-bullet {
+  color: #555050;
+  margin-right: 4px;
+}
+.nz-brand-reviews .nz-br-title .nz-br-count {
+  font-weight: 400;
+  color: #999;
+  font-size: 12.5px;
+}
+.nz-brand-reviews .nz-br-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.nz-brand-reviews .nz-br-pills a {
+  text-decoration: none;
+  font-size: 12.5px;
+  padding: 8px 13px 6px;
+  border-radius: 16px;
+  background: #f0edea;
+  color: #555050;
+  transition: background 0.15s;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+.nz-brand-reviews .nz-br-pills a:hover {
+  background: #ddd9d5;
+}
+.nz-brand-reviews .nz-br-more {
+  display: inline-block;
+  margin-top: 10px;
+  margin-left: 13px;
+  font-size: 12.5px;
+  color: #999;
+  text-decoration: none;
+}
+.nz-brand-reviews .nz-br-more:hover {
+  color: #666;
+}
+@media (min-width: 768px) {
+  .nz-brand-reviews {
+    max-width: 800px;
+  }
+  .nz-brand-reviews .nz-br-title { font-size: 15px; }
+  .nz-brand-reviews .nz-br-title .nz-br-count { font-size: 13.5px; }
+  .nz-brand-reviews .nz-br-pills a {
+    font-size: 14.5px;
+    padding: 6.5px 15px;
+  }
+  .nz-brand-reviews .nz-br-more { font-size: 13.5px; }
+}

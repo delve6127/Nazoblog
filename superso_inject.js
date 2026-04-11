@@ -1,3 +1,35 @@
+<script>
+// ── 외부 JSON에서 데이터 로드 (전역) ──
+var NAZO_DATA_URL = 'https://cdn.jsdelivr.net/gh/delve6127/Nazoblog@main/nazo_data.json';
+var PHONETIC_MAP = {};
+var COMPANY_MAP = {};
+var SORT_DATA = {};
+var _nazoDataLoaded = false;
+var _nazoDataCallbacks = [];
+
+function loadNazoData(callback) {
+  if (_nazoDataLoaded) { callback(); return; }
+  _nazoDataCallbacks.push(callback);
+  if (_nazoDataCallbacks.length > 1) return; // 이미 로딩 중
+  fetch(NAZO_DATA_URL)
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      PHONETIC_MAP = data.PHONETIC_MAP || {};
+      COMPANY_MAP = data.COMPANY_MAP || {};
+      SORT_DATA = data.SORT_DATA || {};
+      _nazoDataLoaded = true;
+      console.log('[나조토키] 외부 데이터 로드 완료 (' + Object.keys(SORT_DATA).length + '개 리뷰)');
+      _nazoDataCallbacks.forEach(function (cb) { cb(); });
+      _nazoDataCallbacks = [];
+    })
+    .catch(function (err) {
+      console.warn('[나조토키] 데이터 로드 실패, 기능 제한 모드:', err);
+      _nazoDataLoaded = true;
+      _nazoDataCallbacks.forEach(function (cb) { cb(); });
+      _nazoDataCallbacks = [];
+    });
+}
+
 // ── 로딩 스크린 ──
 function showLoader() {
   if (document.getElementById('nz-loader')) return;
@@ -808,11 +840,17 @@ setTimeout(replaceMainTitle, 1500);
   });
   spaObserver.observe(document.body, { childList: true, subtree: true });
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () { tryRender(); });
-  } else {
-    tryRender();
+  // 데이터 로드 후 렌더링 시작
+  function startAfterDataLoad() {
+    loadNazoData(function () {
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function () { tryRender(); });
+      } else {
+        tryRender();
+      }
+    });
   }
+  startAfterDataLoad();
 
 })();
 
@@ -820,6 +858,9 @@ setTimeout(replaceMainTitle, 1500);
 (function () {
   'use strict';
 
+  loadNazoData(function () { initGallery(); });
+
+  function initGallery() {
   var GALLERY_SEL   = '.notion-collection-gallery';
   var CARD_SEL      = '.notion-collection-card.gallery';
   var TITLE_SEL     = '.notion-property__title';
@@ -936,54 +977,6 @@ setTimeout(replaceMainTitle, 1500);
       card.classList.add('nz-card-custom');
     });
   }
-
-  var PHONETIC_MAP = {
-    'one operation':     ['원 오퍼레이션', '원오페', '원오퍼'],
-    'twelve trick tiles':['트웰브 트릭 타일즈', '트웰브 트릭 타일스', '12 타일즈', '12 tiles', '12 타일스'],
-    '26':                ['twenty six', '이십육', '트웬티 식스'],
-    '무비무드 디저트 퍼즐 팩': ['무비무드'],
-    'square maze':       ['스퀘어 메이즈', '스퀘어메이즈', '사각 미로', '사각미로'],
-    'square maze -another-': ['스퀘어 메이저 어나더', '스퀘어메이즈어나더', '스퀘어메이즈 어나더', '사각 미로', '사각미로', '어나더'],
-    'square maze -cosmos-':  ['스퀘어 메이즈 코스모스', '스퀘어메이즈 코스모스', '스퀘어메이즈코스모스', '사각 미로', '사각미로', '코스모스'],
-    'hirameki trump gold':   ['히라메키 트럼프 골드', '히라메키트럼프 골드', '히라메키트럼프골드', '히라메키 트럼프골드', '트럼프', '골드', '히라메키'],
-    'hirameki trump silver': ['히라메키 트럼프 실버', '히라메키트럼프 실버', '히라메키트럼프실버', '히라메키 트럼프실버', '히라메키', '트럼프', '실버'],
-    'アルティメットナゾトキショウ (얼티밋 나조토키쇼)': ['얼티밋 나조토키쇼', '얼티밋나조토키쇼', '궁극의 나조토키쇼', '궁극의나조토키쇼', '얼티밋', '나조토키', '쇼'],
-    'quick+lazy':            ['퀵레이지', '퀵앤레이지', '퀵플러스레이지', '퀵 레이지', '퀵 앤 레이지', '퀵 플러스 레이지', '퀵', '레이지'],
-    'category':              ['카테고리'],
-    'マスターからの挑戦錠':    ['마스터로부터의 도전장', '마스터로부터의 도전자물쇠', '마스터의 도전장', '마스터의 도전자물쇠', '마스터로부터의도전장', '마스터로부터의도전자물쇠', '마스터의도전장', '마스터의도전자물쇠', '마스터', '도전', '자물쇠', '도전장'],
-    'white paper':           ['화이트 페이퍼', '화이트페이퍼', '하얀종이', '하얀 종이', '흰종이', '흰 종이', '백지', '페이퍼', '종이', '화이트'],
-    '魔法の喫茶 épeler':      ['마법의 찻집', '에프레', '에펠레', '마법의 카페', '마법의찻집', '마법의카페', '카페', '마법']
-  };
-
-  var COMPANY_MAP = {
-    'tumbleweed': ['텀블위드', '탐블위도', '탐블위드'],
-    '키이스케이프': ['keyescape'],
-    'nazoxnazo劇団': ['나조x나조극단', '나조x나조 극단', '나조나조극단', '나조x나조게키단', '나조나조게키단', '나조', '극단', '게키단'],
-    'michi': ['미치'],
-    'ぐずりあ': ['구스리아'],
-    '時解き': ['토키토키', 'tokitoki', '토키', 'toki'],
-    'mystery lunch': ['미스테리 런치', '미스터리 런치', '미스테리런치', '미스터리런치', '미스터리', '미스테리', '런치', '점심']
-  };
-
-  var SORT_DATA = {
-    '무비무드 디저트 퍼즐 팩': { num: 1,  date: '2026-03-07', diff: 1, satisfaction: 3,   puzzle: 3.5, gimmick: 3,   design: 3,   language: 4.5, brand: '키이스케이프',    url: '/나조토키-리뷰모음/무비무드-디저트-퍼즐-팩' },
-    'Twelve Trick Tiles':      { num: 2,  date: '2026-03-18', diff: 3, satisfaction: 5,   puzzle: 3.5, gimmick: 5,   design: 3.7, language: 2.5, brand: 'Tumbleweed',      url: '/나조토키-리뷰모음/twelve-trick-tiles' },
-    '26':                      { num: 3,  date: '2026-03-22', diff: 4, satisfaction: 5,   puzzle: 4.5, gimmick: 5,   design: 3,   language: 2.5, brand: 'Tumbleweed',      url: '/나조토키-리뷰모음/26' },
-    'ONE OPERATION':           { num: 4,  date: '2026-03-25', diff: 3, satisfaction: 5,   puzzle: 4,   gimmick: 4,   design: 4.5, language: 2,   brand: 'Tumbleweed',      url: '/나조토키-리뷰모음/one-operation' },
-    'sQuare mAze':             { num: 5,  date: '2026-03-27', diff: 3, satisfaction: 4,   puzzle: 4.5, gimmick: 4,   design: 3.5, language: 3.5, brand: 'NAZOxNAZO劇団',   url: '/나조토키-리뷰모음/square-maze' },
-    'sQuare mAze -another-':   { num: 6,  date: '2026-03-28', diff: 2, satisfaction: 4,   puzzle: 4,   gimmick: 4,   design: 3,   language: 3,   brand: 'NAZOxNAZO劇団',   url: '/나조토키-리뷰모음/square-maze-another' },
-    'sQuare mAze -cosmos-':    { num: 7,  date: '2026-03-28', diff: 5, satisfaction: 5,   puzzle: 4.5, gimmick: 4.5, design: 3.7, language: 2.5, brand: 'NAZOxNAZO劇団',   url: '/나조토키-리뷰모음/square-maze-cosmos' },
-    'HIRAMEKI TRUMP GOLD':     { num: 8,  date: '2026-03-29', diff: 4, satisfaction: 4,   puzzle: 4,   gimmick: 4,   design: 3.5, language: 3,   brand: 'Tumbleweed',      url: '/나조토키-리뷰모음/hirameki-trump-gold' },
-    'アルティメットナゾトキショウ (얼티밋 나조토키쇼)': { num: 9,  date: '2026-04-01', diff: 3, satisfaction: 4,   puzzle: 4,   gimmick: 4,   design: 4,   language: 1.5, brand: 'Tumbleweed',      url: '/나조토키-리뷰모음/アルティメットナゾトキショウ' },
-    'Quick+lazy':              { num: 10, date: '2026-04-02', diff: 4, satisfaction: 2.5, puzzle: 2.5, gimmick: 3.5, design: 3.5, language: 3,   brand: 'ぐずりあ',         url: '/나조토키-리뷰모음/quicklazy' },
-    'HIRAMEKI TRUMP SILVER':   { num: 11, date: '2026-04-04', diff: 5, satisfaction: 4.5, puzzle: 4.5, gimmick: 4,   design: 3.5, language: 2.5, brand: 'Tumbleweed',      url: '/나조토키-리뷰모음/hirameki-trump-silver' },
-    'CATEGORY':                { num: 12, date: '2026-04-05', diff: 3, satisfaction: 4.5, puzzle: 4,   gimmick: 4.5, design: 3.5, language: 2.5, brand: 'NAZOxNAZO劇団',   url: '/나조토키-리뷰모음/category' },
-    'マスターからの挑戦錠':      { num: 13, date: '2026-04-05', diff: 1, satisfaction: 2.5, puzzle: 2.5, gimmick: 3,   design: 2.5, language: 3.5, brand: '時解き',           url: '/나조토키-리뷰모음/マスターからの挑戦錠' },
-    'WHITE PAPER':             { num: 14, date: '2026-04-05', diff: 2, satisfaction: 3.5, puzzle: 3.5, gimmick: 3,   design: 3,   language: 3.5, brand: 'Mystery Lunch',    url: '/나조토키-리뷰모음/white-paper' },
-    '魔法の喫茶 épeler':        { num: 15, date: '2026-04-06', diff: 2, satisfaction: 4,   puzzle: 4,   gimmick: 3.5, design: 3.5, language: 3.5, brand: 'ぐずりあ',         url: '/나조토키-리뷰모음/魔法の喫茶-peler' },
-    'シッソウ迷宮リドレール (질주 미궁 리드레일)': { num: 16, date: '2026-04-07', diff: 2, satisfaction: 3.7, puzzle: 3.5, gimmick: 3.7, design: 3.5, language: 3.8, brand: 'Tumbleweed', url: '/나조토키-리뷰모음/シッソウ迷宮リドレール-질주-미궁-리드레일' },
-    'テストプレイお願いします':  { num: 17, date: '2026-04-10', diff: 5, satisfaction: 4,   puzzle: 4,   gimmick: 4,   design: 3.5, language: 1.5, brand: 'Tumbleweed',      url: '/나조토키-리뷰모음/テストプレイお願いします' }
-  };
 
   var state = {
     searchQ:   '',
@@ -1363,11 +1356,43 @@ setTimeout(replaceMainTitle, 1500);
     });
   }
 
+  function applyUrlSearch() {
+    var params = new URLSearchParams(window.location.search);
+    var q = params.get('search');
+    if (!q) return;
+    var input = document.getElementById('nz-search');
+    if (input) {
+      input.value = q;
+      state.searchQ = q.trim().toLowerCase();
+      state.page = 1;
+    }
+    // URL 파라미터 제거 (뒤로가기 시 깔끔하게)
+    history.replaceState(null, '', window.location.pathname);
+  }
+
+  // ── 홈 로고 클릭 시 새로고침 (필터 초기화) ──
+  function setupLogoRefresh() {
+    document.addEventListener('click', function (e) {
+      var link = e.target.closest('a');
+      if (!link) return;
+      var href = link.href;
+      if (href === window.location.origin + '/' || href === window.location.origin) {
+        if (window.location.pathname === '/') {
+          e.preventDefault();
+          e.stopPropagation();
+          window.location.reload();
+        }
+      }
+    }, true);
+  }
+
   function buildAll() {
     buildSearch();
     buildFilterPanel();
     customizeCards();
+    applyUrlSearch();
     applyVisibility();
+    setupLogoRefresh();
   }
 
   var galleryDebounce = null;
@@ -1393,6 +1418,7 @@ setTimeout(replaceMainTitle, 1500);
   galleryObserver.observe(document.body, { childList: true, subtree: true });
 
   if (document.querySelector(GALLERY_SEL)) buildAll();
+  } // initGallery 끝
 })();
 
 // ── 구매처 정보 페이지 커스터마이징 ────────────────────────
@@ -1748,5 +1774,4 @@ setTimeout(replaceMainTitle, 1500);
   newObserver.observe(document.body, { childList: true, subtree: true });
   addNewBadges();
 })();
-
 </script>

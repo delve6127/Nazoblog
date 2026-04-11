@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>브랜드 다른 리뷰 — 최종 목업 (리뷰 페이지 하단)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f5f0e8;
+    padding: 20px;
+    color: #333;
+  }
+
+  .mockup-label {
+    font-size: 13px; font-weight: 700; color: #999;
+    margin: 40px 0 12px; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .mockup-label:first-child { margin-top: 0; }
+  .mockup-desc { font-size: 11px; color: #aaa; margin-bottom: 16px; }
+
+  .compare { display: flex; gap: 30px; flex-wrap: wrap; margin-bottom: 50px; }
+  .compare-section h4 { font-size: 12px; color: #888; margin-bottom: 8px; }
+
+  /* ── 리뷰 페이지 시뮬레이션 ── */
+  .review-page {
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .review-page.pc { width: 580px; }
+  .review-page.mobile { width: 360px; }
+
+  /* 리뷰 본문 영역 (요약 표현) */
+  .review-body {
+    padding: 24px 20px 16px;
+  }
+  .review-page.pc .review-body { padding: 32px 28px 20px; }
+
+  .review-title {
+    font-size: 18px; font-weight: 700; margin-bottom: 16px; line-height: 1.4;
+  }
+  .review-page.pc .review-title { font-size: 22px; }
+
+  .review-text-placeholder .line {
+    display: block;
+    height: 10px;
+    background: #f0ece6;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  .review-text-placeholder .line:nth-child(2) { width: 85%; }
+  .review-text-placeholder .line:nth-child(3) { width: 92%; }
+  .review-text-placeholder .line:nth-child(4) { width: 70%; }
+  .review-text-placeholder .line:nth-child(5) { width: 88%; }
+  .review-text-placeholder .line:last-child { width: 55%; margin-bottom: 0; }
+
+  /* ── 플레이 일기 박스 (실제 CSS 반영) ── */
+  .diary-box {
+    max-width: 390px;
+    margin: 8px auto 24px;
+    background: #f1efe8;
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .review-page.pc .diary-box {
+    max-width: 520px;
+  }
+  .diary-title {
+    font-size: 10px;
+    font-weight: 600;
+    color: #888780;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 0 0 12px;
+  }
+  .diary-content {
+    font-size: 14px;
+    line-height: 1.85;
+    color: #3c3c3a;
+  }
+  .diary-content p { margin: 0 0 10px; }
+  .diary-content p:last-child { margin: 0; }
+
+  /* 점수 카드 영역 */
+  .score-card {
+    margin: 0 20px 16px;
+    padding: 16px;
+    background: #faf8f5;
+    border-radius: 10px;
+    border: 1px solid #eee;
+  }
+  .review-page.pc .score-card { margin: 0 28px 20px; padding: 20px; }
+
+  .score-card-title {
+    font-size: 11px; font-weight: 700; color: #888;
+    text-transform: uppercase; letter-spacing: 0.3px;
+    margin-bottom: 10px;
+  }
+  .review-page.pc .score-card-title { font-size: 12px; }
+
+  .radar-placeholder {
+    width: 100%; height: 100px;
+    background: #f0ece6; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: #ccc; font-size: 11px; margin-bottom: 10px;
+  }
+  .review-page.pc .radar-placeholder { height: 140px; }
+
+  .score-row {
+    display: flex; justify-content: space-between;
+    font-size: 10px; color: #999; padding: 3px 0;
+  }
+  .score-row span:last-child { font-weight: 600; color: #555; }
+  .review-page.pc .score-row { font-size: 11px; }
+
+  /* 태그 영역 */
+  .tag-section {
+    margin: 0 20px 16px;
+  }
+  .review-page.pc .tag-section { margin: 0 28px 20px; }
+
+  .tag-label {
+    font-size: 10px; font-weight: 700; color: #aaa;
+    text-transform: uppercase; margin-bottom: 6px;
+  }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    font-size: 10px; padding: 3px 10px; border-radius: 12px;
+    font-weight: 500;
+  }
+  .review-page.pc .tag { font-size: 11px; }
+  .tag-blue { background: #e0e8ff; color: #3366cc; }
+  .tag-teal { background: #e0f5f0; color: #1a8a6a; }
+  .tag-maker { background: #f0e8ff; color: #7744aa; }
+
+  /* ══════════════════════════════════════
+     ★ 브랜드 다른 리뷰 컴포넌트 (확정 디자인)
+     ══════════════════════════════════════ */
+  .brand-reviews {
+    margin: 0 20px 20px;
+    padding: 16px 0 0;
+    border-top: 1px solid #e8e0d5;
+  }
+  .review-page.pc .brand-reviews {
+    margin: 0 28px 24px;
+    padding: 20px 0 0;
+  }
+
+  .brand-reviews .title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 10px;
+  }
+  .review-page.pc .brand-reviews .title { font-size: 13px; }
+
+  .brand-reviews .title .bullet {
+    color: #555050;
+    margin-right: 4px;
+  }
+  .brand-reviews .title .count {
+    font-weight: 400;
+    color: #999;
+    font-size: 11px;
+  }
+  .review-page.pc .brand-reviews .title .count { font-size: 12px; }
+
+  .brand-reviews .pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .brand-reviews .pills a {
+    text-decoration: none;
+    font-size: 11px;
+    padding: 5px 12px;
+    border-radius: 16px;
+    background: #f0edea;
+    color: #555050;
+    transition: background 0.15s;
+  }
+  .brand-reviews .pills a:hover {
+    background: #ddd9d5;
+  }
+  .review-page.pc .brand-reviews .pills a {
+    font-size: 13px;
+    padding: 6px 14px;
+  }
+
+  .brand-reviews .more-link {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 11px;
+    color: #999;
+    text-decoration: none;
+  }
+  .brand-reviews .more-link:hover {
+    color: #666;
+  }
+  .review-page.pc .brand-reviews .more-link { font-size: 12px; }
+
+  /* 하단 여백 */
+  .page-bottom { height: 8px; }
+
+  hr.divider {
+    border: none;
+    border-top: 2px dashed #ddd;
+    margin: 50px 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     시나리오 A: 기본 (같은 브랜드 리뷰 3개)
+     ═══════════════════════════════════════════ -->
+<p class="mockup-label">시나리오 A — 기본 (같은 브랜드 리뷰 3개)</p>
+<p class="mockup-desc">현재 리뷰: HIRAMEKI TRUMP SILVER (Tumbleweed 제작) / 체감 난이도 5</p>
+
+<div class="compare">
+  <!-- PC -->
+  <div class="compare-section">
+    <h4>PC</h4>
+    <div class="review-page pc">
+      <div class="review-body">
+        <div class="review-title">HIRAMEKI TRUMP SILVER</div>
+        <div class="review-text-placeholder">
+          <span class="line"></span>
+          <span class="line"></span>
+          <span class="line"></span>
+          <span class="line"></span>
+          <span class="line"></span>
+          <span class="line"></span>
+        </div>
+      </div>
+
+      <div class="score-card">
+        <div class="score-card-title">점수 분석</div>
+        <div class="radar-placeholder">[ 레이더 차트 ]</div>
+        <div class="score-row"><span>문제</span><span>4.5</span></div>
+        <div class="score-row"><span>기믹</span><span>4.0</span></div>
+        <div class="score-row"><span>연출/디자인</span><span>3.5</span></div>
+        <div class="score-row"><span>언어 접근성</span><span>2.5</span></div>
+      </div>
+
+      <div class="tag-section">
+        <div class="tag-label">태그</div>
+        <div class="tags">
+          <span class="tag tag-blue">카드</span>
+          <span class="tag tag-teal">1인 플레이</span>
+          <span class="tag tag-maker">Tumbleweed</span>
+        </div>
+      </div>
+
+      <!-- 플레이 일기 -->
+      <div class="diary-box">
+        <p class="diary-title">플레이 일기</p>
+        <div class="diary-content">
+          <p>난이도가 높아서 고전했지만, 마지막 기믹에서 감탄이 나왔다. 트럼프 카드라는 소재를 이렇게까지 활용할 수 있구나 싶었음.</p>
+          <p>소요 시간: 약 2시간 30분</p>
+        </div>
+      </div>
+
+      <!-- ★ 브랜드 다른 리뷰 컴포넌트 -->
+      <div class="brand-reviews">
+        <div class="title"><span class="bullet">&#8226;</span>Tumbleweed의 다른 리뷰 <span class="count">(3)</span></div>
+        <div class="pills">
+          <a href="#">HIRAMEKI TRUMP GOLD</a>
+          <a href="#">Twelve Trick Tiles</a>
+          <a href="#">sQuare mAze</a>
+        </div>
+      </div>
+      <div class="page-bottom"></div>
+    </div>
+  </div>
+
+  <!-- Mobile -->
+  <div class="compare-section">
+    <h4>Mobile</h4>
+    <div class="review-page mobile">
+      <div class="review-body">
+        <div class="review-title">HIRAMEKI TRUMP SILVER</div>
+        <div class="review-text-placeholder">
+          <span class="line"></span>
+          <span class="line"></span>
+          <span class="line"></span>
+          <span class="line"></span>
+          <span class="line"></span>
+          <span class="line"></span>
+        </div>
+      </div>
+
+      <div class="score-card">
+        <div class="score-card-title">점수 분석</div>
+        <div class="radar-placeholder">[ 레이더 차트 ]</div>
+        <div class="score-row"><span>문제</span><span>4.5</span></div>
+        <div class="score-row"><span>기믹</span><span>4.0</span></div>
+        <div class="score-row"><span>연출/디자인</span><span>3.5</span></div>
+        <div class="score-row"><span>언어 접근성</span><span>2.5</span></div>
+      </div>
+
+      <div class="tag-section">
+        <div class="tag-label">태그</div>
+        <div class="tags">
+          <span class="tag tag-blue">카드</span>
+          <span class="tag tag-teal">1인 플레이</span>
+          <span class="tag tag-maker">Tumbleweed</span>
+        </div>
+      </div>
+
+      <!-- 플레이 일기 -->
+      <div class="diary-box">
+        <p class="diary-title">플레이 일기</p>
+        <div class="diary-content">
+          <p>난이도가 높아서 고전했지만, 마지막 기믹에서 감탄이 나왔다. 트럼프 카드라는 소재를 이렇게까지 활용할 수 있구나 싶었음.</p>
+          <p>소요 시간: 약 2시간 30분</p>
+        </div>
+      </div>
+
+      <!-- ★ 브랜드 다른 리뷰 컴포넌트 -->
+      <div class="brand-reviews">
+        <div class="title"><span class="bullet">&#8226;</span>Tumbleweed의 다른 리뷰 <span class="count">(3)</span></div>
+        <div class="pills">
+          <a href="#">HIRAMEKI TRUMP GOLD</a>
+          <a href="#">Twelve Trick Tiles</a>
+          <a href="#">sQuare mAze</a>
+        </div>
+      </div>
+      <div class="page-bottom"></div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════
+     시나리오 B: 오버플로우 (같은 브랜드 리뷰 8개)
+     ═══════════════════════════════════════════ -->
+<p class="mockup-label">시나리오 B — 오버플로우 (같은 브랜드 리뷰 8개)</p>
+<p class="mockup-desc">현재 리뷰: Quick+lazy (タカラッシュ 제작) / 체감 난이도 4 → 난이도 비슷한 순으로 5개 표시</p>
+
+<div class="compare">
+  <!-- PC -->
+  <div class="compare-section">
+    <h4>PC</h4>
+    <div class="review-page pc">
+      <div class="review-body">
+        <div class="review-title">Quick+lazy</div>
+        <div class="review-text-placeholder">
+          <span class="line"></span>
+          <span class="line"></span>
+          <span class="line"></span>
+          <span class="line"></span>
+          <span class="line"></span>
+          <span class="line"></span>
+        </div>
+      </div>
+
+      <div class="score-card">
+        <div class="score-card-title">점수 분석</div>
+        <div class="radar-placeholder">[ 레이더 차트 ]</div>
+        <div class="score-row"><span>문제</span><span>2.5</span></div>
+        <div class="score-row"><span>기믹</span><span>3.5</span></div>
+        <div class="score-row"><span>연출/디자인</span><span>3.5</span></div>
+        <div class="score-row"><span>언어 접근성</span><span>3.0</span></div>
+      </div>
+
+      <div class="tag-section">
+        <div class="tag-label">태그</div>
+        <div class="tags">
+          <span class="tag tag-blue">박스</span>
+          <span class="tag tag-teal">1~2인</span>
+          <span class="tag tag-maker">タカラッシュ</span>
+        </div>
+      </div>
+
+      <!-- 플레이 일기 -->
+      <div class="diary-box">
+        <p class="diary-title">플레이 일기</p>
+        <div class="diary-content">
+          <p>쉬운 편이라 가볍게 풀었다. 디자인은 깔끔한데 기믹 면에서 아쉬움이 있었음.</p>
+        </div>
+      </div>
+
+      <!-- ★ 브랜드 다른 리뷰 컴포넌트 (오버플로우) -->
+      <div class="brand-reviews">
+        <div class="title"><span class="bullet">&#8226;</span>タカラッシュ의 다른 리뷰 <span class="count">(8)</span></div>
+        <div class="pills">
+          <a href="#">CATEGORY</a>
+          <a href="#">WHITE PAPER</a>
+          <a href="#">アルティメットナゾトキショウ</a>
+          <a href="#">マスターからの挑戦錠</a>
+          <a href="#">テストプレイお願いします</a>
+        </div>
+        <a class="more-link" href="#">외 3개 더보기 →</a>
+      </div>
+      <div class="page-bottom"></div>
+    </div>
+  </div>
+
+  <!-- Mobile -->
+  <div class="compare-section">
+    <h4>Mobile</h4>
+    <div class="review-page mobile">
+      <div class="review-body">
+        <div class="review-title">Quick+lazy</div>
+        <div class="review-text-placeholder">
+          <span class="line"></span>
+          <span class="line"></span>
+          <span class="line"></span>
+          <span class="line"></span>
+          <span class="line"></span>
+          <span class="line"></span>
+        </div>
+      </div>
+
+      <div class="score-card">
+        <div class="score-card-title">점수 분석</div>
+        <div class="radar-placeholder">[ 레이더 차트 ]</div>
+        <div class="score-row"><span>문제</span><span>2.5</span></div>
+        <div class="score-row"><span>기믹</span><span>3.5</span></div>
+        <div class="score-row"><span>연출/디자인</span><span>3.5</span></div>
+        <div class="score-row"><span>언어 접근성</span><span>3.0</span></div>
+      </div>
+
+      <div class="tag-section">
+        <div class="tag-label">태그</div>
+        <div class="tags">
+          <span class="tag tag-blue">박스</span>
+          <span class="tag tag-teal">1~2인</span>
+          <span class="tag tag-maker">タカラッシュ</span>
+        </div>
+      </div>
+
+      <!-- 플레이 일기 -->
+      <div class="diary-box">
+        <p class="diary-title">플레이 일기</p>
+        <div class="diary-content">
+          <p>쉬운 편이라 가볍게 풀었다. 디자인은 깔끔한데 기믹 면에서 아쉬움이 있었음.</p>
+        </div>
+      </div>
+
+      <!-- ★ 브랜드 다른 리뷰 컴포넌트 (오버플로우) -->
+      <div class="brand-reviews">
+        <div class="title"><span class="bullet">&#8226;</span>タカラッシュ의 다른 리뷰 <span class="count">(8)</span></div>
+        <div class="pills">
+          <a href="#">CATEGORY</a>
+          <a href="#">WHITE PAPER</a>
+          <a href="#">アルティメットナゾトキショウ</a>
+          <a href="#">マスターからの挑戦錠</a>
+          <a href="#">テストプレイお願いします</a>
+        </div>
+        <a class="more-link" href="#">외 3개 더보기 →</a>
+      </div>
+      <div class="page-bottom"></div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════
+     시나리오 C: 브랜드 리뷰 없는 경우
+     ═══════════════════════════════════════════ -->
+<p class="mockup-label">시나리오 C — 같은 브랜드 리뷰가 없는 경우</p>
+<p class="mockup-desc">해당 브랜드 리뷰가 현재 페이지 1개뿐이면 컴포넌트 자체가 표시되지 않음</p>
+
+<div class="compare">
+  <div class="compare-section">
+    <h4>PC</h4>
+    <div class="review-page pc">
+      <div class="review-body">
+        <div class="review-title">魔法の喫茶 épeler</div>
+        <div class="review-text-placeholder">
+          <span class="line"></span>
+          <span class="line"></span>
+          <span class="line"></span>
+          <span class="line"></span>
+        </div>
+      </div>
+
+      <div class="score-card">
+        <div class="score-card-title">점수 분석</div>
+        <div class="radar-placeholder">[ 레이더 차트 ]</div>
+        <div class="score-row"><span>문제</span><span>4.0</span></div>
+        <div class="score-row"><span>기믹</span><span>3.5</span></div>
+      </div>
+
+      <div class="tag-section">
+        <div class="tag-label">태그</div>
+        <div class="tags">
+          <span class="tag tag-blue">WEB</span>
+          <span class="tag tag-maker">epeler</span>
+        </div>
+      </div>
+
+      <!-- 플레이 일기 (페이지 최하단) -->
+      <div class="diary-box">
+        <p class="diary-title">플레이 일기</p>
+        <div class="diary-content">
+          <p>웹 기반이라 접근성이 좋았고, 마법 카페라는 세계관이 잘 녹아들어 있었다.</p>
+        </div>
+      </div>
+
+      <!-- 브랜드 리뷰 컴포넌트 없음 — 플레이 일기로 페이지 끝 -->
+      <div class="page-bottom" style="height: 4px;"></div>
+    </div>
+  </div>
+
+  <div class="compare-section">
+    <h4>Mobile</h4>
+    <div class="review-page mobile">
+      <div class="review-body">
+        <div class="review-title">魔法の喫茶 épeler</div>
+        <div class="review-text-placeholder">
+          <span class="line"></span>
+          <span class="line"></span>
+          <span class="line"></span>
+          <span class="line"></span>
+        </div>
+      </div>
+
+      <div class="score-card">
+        <div class="score-card-title">점수 분석</div>
+        <div class="radar-placeholder">[ 레이더 차트 ]</div>
+        <div class="score-row"><span>문제</span><span>4.0</span></div>
+        <div class="score-row"><span>기믹</span><span>3.5</span></div>
+      </div>
+
+      <div class="tag-section">
+        <div class="tag-label">태그</div>
+        <div class="tags">
+          <span class="tag tag-blue">WEB</span>
+          <span class="tag tag-maker">epeler</span>
+        </div>
+      </div>
+
+      <!-- 플레이 일기 (페이지 최하단) -->
+      <div class="diary-box">
+        <p class="diary-title">플레이 일기</p>
+        <div class="diary-content">
+          <p>웹 기반이라 접근성이 좋았고, 마법 카페라는 세계관이 잘 녹아들어 있었다.</p>
+        </div>
+      </div>
+
+      <div class="page-bottom" style="height: 4px;"></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
