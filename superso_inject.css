@@ -55,7 +55,8 @@ body.nz-loading .notion-app {
 a.notion-page[href="/how-to-buy-nazotokis"],
 a.notion-page[href="/lemonbread"],
 a.notion-page[href="/to-review"],
-a.notion-page[href="/what-is-nazo"] {
+a.notion-page[href="/what-is-nazo"],
+a.notion-page[href="/테스트용-페이지"] {
   display: none !important;
 }
 
