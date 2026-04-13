@@ -44,6 +44,7 @@
     "シッソウ迷宮リドレール": { "num": 16, "date": "2026-04-07", "diff": 2, "satisfaction": 3.7, "puzzle": 3.5, "gimmick": 3.7, "design": 3.5, "language": 3.8, "brand": "Tumbleweed", "url": "/나조토키-리뷰모음/シッソウ迷宮リドレール-질주-미궁-리드레일" },
     "テストプレイお願いします":  { "num": 17, "date": "2026-04-10", "diff": 5, "satisfaction": 4,   "puzzle": 4,   "gimmick": 4,   "design": 3.5, "language": 1.5, "brand": "Tumbleweed",      "url": "/나조토키-리뷰모음/テストプレイお願いします" },
     "金のエンジェル缶":          { "num": 18, "date": "2026-04-11", "diff": 4, "satisfaction": 4,   "puzzle": 4,   "gimmick": 4.2, "design": 4,   "language": 3,   "brand": "SCRAP",            "url": "/나조토키-리뷰모음/金のエンジェル缶" },
-    "銀のデビル缶":              { "num": 19, "date": "2026-04-12", "diff": 4, "satisfaction": 4.5, "puzzle": 4.5, "gimmick": 4,   "design": 3.5, "language": 3,   "brand": "SCRAP",            "url": "/나조토키-리뷰모음/銀のデビル缶" }
+    "銀のデビル缶":              { "num": 19, "date": "2026-04-12", "diff": 4, "satisfaction": 4.5, "puzzle": 4.5, "gimmick": 4,   "design": 3.5, "language": 3,   "brand": "SCRAP",            "url": "/나조토키-리뷰모음/銀のデビル缶" },
+    "SORT":                    { "num": 20, "date": "2026-04-12", "diff": 4, "satisfaction": 4,   "puzzle": 4,   "gimmick": 4,   "design": 3,   "language": 3,   "brand": "Tumbleweed",       "url": "/나조토키-리뷰모음/sort" }
   }
 }
