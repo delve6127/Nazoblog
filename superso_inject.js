@@ -867,6 +867,7 @@ setTimeout(replaceMainTitle, 1500);
   var DIFF_SEL      = '.property-47784163';
   var RECOMMEND_SEL = '.property-646a6749';
   var OFFICIAL_SEL  = '.property-6d44666a';
+  var PUBLISH_SEL   = '.property-54495c70';
 
   // ── 체감 난이도 색상 매핑 ──
   var DIFF_COLORS = {
@@ -890,6 +891,19 @@ setTimeout(replaceMainTitle, 1500);
     var cards = document.querySelectorAll(CARD_SEL);
     cards.forEach(function (card) {
       if (card.classList.contains('nz-card-custom')) return;
+
+      // ── 공개여부 체크: 비공개면 카드 숨김 ──
+      var publishEl = card.querySelector(PUBLISH_SEL);
+      if (publishEl) {
+        var publishText = publishEl.textContent.trim();
+        if (publishText === '비공개') {
+          card.style.display = 'none';
+          card.classList.add('nz-card-custom');
+          return;
+        }
+        // 공개 태그는 사이트에서 안 보이게 숨김
+        publishEl.style.display = 'none';
+      }
 
       var companyEl   = card.querySelector(COMPANY_SEL);
       var recommendEl = card.querySelector(RECOMMEND_SEL);
