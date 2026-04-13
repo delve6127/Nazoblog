@@ -121,9 +121,14 @@ function replaceMainTitle() {
       var cards = document.querySelectorAll('.notion-collection-card');
       if (!cards.length) return;
       clearInterval(counterInterval);
+      var publishSel = '.property-54495c70';
+      var visibleCount = 0;
       var dateSel = '.property-57636b4d';
       var latestDate = null;
       cards.forEach(function (card) {
+        var pubEl = card.querySelector(publishSel);
+        if (pubEl && pubEl.textContent.trim() === '비공개') return;
+        visibleCount++;
         var dateEl = card.querySelector(dateSel);
         if (!dateEl) return;
         var parsed = new Date(dateEl.textContent.trim());
@@ -138,7 +143,7 @@ function replaceMainTitle() {
       }
       var el = document.createElement('div');
       el.id = 'nz-review-counter';
-      el.innerHTML = '지금까지 <strong>' + cards.length + ' 작품</strong>을 풀고 기록했어요'
+      el.innerHTML = '지금까지 <strong>' + visibleCount + ' 작품</strong>을 풀고 기록했어요'
         + (dateStr ? ' · 마지막 업데이트 ' + dateStr : '');
       var w = document.querySelector('.nz-title-img-wrap');
       if (w) w.parentNode.insertBefore(el, w.nextSibling);
