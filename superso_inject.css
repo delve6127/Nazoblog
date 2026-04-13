@@ -1,3 +1,6 @@
+/* ── 비공개 카드 숨김 ── */
+.nz-card-hidden { display: none !important; }
+
 /* ── 로딩 스크린 ── */
 #nz-loader {
   position: fixed;

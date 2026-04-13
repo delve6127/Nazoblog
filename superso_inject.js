@@ -897,7 +897,7 @@ setTimeout(replaceMainTitle, 1500);
       if (publishEl) {
         var publishText = publishEl.textContent.trim();
         if (publishText === '비공개') {
-          card.style.display = 'none';
+          card.classList.add('nz-card-hidden');
           card.classList.add('nz-card-custom');
           return;
         }
