@@ -139,13 +139,6 @@ a.notion-page[href="/test"] {
   }
 }
 
-a.notion-page[href="/나조토키謎解き란"] {
-  display: none !important;
-}
-
-a.notion-page[href="/리뷰-예정-목록"] {
-  display: none !important;
-}
 
 .notion-collection__header {
   display: none !important;

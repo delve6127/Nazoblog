@@ -1461,7 +1461,7 @@ setTimeout(replaceMainTitle, 1500);
   };
 
   function isPurchasePage() {
-    return decodeURIComponent(location.pathname).indexOf('구매처') !== -1;
+    return location.pathname.indexOf('how-to-buy-nazotokis') !== -1;
   }
 
   function classifyTag(text) {
@@ -1665,7 +1665,7 @@ setTimeout(replaceMainTitle, 1500);
   'use strict';
 
   function isReviewListPage() {
-    return decodeURIComponent(location.pathname).indexOf('리뷰-예정-목록') !== -1;
+    return location.pathname.indexOf('to-review') !== -1;
   }
 
   function run() {
