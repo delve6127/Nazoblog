@@ -1832,10 +1832,10 @@ setTimeout(replaceMainTitle, 1500);
 
   // 보이는 DOM에서 삽입 지점 찾기
   function findVisibleAnchor() {
-    // 보이는 diary box 찾기
+    // 보이는 diary box 안에 삽입 (맨 아래 자식으로)
     var diaries = document.querySelectorAll('.nz-diary-box');
     for (var i = 0; i < diaries.length; i++) {
-      if (diaries[i].offsetWidth > 0) return { el: diaries[i], position: 'after' };
+      if (diaries[i].offsetWidth > 0) return { el: diaries[i], position: 'inside' };
     }
     // diary box 없으면 보이는 brand reviews 앞에
     var brands = document.querySelectorAll('.nz-brand-reviews');
@@ -1885,8 +1885,8 @@ setTimeout(replaceMainTitle, 1500);
     wrap.appendChild(pill);
 
     // 삽입
-    if (anchor.position === 'after') {
-      anchor.el.parentNode.insertBefore(wrap, anchor.el.nextSibling);
+    if (anchor.position === 'inside') {
+      anchor.el.appendChild(wrap);
     } else if (anchor.position === 'before') {
       anchor.el.parentNode.insertBefore(wrap, anchor.el);
     } else if (anchor.position === 'after-last-sibling') {
