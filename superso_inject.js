@@ -1827,7 +1827,7 @@ setTimeout(replaceMainTitle, 1500);
       }
     };
     if (body) opts.body = JSON.stringify(body);
-    return fetch(SUPABASE_URL + '/rest/v1/' + endpoint, opts);
+    return fetch(SUPABASE_URL + '/rest/v1/' + endpoint.replace(/^likes/, 'Likes'), opts);
   }
 
   // 보이는 DOM에서 삽입 지점 찾기
