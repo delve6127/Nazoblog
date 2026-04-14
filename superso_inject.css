@@ -513,8 +513,20 @@ a.notion-page[href="/test"] {
   background: #fff;
 }
 
-/* 푸터 홈 로고 버튼 숨기기 */
+/* ── 푸터 스타일 ── */
 .super-footer__logo { display: none !important; }
+.super-footer__divider { display: none !important; }
+.super-footer {
+  text-align: center !important;
+  padding: 24px 20px !important;
+  border-top: 1px solid #e8e6e1 !important;
+}
+.super-footer__footnote {
+  font-size: 13px !important;
+  color: #bbb !important;
+  font-weight: 300 !important;
+  line-height: 1.6 !important;
+}
 
 /* 플레이 사진 그리드 */
 .nz-photos-grid {
