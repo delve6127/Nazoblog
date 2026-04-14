@@ -1230,6 +1230,93 @@ a[href*="%EC%A0%90%EC%88%98-%EC%A1%B0%EC%A0%88%EC%9A%A9-%ED%8E%98%EC%9D%B4%EC%A7
   white-space: nowrap;
 }
 
+/* ── 좋아요 버튼 ── */
+.nz-like-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+}
+.nz-like-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 20px;
+  border-radius: 40px;
+  border: 1px solid #e8e6e1;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #fff;
+  user-select: none;
+  position: relative;
+}
+.nz-like-pill:hover {
+  border-color: #E24B4A;
+  background: #fef5f5;
+}
+.nz-like-pill.active {
+  border-color: #E24B4A;
+  background: #fef5f5;
+}
+.nz-like-pill .nz-like-icon {
+  display: flex;
+  transition: transform 0.2s;
+}
+.nz-like-pill.active .nz-like-icon {
+  animation: nzHeartPop 0.4s ease;
+}
+.nz-like-pill .nz-like-text {
+  font-size: 13px;
+  color: #999;
+  transition: color 0.2s;
+}
+.nz-like-pill.active .nz-like-text {
+  color: #E24B4A;
+}
+.nz-like-pill .nz-like-count {
+  font-size: 13px;
+  font-weight: 600;
+  color: #E24B4A;
+  transition: transform 0.2s;
+}
+.nz-like-pill.active .nz-like-count {
+  animation: nzCountPop 0.3s ease;
+}
+.nz-like-particles {
+  position: absolute;
+  top: 50%;
+  left: 28px;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.nz-like-particle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0;
+}
+
+@keyframes nzHeartPop {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.4); }
+  50% { transform: scale(0.9); }
+  70% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+@keyframes nzCountPop {
+  0% { transform: translateY(0); }
+  40% { transform: translateY(-4px); }
+  100% { transform: translateY(0); }
+}
+
+@media (min-width: 768px) {
+  .nz-like-pill {
+    gap: 8px;
+    padding: 10px 24px;
+  }
+  .nz-like-pill .nz-like-text { font-size: 14px; }
+  .nz-like-pill .nz-like-count { font-size: 14px; }
+}
+
 /* ── 브랜드 다른 리뷰 ── */
 .nz-brand-reviews {
   margin: 0;
