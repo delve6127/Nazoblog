@@ -1232,7 +1232,7 @@ a[href*="%EC%A0%90%EC%88%98-%EC%A1%B0%EC%A0%88%EC%9A%A9-%ED%8E%98%EC%9D%B4%EC%A7
 
 /* ── 브랜드 다른 리뷰 ── */
 .nz-brand-reviews {
-  margin: 0 auto;
+  margin: 0;
   max-width: 390px;
   padding: 16px 0 0;
   border-top: 1px solid #e8e0d5;
