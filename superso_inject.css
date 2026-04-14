@@ -523,7 +523,7 @@ a.notion-page[href="/test"] {
 }
 .super-footer__footnote {
   font-size: 14px !important;
-  color: #aaa !important;
+  color: #999 !important;
   font-weight: 300 !important;
   line-height: 1.6 !important;
 }
