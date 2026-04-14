@@ -1,5 +1,5 @@
 // ── 외부 JSON에서 데이터 로드 (전역) ──
-var NAZO_DATA_URL = 'https://cdn.jsdelivr.net/gh/delve6127/Nazoblog@main/nazo_data.json';
+var NAZO_DATA_URL = 'https://delve6127.github.io/Nazoblog/nazo_data.json';
 var PHONETIC_MAP = {};
 var COMPANY_MAP = {};
 var SORT_DATA = {};
