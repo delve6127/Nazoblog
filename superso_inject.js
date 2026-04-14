@@ -697,150 +697,7 @@ setTimeout(replaceMainTitle, 1500);
     propsEl.parentNode.appendChild(box);
   }
 
-  // ── 좋아요 버튼 ──────────────────────────────────────
-  var SUPABASE_URL = 'https://llwdqogseeddnffradej.supabase.co';
-  var SUPABASE_KEY = 'sb_publishable_8cOoT2cGQ0x7Is57k-VT5A_fqgVKr6f';
-
-  function getSessionId() {
-    var id = localStorage.getItem('nz_session_id');
-    if (!id) {
-      id = 'nz_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
-      localStorage.setItem('nz_session_id', id);
-    }
-    return id;
-  }
-
-  function getPageSlug() {
-    return location.pathname.replace(/\/$/, '') || '/';
-  }
-
-  function supabaseRequest(method, endpoint, body) {
-    var opts = {
-      method: method,
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': 'Bearer ' + SUPABASE_KEY,
-        'Content-Type': 'application/json',
-        'Prefer': method === 'GET' ? 'count=exact' : ''
-      }
-    };
-    if (body) opts.body = JSON.stringify(body);
-    return fetch(SUPABASE_URL + '/rest/v1/' + endpoint, opts);
-  }
-
-  function renderLikeButton() {
-    if (document.querySelector('.nz-like-wrap')) return;
-    var diaryBox = document.querySelector('.nz-diary-box');
-    if (!diaryBox) return;
-
-    var slug = getPageSlug();
-    var sessionId = getSessionId();
-
-    // 컨테이너 생성
-    var wrap = document.createElement('div');
-    wrap.className = 'nz-like-wrap';
-
-    var pill = document.createElement('div');
-    pill.className = 'nz-like-pill';
-
-    pill.innerHTML =
-      '<div class="nz-like-particles"></div>' +
-      '<div class="nz-like-icon">' +
-        '<svg width="18" height="18" viewBox="0 0 24 24"><path class="nz-heart-path" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="none" stroke="#E24B4A" stroke-width="2"/></svg>' +
-      '</div>' +
-      '<span class="nz-like-text">잘 읽었어요</span>' +
-      '<span class="nz-like-count">…</span>';
-
-    wrap.appendChild(pill);
-    diaryBox.parentNode.insertBefore(wrap, diaryBox.nextSibling);
-
-    // Supabase에서 데이터 로드
-    var countEl = pill.querySelector('.nz-like-count');
-    var heartPath = pill.querySelector('.nz-heart-path');
-
-    // 총 좋아요 수
-    supabaseRequest('GET', 'likes?page_slug=eq.' + encodeURIComponent(slug) + '&select=id')
-      .then(function (res) {
-        var count = res.headers.get('content-range');
-        var total = count ? parseInt(count.split('/')[1]) || 0 : 0;
-        countEl.textContent = total;
-      });
-
-    // 내가 이미 눌렀는지
-    supabaseRequest('GET', 'likes?page_slug=eq.' + encodeURIComponent(slug) + '&session_id=eq.' + encodeURIComponent(sessionId) + '&select=id')
-      .then(function (res) { return res.json(); })
-      .then(function (rows) {
-        if (rows.length > 0) {
-          pill.classList.add('active');
-          heartPath.setAttribute('fill', '#E24B4A');
-          heartPath.removeAttribute('stroke');
-          heartPath.removeAttribute('stroke-width');
-        }
-      });
-
-    // 클릭 이벤트
-    pill.addEventListener('click', function () {
-      var isActive = pill.classList.contains('active');
-      var currentCount = parseInt(countEl.textContent) || 0;
-
-      if (isActive) {
-        // 좋아요 취소
-        pill.classList.remove('active');
-        heartPath.setAttribute('fill', 'none');
-        heartPath.setAttribute('stroke', '#E24B4A');
-        heartPath.setAttribute('stroke-width', '2');
-        countEl.textContent = Math.max(0, currentCount - 1);
-
-        supabaseRequest('DELETE', 'likes?page_slug=eq.' + encodeURIComponent(slug) + '&session_id=eq.' + encodeURIComponent(sessionId));
-      } else {
-        // 좋아요
-        pill.classList.add('active');
-        heartPath.setAttribute('fill', '#E24B4A');
-        heartPath.removeAttribute('stroke');
-        heartPath.removeAttribute('stroke-width');
-        countEl.textContent = currentCount + 1;
-
-        burstParticles(pill.querySelector('.nz-like-particles'));
-
-        supabaseRequest('POST', 'likes', {
-          page_slug: slug,
-          session_id: sessionId
-        });
-      }
-    });
-
-    console.log('[나조토키] 좋아요 버튼 렌더링 완료');
-  }
-
-  function burstParticles(container) {
-    container.innerHTML = '';
-    var COLORS = ['#E24B4A', '#FF6B6B', '#FF8787', '#FFA8A8', '#e55b3c', '#f2847c'];
-    var count = 8;
-    for (var i = 0; i < count; i++) {
-      var particle = document.createElement('div');
-      particle.className = 'nz-like-particle';
-      var angle = (360 / count) * i;
-      var distance = 18 + Math.random() * 14;
-      var rad = angle * Math.PI / 180;
-      var tx = Math.cos(rad) * distance;
-      var ty = Math.sin(rad) * distance;
-      var color = COLORS[Math.floor(Math.random() * COLORS.length)];
-      var size = 4 + Math.random() * 3;
-
-      particle.style.width = size + 'px';
-      particle.style.height = size + 'px';
-      particle.style.background = color;
-
-      var animName = 'nzPb' + i + '_' + Date.now();
-      var styleEl = document.createElement('style');
-      styleEl.textContent = '@keyframes ' + animName + '{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(' + tx + 'px,' + ty + 'px) scale(0);opacity:0}}';
-      document.head.appendChild(styleEl);
-      particle.style.animation = animName + ' 0.45s ease-out forwards';
-
-      container.appendChild(particle);
-    }
-    setTimeout(function () { container.innerHTML = ''; }, 600);
-  }
+  // ── 좋아요 버튼 (별도 파이프라인) ───────────────────────
 
   // ── 브랜드 다른 리뷰 표시 ──────────────────────────────
   function renderBrandReviews() {
@@ -955,7 +812,6 @@ setTimeout(replaceMainTitle, 1500);
           nzObserver.disconnect();
           render();
           wrapDiary();
-          renderLikeButton();
           renderBrandReviews();
           nzRendering = false;
           startObserver();
@@ -1937,4 +1793,203 @@ setTimeout(replaceMainTitle, 1500);
   var newObserver = new MutationObserver(function () { addNewBadges(); });
   newObserver.observe(document.body, { childList: true, subtree: true });
   addNewBadges();
+})();
+
+// ── 좋아요 버튼 (독립 모듈) ──────────────────────────────
+(function () {
+  'use strict';
+
+  var SUPABASE_URL = 'https://llwdqogseeddnffradej.supabase.co';
+  var SUPABASE_KEY = 'sb_publishable_8cOoT2cGQ0x7Is57k-VT5A_fqgVKr6f';
+  var LIKE_COLORS = ['#E24B4A', '#FF6B6B', '#FF8787', '#FFA8A8', '#e55b3c', '#f2847c'];
+
+  function getSessionId() {
+    var id = localStorage.getItem('nz_session_id');
+    if (!id) {
+      id = 'nz_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
+      localStorage.setItem('nz_session_id', id);
+    }
+    return id;
+  }
+
+  function getPageSlug() {
+    return location.pathname.replace(/\/$/, '') || '/';
+  }
+
+  function supabaseRequest(method, endpoint, body) {
+    var opts = {
+      method: method,
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': method === 'GET' ? 'count=exact' : ''
+      }
+    };
+    if (body) opts.body = JSON.stringify(body);
+    return fetch(SUPABASE_URL + '/rest/v1/' + endpoint, opts);
+  }
+
+  // 보이는 DOM에서 삽입 지점 찾기
+  function findVisibleAnchor() {
+    // 보이는 diary box 찾기
+    var diaries = document.querySelectorAll('.nz-diary-box');
+    for (var i = 0; i < diaries.length; i++) {
+      if (diaries[i].offsetWidth > 0) return { el: diaries[i], position: 'after' };
+    }
+    // diary box 없으면 보이는 brand reviews 앞에
+    var brands = document.querySelectorAll('.nz-brand-reviews');
+    for (var i = 0; i < brands.length; i++) {
+      if (brands[i].offsetWidth > 0) return { el: brands[i], position: 'before' };
+    }
+    // 둘 다 없으면 보이는 notion-page__properties 뒤에
+    var props = document.querySelectorAll('.notion-page__properties');
+    for (var i = 0; i < props.length; i++) {
+      if (props[i].offsetWidth > 0) return { el: props[i], position: 'after-last-sibling' };
+    }
+    return null;
+  }
+
+  function hasVisibleLikeButton() {
+    var wraps = document.querySelectorAll('.nz-like-wrap');
+    for (var i = 0; i < wraps.length; i++) {
+      if (wraps[i].offsetWidth > 0) return true;
+    }
+    return false;
+  }
+
+  function renderLikeButton() {
+    if (hasVisibleLikeButton()) return;
+    if (location.pathname.indexOf('/nazotoki-reviews/') === -1) return;
+
+    var anchor = findVisibleAnchor();
+    if (!anchor) return;
+
+    var slug = getPageSlug();
+    var sessionId = getSessionId();
+
+    var wrap = document.createElement('div');
+    wrap.className = 'nz-like-wrap';
+
+    var pill = document.createElement('div');
+    pill.className = 'nz-like-pill';
+
+    pill.innerHTML =
+      '<div class="nz-like-particles"></div>' +
+      '<div class="nz-like-icon">' +
+        '<svg width="18" height="18" viewBox="0 0 24 24"><path class="nz-heart-path" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="none" stroke="#E24B4A" stroke-width="2"/></svg>' +
+      '</div>' +
+      '<span class="nz-like-text">잘 읽었어요</span>' +
+      '<span class="nz-like-count">…</span>';
+
+    wrap.appendChild(pill);
+
+    // 삽입
+    if (anchor.position === 'after') {
+      anchor.el.parentNode.insertBefore(wrap, anchor.el.nextSibling);
+    } else if (anchor.position === 'before') {
+      anchor.el.parentNode.insertBefore(wrap, anchor.el);
+    } else if (anchor.position === 'after-last-sibling') {
+      var lastChild = anchor.el.parentNode.lastElementChild;
+      anchor.el.parentNode.insertBefore(wrap, lastChild ? lastChild.nextSibling : null);
+    }
+
+    var countEl = pill.querySelector('.nz-like-count');
+    var heartPath = pill.querySelector('.nz-heart-path');
+
+    // 총 좋아요 수
+    supabaseRequest('GET', 'likes?page_slug=eq.' + encodeURIComponent(slug) + '&select=id')
+      .then(function (res) {
+        var count = res.headers.get('content-range');
+        var total = count ? parseInt(count.split('/')[1]) || 0 : 0;
+        countEl.textContent = total;
+      })
+      .catch(function () { countEl.textContent = 0; });
+
+    // 내가 이미 눌렀는지
+    supabaseRequest('GET', 'likes?page_slug=eq.' + encodeURIComponent(slug) + '&session_id=eq.' + encodeURIComponent(sessionId) + '&select=id')
+      .then(function (res) { return res.json(); })
+      .then(function (rows) {
+        if (rows.length > 0) {
+          pill.classList.add('active');
+          heartPath.setAttribute('fill', '#E24B4A');
+          heartPath.removeAttribute('stroke');
+          heartPath.removeAttribute('stroke-width');
+        }
+      })
+      .catch(function () {});
+
+    // 클릭 이벤트
+    pill.addEventListener('click', function () {
+      var isActive = pill.classList.contains('active');
+      var currentCount = parseInt(countEl.textContent) || 0;
+
+      if (isActive) {
+        pill.classList.remove('active');
+        heartPath.setAttribute('fill', 'none');
+        heartPath.setAttribute('stroke', '#E24B4A');
+        heartPath.setAttribute('stroke-width', '2');
+        countEl.textContent = Math.max(0, currentCount - 1);
+        supabaseRequest('DELETE', 'likes?page_slug=eq.' + encodeURIComponent(slug) + '&session_id=eq.' + encodeURIComponent(sessionId));
+      } else {
+        pill.classList.add('active');
+        heartPath.setAttribute('fill', '#E24B4A');
+        heartPath.removeAttribute('stroke');
+        heartPath.removeAttribute('stroke-width');
+        countEl.textContent = currentCount + 1;
+        nzBurstParticles(pill.querySelector('.nz-like-particles'));
+        supabaseRequest('POST', 'likes', { page_slug: slug, session_id: sessionId });
+      }
+    });
+
+    console.log('[나조토키] 좋아요 버튼 렌더링 완료');
+  }
+
+  function nzBurstParticles(container) {
+    container.innerHTML = '';
+    for (var i = 0; i < 8; i++) {
+      var particle = document.createElement('div');
+      particle.className = 'nz-like-particle';
+      var angle = (360 / 8) * i;
+      var distance = 18 + Math.random() * 14;
+      var rad = angle * Math.PI / 180;
+      var tx = Math.cos(rad) * distance;
+      var ty = Math.sin(rad) * distance;
+      var size = 4 + Math.random() * 3;
+
+      particle.style.width = size + 'px';
+      particle.style.height = size + 'px';
+      particle.style.background = LIKE_COLORS[Math.floor(Math.random() * LIKE_COLORS.length)];
+
+      var animName = 'nzPb' + i + '_' + Date.now();
+      var s = document.createElement('style');
+      s.textContent = '@keyframes ' + animName + '{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(' + tx + 'px,' + ty + 'px) scale(0);opacity:0}}';
+      document.head.appendChild(s);
+      particle.style.animation = animName + ' 0.45s ease-out forwards';
+      container.appendChild(particle);
+    }
+    setTimeout(function () { container.innerHTML = ''; }, 600);
+  }
+
+  // 자체 옵저버: 보이는 DOM에 좋아요 버튼이 없으면 계속 시도
+  var likeObserver = new MutationObserver(function () {
+    if (!hasVisibleLikeButton() && location.pathname.indexOf('/nazotoki-reviews/') > -1) {
+      renderLikeButton();
+    }
+  });
+  likeObserver.observe(document.body, { childList: true, subtree: true });
+
+  // 초기 시도 (약간의 딜레이 후)
+  setTimeout(function () { renderLikeButton(); }, 1000);
+  setTimeout(function () { renderLikeButton(); }, 3000);
+  setTimeout(function () { renderLikeButton(); }, 5000);
+
+  // SPA 네비게이션 대응
+  var likeLastUrl = location.href;
+  setInterval(function () {
+    if (location.href !== likeLastUrl) {
+      likeLastUrl = location.href;
+      setTimeout(function () { renderLikeButton(); }, 1500);
+    }
+  }, 500);
 })();
