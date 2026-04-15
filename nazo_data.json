@@ -45,6 +45,8 @@
     "テストプレイお願いします":  { "num": 17, "date": "2026-04-10", "diff": 5, "satisfaction": 4,   "puzzle": 4,   "gimmick": 4,   "design": 3.5, "language": 1.5, "brand": "Tumbleweed",      "url": "/nazotoki-reviews/test-play-please" },
     "金のエンジェル缶":          { "num": 18, "date": "2026-04-11", "diff": 4, "satisfaction": 4,   "puzzle": 4,   "gimmick": 4.2, "design": 4,   "language": 3,   "brand": "SCRAP",            "url": "/nazotoki-reviews/gold-angel-can" },
     "銀のデビル缶":              { "num": 19, "date": "2026-04-12", "diff": 4, "satisfaction": 4.5, "puzzle": 4.5, "gimmick": 4,   "design": 3.5, "language": 3,   "brand": "SCRAP",            "url": "/nazotoki-reviews/silver-devil-can" },
-    "SORT":                    { "num": 20, "date": "2026-04-12", "diff": 4, "satisfaction": 4,   "puzzle": 4,   "gimmick": 4,   "design": 3,   "language": 3,   "brand": "Tumbleweed",       "url": "/nazotoki-reviews/sort" }
+    "SORT":                    { "num": 20, "date": "2026-04-12", "diff": 4, "satisfaction": 4,   "puzzle": 4,   "gimmick": 4,   "design": 3,   "language": 3,   "brand": "Tumbleweed",       "url": "/nazotoki-reviews/sort" },
+    "国旗なぞ":                 { "num": 21, "date": "2026-04-13", "diff": 2, "satisfaction": 4,   "puzzle": 3.2, "gimmick": 3.5, "design": 3.7, "language": 4,   "brand": "Tumbleweed",       "url": "/nazotoki-reviews/national-flag-nazo" },
+    "雨の出会いと、隠されたメッセージ": { "num": 22, "date": "2026-04-13", "diff": 4, "satisfaction": 4.3, "puzzle": 4,   "gimmick": 3.5, "design": 3.9, "language": 3.3, "brand": "SCRAP - Mystery For You", "url": "/nazotoki-reviews/rainy-encounter-hidden-message" }
   }
 }
