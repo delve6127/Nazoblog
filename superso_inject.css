@@ -1402,16 +1402,18 @@ a[href*="%EC%A0%90%EC%88%98-%EC%A1%B0%EC%A0%88%EC%9A%A9-%ED%8E%98%EC%9D%B4%EC%A7
 /* 기본 표 스타일은 .nz-review-list-page 섹션 참조    */
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-/* === 안내 배너: 손 아이콘 의미 설명 (표 위) === */
+/* === 안내 배너: 손 아이콘 의미 설명 (표 위, 표 헤더와 자연스럽게 연결) === */
 body.nz-vote-page .nz-vote-banner {
   display: flex;
   align-items: center;
   gap: 8px;
   background: #eef3fb;
-  border: 1px solid rgba(74, 127, 212, 0.2);
+  /* solid 컬러로 균일하게 (alpha 사용 X) */
+  border: 1px solid #c4d6f0;
   border-radius: 8px;
   padding: 10px 14px;
-  margin: 0 0 12px 0;
+  /* 표 헤더와 시각적으로 연결되도록 간격 절반으로 줄임 */
+  margin: 0 0 6px 0;
   line-height: 1.5;
 }
 body.nz-vote-page .nz-vote-banner-icon {
@@ -1437,13 +1439,6 @@ body.nz-vote-page .nz-vote-banner-text strong {
 }
 body.nz-vote-page .nz-vote-banner-sub {
   color: #888;
-}
-
-/* === '상태' 헤더 텍스트: PC/모바일 분기 === */
-/* 기본은 모두 숨김 → 미디어쿼리에서 한쪽만 표시 */
-body.nz-vote-page .nz-vote-head-pc,
-body.nz-vote-page .nz-vote-head-mobile {
-  display: none;
 }
 
 /* === 표 세로줄 제거 (예정 목록 표는 칼럼 구분선 없이 깔끔하게) === */
@@ -1547,9 +1542,11 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
   body.nz-vote-page .nz-vote-btn--pc {
     display: none !important;
   }
-  /* 모바일 헤더에는 '상태 / 리뷰 요청' 텍스트 노출 */
-  body.nz-vote-page .nz-vote-head-mobile {
-    display: inline;
+  /* 모바일 헤더: 노션 원본 '상태' 뒤에 '/ 리뷰 요청' 추가 (DOM 변경 없이 CSS only) */
+  body.nz-vote-page .nz-vote-select-head .notion-collection-table__head-cell-content::after {
+    content: ' / 리뷰 요청';
+    font: inherit;
+    color: inherit;
   }
 }
 
@@ -1559,10 +1556,7 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
   body.nz-vote-page .nz-vote-btn--mobile {
     display: none !important;
   }
-  /* PC 헤더에는 원본 '상태' 텍스트만 노출 */
-  body.nz-vote-page .nz-vote-head-pc {
-    display: inline;
-  }
+  /* PC 헤더는 노션 원본 '상태' 그대로 (별도 처리 불필요) */
 
   /* 컬럼 폭 재배분: 제목 38% / 제작사 25% / 상태 17% / 투표 20% */
   body.nz-vote-page .notion-collection-table__head-cell.title,

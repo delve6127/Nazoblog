@@ -2122,19 +2122,12 @@ setTimeout(replaceMainTitle, 1500);
     headRow.appendChild(th);
   }
 
-  // ── '상태' 헤더 텍스트 보강 (모바일에서만 ' / 리뷰 요청' 추가 노출) ──
+  // ── '상태' 헤더 마킹 (모바일에서 CSS ::after로 ' / 리뷰 요청' 추가) ──
+  // ⚠️ 노션 원본 DOM(__head-cell-content + __head-cell-icon-wrapper)을 절대 수정하지 않음
   function ensureSelectHeaderText(table) {
     var selectHead = table.querySelector('thead .notion-collection-table__head-cell.select');
     if (!selectHead) return;
-    if (selectHead.querySelector('.nz-vote-head-mobile')) return; // 이미 처리됨
-    // 헤더 안에서 텍스트를 담은 가장 안쪽 요소를 찾되, 없으면 헤더 자체에 적용
-    var nameEl = selectHead.querySelector('.notion-collection-table__head-cell-name')
-      || selectHead.querySelector('span')
-      || selectHead;
-    var originalText = (nameEl.textContent || '').trim() || '상태';
-    nameEl.innerHTML =
-      '<span class="nz-vote-head-pc">' + originalText + '</span>' +
-      '<span class="nz-vote-head-mobile">' + originalText + ' / 리뷰 요청</span>';
+    selectHead.classList.add('nz-vote-select-head');
   }
 
   // ── 안내 배너 보장 (표 위에 1개) ──
