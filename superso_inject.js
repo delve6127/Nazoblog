@@ -2036,7 +2036,10 @@ setTimeout(replaceMainTitle, 1500);
     return fetch(SUPABASE_URL + '/rest/v1/' + endpoint, opts);
   }
 
-  // ── 행에서 슬러그 추출 (URL 패턴 기준) ──
+  // ── 행에서 슬러그 추출 ──
+  // 1순위: /to-review/{slug} href (정상 케이스)
+  // 2순위: id="block-to-review-{slug}" (백업)
+  // 3순위: 블록 UUID (Super.so가 슬러그 생성 못한 신규 행 - 충돌, 신규 등)
   function getRowSlug(row) {
     var anchor = row.querySelector('a[href*="/to-review/"]');
     if (anchor) {
@@ -2044,9 +2047,13 @@ setTimeout(replaceMainTitle, 1500);
       var m = href.match(/\/to-review\/([^\/?#]+)/);
       if (m) return decodeURIComponent(m[1]);
     }
-    // 백업: Super.so의 id 패턴
     var idAnchor = row.querySelector('a[id^="block-to-review-"]');
     if (idAnchor) return idAnchor.id.replace('block-to-review-', '');
+    // 슬러그 없는 행 → block UUID 사용 (id="block-XXXX" 그대로)
+    var blockAnchor = row.querySelector('a.notion-link[id^="block-"]');
+    if (blockAnchor && blockAnchor.id.length > 'block-'.length) {
+      return blockAnchor.id; // "block-344d25cb..." 형식 그대로 저장
+    }
     return null;
   }
 
