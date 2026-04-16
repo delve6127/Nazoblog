@@ -2122,12 +2122,20 @@ setTimeout(replaceMainTitle, 1500);
     headRow.appendChild(th);
   }
 
-  // ── '상태' 헤더 마킹 (모바일에서 CSS ::after로 ' / 리뷰 요청' 추가) ──
-  // ⚠️ 노션 원본 DOM(__head-cell-content + __head-cell-icon-wrapper)을 절대 수정하지 않음
+  // ── '상태' 헤더에 모바일 전용 접미사 span 추가 ──
+  // ⚠️ 노션 원본 구조(__head-cell-content + 아이콘 래퍼 + 텍스트 노드)는 그대로 두고
+  //    그 뒤에 inline span만 append → flex row 안에서 자연스럽게 인라인으로 보임
   function ensureSelectHeaderText(table) {
     var selectHead = table.querySelector('thead .notion-collection-table__head-cell.select');
     if (!selectHead) return;
+    if (selectHead.querySelector('.nz-vote-head-mobile-suffix')) return; // 이미 처리됨
     selectHead.classList.add('nz-vote-select-head');
+    var content = selectHead.querySelector('.notion-collection-table__head-cell-content');
+    if (!content) return;
+    var suffix = document.createElement('span');
+    suffix.className = 'nz-vote-head-mobile-suffix';
+    suffix.textContent = ' / 리뷰 요청';
+    content.appendChild(suffix);
   }
 
   // ── 안내 배너 보장 (표 위에 1개) ──

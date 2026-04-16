@@ -1408,8 +1408,10 @@ body.nz-vote-page .nz-vote-banner {
   align-items: center;
   gap: 8px;
   background: #eef3fb;
-  /* solid 컬러로 균일하게 (alpha 사용 X) */
-  border: 1px solid #c4d6f0;
+  /* border 대신 inset box-shadow로 1px 라인을 그려서
+     둥근 모서리에서도 균일한 두께/컬러로 또렷하게 보임 */
+  border: none;
+  box-shadow: inset 0 0 0 1px #c4d6f0;
   border-radius: 8px;
   padding: 10px 14px;
   /* 표 헤더와 시각적으로 연결되도록 간격 절반으로 줄임 */
@@ -1439,6 +1441,11 @@ body.nz-vote-page .nz-vote-banner-text strong {
 }
 body.nz-vote-page .nz-vote-banner-sub {
   color: #888;
+}
+
+/* === '상태' 헤더 모바일 전용 접미사: PC에서는 숨김 === */
+body.nz-vote-page .nz-vote-head-mobile-suffix {
+  display: none;
 }
 
 /* === 표 세로줄 제거 (예정 목록 표는 칼럼 구분선 없이 깔끔하게) === */
@@ -1542,11 +1549,9 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
   body.nz-vote-page .nz-vote-btn--pc {
     display: none !important;
   }
-  /* 모바일 헤더: 노션 원본 '상태' 뒤에 '/ 리뷰 요청' 추가 (DOM 변경 없이 CSS only) */
-  body.nz-vote-page .nz-vote-select-head .notion-collection-table__head-cell-content::after {
-    content: ' / 리뷰 요청';
-    font: inherit;
-    color: inherit;
+  /* 모바일 헤더: '상태' 옆에 '/ 리뷰 요청' inline 노출 */
+  body.nz-vote-page .nz-vote-head-mobile-suffix {
+    display: inline;
   }
 }
 
