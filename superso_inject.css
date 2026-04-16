@@ -1395,3 +1395,166 @@ a[href*="%EC%A0%90%EC%88%98-%EC%A1%B0%EC%A0%88%EC%9A%A9-%ED%8E%98%EC%9D%B4%EC%A7
   }
   .nz-brand-reviews .nz-br-more { font-size: 13.5px; }
 }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* 리뷰 예정 목록 - 투표 버튼 (ReviewRequests)        */
+/* /to-review 페이지에서만 동작 (body.nz-vote-page)   */
+/* 기본 표 스타일은 .nz-review-list-page 섹션 참조    */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* === 표 세로줄 제거 (예정 목록 표는 칼럼 구분선 없이 깔끔하게) === */
+body.nz-vote-page .notion-collection-table table {
+  border-collapse: collapse;
+}
+body.nz-vote-page .notion-collection-table__cell,
+body.nz-vote-page .notion-collection-table__head-cell {
+  border-left: none !important;
+  border-right: none !important;
+}
+
+/* === 상태 pill: 둥근 캡슐 모양 + 목업 컬러로 강조 (select 셀 한정) === */
+body.nz-vote-page .notion-collection-table__cell.select .notion-pill {
+  border-radius: 16px !important;
+  padding: 3px 10px !important;
+  border: none !important;
+}
+body.nz-vote-page .notion-collection-table__cell.select .pill-green {
+  background: #e8f5e9 !important;
+  color: #4caf50 !important;
+}
+body.nz-vote-page .notion-collection-table__cell.select .pill-red {
+  background: #fde8e8 !important;
+  color: #c05050 !important;
+}
+body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
+  background: #e3f2fd !important;
+  color: #2196f3 !important;
+}
+
+/* === 투표 버튼 === */
+.nz-vote-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 14px;
+  border: 1px solid #ddd;
+  background: transparent;
+  color: #b0b0b0;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  font-family: inherit;
+  user-select: none;
+  line-height: 1;
+}
+.nz-vote-btn:hover {
+  border-color: #4a7fd4;
+  color: #4a7fd4;
+}
+.nz-vote-btn.voted {
+  border-color: #4a7fd4;
+  background: #eef3fb;
+  color: #4a7fd4;
+}
+.nz-vote-btn .nz-vote-icon {
+  display: inline-flex;
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+}
+.nz-vote-btn.voted .nz-vote-icon {
+  animation: nzVotePop 0.4s ease;
+}
+.nz-vote-btn .nz-vote-icon svg {
+  width: 100%;
+  height: 100%;
+}
+.nz-vote-btn.loading {
+  opacity: 0.6;
+  cursor: wait;
+  pointer-events: none;
+}
+
+@keyframes nzVotePop {
+  0% { transform: translateY(0) scale(1); }
+  30% { transform: translateY(-3px) scale(1.15); }
+  60% { transform: translateY(0) scale(0.95); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+/* === 모바일 (~767px): 상태 셀 안에 [상태 pill + 투표 버튼] 세로 스택 === */
+@media (max-width: 767px) {
+  /* status 셀의 inner div를 세로 정렬로 전환 */
+  body.nz-vote-page .notion-collection-table__cell.select > div {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 7px !important;
+  }
+  /* PC 전용 4번째 컬럼은 모바일에서 숨김 */
+  body.nz-vote-page .nz-vote-cell,
+  body.nz-vote-page .nz-vote-cell-header {
+    display: none !important;
+  }
+  /* PC 전용 버튼은 모바일에서 숨김 */
+  body.nz-vote-page .nz-vote-btn--pc {
+    display: none !important;
+  }
+}
+
+/* === PC (768px+): 4번째 '리뷰 요청' 컬럼 === */
+@media (min-width: 768px) {
+  /* 모바일용(상태 셀 안) 버튼은 PC에서 숨김 */
+  body.nz-vote-page .nz-vote-btn--mobile {
+    display: none !important;
+  }
+
+  /* 컬럼 폭 재배분: 제목 38% / 제작사 25% / 상태 17% / 투표 20% */
+  body.nz-vote-page .notion-collection-table__head-cell.title,
+  body.nz-vote-page .notion-collection-table__cell.title {
+    width: 38% !important;
+  }
+  body.nz-vote-page .notion-collection-table__head-cell.multi_select,
+  body.nz-vote-page .notion-collection-table__cell.multi_select {
+    width: 25% !important;
+  }
+  body.nz-vote-page .notion-collection-table__head-cell.select,
+  body.nz-vote-page .notion-collection-table__cell.select {
+    width: 17% !important;
+  }
+
+  /* 투표 셀 */
+  body.nz-vote-page .nz-vote-cell,
+  body.nz-vote-page .nz-vote-cell-header {
+    width: 20% !important;
+    padding: 12px 18px !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+    border-bottom: 1px solid #f5f3f0 !important;
+  }
+  body.nz-vote-page .nz-vote-cell-header {
+    background: #faf7f2 !important;
+    border-bottom: 1.5px solid #ece8e1 !important;
+    padding: 13px 18px !important;
+  }
+  body.nz-vote-page .nz-vote-cell-header-content {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    color: #a8a29e !important;
+    letter-spacing: 0.03em;
+    text-align: center !important;
+  }
+
+  /* PC 버튼 살짝 크게 */
+  body.nz-vote-page .nz-vote-cell .nz-vote-btn {
+    padding: 6px 14px;
+    font-size: 12px;
+  }
+  body.nz-vote-page .nz-vote-cell .nz-vote-btn .nz-vote-icon {
+    width: 13px;
+    height: 13px;
+  }
+}
