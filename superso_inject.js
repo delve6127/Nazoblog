@@ -1757,12 +1757,12 @@ setTimeout(replaceMainTitle, 1500);
   }
 })();
 
-// ── 갤러리 카드 NEW 뱃지 (작성일 7일 이내) ──
+// ── 갤러리 카드 NEW 뱃지 (작성일 3일 이내) ──
 (function () {
   'use strict';
   var DATE_SEL = '.property-57636b4d';
   var CARD_SEL = '.notion-collection-card';
-  var NEW_DAYS = 5;
+  var NEW_DAYS = 3;
   var MARKER  = 'data-nz-new';
 
   function addNewBadges() {
