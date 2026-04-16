@@ -2122,6 +2122,35 @@ setTimeout(replaceMainTitle, 1500);
     headRow.appendChild(th);
   }
 
+  // ── '상태' 헤더 텍스트 보강 (모바일에서만 ' / 리뷰 요청' 추가 노출) ──
+  function ensureSelectHeaderText(table) {
+    var selectHead = table.querySelector('thead .notion-collection-table__head-cell.select');
+    if (!selectHead) return;
+    if (selectHead.querySelector('.nz-vote-head-mobile')) return; // 이미 처리됨
+    // 헤더 안에서 텍스트를 담은 가장 안쪽 요소를 찾되, 없으면 헤더 자체에 적용
+    var nameEl = selectHead.querySelector('.notion-collection-table__head-cell-name')
+      || selectHead.querySelector('span')
+      || selectHead;
+    var originalText = (nameEl.textContent || '').trim() || '상태';
+    nameEl.innerHTML =
+      '<span class="nz-vote-head-pc">' + originalText + '</span>' +
+      '<span class="nz-vote-head-mobile">' + originalText + ' / 리뷰 요청</span>';
+  }
+
+  // ── 안내 배너 보장 (표 위에 1개) ──
+  function ensureBanner(table) {
+    if (document.querySelector('.nz-vote-banner')) return;
+    var banner = document.createElement('div');
+    banner.className = 'nz-vote-banner';
+    banner.innerHTML =
+      '<span class="nz-vote-banner-icon">' + HAND_OUTLINE + '</span>' +
+      '<span class="nz-vote-banner-text">' +
+        '<strong>리뷰 읽고 싶어요!</strong>' +
+        '<span class="nz-vote-banner-sub"> — 버튼을 누르면 우선 리뷰 대상에 반영돼요</span>' +
+      '</span>';
+    if (table.parentNode) table.parentNode.insertBefore(banner, table);
+  }
+
   // ── 행별 버튼 보장 (미주입 행만 처리) ──
   // 모든 행에 data-nz-vote-seen 마커를 붙임 → 옵저버가 신규 행 감지 가능
   function ensureRowButtons(table) {
@@ -2245,16 +2274,25 @@ setTimeout(replaceMainTitle, 1500);
     }
   }
 
+  // ── 비-투표 페이지로 전환 시 흔적 제거 ──
+  function cleanupVoteUI() {
+    document.body.classList.remove(BODY_CLASS);
+    var stale = document.querySelector('.nz-vote-banner');
+    if (stale) stale.remove();
+  }
+
   // ── 주입 (idempotent) ──
   function injectAll() {
     if (!isVotePage()) {
-      document.body.classList.remove(BODY_CLASS);
+      cleanupVoteUI();
       return;
     }
     var table = document.querySelector('.notion-collection-table');
     if (!table) return;
 
     document.body.classList.add(BODY_CLASS);
+    ensureBanner(table);
+    ensureSelectHeaderText(table);
     ensureHeader(table);
     ensureClickHandler(table);
     var result = ensureRowButtons(table);
@@ -2284,7 +2322,7 @@ setTimeout(replaceMainTitle, 1500);
     if (location.href !== voteLastUrl) {
       voteLastUrl = location.href;
       if (!isVotePage()) {
-        document.body.classList.remove(BODY_CLASS);
+        cleanupVoteUI();
       } else {
         tryInject();
       }
