@@ -2116,17 +2116,27 @@ setTimeout(replaceMainTitle, 1500);
   }
 
   // ── 행별 버튼 보장 (미주입 행만 처리) ──
+  // 모든 행에 data-nz-vote-seen 마커를 붙임 → 옵저버가 신규 행 감지 가능
   function ensureRowButtons(table) {
     var freshSlugs = [];
     var allSlugs   = [];
     var rows = table.querySelectorAll('tbody tr');
     for (var i = 0; i < rows.length; i++) {
       var row  = rows[i];
+      // 이미 검사한 행: 슬러그가 있으면 allSlugs에만 추가하고 스킵
+      if (row.hasAttribute('data-nz-vote-seen')) {
+        var existing = row.getAttribute('data-nz-vote-row');
+        if (existing) allSlugs.push(existing);
+        continue;
+      }
+      // 신규 행: 마커부터 찍기 (슬러그 없는 행도 포함 → 무한 재시도 방지)
+      row.setAttribute('data-nz-vote-seen', '1');
+
       var slug = getRowSlug(row);
-      if (!slug) continue;
-      allSlugs.push(slug);
-      if (row.querySelector('.nz-vote-cell')) continue; // 이미 처리됨
+      if (!slug) continue; // 슬러그 추출 실패한 행은 스킵 (마커는 이미 찍음)
+
       row.setAttribute('data-nz-vote-row', slug);
+      allSlugs.push(slug);
       freshSlugs.push(slug);
 
       // 1) PC: 4번째 컬럼 추가
@@ -2241,9 +2251,8 @@ setTimeout(replaceMainTitle, 1500);
     ensureHeader(table);
     ensureClickHandler(table);
     var result = ensureRowButtons(table);
-    // 새로 주입된 행만 데이터 요청 (재렌더 시 기존 행도 포함해서 최신화)
-    var toLoad = result.fresh.length > 0 ? result.fresh : result.all;
-    loadVotes(toLoad);
+    // 신규 행이 있을 때만 데이터 요청 (불필요한 Supabase 호출 방지)
+    if (result.fresh.length > 0) loadVotes(result.fresh);
   }
 
   // ── 테이블 렌더 대기 후 시도 ──
@@ -2280,10 +2289,8 @@ setTimeout(replaceMainTitle, 1500);
       voteDebounce = null;
       var table = document.querySelector('.notion-collection-table');
       if (!table) return;
-      var firstRow = table.querySelector('tbody tr');
-      if (!firstRow) return;
-      // 행은 있는데 투표 셀이 없으면 재주입 (필터/정렬 등으로 tbody 재렌더된 경우)
-      if (!firstRow.querySelector('.nz-vote-cell')) injectAll();
+      // 검사 안 한 행이 하나라도 있으면 재주입 (신규 행, 필터/정렬 등으로 재렌더된 경우 모두 커버)
+      if (table.querySelector('tbody tr:not([data-nz-vote-seen])')) injectAll();
     }, 250);
   });
   voteObserver.observe(document.body, { childList: true, subtree: true });
