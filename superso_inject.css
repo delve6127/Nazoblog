@@ -79,10 +79,14 @@ a.notion-page[href="/test"] {
 
 /* ── 메인 히어로 카피 ── */
 .nz-hero-copy {
-  text-align: center;
+  text-align: center !important;
   margin: 32px auto 0;
   padding: 0 16px;
   max-width: 640px;
+  pointer-events: auto;
+}
+.nz-hero-copy * {
+  pointer-events: auto;
 }
 .nz-hero-copy__main {
   font-size: 15px;
@@ -108,6 +112,7 @@ a.notion-page[href="/test"] {
   text-decoration-thickness: 3px;
   text-underline-offset: 3px;
   font-weight: 500;
+  cursor: pointer;
 }
 .nz-hero-copy__link:hover {
   text-decoration-color: #E8C547;
