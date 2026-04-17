@@ -1,3 +1,11 @@
+// ── 메인 히어로 카피 (문구 수정은 여기서) ──
+var NZ_HERO_COPY = {
+  main: '일본 나조토키(謎解き)를 한국인 플레이어 관점에서 풀고 기록합니다.',
+  cta_before: '나조토키가 처음이라면',
+  cta_link: '나조토키란?',
+  cta_url: '/what-is-nazo'
+};
+
 // ── 외부 JSON에서 데이터 로드 (전역) ──
 var NAZO_DATA_URL = 'https://delve6127.github.io/Nazoblog/nazo_data.json';
 var PHONETIC_MAP = {};
@@ -106,10 +114,23 @@ function replaceMainTitle() {
 
   titleEl.parentNode.insertBefore(wrap, titleEl);
 
-  // 카운터 생성/재삽입
+  // 히어로 카피 생성/재삽입
+  var oldHero = document.querySelector('.nz-hero-copy');
+  if (oldHero) oldHero.parentNode.removeChild(oldHero);
+
+  var heroCopy = document.createElement('div');
+  heroCopy.className = 'nz-hero-copy';
+  heroCopy.innerHTML =
+    '<p class="nz-hero-copy__main">' + NZ_HERO_COPY.main + '</p>' +
+    '<p class="nz-hero-copy__cta">' + NZ_HERO_COPY.cta_before +
+    ' <span class="nz-hero-copy__arrow">→</span> ' +
+    '<a class="nz-hero-copy__link" href="' + NZ_HERO_COPY.cta_url + '">' + NZ_HERO_COPY.cta_link + '</a></p>';
+  wrap.parentNode.insertBefore(heroCopy, wrap.nextSibling);
+
+  // 카운터 생성/재삽입 (히어로 카피 다음 위치)
   var oldCounter = document.getElementById('nz-review-counter');
   if (oldCounter) {
-    wrap.parentNode.insertBefore(oldCounter, wrap.nextSibling);
+    heroCopy.parentNode.insertBefore(oldCounter, heroCopy.nextSibling);
   } else {
     var counterTry = 0;
     var counterInterval = setInterval(function () {
@@ -145,8 +166,8 @@ function replaceMainTitle() {
       el.id = 'nz-review-counter';
       el.innerHTML = '지금까지 <strong>' + visibleCount + ' 작품</strong>을 풀고 기록했어요'
         + (dateStr ? ' · 마지막 업데이트 ' + dateStr : '');
-      var w = document.querySelector('.nz-title-img-wrap');
-      if (w) w.parentNode.insertBefore(el, w.nextSibling);
+      var h = document.querySelector('.nz-hero-copy');
+      if (h) h.parentNode.insertBefore(el, h.nextSibling);
     }, 200);
   }
 }
