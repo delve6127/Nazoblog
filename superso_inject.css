@@ -119,6 +119,10 @@ a.notion-page[href="/test"] {
 .nz-hero-copy__link:hover {
   text-decoration-color: #E8C547;
 }
+/* PC에서는 히어로 카피를 한 줄로 */
+@media (min-width: 769px) {
+  .nz-hero-copy__br { display: none; }
+}
 @media (max-width: 768px) {
   .nz-hero-copy {
     margin-top: 48px;
