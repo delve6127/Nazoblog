@@ -1,6 +1,6 @@
 // ── 메인 히어로 카피 (문구 수정은 여기서) ──
 var NZ_HERO_COPY = {
-  main: '일본 나조토키(謎解き)를 한국인 플레이어 관점에서 풀고 기록합니다.',
+  main: '한국인 플레이어의 시선으로<br class="nz-hero-copy__br">일본 나조토키(謎解き)를 풀고 기록합니다.',
   cta_before: '나조토키가 처음이라면',
   cta_link: '나조토키란?',
   cta_url: '/what-is-nazo'

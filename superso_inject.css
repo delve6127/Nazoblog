@@ -95,6 +95,8 @@ a.notion-page[href="/test"] {
   color: #4a4a48;
   margin: 0 0 12px;
   letter-spacing: -0.1px;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 .nz-hero-copy__cta {
   font-size: 13px;
