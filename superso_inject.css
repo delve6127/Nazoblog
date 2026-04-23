@@ -1727,7 +1727,7 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
 .super-content.page__what-is-nazo .nz-wn-callout {
   border-radius: 8px !important;
   padding: 24px !important;
-  margin: 36px 0 !important;
+  margin: 18px 0 !important;
   display: grid !important;
   grid-template-columns: auto 1fr !important;
   column-gap: 12px !important;
@@ -1914,14 +1914,14 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
 /* ── Ending (끝 인사 + CTA 3버튼) ── */
 .super-content.page__what-is-nazo .nz-wn-ending {
   padding-top: 32px;
-  margin-top: 48px;
+  margin-top: 24px;
   border-top: 1px dashed #D8CFBE;
 }
 .super-content.page__what-is-nazo .nz-wn-ending__lead {
   text-align: center !important;
   color: #4a4a48 !important;
   font-size: 15px !important;
-  margin: 0 0 24px !important;
+  margin: 0 0 40px !important;
   word-break: keep-all;
 }
 .super-content.page__what-is-nazo .nz-wn-cta-wrap {
@@ -1985,7 +1985,7 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
   }
   .super-content.page__what-is-nazo .nz-wn-callout {
     padding: 20px 18px !important;
-    margin: 28px 0 !important;
+    margin: 14px 0 !important;
   }
   .super-content.page__what-is-nazo .nz-wn-callout .notion-callout__icon svg {
     width: 24px;
@@ -2015,7 +2015,7 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
   .super-content.page__what-is-nazo .nz-wn-sub .nz-wn-metric { font-size: 13px !important; }
 
   .super-content.page__what-is-nazo .nz-wn-ending {
-    margin-top: 40px;
+    margin-top: 20px;
   }
   .super-content.page__what-is-nazo .nz-wn-ending__lead {
     font-size: 14px !important;
