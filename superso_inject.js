@@ -2572,19 +2572,55 @@ setTimeout(replaceMainTitle, 1500);
     }
   }
 
+  // React hydration 완료 후 실행 (Super.so/Next.js 환경)
+  function start(delay) {
+    if (!isWhatIsNazoPage()) return;
+    setTimeout(function () { tryDecorate(); }, delay || 1200);
+  }
+
+  // 우리가 장식한 DOM을 React가 리렌더링으로 덮어쓰는 경우 대비해 재적용
+  var wnReapplyObserver = null;
+  function startReapplyGuard() {
+    if (wnReapplyObserver) return;
+    var article = document.querySelector('article.notion-root');
+    if (!article) return;
+    wnReapplyObserver = new MutationObserver(function () {
+      if (!isWhatIsNazoPage()) return;
+      // 장식 안 된 콜아웃이 다시 생기거나 ending이 사라지면 재실행
+      var pending = article.querySelectorAll('.notion-callout:not(.nz-wn-callout)');
+      var endingGone = !article.querySelector('.nz-wn-ending');
+      if (pending.length > 0 || endingGone) {
+        // 콜아웃들에 nzWnDone 플래그 리셋
+        Array.prototype.forEach.call(article.querySelectorAll('.notion-callout'), function (c) {
+          if (!c.classList.contains('nz-wn-callout')) delete c.dataset.nzWnDone;
+        });
+        tryDecorate();
+      }
+    });
+    wnReapplyObserver.observe(article, { childList: true, subtree: false });
+  }
+
   // SPA 내비게이션 대응
   var wnLastUrl = location.href;
-  var wnObserver = new MutationObserver(function () {
+  var wnNavObserver = new MutationObserver(function () {
     if (location.href !== wnLastUrl) {
       wnLastUrl = location.href;
-      if (isWhatIsNazoPage()) tryDecorate();
+      if (wnReapplyObserver) { wnReapplyObserver.disconnect(); wnReapplyObserver = null; }
+      if (isWhatIsNazoPage()) start(600);
     }
   });
-  wnObserver.observe(document.body, { childList: true, subtree: true });
+  wnNavObserver.observe(document.body, { childList: true, subtree: true });
 
+  // 최초 진입: hydration 대기 후 실행
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () { tryDecorate(); });
+    document.addEventListener('DOMContentLoaded', function () { start(1200); });
   } else {
-    tryDecorate();
+    start(1200);
   }
+  // decorateAll 종료 후 재적용 감시 켜기
+  var _origDecorate = decorateAll;
+  decorateAll = function () {
+    _origDecorate();
+    startReapplyGuard();
+  };
 })();
