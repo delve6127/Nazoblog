@@ -2600,16 +2600,23 @@ setTimeout(replaceMainTitle, 1500);
     wnReapplyObserver.observe(article, { childList: true, subtree: false });
   }
 
-  // SPA 내비게이션 대응
+  // SPA 내비게이션 대응 (History API 훅 방식; MutationObserver보다 가벼움)
   var wnLastUrl = location.href;
-  var wnNavObserver = new MutationObserver(function () {
-    if (location.href !== wnLastUrl) {
-      wnLastUrl = location.href;
-      if (wnReapplyObserver) { wnReapplyObserver.disconnect(); wnReapplyObserver = null; }
-      if (isWhatIsNazoPage()) start(600);
-    }
+  function wnOnRouteChange() {
+    if (location.href === wnLastUrl) return;
+    wnLastUrl = location.href;
+    if (wnReapplyObserver) { wnReapplyObserver.disconnect(); wnReapplyObserver = null; }
+    if (isWhatIsNazoPage()) start(600);
+  }
+  ['pushState', 'replaceState'].forEach(function (m) {
+    var orig = history[m];
+    history[m] = function () {
+      var rv = orig.apply(this, arguments);
+      setTimeout(wnOnRouteChange, 0);
+      return rv;
+    };
   });
-  wnNavObserver.observe(document.body, { childList: true, subtree: true });
+  window.addEventListener('popstate', wnOnRouteChange);
 
   // 최초 진입: hydration 대기 후 실행
   if (document.readyState === 'loading') {
