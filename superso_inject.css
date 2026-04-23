@@ -1987,6 +1987,9 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
     padding: 20px 18px !important;
     margin: 14px 0 !important;
   }
+  .super-content.page__what-is-nazo .nz-wn-term1 { margin: 14px 0 0 !important; }
+  .super-content.page__what-is-nazo .nz-wn-term2,
+  .super-content.page__what-is-nazo .nz-wn-term3 { margin: 6px 0 0 !important; }
   .super-content.page__what-is-nazo .nz-wn-callout .notion-callout__icon svg {
     width: 24px;
     height: 24px;
