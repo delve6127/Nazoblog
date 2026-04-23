@@ -56,6 +56,10 @@
     "銀のデビル缶":              { "num": 19, "date": "2026-04-12", "diff": 4, "satisfaction": 4.5, "puzzle": 4.5, "gimmick": 4,   "design": 3.5, "language": 3,   "brand": "SCRAP",            "url": "/nazotoki-reviews/silver-devil-can" },
     "SORT":                    { "num": 20, "date": "2026-04-12", "diff": 4, "satisfaction": 4,   "puzzle": 4,   "gimmick": 4,   "design": 3,   "language": 3,   "brand": "Tumbleweed",       "url": "/nazotoki-reviews/sort" },
     "国旗なぞ":                 { "num": 21, "date": "2026-04-13", "diff": 2, "satisfaction": 4,   "puzzle": 3.2, "gimmick": 3.5, "design": 3.7, "language": 4,   "brand": "Tumbleweed",       "url": "/nazotoki-reviews/national-flag-nazo" },
-    "雨の出会いと、隠されたメッセージ": { "num": 22, "date": "2026-04-13", "diff": 4, "satisfaction": 4.3, "puzzle": 4,   "gimmick": 3.5, "design": 3.9, "language": 3.3, "brand": "SCRAP - Mystery For You", "url": "/nazotoki-reviews/rainy-encounter-hidden-message" }
+    "雨の出会いと、隠されたメッセージ": { "num": 22, "date": "2026-04-13", "diff": 4, "satisfaction": 4.3, "puzzle": 4,   "gimmick": 3.5, "design": 3.9, "language": 3.3, "brand": "SCRAP - Mystery For You", "url": "/nazotoki-reviews/rainy-encounter-hidden-message" },
+    "謎解き死霊使いと14通の手紙":       { "num": 23, "date": "2026-04-16", "diff": 2, "satisfaction": 3.5, "puzzle": 3.7, "gimmick": 3.5, "design": 3.7, "language": 3.1, "brand": "ぐずりあ",                  "url": "/nazotoki-reviews/necromancer-and-14-letters" },
+    "魔術解析機関-Institution of Witch Craft Analyzation-": { "num": 24, "date": "2026-04-17", "diff": 2, "satisfaction": 3.7, "puzzle": 3.3, "gimmick": 3.7, "design": 3.6, "language": 3.4, "brand": "SCRAP - Mystery For You", "url": "/nazotoki-reviews/witchcraft-analyzation" },
+    "STREET NAZO ART":               { "num": 25, "date": "2026-04-20", "diff": 2, "satisfaction": 3.4, "puzzle": 3.7, "gimmick": 3.5, "design": 3.3, "language": 3.3, "brand": "SCRAP - Mystery For You", "url": "/nazotoki-reviews/street-nazo-art" },
+    "ULTIMATE PUZZLE TOWER":         { "num": 26, "date": "2026-04-22", "diff": 3, "satisfaction": 4,   "puzzle": 3.9, "gimmick": 3.7, "design": 3.5, "language": 3,   "brand": "Tumbleweed",              "url": "/nazotoki-reviews/ultimate-puzzle-tower" }
   }
 }
