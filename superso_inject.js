@@ -2369,3 +2369,222 @@ setTimeout(replaceMainTitle, 1500);
     tryInject();
   }
 })();
+
+
+/* ============================================================
+ *  what-is-nazo 페이지 전용 리디자인 (Task 2)
+ *  팔레트: Cream + Ink Blue  |  아이콘: Lucide 인라인 SVG
+ * ============================================================ */
+(function () {
+  'use strict';
+
+  function isWhatIsNazoPage() {
+    return location.pathname.indexOf('/what-is-nazo') !== -1;
+  }
+
+  // ── Lucide 인라인 SVG (필요한 8개만) ──
+  var LUCIDE = {
+    'message-circle-question': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>',
+    'git-compare-arrows': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="6" r="3"/><path d="M12 6h5a2 2 0 0 1 2 2v7"/><path d="m15 9-3-3 3-3"/><circle cx="19" cy="18" r="3"/><path d="M12 18H7a2 2 0 0 1-2-2V9"/><path d="m9 15 3 3-3 3"/></svg>',
+    'square-scissors': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="8" cy="8" r="2"/><path d="m19.5 8.5-8 8"/><circle cx="8" cy="16" r="2"/><path d="m8.5 9.5 7 7"/></svg>',
+    'crown': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg>',
+    'recycle': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5"/><path d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12"/><path d="m14 16-3 3 3 3"/><path d="M8.293 13.596 7.196 9.5 3.1 10.598"/><path d="m9.344 5.811 1.093-1.892A1.83 1.83 0 0 1 11.985 3a1.784 1.784 0 0 1 1.546.888l3.943 6.843"/><path d="m13.378 9.633 4.096 1.098 1.097-4.096"/></svg>',
+    'book-open-check': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V7"/><path d="m16 12 2 2 4-4"/><path d="M22 6V4a1 1 0 0 0-1-1h-5a4 4 0 0 0-4 4 4 4 0 0 0-4-4H3a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h6a3 3 0 0 1 3 3 3 3 0 0 1 3-3h6a1 1 0 0 0 1-1v-1.3"/></svg>',
+    'package-plus': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 16h6"/><path d="M19 13v6"/><path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14"/><path d="M16.5 9.4 7.55 4.24"/><path d="M3.29 7 12 12l8.71-5"/><path d="M12 22V12"/></svg>',
+    'list-checks': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></svg>'
+  };
+
+  // 이모지 → 타입/아이콘 매핑 (variation selector FE0F 처리)
+  var EMOJI_MAP = [
+    { emoji: '💬',  type: 'info1', icon: 'message-circle-question' },
+    { emoji: '🔀',  type: 'info2', icon: 'git-compare-arrows' },
+    { emoji: '✂️', type: 'term1', icon: 'square-scissors' },
+    { emoji: '✂',  type: 'term1', icon: 'square-scissors' },
+    { emoji: '👑',  type: 'term2', icon: 'crown' },
+    { emoji: '♻️', type: 'term3', icon: 'recycle' },
+    { emoji: '♻',  type: 'term3', icon: 'recycle' },
+    { emoji: '🗺️', type: 'guide', icon: null },
+    { emoji: '🗺',  type: 'guide', icon: null },
+    { emoji: '📊',  type: 'sub',   icon: null }
+  ];
+
+  function matchEmoji(text) {
+    if (!text) return null;
+    for (var i = 0; i < EMOJI_MAP.length; i++) {
+      if (text.indexOf(EMOJI_MAP[i].emoji) !== -1) return EMOJI_MAP[i];
+    }
+    return null;
+  }
+
+  function escHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  // "제목 : 설명" 또는 "제목: 설명" 형식의 p를 b.title + span.desc로 변환
+  function splitTitleDesc(p) {
+    var bold = p.querySelector('strong, b');
+    if (!bold) return null;
+    var title = bold.textContent.trim();
+    if (!title) return null;
+    var fullText = p.textContent;
+    var idx = fullText.indexOf(title);
+    if (idx === -1) return null;
+    var rest = fullText.slice(idx + title.length);
+    var desc = rest.replace(/^\s*[::]\s*/, '').trim();
+    return { title: title, desc: desc };
+  }
+
+  function decorateCallout(callout) {
+    if (callout.dataset.nzWnDone) return;
+    var iconBox = callout.querySelector('.notion-callout__icon');
+    if (!iconBox) return;
+    var iconText = iconBox.textContent.trim();
+    var m = matchEmoji(iconText);
+    if (!m) return;
+
+    callout.classList.add('nz-wn-callout', 'nz-wn-' + m.type);
+    callout.dataset.nzWnDone = '1';
+
+    // 노션 이모지 아이콘 → Lucide SVG 교체 (info/term만; guide/sub는 아이콘 없음)
+    if (m.icon && LUCIDE[m.icon]) {
+      iconBox.textContent = '';
+      iconBox.innerHTML = LUCIDE[m.icon];
+    }
+
+    // 용어 카드 본문 파싱
+    if (m.type.indexOf('term') === 0) {
+      var content = callout.querySelector('.notion-callout__content');
+      if (content) {
+        var p = content.querySelector('p.notion-text');
+        if (p) {
+          var parsed = splitTitleDesc(p);
+          if (parsed) {
+            p.classList.add('nz-wn-term__row');
+            p.innerHTML =
+              '<b class="nz-wn-term__title">' + escHtml(parsed.title) + '</b>' +
+              '<span class="nz-wn-term__desc">' + escHtml(parsed.desc) + '</span>';
+          }
+        }
+      }
+    }
+
+    // sub-callout metric 파싱
+    if (m.type === 'sub') {
+      var subContent = callout.querySelector('.notion-callout__content');
+      if (subContent) {
+        var ps = subContent.querySelectorAll('p.notion-text');
+        ps.forEach(function (p) {
+          var parsed = splitTitleDesc(p);
+          if (parsed) {
+            p.classList.add('nz-wn-metric');
+            p.innerHTML =
+              '<b>' + escHtml(parsed.title) + '</b>' +
+              '<span>' + escHtml(parsed.desc) + '</span>';
+          }
+        });
+      }
+    }
+  }
+
+  function markSubtitle(article) {
+    var children = article.children;
+    for (var i = 0; i < children.length; i++) {
+      var el = children[i];
+      if (el.tagName === 'P' && (el.innerText || '').trim()) {
+        el.classList.add('nz-wn-subtitle');
+        return;
+      }
+    }
+  }
+
+  function injectEnding(article) {
+    if (article.querySelector('.nz-wn-ending')) return;
+
+    // article 직속 마지막 실제 p(텍스트 있음) = "그럼 즐거운..."
+    var lastP = null;
+    var directPs = article.querySelectorAll(':scope > p.notion-text');
+    for (var i = directPs.length - 1; i >= 0; i--) {
+      if ((directPs[i].innerText || '').trim()) {
+        lastP = directPs[i];
+        break;
+      }
+    }
+
+    var ending = document.createElement('div');
+    ending.className = 'nz-wn-ending';
+
+    if (lastP && lastP.textContent.indexOf('즐거운') !== -1) {
+      var lead = document.createElement('p');
+      lead.className = 'nz-wn-ending__lead';
+      lead.innerHTML = lastP.innerHTML;
+      ending.appendChild(lead);
+      lastP.remove();
+    } else {
+      var fallback = document.createElement('p');
+      fallback.className = 'nz-wn-ending__lead';
+      fallback.textContent = '그럼 즐거운 나조토키 여행 되시길 바랍니다!';
+      ending.appendChild(fallback);
+    }
+
+    var CTAS = [
+      { href: '/',                      icon: 'book-open-check', label: '리뷰 둘러보기',              sub: '메인 페이지로' },
+      { href: '/how-to-buy-nazotokis',  icon: 'package-plus',    label: '나조를 구하는 방법',          sub: '구매 정보 페이지로' },
+      { href: '/to-review',             icon: 'list-checks',     label: '올라올 리뷰가 궁금하다면?',   sub: '리뷰 예정 목록으로' }
+    ];
+    var wrap = document.createElement('div');
+    wrap.className = 'nz-wn-cta-wrap';
+    CTAS.forEach(function (c) {
+      var a = document.createElement('a');
+      a.className = 'nz-wn-cta';
+      a.href = c.href;
+      a.innerHTML =
+        '<span class="nz-wn-cta__icon">' + LUCIDE[c.icon] + '</span>' +
+        '<span class="nz-wn-cta__label">' + escHtml(c.label) + '</span>' +
+        '<span class="nz-wn-cta__sub">' + escHtml(c.sub) + '</span>';
+      wrap.appendChild(a);
+    });
+    ending.appendChild(wrap);
+    article.appendChild(ending);
+  }
+
+  function decorateAll() {
+    if (!isWhatIsNazoPage()) return;
+    var article = document.querySelector('article.notion-root');
+    if (!article) return;
+
+    markSubtitle(article);
+
+    var callouts = article.querySelectorAll('.notion-callout');
+    for (var i = 0; i < callouts.length; i++) {
+      decorateCallout(callouts[i]);
+    }
+
+    injectEnding(article);
+  }
+
+  function tryDecorate(attempt) {
+    attempt = attempt || 0;
+    if (!isWhatIsNazoPage()) return;
+    if (document.querySelector('article.notion-root .notion-callout')) {
+      decorateAll();
+    } else if (attempt < 30) {
+      setTimeout(function () { tryDecorate(attempt + 1); }, 200);
+    }
+  }
+
+  // SPA 내비게이션 대응
+  var wnLastUrl = location.href;
+  var wnObserver = new MutationObserver(function () {
+    if (location.href !== wnLastUrl) {
+      wnLastUrl = location.href;
+      if (isWhatIsNazoPage()) tryDecorate();
+    }
+  });
+  wnObserver.observe(document.body, { childList: true, subtree: true });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { tryDecorate(); });
+  } else {
+    tryDecorate();
+  }
+})();
