@@ -2382,6 +2382,33 @@ setTimeout(replaceMainTitle, 1500);
     return location.pathname.indexOf('/what-is-nazo') !== -1;
   }
 
+  // ── 커버 (플레인 노션 레이아웃 깜빡임 가림용) ──
+  function _createCover() {
+    if (document.getElementById('nz-wn-cover')) return;
+    if (!document.body) return;
+    var cover = document.createElement('div');
+    cover.id = 'nz-wn-cover';
+    cover.innerHTML =
+      '<div class="nz-wn-cover__inner">' +
+        '<div class="nz-wn-cover__lemon"><img src="https://assets.super.so/b529abf1-8288-44d9-87eb-38228677c041/images/bcc6ec8e-275b-4bfc-b598-b2108922863e/noname.png" alt=""/></div>' +
+        '<div class="nz-wn-cover__spinner"></div>' +
+      '</div>';
+    document.body.appendChild(cover);
+  }
+  function showCover() {
+    if (!isWhatIsNazoPage()) return;
+    if (document.body) _createCover();
+    else document.addEventListener('DOMContentLoaded', _createCover);
+  }
+  function hideCover() {
+    var cover = document.getElementById('nz-wn-cover');
+    if (!cover) return;
+    cover.classList.add('nz-wn-cover--fade');
+    setTimeout(function () {
+      if (cover.parentNode) cover.parentNode.removeChild(cover);
+    }, 420);
+  }
+
   // ── Lucide 인라인 SVG (필요한 8개만) ──
   var LUCIDE = {
     'message-circle-question': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>',
@@ -2560,6 +2587,9 @@ setTimeout(replaceMainTitle, 1500);
     }
 
     injectEnding(article);
+
+    // 장식 완료 → 다음 프레임에 커버 페이드아웃 (페인트 이후 제거)
+    requestAnimationFrame(function () { hideCover(); });
   }
 
   function tryDecorate(attempt) {
@@ -2575,6 +2605,7 @@ setTimeout(replaceMainTitle, 1500);
   // React hydration 완료 후 실행 (Super.so/Next.js 환경)
   function start(delay) {
     if (!isWhatIsNazoPage()) return;
+    showCover();
     setTimeout(function () { tryDecorate(); }, delay || 1200);
   }
 
@@ -2618,7 +2649,8 @@ setTimeout(replaceMainTitle, 1500);
   });
   window.addEventListener('popstate', wnOnRouteChange);
 
-  // 최초 진입: hydration 대기 후 실행
+  // 최초 진입: 가능한 한 빨리 커버 띄우고, hydration 대기 후 장식
+  showCover();
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () { start(1200); });
   } else {

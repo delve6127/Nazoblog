@@ -1676,6 +1676,45 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
  *  팔레트: Cream + Ink Blue (N안)
  * ============================================================ */
 
+/* ── 커버 (플레인 노션 레이아웃 깜빡임 가림) ── */
+#nz-wn-cover {
+  position: fixed;
+  inset: 0;
+  background: #FAF7F2;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.4s ease;
+  opacity: 1;
+}
+#nz-wn-cover.nz-wn-cover--fade {
+  opacity: 0;
+  pointer-events: none;
+}
+#nz-wn-cover .nz-wn-cover__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+#nz-wn-cover .nz-wn-cover__lemon img {
+  width: 56px;
+  height: auto;
+  display: block;
+}
+#nz-wn-cover .nz-wn-cover__spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #EEE4C7;
+  border-top-color: #D4B860;
+  border-radius: 50%;
+  animation: nz-wn-cover-spin 0.8s linear infinite;
+}
+@keyframes nz-wn-cover-spin {
+  to { transform: rotate(360deg); }
+}
+
 /* ── 본문 타이포 ── */
 .super-content.page__what-is-nazo article.notion-root {
   font-family: 'NanumSquareRound', -apple-system, BlinkMacSystemFont, sans-serif !important;
