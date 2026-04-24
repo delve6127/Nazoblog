@@ -2418,7 +2418,9 @@ setTimeout(replaceMainTitle, 1500);
     'recycle': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5"/><path d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12"/><path d="m14 16-3 3 3 3"/><path d="M8.293 13.596 7.196 9.5 3.1 10.598"/><path d="m9.344 5.811 1.093-1.892A1.83 1.83 0 0 1 11.985 3a1.784 1.784 0 0 1 1.546.888l3.943 6.843"/><path d="m13.378 9.633 4.096 1.098 1.097-4.096"/></svg>',
     'book-open-check': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V7"/><path d="m16 12 2 2 4-4"/><path d="M22 6V4a1 1 0 0 0-1-1h-5a4 4 0 0 0-4 4 4 4 0 0 0-4-4H3a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h6a3 3 0 0 1 3 3 3 3 0 0 1 3-3h6a1 1 0 0 0 1-1v-1.3"/></svg>',
     'package-plus': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 16h6"/><path d="M19 13v6"/><path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14"/><path d="M16.5 9.4 7.55 4.24"/><path d="M3.29 7 12 12l8.71-5"/><path d="M12 22V12"/></svg>',
-    'list-checks': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></svg>'
+    'list-checks': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></svg>',
+    'link': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
+    'tablet': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>'
   };
 
   // 이모지 → 타입/아이콘 매핑 (variation selector FE0F 처리)
@@ -2432,7 +2434,9 @@ setTimeout(replaceMainTitle, 1500);
     { emoji: '♻',  type: 'term3', icon: 'recycle' },
     { emoji: '🗺️', type: 'guide', icon: null },
     { emoji: '🗺',  type: 'guide', icon: null },
-    { emoji: '📊',  type: 'sub',   icon: null }
+    { emoji: '📊',  type: 'sub',   icon: null },
+    { emoji: '🏷️', type: 'tags',  icon: null },
+    { emoji: '🏷',  type: 'tags',  icon: null }
   ];
 
   function matchEmoji(text) {
@@ -2459,6 +2463,75 @@ setTimeout(replaceMainTitle, 1500);
     var rest = fullText.slice(idx + title.length);
     var desc = rest.replace(/^\s*[::]\s*/, '').trim();
     return { title: title, desc: desc };
+  }
+
+  // ── 🏷️ "추가 정보" 콜아웃 파서 ──
+  function tagsLucide(name) {
+    if (!LUCIDE[name]) return '';
+    return LUCIDE[name].replace(/^<svg /, '<svg class="ico" ');
+  }
+  function replaceContentEmojis(html) {
+    return html
+      .replace(/📲\uFE0F?/g, tagsLucide('link'))
+      .replace(/📱\uFE0F?/g, tagsLucide('tablet'))
+      .replace(/♻\uFE0F?/g, tagsLucide('recycle'));
+  }
+  function replaceContentCodes(html) {
+    // 노션 인라인 코드 <code>X</code> → 틸 태그 뱃지
+    return html.replace(/<code[^>]*>([\s\S]*?)<\/code>/g,
+      '<span class="nz-wn-tag">$1</span>');
+  }
+  function isTagsHeader(p) {
+    var text = p.textContent || '';
+    var hasEmoji = /📲|📱|♻/.test(text);
+    var hasStrong = !!p.querySelector('strong, b');
+    return hasEmoji && hasStrong;
+  }
+  function decorateTagsCallout(callout) {
+    var content = callout.querySelector('.notion-callout__content');
+    if (!content) return;
+    var ps = Array.prototype.slice.call(content.querySelectorAll('p.notion-text'));
+    if (ps.length === 0) return;
+
+    // 이모지+볼드 헤더 기준으로 그룹핑: 헤더 → 이어지는 본문들
+    var groups = [];
+    var current = null;
+    ps.forEach(function (p) {
+      if (isTagsHeader(p)) {
+        if (current) groups.push(current);
+        current = { header: p, bodies: [] };
+      } else if (current) {
+        current.bodies.push(p);
+      }
+    });
+    if (current) groups.push(current);
+    if (groups.length === 0) return;
+
+    // DOM 재조립
+    var anchor = groups[0].header;
+    groups.forEach(function (g) {
+      var item = document.createElement('div');
+      item.className = 'nz-wn-info-item';
+
+      var head = document.createElement('div');
+      head.className = 'nz-wn-info-item__head';
+      head.innerHTML = replaceContentEmojis(g.header.innerHTML);
+      item.appendChild(head);
+
+      g.bodies.forEach(function (b) {
+        var body = document.createElement('div');
+        body.className = 'nz-wn-info-item__body';
+        body.innerHTML = replaceContentCodes(b.innerHTML);
+        item.appendChild(body);
+      });
+
+      anchor.parentNode.insertBefore(item, anchor);
+    });
+    // 원본 p 제거
+    groups.forEach(function (g) {
+      g.header.remove();
+      g.bodies.forEach(function (b) { b.remove(); });
+    });
   }
 
   function decorateCallout(callout) {
@@ -2510,6 +2583,11 @@ setTimeout(replaceMainTitle, 1500);
           }
         });
       }
+    }
+
+    // 🏷️ 추가 정보 콜아웃 파싱
+    if (m.type === 'tags') {
+      decorateTagsCallout(callout);
     }
   }
 
