@@ -64,6 +64,7 @@
     "謎解き死霊使いと14通の手紙":       { "num": 23, "date": "2026-04-16", "diff": 2, "satisfaction": 3.5, "puzzle": 3.7, "gimmick": 3.5, "design": 3.7, "language": 3.1, "brand": "ぐずりあ",                  "url": "/nazotoki-reviews/necromancer-and-14-letters" },
     "魔術解析機関-Institution of Witch Craft Analyzation-": { "num": 24, "date": "2026-04-17", "diff": 2, "satisfaction": 3.7, "puzzle": 3.3, "gimmick": 3.7, "design": 3.6, "language": 3.4, "brand": "SCRAP - Mystery For You", "url": "/nazotoki-reviews/witchcraft-analyzation" },
     "STREET NAZO ART":               { "num": 25, "date": "2026-04-20", "diff": 2, "satisfaction": 3.4, "puzzle": 3.7, "gimmick": 3.5, "design": 3.3, "language": 3.3, "brand": "SCRAP - Mystery For You", "url": "/nazotoki-reviews/street-nazo-art" },
-    "ULTIMATE PUZZLE TOWER":         { "num": 26, "date": "2026-04-22", "diff": 3, "satisfaction": 4,   "puzzle": 3.9, "gimmick": 3.7, "design": 3.5, "language": 3,   "brand": "Tumbleweed",              "url": "/nazotoki-reviews/ultimate-puzzle-tower" }
+    "ULTIMATE PUZZLE TOWER":         { "num": 26, "date": "2026-04-22", "diff": 3, "satisfaction": 4,   "puzzle": 3.9, "gimmick": 3.7, "design": 3.5, "language": 3,   "brand": "Tumbleweed",              "url": "/nazotoki-reviews/ultimate-puzzle-tower" },
+    "AXIDENTZ":                      { "num": 27, "date": "2026-04-24", "diff": 4, "satisfaction": 4.5, "puzzle": 4.5, "gimmick": 4.5, "design": 3,   "language": 2.8, "brand": "4CE Dimension",            "url": "/nazotoki-reviews/axidentz" }
   }
 }
