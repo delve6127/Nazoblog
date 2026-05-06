@@ -67,6 +67,7 @@
     "ULTIMATE PUZZLE TOWER":         { "num": 26, "date": "2026-04-22", "diff": 3, "satisfaction": 4,   "puzzle": 3.9, "gimmick": 3.7, "design": 3.5, "language": 3,   "brand": "Tumbleweed",              "url": "/nazotoki-reviews/ultimate-puzzle-tower" },
     "AXIDENTZ":                      { "num": 27, "date": "2026-04-24", "diff": 4, "satisfaction": 4.5, "puzzle": 4.5, "gimmick": 4.5, "design": 3,   "language": 2.8, "brand": "4CE Dimension",            "url": "/nazotoki-reviews/axidentz" },
     "タンブルダイス":                 { "num": 28, "date": "2026-05-01", "diff": 2, "satisfaction": 4,   "puzzle": 3.7, "gimmick": 3.7, "design": 3.5, "language": 3.5, "brand": "Tumbleweed",              "url": "/nazotoki-reviews/tumbledice" },
-    "はじみまして":                   { "num": 29, "date": "2026-05-01", "diff": 2, "satisfaction": 3.4, "puzzle": 3.4, "gimmick": 3,   "design": 2.9, "language": 3.1, "brand": "Mystery Lunch",           "url": "/nazotoki-reviews/hajimimashite" }
+    "はじみまして":                   { "num": 29, "date": "2026-05-01", "diff": 2, "satisfaction": 3.4, "puzzle": 3.4, "gimmick": 3,   "design": 2.9, "language": 3.1, "brand": "Mystery Lunch",           "url": "/nazotoki-reviews/hajimimashite" },
+    "Answersheet":                    { "num": 30, "date": "2026-05-02", "diff": 4, "satisfaction": 4.5, "puzzle": 3.7, "gimmick": 4.2, "design": 3.5, "language": 3,   "brand": "4CE Dimension",           "url": "/nazotoki-reviews/answersheet" }
   }
 }
