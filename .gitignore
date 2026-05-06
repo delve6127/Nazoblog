@@ -1,1 +1,6 @@
 .claude/
+
+# 노션 통합 토큰 (sync_nazo_data.py가 ~/.notion_nazo_token에서 읽음)
+# 혹시 모를 실수로 레포 안에 같은 이름 파일이 생겨도 git에 안 올라가도록 방어
+.notion_nazo_token
+*notion*token*
