@@ -25,7 +25,13 @@
     "謎解き死霊使いと14通の手紙":       ["나조토키 사령술사와 14통의 편지", "네크로맨서", "수수께끼 풀이"],
     "魔術解析機関-Institution of Witch Craft Analyzation-": ["마술해석기관", "마법"],
     "street nazo art":       ["스트릿 나조 아트", "스트리트"],
-    "ultimate puzzle tower": ["얼티밋 퍼즐 타워", "얼티미트"]
+    "ultimate puzzle tower": ["얼티밋 퍼즐 타워", "얼티미트"],
+    "axidentz": ["액시덴츠", "액시덴트", "엑시덴츠", "엑시덴트"],
+    "タンブルダイス": ["텀블다이스", "텀블 다이트", "탐브루다이스", "탐부루다이스"],
+    "はじみまして": ["하지미마시떼", "하지미마시테"],
+    "answersheet": ["앤서시트", "안사시트", "안-사시트", "답안지"],
+    "eco": ["에코", "이씨오", "에꼬"],
+    "アナビナゾ": ["아나비나조", "아나비 나조"]
   },
   "COMPANY_MAP": {
     "tumbleweed": ["텀블위드", "탐블위도", "탐블위드"],
@@ -36,7 +42,9 @@
     "時解き": ["토키토키", "tokitoki", "토키", "toki"],
     "mystery lunch": ["미스테리 런치", "미스터리 런치", "미스테리런치", "미스터리런치", "미스터리", "미스테리", "런치", "점심"],
     "scrap": ["스크랩", "스크랍뿌", "스크랍부", "스크랏푸", "스크랏뿌", "스크렙"],
-    "scrap - mystery for you": ["스크랩 - 미스터리 포유", "미스터리 포유", "미포유", "Mystery For You", "MFY"]
+    "scrap - mystery for you": ["스크랩 - 미스터리 포유", "미스터리 포유", "미포유", "Mystery For You", "MFY"],
+    "4ce dimension": ["포스 디멘션", "포스 디멘젼"],
+    "anothervision": ["어나더비젼", "어나더비전", "어나더 비전", "어나더 비젼", "도쿄대 걔네"]
   },
   "SORT_DATA": {
     "무비무드 디저트 퍼즐 팩": { "num": 1, "date": "2026-03-07", "diff": 2, "satisfaction": 3, "puzzle": 3.7, "gimmick": 3, "design": 3.5, "language": 5, "brand": "키이스케이프", "url": "/nazotoki-reviews/moviemood-dessert-puzzle-pack" },

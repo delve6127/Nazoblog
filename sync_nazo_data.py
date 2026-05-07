@@ -217,6 +217,130 @@ def write_json_in_place(json_path: Path, sort_data: dict, updated_titles: list, 
     json_path.write_text(text, encoding="utf-8")
 
 
+def read_xlsx_keywords() -> tuple:
+    """검색어_맵핑.xlsx에서 키워드 칸이 채워진 항목을 읽어
+    (review_keywords, brand_keywords) 두 dict를 반환.
+    각 dict는 {원본 키: [키워드 리스트]} 형태."""
+    try:
+        import openpyxl
+    except ImportError:
+        return {}, {}
+
+    wb = openpyxl.load_workbook(XLSX_PATH)
+    ws = wb.active
+
+    sep_seen = False
+    review_keywords = {}
+    brand_keywords = {}
+    for row in ws.iter_rows(values_only=True):
+        if row == (None, None, None):
+            sep_seen = True
+            continue
+        if not row[1] or row[0] == "구분":
+            continue
+        if not row[2]:  # 키워드 칸 비어있음
+            continue
+        # 쉼표로 분리하고 공백 정리, 빈 항목 제거
+        kws = [k.strip() for k in row[2].split(",") if k.strip()]
+        if not kws:
+            continue
+        if not sep_seen:
+            review_keywords[row[1]] = kws
+        else:
+            brand_keywords[row[1]] = kws
+    return review_keywords, brand_keywords
+
+
+def apply_xlsx_to_maps(json_path: Path, data: dict) -> dict:
+    """엑셀에서 채운 키워드 중 PHONETIC_MAP/COMPANY_MAP에 아직 없는 항목을
+    JSON에 in-place 추가한다. 한 줄 포맷 유지.
+    반환: 작업 결과 보고용 dict"""
+    review_kw, brand_kw = read_xlsx_keywords()
+    sort_lower = {k.lower(): k for k in data["SORT_DATA"]}
+    phonetic_lower = {k.lower() for k in data["PHONETIC_MAP"]}
+    company_lower = {k.lower() for k in data["COMPANY_MAP"]}
+    brand_set_lower = {
+        e["brand"].lower() for e in data["SORT_DATA"].values()
+        if e.get("brand")
+    }
+
+    to_add_phonetic = []  # [(json_key, [keywords]), ...]
+    to_add_company = []
+    skipped_no_match = []  # [(원본 엑셀키, 사유)]
+
+    for xl_key, kws in review_kw.items():
+        xl_lower = xl_key.lower()
+        if xl_lower in phonetic_lower:
+            continue
+        if xl_lower not in sort_lower:
+            skipped_no_match.append((xl_key, "PHONETIC_MAP", "SORT_DATA에 매칭 키 없음"))
+            continue
+        json_key = sort_lower[xl_lower]  # SORT_DATA 키 기준 (lowercase 영문 등 보존)
+        to_add_phonetic.append((json_key.lower(), kws))
+
+    for xl_key, kws in brand_kw.items():
+        xl_lower = xl_key.lower()
+        if xl_lower in company_lower:
+            continue
+        if xl_lower not in brand_set_lower:
+            skipped_no_match.append((xl_key, "COMPANY_MAP", "SORT_DATA의 brand에 매칭 없음"))
+            continue
+        to_add_company.append((xl_lower, kws))
+
+    if not to_add_phonetic and not to_add_company:
+        return {"phonetic": [], "company": [], "skipped": skipped_no_match}
+
+    text = json_path.read_text(encoding="utf-8")
+
+    # PHONETIC_MAP 닫는 } 직전에 추가
+    if to_add_phonetic:
+        new_lines = ",\n".join(
+            f'    {json.dumps(k, ensure_ascii=False)}: '
+            f'{json.dumps(v, ensure_ascii=False, separators=(", ", ": "))}'
+            for k, v in to_add_phonetic
+        )
+        # PHONETIC_MAP 마지막 엔트리 뒤에 콤마 추가 + 새 라인 삽입
+        # 패턴: PHONETIC_MAP 블록의 마지막 엔트리(]) 뒤 \n  },
+        pattern = re.compile(
+            r'("PHONETIC_MAP"\s*:\s*\{(?:[^{}]|\{[^{}]*\})*?\])(\s*\n\s*\},)',
+            re.DOTALL
+        )
+        replaced = [False]
+        def repl(m):
+            replaced[0] = True
+            return m.group(1) + ",\n" + new_lines + m.group(2)
+        text = pattern.sub(repl, text, count=1)
+        if not replaced[0]:
+            raise RuntimeError("PHONETIC_MAP 삽입 위치 매칭 실패")
+
+    # COMPANY_MAP 닫는 } 직전에 추가
+    if to_add_company:
+        new_lines = ",\n".join(
+            f'    {json.dumps(k, ensure_ascii=False)}: '
+            f'{json.dumps(v, ensure_ascii=False, separators=(", ", ": "))}'
+            for k, v in to_add_company
+        )
+        pattern = re.compile(
+            r'("COMPANY_MAP"\s*:\s*\{(?:[^{}]|\{[^{}]*\})*?\])(\s*\n\s*\},)',
+            re.DOTALL
+        )
+        replaced = [False]
+        def repl(m):
+            replaced[0] = True
+            return m.group(1) + ",\n" + new_lines + m.group(2)
+        text = pattern.sub(repl, text, count=1)
+        if not replaced[0]:
+            raise RuntimeError("COMPANY_MAP 삽입 위치 매칭 실패")
+
+    json_path.write_text(text, encoding="utf-8")
+
+    return {
+        "phonetic": to_add_phonetic,
+        "company": to_add_company,
+        "skipped": skipped_no_match,
+    }
+
+
 def update_xlsx(new_review_titles: list, new_brand_names: list) -> None:
     try:
         import openpyxl
@@ -258,7 +382,7 @@ def update_xlsx(new_review_titles: list, new_brand_names: list) -> None:
 
 
 # ─── 출력 ───────────────────────────────────────────────────────────
-def print_report(changes, missing_phonetic, missing_company, dry_run=False) -> None:
+def print_report(changes, missing_phonetic, missing_company, dry_run=False, map_result=None) -> None:
     print("\n" + "=" * 60)
     print("📋 동기화 결과" + (" (DRY RUN — 파일 저장 안 함)" if dry_run else ""))
     print("=" * 60)
@@ -279,13 +403,29 @@ def print_report(changes, missing_phonetic, missing_company, dry_run=False) -> N
     if not changes["new"] and not changes["updated"]:
         print("\n✅ 변경사항 없음")
 
+    if map_result and (map_result["phonetic"] or map_result["company"]):
+        print(f"\n🔁 검색 맵에 자동 반영")
+        if map_result["phonetic"]:
+            print(f"  PHONETIC_MAP +{len(map_result['phonetic'])}건")
+            for k, v in map_result["phonetic"]:
+                print(f"    · {k}: {v}")
+        if map_result["company"]:
+            print(f"  COMPANY_MAP +{len(map_result['company'])}건")
+            for k, v in map_result["company"]:
+                print(f"    · {k}: {v}")
+
+    if map_result and map_result["skipped"]:
+        print(f"\n⚠️  엑셀 키 매칭 실패 — 수동 확인 필요 ({len(map_result['skipped'])}건)")
+        for xl_key, target, reason in map_result["skipped"]:
+            print(f"  · [{target}] {xl_key} — {reason}")
+
     if missing_phonetic:
-        print(f"\n⚠️  PHONETIC_MAP 누락 ({len(missing_phonetic)}건)")
+        print(f"\n⚠️  PHONETIC_MAP 누락 ({len(missing_phonetic)}건) — 엑셀에 키워드 채우면 다음 sync에서 자동 반영")
         for t in missing_phonetic:
             print(f"  - {t}")
 
     if missing_company:
-        print(f"\n⚠️  COMPANY_MAP 누락 ({len(missing_company)}건)")
+        print(f"\n⚠️  COMPANY_MAP 누락 ({len(missing_company)}건) — 엑셀에 키워드 채우면 다음 sync에서 자동 반영")
         for b in missing_company:
             print(f"  - {b}")
 
@@ -366,9 +506,21 @@ def main() -> int:
             new_brand_names=missing_company,
         )
 
-    print_report(changes, missing_phonetic, missing_company, dry_run=dry_run)
+    # 엑셀에 채워진 키워드를 PHONETIC_MAP/COMPANY_MAP으로 자동 반영
+    map_result = {"phonetic": [], "company": [], "skipped": []}
+    if not dry_run:
+        # JSON이 수정됐을 수 있으니 다시 로드
+        with open(JSON_PATH, encoding="utf-8") as f:
+            data = json.load(f)
+        map_result = apply_xlsx_to_maps(JSON_PATH, data)
+        # 미반영 항목이 사라졌는지 다시 계산
+        with open(JSON_PATH, encoding="utf-8") as f:
+            data = json.load(f)
+        missing_phonetic, missing_company = detect_missing(data)
 
-    if changes["new"] or changes["updated"]:
+    print_report(changes, missing_phonetic, missing_company, dry_run=dry_run, map_result=map_result)
+
+    if changes["new"] or changes["updated"] or map_result["phonetic"] or map_result["company"]:
         return 1  # 변경 있음 → 호출자가 git commit 처리
     return 0
 
