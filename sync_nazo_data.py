@@ -12,6 +12,7 @@
 """
 import json
 import re
+import subprocess
 import sys
 import urllib.request
 from datetime import datetime
@@ -296,9 +297,38 @@ def print_report(changes, missing_phonetic, missing_company, dry_run=False) -> N
     print()
 
 
+# ─── git 동기화 ─────────────────────────────────────────────────────
+def git_pull_rebase() -> None:
+    """origin/main과 먼저 동기화. 충돌하면 즉시 중단."""
+    print("🔄 git pull --rebase 실행 중...")
+    try:
+        subprocess.run(
+            ["git", "fetch", "origin", "main"],
+            cwd=PROJECT_DIR, check=True, capture_output=True, text=True,
+        )
+        result = subprocess.run(
+            ["git", "pull", "--rebase", "origin", "main"],
+            cwd=PROJECT_DIR, check=True, capture_output=True, text=True,
+        )
+        if "Already up to date" in result.stdout or "up to date" in result.stdout.lower():
+            print("   이미 최신 상태")
+        else:
+            print(f"   {result.stdout.strip().splitlines()[-1] if result.stdout.strip() else '동기화 완료'}")
+    except subprocess.CalledProcessError as e:
+        sys.exit(
+            f"❌ git pull --rebase 실패 — 충돌 또는 미커밋 변경 가능성.\n"
+            f"   stdout: {e.stdout}\n"
+            f"   stderr: {e.stderr}\n"
+            f"   수동으로 해결 후 다시 실행하세요."
+        )
+
+
 # ─── 메인 ───────────────────────────────────────────────────────────
 def main() -> int:
     dry_run = "--dry-run" in sys.argv
+
+    if not dry_run:
+        git_pull_rebase()
 
     token = load_token()
 
