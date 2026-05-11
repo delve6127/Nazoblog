@@ -78,6 +78,7 @@
     "はじみまして": { "num": 29, "date": "2026-04-24", "diff": 2, "satisfaction": 3.4, "puzzle": 3.4, "gimmick": 3, "design": 2.9, "language": 3.1, "brand": "Mystery Lunch", "url": "/nazotoki-reviews/hajimimashite" },
     "Answersheet": { "num": 30, "date": "2026-04-25", "diff": 4, "satisfaction": 4.5, "puzzle": 3.7, "gimmick": 4.2, "design": 3.5, "language": 3, "brand": "4CE Dimension", "url": "/nazotoki-reviews/answersheet" },
     "ECO": { "num": 31, "date": "2026-04-26", "diff": 3, "satisfaction": 3.8, "puzzle": 3.7, "gimmick": 3.7, "design": 3, "language": 3, "brand": "Tumbleweed", "url": "/nazotoki-reviews/eco" },
-    "アナビナゾ": { "num": 32, "date": "2026-04-26", "diff": 3, "satisfaction": 5, "puzzle": 5, "gimmick": 4, "design": 3.4, "language": 3, "brand": "AnotherVision", "url": "/nazotoki-reviews/anabinazo" }
+    "アナビナゾ": { "num": 32, "date": "2026-04-26", "diff": 3, "satisfaction": 5, "puzzle": 5, "gimmick": 4, "design": 3.4, "language": 3, "brand": "AnotherVision", "url": "/nazotoki-reviews/anabinazo" },
+    "王女ミラと試練の館": { "num": 33, "date": "2026-05-03", "diff": 2, "satisfaction": 3.5, "puzzle": 3.6, "gimmick": 3.6, "design": 3, "language": 3.8, "brand": "Tumbleweed", "url": "/nazotoki-reviews/princessmira" }
   }
 }
