@@ -731,12 +731,19 @@ setTimeout(replaceMainTitle, 1500);
     if (!pageTitle) return;
     var pageTitleText = pageTitle.textContent.trim();
 
-    // SORT_DATA에서 매칭
-    for (var key in SORT_DATA) {
-      if (key === pageTitleText || pageTitleText.indexOf(key) > -1 || key.indexOf(pageTitleText) > -1) {
-        currentTitle = key;
-        currentData = SORT_DATA[key];
-        break;
+    // SORT_DATA에서 매칭 (정확 매칭 우선)
+    if (SORT_DATA[pageTitleText]) {
+      currentTitle = pageTitleText;
+      currentData = SORT_DATA[pageTitleText];
+    } else {
+      var keys = Object.keys(SORT_DATA).sort(function (a, b) { return b.length - a.length; });
+      for (var i = 0; i < keys.length; i++) {
+        var key = keys[i];
+        if (pageTitleText.indexOf(key) > -1 || key.indexOf(pageTitleText) > -1) {
+          currentTitle = key;
+          currentData = SORT_DATA[key];
+          break;
+        }
       }
     }
 
