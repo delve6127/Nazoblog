@@ -1067,10 +1067,29 @@ a.notion-page[href="/test"] {
   }
 }
 
-/* ── 리뷰 예정 목록 - 썸네일 ── */
+/* ── 리뷰 예정 목록 - 숨김 열 (사진 / 생성일시) ── */
 .nz-review-list-page .notion-collection-table__head-cell.file,
-.nz-review-list-page .notion-collection-table__cell.file {
+.nz-review-list-page .notion-collection-table__cell.file,
+.nz-review-list-page .notion-collection-table__head-cell.created_time,
+.nz-review-list-page .notion-collection-table__cell.created_time {
   display: none !important;
+}
+
+/* ── 리뷰 예정 목록 - NEW 뱃지 ── */
+.nz-new-badge {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  background: #E0654F;
+  color: #fff;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  padding: 3px 7px;
+  border-radius: 7px;
+  box-shadow: 0 2px 6px rgba(224,101,79,.4);
+  z-index: 1;
+  line-height: 1;
 }
 .nz-review-list-page .nz-thumb {
   position: relative;

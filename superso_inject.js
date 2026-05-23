@@ -1809,6 +1809,23 @@ function nzLightboxClose() {
           innerDiv.classList.add('nz-thumb-row');
         }
 
+        // NEW 뱃지: 생성일시 4일 이내면 표시
+        var timeCell = row.querySelector('.notion-collection-table__cell.created_time');
+        if (timeCell) {
+          var dateText = timeCell.textContent.trim();
+          var created = new Date(dateText);
+          if (!isNaN(created.getTime())) {
+            var now = new Date();
+            var diffDays = (now - created) / (1000 * 60 * 60 * 24);
+            if (diffDays <= 4) {
+              var badge = document.createElement('span');
+              badge.className = 'nz-new-badge';
+              badge.textContent = 'NEW';
+              thumb.appendChild(badge);
+            }
+          }
+        }
+
         row.setAttribute('data-nz-thumb', '1');
       });
     }
