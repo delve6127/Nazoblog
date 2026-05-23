@@ -1744,12 +1744,56 @@ setTimeout(replaceMainTitle, 1500);
       var table = document.querySelector('.notion-collection-table');
       if (table) table.setAttribute('data-nz-2col', '1');
     }
+
+    // 사진 열 → 제목 셀에 썸네일로 표시
+    var thumbRows = document.querySelectorAll('.notion-collection-table tbody tr:not([data-nz-thumb])');
+    if (thumbRows.length > 0) {
+      thumbRows.forEach(function (row) {
+        var titleCell = row.querySelector('.notion-collection-table__cell.title');
+        var fileCell = row.querySelector('.notion-collection-table__cell.file');
+        if (!titleCell) return;
+
+        // 이미지 URL 추출
+        var imgSrc = null;
+        if (fileCell) {
+          var img = fileCell.querySelector('img');
+          var link = fileCell.querySelector('a');
+          if (img && img.src) imgSrc = img.src;
+          else if (link && link.href) imgSrc = link.href;
+        }
+
+        // 썸네일 div 생성
+        var thumb = document.createElement('div');
+        thumb.className = 'nz-thumb';
+        if (imgSrc) {
+          thumb.style.backgroundImage = "url('" + imgSrc + "')";
+        } else {
+          thumb.classList.add('nz-thumb--empty');
+          thumb.textContent = '🧩';
+        }
+
+        // 제목 셀 내부 재구성: [thumb] [info(title + maker)]
+        var innerDiv = titleCell.querySelector('div');
+        if (innerDiv) {
+          var infoWrap = document.createElement('div');
+          infoWrap.className = 'nz-thumb-info';
+          while (innerDiv.firstChild) {
+            infoWrap.appendChild(innerDiv.firstChild);
+          }
+          innerDiv.appendChild(thumb);
+          innerDiv.appendChild(infoWrap);
+          innerDiv.classList.add('nz-thumb-row');
+        }
+
+        row.setAttribute('data-nz-thumb', '1');
+      });
+    }
   }
 
   function needsRun() {
     return isReviewListPage() &&
       document.querySelector('.notion-collection-table') &&
-      (!document.querySelector('.nz-review-subtitle') || !document.querySelector('[data-nz-2col]'));
+      (!document.querySelector('.nz-review-subtitle') || !document.querySelector('[data-nz-2col]') || document.querySelector('.notion-collection-table tbody tr:not([data-nz-thumb])'));
   }
 
   function tryRun(attempt) {

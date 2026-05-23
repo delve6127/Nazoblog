@@ -1048,6 +1048,54 @@ a.notion-page[href="/test"] {
   }
 }
 
+/* ── 리뷰 예정 목록 - 썸네일 ── */
+.nz-review-list-page .notion-collection-table__head-cell.file,
+.nz-review-list-page .notion-collection-table__cell.file {
+  display: none !important;
+}
+.nz-review-list-page .nz-thumb {
+  position: relative;
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #EFEBDF;
+  box-shadow: inset 0 0 0 1px rgba(44,42,36,.10);
+}
+.nz-review-list-page .nz-thumb--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: repeating-linear-gradient(45deg, #F1ECDF, #F1ECDF 8px, #EDE7D7 8px, #EDE7D7 16px);
+  font-size: 20px;
+  opacity: .75;
+}
+.nz-review-list-page .nz-thumb-row {
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 14px !important;
+}
+.nz-review-list-page .nz-thumb-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+}
+@media (max-width: 768px) {
+  .nz-review-list-page .nz-thumb {
+    width: 78px;
+    height: 78px;
+    border-radius: 13px;
+  }
+  .nz-review-list-page .nz-thumb--empty {
+    font-size: 26px;
+  }
+}
+
 /* ── 숨김 페이지 (링크 자체만 숨김) ── */
 a[href*="점수-조절용-페이지"],
 a[href*="%EC%A0%90%EC%88%98-%EC%A1%B0%EC%A0%88%EC%9A%A9-%ED%8E%98%EC%9D%B4%EC%A7%80"] {
