@@ -1073,7 +1073,7 @@ a.notion-page[href="/test"] {
   font-size: 20px;
   opacity: .75;
 }
-.nz-review-list-page .nz-thumb-row {
+.nz-review-list-page .notion-collection-table__cell.title > div.nz-thumb-row {
   flex-direction: row !important;
   align-items: center !important;
   gap: 14px !important;
