@@ -222,6 +222,67 @@ setTimeout(replaceMainTitle, 300);
 setTimeout(replaceMainTitle, 800);
 setTimeout(replaceMainTitle, 1500);
 
+// ── 공용 라이트박스 ────────────────────────────────────────
+function nzLightboxInit() {
+  if (document.getElementById('nz-lightbox')) return;
+  var lb = document.createElement('div');
+  lb.id = 'nz-lightbox';
+  lb.innerHTML = '<div id="nz-lightbox-backdrop"></div>'
+    + '<div id="nz-lightbox-content">'
+    +   '<button id="nz-lightbox-close">✕</button>'
+    +   '<img id="nz-lightbox-img" src="" alt="사진">'
+    + '</div>';
+  document.body.appendChild(lb);
+
+  document.getElementById('nz-lightbox-backdrop').addEventListener('click', nzLightboxClose);
+  document.getElementById('nz-lightbox-close').addEventListener('click', nzLightboxClose);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') nzLightboxClose();
+  });
+}
+
+function nzLightboxOpen(url) {
+  nzLightboxInit();
+  var lb = document.getElementById('nz-lightbox');
+  var img = document.getElementById('nz-lightbox-img');
+  if (!lb || !img) return;
+
+  function showLightbox() {
+    var content = document.getElementById('nz-lightbox-content');
+    lb.classList.add('nz-lightbox-active');
+    document.body.style.overflow = 'hidden';
+    if (!content) return;
+
+    var start = null;
+    var duration = 300;
+    content.style.opacity = '0';
+    content.style.transform = 'translateY(20px) scale(0.95)';
+
+    function animate(ts) {
+      if (!start) start = ts;
+      var p = Math.min((ts - start) / duration, 1);
+      var e = 1 - Math.pow(1 - p, 3);
+      content.style.opacity = e;
+      content.style.transform = 'translateY(' + (20 * (1 - e)) + 'px) scale(' + (0.95 + 0.05 * e) + ')';
+      if (p < 1) requestAnimationFrame(animate);
+      else { content.style.opacity = '1'; content.style.transform = ''; }
+    }
+    requestAnimationFrame(animate);
+  }
+
+  img.onload = showLightbox;
+  img.onerror = showLightbox;
+  img.src = url;
+  if (img.complete) { img.onload = null; img.onerror = null; showLightbox(); }
+}
+
+function nzLightboxClose() {
+  var lb = document.getElementById('nz-lightbox');
+  if (!lb) return;
+  lb.classList.remove('nz-lightbox-active');
+  document.body.style.overflow = '';
+}
+
 // ── 리뷰 상세 페이지 레이아웃 ──
 (function () {
   'use strict';
@@ -447,66 +508,6 @@ setTimeout(replaceMainTitle, 1500);
       + '<g transform="translate(150,120)">'
       + grids + lines + polygon + dots + scoreLabels + axisLabels + gridNums
       + '</g></svg>';
-  }
-
-  // ── 라이트박스 ────────────────────────────────────────
-  function nzLightboxInit() {
-    if (document.getElementById('nz-lightbox')) return;
-    var lb = document.createElement('div');
-    lb.id = 'nz-lightbox';
-    lb.innerHTML = '<div id="nz-lightbox-backdrop"></div>'
-      + '<div id="nz-lightbox-content">'
-      +   '<button id="nz-lightbox-close">✕</button>'
-      +   '<img id="nz-lightbox-img" src="" alt="플레이 사진">'
-      + '</div>';
-    document.body.appendChild(lb);
-
-    document.getElementById('nz-lightbox-backdrop').addEventListener('click', nzLightboxClose);
-    document.getElementById('nz-lightbox-close').addEventListener('click', nzLightboxClose);
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') nzLightboxClose();
-    });
-  }
-
-  function nzLightboxOpen(url) {
-    var lb = document.getElementById('nz-lightbox');
-    var img = document.getElementById('nz-lightbox-img');
-    if (!lb || !img) return;
-
-    function showLightbox() {
-      var content = document.getElementById('nz-lightbox-content');
-      lb.classList.add('nz-lightbox-active');
-      document.body.style.overflow = 'hidden';
-      if (!content) return;
-
-      var start = null;
-      var duration = 300;
-      content.style.opacity = '0';
-      content.style.transform = 'translateY(20px) scale(0.95)';
-
-      function animate(ts) {
-        if (!start) start = ts;
-        var p = Math.min((ts - start) / duration, 1);
-        var e = 1 - Math.pow(1 - p, 3); // ease-out cubic
-        content.style.opacity = e;
-        content.style.transform = 'translateY(' + (20 * (1 - e)) + 'px) scale(' + (0.95 + 0.05 * e) + ')';
-        if (p < 1) requestAnimationFrame(animate);
-        else { content.style.opacity = '1'; content.style.transform = ''; }
-      }
-      requestAnimationFrame(animate);
-    }
-
-    img.onload = showLightbox;
-    img.onerror = showLightbox;
-    img.src = url;
-    if (img.complete) { img.onload = null; img.onerror = null; showLightbox(); }
-  }
-
-  function nzLightboxClose() {
-    var lb = document.getElementById('nz-lightbox');
-    if (!lb) return;
-    lb.classList.remove('nz-lightbox-active');
-    document.body.style.overflow = '';
   }
 
   // ── 메인 렌더링 ───────────────────────────────────────
@@ -1773,6 +1774,19 @@ setTimeout(replaceMainTitle, 1500);
         thumb.className = 'nz-thumb';
         if (imgSrc) {
           thumb.style.backgroundImage = "url('" + imgSrc + "')";
+          thumb.style.cursor = 'pointer';
+          // 원본 이미지 URL 저장 (라이트박스용)
+          var origUrl = null;
+          if (fileCell) {
+            var link = fileCell.querySelector('a');
+            if (link && link.href) origUrl = link.href;
+          }
+          if (origUrl) {
+            thumb.setAttribute('data-nz-full', origUrl);
+            thumb.addEventListener('click', function () {
+              nzLightboxOpen(this.getAttribute('data-nz-full'));
+            });
+          }
         } else {
           thumb.classList.add('nz-thumb--empty');
           var logo = document.createElement('img');
