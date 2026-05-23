@@ -1058,6 +1058,10 @@ a.notion-page[href="/test"] {
     padding: 0 !important;
     margin: 0 !important;
   }
+  .nz-review-list-page .notion-collection-table__cell.select .notion-pill {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
   .nz-maker-row {
     display: flex !important;
   }
