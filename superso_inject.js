@@ -1775,7 +1775,11 @@ setTimeout(replaceMainTitle, 1500);
           thumb.style.backgroundImage = "url('" + imgSrc + "')";
         } else {
           thumb.classList.add('nz-thumb--empty');
-          thumb.textContent = '🧩';
+          var logo = document.createElement('img');
+          logo.src = 'https://assets.super.so/b529abf1-8288-44d9-87eb-38228677c041/images/bcc6ec8e-275b-4bfc-b598-b2108922863e/noname.png';
+          logo.alt = '';
+          logo.className = 'nz-thumb-logo';
+          thumb.appendChild(logo);
         }
 
         // 제목 셀 내부 재구성: [thumb] [info(title + maker)]
