@@ -1072,10 +1072,11 @@ a.notion-page[href="/test"] {
   background: #F3EFE5;
 }
 .nz-review-list-page .nz-thumb-logo {
-  width: 55%;
-  height: 55%;
+  width: 38%;
+  height: 38%;
   object-fit: contain;
-  opacity: .25;
+  opacity: .22;
+  margin: auto;
 }
 .nz-review-list-page .notion-collection-table__cell.title > div.nz-thumb-row {
   flex-direction: row !important;
