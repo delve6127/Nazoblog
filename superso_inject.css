@@ -1043,8 +1043,8 @@ a.notion-page[href="/test"] {
   .nz-review-list-page .notion-collection-table__cell.select {
     width: 28% !important;
     text-align: center !important;
-    padding-left: 4px !important;
-    padding-right: 4px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
   .nz-review-list-page .notion-collection-table__head-cell.select .notion-collection-table__head-cell-content {
     width: 100% !important;
@@ -1052,11 +1052,9 @@ a.notion-page[href="/test"] {
     padding: 0 !important;
     margin: 0 !important;
   }
-  .nz-review-list-page .notion-collection-table__head-cell.select .notion-collection-table__head-cell-content > *:not(span) {
-    display: none !important;
-  }
   .nz-review-list-page .notion-collection-table__cell.select > div {
     width: 100% !important;
+    justify-content: center !important;
     padding: 0 !important;
     margin: 0 !important;
   }
