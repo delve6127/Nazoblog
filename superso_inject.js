@@ -1716,6 +1716,12 @@ setTimeout(replaceMainTitle, 1500);
       }
     }
 
+    // 제목 열 헤더 텍스트 변경: '나조토키 제목' → '나조토키'
+    var titleHead = document.querySelector('.notion-collection-table__head-cell.title .notion-collection-table__head-cell-content');
+    if (titleHead && titleHead.textContent.trim() === '나조토키 제목') {
+      titleHead.textContent = '나조토키';
+    }
+
     // 제작사 열 → 제목 셀 아래로 병합 (2열화)
     if (!document.querySelector('[data-nz-2col]')) {
       var rows = document.querySelectorAll('.notion-collection-table tbody tr');
