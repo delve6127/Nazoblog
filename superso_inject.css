@@ -1075,8 +1075,8 @@ a.notion-page[href="/test"] {
   display: none !important;
 }
 
-/* ── 리뷰 예정 목록 - NEW 뱃지 ── */
-.nz-new-badge {
+/* ── 리뷰 예정 목록 - NEW 뱃지 (갤러리 카드용과 분리) ── */
+.nz-review-list-page .nz-new-badge {
   position: absolute;
   top: -6px;
   left: -6px;
