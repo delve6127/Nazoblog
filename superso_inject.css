@@ -1042,6 +1042,13 @@ a.notion-page[href="/test"] {
   .nz-review-list-page .notion-collection-table__head-cell.select,
   .nz-review-list-page .notion-collection-table__cell.select {
     width: 28% !important;
+    text-align: center !important;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+  }
+  .nz-review-list-page .notion-collection-table__head-cell.select .notion-collection-table__head-cell-content {
+    width: 100% !important;
+    justify-content: center !important;
   }
   .nz-maker-row {
     display: flex !important;
