@@ -1674,10 +1674,10 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
   }
   /* PC 헤더는 노션 원본 '상태' 그대로 (별도 처리 불필요) */
 
-  /* 컬럼 폭 재배분: 제목 38% / 제작사 25% / 상태 17% / 투표 20% */
+  /* 컬럼 폭 재배분: 제목 43% / 제작사 25% / 상태 15% / 투표 17% */
   body.nz-vote-page .notion-collection-table__head-cell.title,
   body.nz-vote-page .notion-collection-table__cell.title {
-    width: 38% !important;
+    width: 43% !important;
   }
   body.nz-vote-page .notion-collection-table__head-cell.multi_select,
   body.nz-vote-page .notion-collection-table__cell.multi_select {
@@ -1685,13 +1685,13 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
   }
   body.nz-vote-page .notion-collection-table__head-cell.select,
   body.nz-vote-page .notion-collection-table__cell.select {
-    width: 17% !important;
+    width: 15% !important;
   }
 
   /* 투표 셀 */
   body.nz-vote-page .nz-vote-cell,
   body.nz-vote-page .nz-vote-cell-header {
-    width: 20% !important;
+    width: 17% !important;
     padding: 12px 18px !important;
     text-align: center !important;
     vertical-align: middle !important;
