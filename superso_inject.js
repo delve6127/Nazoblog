@@ -645,6 +645,32 @@ function nzLightboxClose() {
     propsContainer.style.display = 'none';
     if (titleEl) titleEl.style.display = 'none';
 
+    // MFY 발매 시기: 렌더 시점에 속성이 아직 안 떴으면 폴링으로 뒤늦게 삽입
+    if (!mfyRelease && company.text && company.text.toLowerCase().indexOf('mystery for you') > -1) {
+      (function pollMfyRelease(tries) {
+        if (tries <= 0) return;
+        setTimeout(function () {
+          var val = getTextVal(ID.mfyRelease);
+          if (val) {
+            var badges = document.querySelector('.nz-review-wrap .nz-badges');
+            if (badges && !badges.querySelector('.badge-mfy-release')) {
+              var companyBadge = badges.querySelector('.badge');
+              var span = document.createElement('span');
+              span.className = 'badge badge-mfy-release';
+              span.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg> ' + val;
+              if (companyBadge && companyBadge.nextSibling) {
+                badges.insertBefore(span, companyBadge.nextSibling);
+              } else {
+                badges.appendChild(span);
+              }
+            }
+          } else {
+            pollMfyRelease(tries - 1);
+          }
+        }, 300);
+      })(20);
+    }
+
     var calloutEl = document.querySelector('.notion-callout');
     if (calloutEl) {
       var contentEl = calloutEl.querySelector('.notion-callout__content');
