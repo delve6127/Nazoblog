@@ -309,7 +309,8 @@ function nzLightboxClose() {
     design:       'property-5f3d7a66',
     photo:        'property-3e44474d',
     purchase:     'property-48527e3b',
-    pad:          'property-46464855'
+    pad:          'property-46464855',
+    mfyRelease:   'property-517d3b40'
   };
 
   // ── 값 읽기 헬퍼 ─────────────────────────────────────
@@ -533,6 +534,7 @@ function nzLightboxClose() {
     var pad          = getSelectVal(ID.pad);
     var purchase     = getSelectVal(ID.purchase);
     if (!purchase.text) purchase = { text: getTextVal(ID.purchase), cls: '' };
+    var mfyRelease   = getTextVal(ID.mfyRelease);
     var scores = {
       satisfaction: getNumVal(ID.satisfaction),
       puzzle:       getNumVal(ID.puzzle),
@@ -558,6 +560,7 @@ function nzLightboxClose() {
       +   '</div>'
       +   '<div class="nz-badges">'
       +     (company.text ? '<span class="badge ' + pillToColor(company.cls) + '">' + company.text + '</span>' : '')
+      +     (mfyRelease ? '<span class="badge badge-mfy-release"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg> ' + mfyRelease + '</span>' : '')
       +     (function() {
               if (!recommend.text) return '';
               var rc = REC_COLORS[recommend.text];

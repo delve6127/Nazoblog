@@ -407,6 +407,12 @@ a.notion-page[href="/test"] {
   color: #78716c;
 }
 .nz-review-wrap .badge-teal     { background: #ccfbf1; color: #0d7377; }
+.nz-review-wrap .badge-mfy-release {
+  background: #f2e8e0;
+  border: 0.5px solid rgba(0,0,0,0.12);
+  color: #8a6a50;
+  gap: 3px;
+}
 
 /* 체감 난이도 5단계 */
 .nz-diff-steps {
