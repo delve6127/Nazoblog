@@ -395,6 +395,40 @@ function nzLightboxClose() {
     'badge-brown':  { bg: '#f2e8e0', color: '#8a6a50' }
   };
 
+  var BADGE_BORDERS = {
+    'badge-red': '#f0a0a0', 'badge-blue': '#93b8e0', 'badge-green': '#86e5a0',
+    'badge-purple': '#c4b5f0', 'badge-orange': '#f0b080', 'badge-yellow': '#f0d87a',
+    'badge-pink': '#f0b4d0', 'badge-gray': '#d6d3d1', 'badge-brown': '#d4c0b0'
+  };
+
+  var DIFF_LEVEL_COLORS = {
+    'ROOKIE': 'badge-gray', 'BEGINNER': 'badge-gray', 'EASY': 'badge-green',
+    'MEDIUM': 'badge-blue', 'NORMAL': 'badge-blue', 'HARD': 'badge-orange',
+    'DIFFICULT': 'badge-red', 'EXPERT': 'badge-purple', 'MASTER': 'badge-pink'
+  };
+
+  function buildGradBadge(text, sizeClass) {
+    var sep = text.indexOf('/') > -1 ? '/' : '&';
+    var parts = text.split(sep).map(function(p) { return p.trim(); });
+    var pd = parts.map(function(p) {
+      var key = DIFF_LEVEL_COLORS[p.toUpperCase()] || 'badge-gray';
+      var bc = BADGE_COLORS[key] || BADGE_COLORS['badge-gray'];
+      return { text: p, color: bc.color, bg: bc.bg, border: BADGE_BORDERS[key] || '#d6d3d1' };
+    });
+    var bgStops = pd.map(function(d, i) {
+      return d.bg + ' ' + Math.round(i * 100 / (pd.length - 1)) + '%';
+    }).join(',');
+    var borderStops = pd.map(function(d, i) {
+      return d.border + ' ' + Math.round(i * 100 / (pd.length - 1)) + '%';
+    }).join(',');
+    var html = pd.map(function(d) {
+      return '<span style="color:' + d.color + '">' + d.text + '</span>';
+    }).join('<span class="nz-diff-sep"> / </span>');
+    return '<div class="nz-diff-grad-border" style="background:linear-gradient(90deg,' + borderStops + ')">'
+         + '<div class="nz-diff-grad-inner badge-lg' + sizeClass + '" style="background:linear-gradient(90deg,' + bgStops + ')">'
+         + html + '</div></div>';
+  }
+
   // ── 추천도 색상 매핑 ─────────────────────────────────
   var REC_COLORS = {
     '강력추천': { bg: '#3b82f6', color: '#fff', weight: '700' },
@@ -583,6 +617,7 @@ function nzLightboxClose() {
                      var sizeClass = len > 20 ? ' badge-lg-xxs'
                                    : (len > 14 || (isMulti && len > 10)) ? ' badge-lg-xs'
                                    : (isMulti || len > 8) ? ' badge-lg-sm' : '';
+                     if (d.text.indexOf('/') > -1 || d.text.indexOf('&') > -1) return buildGradBadge(d.text, sizeClass);
                      return '<span class="badge badge-lg' + sizeClass + ' ' + pillToColor(d.cls) + '">' + d.text + '</span>';
                    }).join('')
                  + '</div>'

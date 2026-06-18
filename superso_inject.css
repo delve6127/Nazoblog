@@ -643,6 +643,22 @@ a.notion-page[href="/test"] {
 .nz-review-wrap .badge-lg-xs  { font-size: 9px;  padding: 5px 4px; line-height: 1.4; }
 .nz-review-wrap .badge-lg-xxs { font-size: 7.5px; padding: 4px 3px; line-height: 1.4; }
 
+/* 공식 난이도 그라데이션 뱃지 */
+.nz-diff-grad-border {
+  border-radius: 20px;
+  padding: 1.5px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.nz-diff-grad-inner {
+  display: block;
+  text-align: center;
+  font-weight: 500;
+  border-radius: 18.5px;
+  line-height: 1.4;
+}
+.nz-diff-sep { color: #a8a8a8; }
+
 /* ── 갤러리 카드 커스텀 ── */
 .nz-card-custom .notion-collection-card__property-list > *:not(.notion-property__title) {
   display: none !important;
