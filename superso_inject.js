@@ -580,7 +580,8 @@ function nzLightboxClose() {
                  + officialDiffs.map(function (d) {
                      var isMulti = officialDiffs.length > 1;
                      var len = d.text.length;
-                     var sizeClass = (len > 16 || (isMulti && len > 10)) ? ' badge-lg-xs'
+                     var sizeClass = len > 20 ? ' badge-lg-xxs'
+                                   : (len > 14 || (isMulti && len > 10)) ? ' badge-lg-xs'
                                    : (isMulti || len > 8) ? ' badge-lg-sm' : '';
                      return '<span class="badge badge-lg' + sizeClass + ' ' + pillToColor(d.cls) + '">' + d.text + '</span>';
                    }).join('')

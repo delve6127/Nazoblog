@@ -640,8 +640,8 @@ a.notion-page[href="/test"] {
   justify-content: center;
 }
 .nz-review-wrap .badge-lg-sm  { font-size: 12px; padding: 6px 6px; line-height: 1.4; }
-.nz-review-wrap .badge-lg-xs  { font-size: 10px; padding: 5px 4px; line-height: 1.4; }
-.nz-official-diff-wrap .badge { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nz-review-wrap .badge-lg-xs  { font-size: 9px;  padding: 5px 4px; line-height: 1.4; }
+.nz-review-wrap .badge-lg-xxs { font-size: 7.5px; padding: 4px 3px; line-height: 1.4; }
 
 /* ── 갤러리 카드 커스텀 ── */
 .nz-card-custom .notion-collection-card__property-list > *:not(.notion-property__title) {
