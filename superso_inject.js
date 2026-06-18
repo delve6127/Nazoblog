@@ -423,7 +423,7 @@ function nzLightboxClose() {
     }).join(',');
     var html = pd.map(function(d) {
       return '<span style="color:' + d.color + '">' + d.text + '</span>';
-    }).join('<span class="nz-diff-sep"> / </span>');
+    }).join('<span class="nz-diff-sep">' + sep + '</span>');
     return '<div class="nz-diff-grad-border" style="background:linear-gradient(90deg,' + borderStops + ')">'
          + '<div class="nz-diff-grad-inner badge-lg' + sizeClass + '" style="background:linear-gradient(90deg,' + bgStops + ')">'
          + html + '</div></div>';
