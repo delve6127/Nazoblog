@@ -647,8 +647,9 @@ a.notion-page[href="/test"] {
 .nz-diff-grad-border {
   border-radius: 20px;
   padding: 1.5px;
-  margin-top: auto;
-  margin-bottom: auto;
+  margin: auto;
+  width: fit-content;
+  max-width: 100%;
 }
 .nz-diff-grad-inner {
   display: block;
