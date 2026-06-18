@@ -579,7 +579,9 @@ function nzLightboxClose() {
                ? '<div class="nz-official-diff-wrap' + (officialDiffs.length > 1 ? ' nz-official-diff-wrap--multi' : '') + '">'
                  + officialDiffs.map(function (d) {
                      var isMulti = officialDiffs.length > 1;
-                     var sizeClass = (isMulti || d.text.length > 8) ? ' badge-lg-sm' : '';
+                     var len = d.text.length;
+                     var sizeClass = (len > 16 || (isMulti && len > 10)) ? ' badge-lg-xs'
+                                   : (isMulti || len > 8) ? ' badge-lg-sm' : '';
                      return '<span class="badge badge-lg' + sizeClass + ' ' + pillToColor(d.cls) + '">' + d.text + '</span>';
                    }).join('')
                  + '</div>'
