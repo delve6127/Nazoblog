@@ -971,6 +971,7 @@ function nzLightboxClose() {
   var RECOMMEND_SEL = '.property-646a6749';
   var OFFICIAL_SEL  = '.property-6d44666a';
   var PUBLISH_SEL   = '.property-54495c70';
+  var MFY_REL_SEL   = '.property-517d3b40';
 
   // ── 체감 난이도 색상 매핑 ──
   var DIFF_COLORS = {
@@ -1051,6 +1052,14 @@ function nzLightboxClose() {
         }
       }
 
+      // MFY 발매년월 읽기
+      var mfyReleaseEl = card.querySelector(MFY_REL_SEL);
+      var mfyRelText = '';
+      if (mfyReleaseEl) {
+        mfyRelText = mfyReleaseEl.textContent.trim();
+        mfyReleaseEl.style.display = 'none';
+      }
+
       // 새 레이아웃 조립
       var html = '';
 
@@ -1080,6 +1089,9 @@ function nzLightboxClose() {
       } else if (officialEl) {
         bottomParts.push('<span class="nz-card-official--none">표기 없음</span>');
       }
+      if (mfyRelText) {
+        bottomParts.push('<span class="nz-card-mfy-release"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>' + mfyRelText + '</span>');
+      }
 
       if (bottomParts.length) {
         html += '<div class="nz-card-bottom">' + bottomParts.join('') + '</div>';
@@ -1091,6 +1103,31 @@ function nzLightboxClose() {
       propsDiv.innerHTML = html;
       card.appendChild(propsDiv);
       card.classList.add('nz-card-custom');
+
+      // MFY 발매년월: 속성이 뒤늦게 로드될 수 있으므로 폴링
+      if (!mfyRelText) {
+        (function pollMfyCard(c, tries) {
+          if (tries <= 0) return;
+          setTimeout(function () {
+            var el = c.querySelector(MFY_REL_SEL);
+            if (el) {
+              var val = el.textContent.trim();
+              if (val) {
+                el.style.display = 'none';
+                var bottom = c.querySelector('.nz-card-bottom');
+                if (bottom && !bottom.querySelector('.nz-card-mfy-release')) {
+                  var span = document.createElement('span');
+                  span.className = 'nz-card-mfy-release';
+                  span.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>' + val;
+                  bottom.appendChild(span);
+                }
+              }
+            } else {
+              pollMfyCard(c, tries - 1);
+            }
+          }, 300);
+        })(card, 20);
+      }
     });
   }
 
