@@ -42,7 +42,10 @@ NOTION_API_VERSION = "2025-09-03"
 DIFF_MAP = {"아주 쉬움": 1, "쉬움": 2, "보통": 3, "어려움": 4, "아주 어려움": 5}
 
 # 비교 대상 필드 (노션 → SORT_DATA)
-COMPARE_FIELDS = ["diff", "satisfaction", "puzzle", "gimmick", "design", "language", "brand", "date"]
+COMPARE_FIELDS = ["diff", "satisfaction", "puzzle", "gimmick", "design", "language", "brand", "date", "rating", "quote", "beginner", "num"]
+
+REVIEW_URL_PREFIX = "/nazotoki-reviews/"
+PAGE_TITLE_SUFFIX = " 리뷰 | 몬빵의 나조토키 다락방"
 
 
 # ─── 유틸 ───────────────────────────────────────────────────────────
@@ -100,6 +103,19 @@ def extract_props(page: dict) -> dict:
     # 노션의 "작성일"(created_time)은 페이지를 만든 시각이라 의미가 다르다.
     clear_date = ((p.get("클리어 날짜", {}).get("date") or {}).get("start") or "")[:10]
 
+    rating = (p.get("추천여부", {}).get("select") or {}).get("name")
+
+    # 한줄평: 비어 있으면 None (미작성 상태를 갱신으로 오인하지 않도록)
+    quote = "".join(t.get("plain_text", "") for t in p.get("한줄평", {}).get("rich_text", [])).strip()
+    quote = quote or None
+
+    beginner = bool(p.get("입문추천", {}).get("checkbox"))
+
+    # 리뷰 순번은 노션 "N번째 나조"가 진실의 원천 (1~48 결번 없음 검증됨)
+    num = p.get("N번째 나조", {}).get("number")
+    if num is not None:
+        num = int(num)
+
     return {
         "title": title,
         "date": clear_date,
@@ -110,6 +126,10 @@ def extract_props(page: dict) -> dict:
         "design": p.get("연출/디자인", {}).get("number"),
         "language": p.get("언어접근성", {}).get("number"),
         "brand": brand,
+        "rating": rating,
+        "quote": quote,
+        "beginner": beginner,
+        "num": num,
         "visibility": visibility,
     }
 
@@ -123,13 +143,61 @@ def fetch_sitemap_slugs() -> list:
     return [loc.split("/nazotoki-reviews/", 1)[1].rstrip("/") for loc in locs]
 
 
+def resolve_new_urls(new_titles: list, sort_data: dict, sitemap_paths: list) -> dict:
+    """새 리뷰의 제목 → 실제 페이지 URL 매핑을 만든다.
+
+    사이트맵 슬러그를 순서대로 추측하면 여러 건이 밀렸을 때 짝이 어긋나므로,
+    아직 SORT_DATA에 쓰이지 않은 슬러그의 실제 페이지를 열어 <title>
+    ("{노션 제목} 리뷰 | 몬빵의 나조토키 다락방")을 읽고 정확히 대조한다.
+    """
+    import html as html_mod
+
+    if not new_titles:
+        return {}
+    used = {entry["url"] for entry in sort_data.values()}
+    unused = [p for p in sitemap_paths if p not in used]
+
+    title_by_url = {}
+    for path in unused:
+        page_url = "https://nazo.monbbang.me" + path
+        try:
+            req = urllib.request.Request(page_url, headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                page = resp.read().decode("utf-8", errors="replace")
+        except Exception as e:
+            print(f"⚠️  페이지 조회 실패: {path} ({e})")
+            continue
+        m = re.search(r"<title>(.*?)</title>", page, re.DOTALL)
+        if not m:
+            continue
+        t = html_mod.unescape(m.group(1)).strip()
+        if t.endswith(PAGE_TITLE_SUFFIX):
+            t = t[: -len(PAGE_TITLE_SUFFIX)].strip()
+        title_by_url[path] = t
+
+    url_by_title = {}
+    # 1차: 정확 일치, 2차: 공백 무시 일치 (Super.so SEO 제목의 띄어쓰기 차이 흡수)
+    squash = lambda s: re.sub(r"\s+", "", s)
+    for title in new_titles:
+        exact = [u for u, t in title_by_url.items() if t == title]
+        loose = [u for u, t in title_by_url.items() if squash(t) == squash(title)]
+        match = exact or loose
+        if len(match) == 1:
+            url_by_title[title] = match[0]
+        elif len(match) > 1:
+            print(f"⚠️  URL 후보가 여러 개: {title} → {match} (수동 확인 필요, 건너뜀)")
+    return url_by_title
+
+
 # ─── 핵심 로직 ──────────────────────────────────────────────────────
-def diff_and_apply(notion_reviews: dict, sort_data: dict, sitemap_paths: list) -> dict:
+def diff_and_apply(notion_reviews: dict, sort_data: dict, url_by_title: dict) -> dict:
     """노션 데이터와 SORT_DATA를 비교해 변경사항을 sort_data에 반영하고,
-    변경 내역을 dict로 반환한다."""
-    changes = {"new": [], "updated": []}
-    used_paths = {entry["url"] for entry in sort_data.values()}
-    new_paths = [p for p in sitemap_paths if p not in used_paths]
+    변경 내역을 dict로 반환한다.
+
+    새 리뷰는 url_by_title(제목→실제 페이지 URL)에서 URL을 찾고,
+    못 찾으면 데이터 오염을 막기 위해 추가하지 않고 보고만 한다.
+    """
+    changes = {"new": [], "updated": [], "skipped_new": []}
     max_num = max((entry.get("num", 0) for entry in sort_data.values()), default=0)
 
     for title, props in notion_reviews.items():
@@ -147,11 +215,14 @@ def diff_and_apply(notion_reviews: dict, sort_data: dict, sitemap_paths: list) -
             if updates:
                 changes["updated"].append((title, updates))
         else:
-            max_num += 1
-            url = new_paths.pop(0) if new_paths else "/nazotoki-reviews/UNKNOWN"
-            url = url if url.startswith("/") else f"/nazotoki-reviews/{url}"
+            url = url_by_title.get(title)
+            if not url:
+                changes["skipped_new"].append(title)
+                continue
+            num = props["num"] if props.get("num") is not None else max_num + 1
+            max_num = max(max_num, num)
             entry = {
-                "num": max_num,
+                "num": num,
                 "date": props["date"],
                 "diff": props["diff"],
                 "satisfaction": props["satisfaction"],
@@ -160,10 +231,16 @@ def diff_and_apply(notion_reviews: dict, sort_data: dict, sitemap_paths: list) -
                 "design": props["design"],
                 "language": props["language"],
                 "brand": props["brand"],
+                "rating": props["rating"],
+                "quote": props["quote"],
+                "beginner": props["beginner"],
                 "url": url,
             }
             sort_data[title] = entry
             changes["new"].append((title, entry))
+
+    # 새 리뷰는 순번 순서로 정렬해 JSON에 깔끔하게 추가되도록
+    changes["new"].sort(key=lambda x: x[1]["num"])
     return changes
 
 
@@ -400,6 +477,11 @@ def print_report(changes, missing_phonetic, missing_company, dry_run=False, map_
             for field, old, new in fields:
                 print(f"      {field}: {old} → {new}")
 
+    if changes.get("skipped_new"):
+        print(f"\n🚫 URL을 못 찾아 추가 보류 ({len(changes['skipped_new'])}건) — Super.so에서 페이지 발행/SEO 제목 확인 필요")
+        for t in changes["skipped_new"]:
+            print(f"  - {t}")
+
     if not changes["new"] and not changes["updated"]:
         print("\n✅ 변경사항 없음")
 
@@ -466,8 +548,9 @@ def git_pull_rebase() -> None:
 # ─── 메인 ───────────────────────────────────────────────────────────
 def main() -> int:
     dry_run = "--dry-run" in sys.argv
+    no_pull = "--no-pull" in sys.argv  # 로컬에 의도적 미커밋 변경이 있을 때 (원격과 동일함을 직접 확인한 경우만)
 
-    if not dry_run:
+    if not dry_run and not no_pull:
         git_pull_rebase()
 
     token = load_token()
@@ -491,7 +574,12 @@ def main() -> int:
     with open(JSON_PATH, encoding="utf-8") as f:
         data = json.load(f)
 
-    changes = diff_and_apply(notion_reviews, data["SORT_DATA"], sitemap_paths)
+    new_titles = [t for t in notion_reviews if t not in data["SORT_DATA"]]
+    if new_titles:
+        print(f"📡 새 리뷰 {len(new_titles)}건 — 실제 페이지 제목과 URL 대조 중...")
+    url_by_title = resolve_new_urls(new_titles, data["SORT_DATA"], sitemap_paths)
+
+    changes = diff_and_apply(notion_reviews, data["SORT_DATA"], url_by_title)
     missing_phonetic, missing_company = detect_missing(data)
 
     if not dry_run and (changes["new"] or changes["updated"]):
