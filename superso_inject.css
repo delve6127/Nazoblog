@@ -1,5 +1,163 @@
+/* ════════════════════════════════════════════════════════
+   다락방 개편 v2 — 디자인 토큰 · 폰트 (핸드오프.md 기준)
+   @import는 반드시 파일 최상단에 있어야 동작함
+   ════════════════════════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=Jua&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap');
+
+@font-face {
+  font-family: 'OmyuPretty';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-01@1.0/omyu_pretty.woff2') format('woff2');
+  font-weight: normal;
+  font-display: swap;
+}
+
+:root {
+  --nz-bg-page: #FAF7F2;
+  --nz-bg-sidebar: #EEE8D6;
+  --nz-paper: #FFFDF7;
+  --nz-paper-warm: #FAF6EB;
+  --nz-ink: #3D372E;
+  --nz-muted-1: #8A8272;
+  --nz-muted-3: #5C554A;
+  --nz-muted-4: #6B6353;
+  --nz-line: #D9CFB6;
+  --nz-line-soft: #E0D7C2;
+  --nz-card-border: #E5DCC6;
+  --nz-rule-brown: #C4B695;
+  --nz-lemon: #FFD953;
+  --nz-lemon-hi: #FFDE59;
+  --nz-lemon-hover: #FFCF33;
+  --nz-chip-hover: #FFF3C9;
+  --nz-featured-bg: #FFF7DC;
+  --nz-featured-border: #F0E1AC;
+  --nz-link: #8A6D00;
+  --nz-link-hover: #5C4B00;
+  --nz-new-badge: #E4573D;
+  --nz-font-display: 'Jua', sans-serif;
+  --nz-font-hand: 'OmyuPretty', sans-serif;
+  --nz-font-body: 'IBM Plex Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* 전역 본문 폰트 — Super.so 테마 폰트 변수(나눔스퀘어라운드)를 IBM Plex로 덮어씀 */
+html:root {
+  --primary-font: 'IBM Plex Sans KR', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  --secondary-font: 'IBM Plex Sans KR', -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
+body,
+.notion-app,
+.super-content,
+.notion-body {
+  font-family: var(--nz-font-body) !important;
+}
+
 /* ── 비공개 카드 숨김 ── */
 .nz-card-hidden { display: none !important; }
+
+/* ── 유틸 네비 (v2): 레몬 홈버튼 + 텍스트 링크 ── */
+.super-navbar,
+.super-navbar.simple {
+  background: var(--nz-bg-page) !important;
+  border-bottom: 1px solid var(--nz-line);
+  box-shadow: none !important;
+  --navbar-shadow: none;
+}
+.super-navbar__content {
+  padding: 10px 24px !important;
+  max-width: none !important;
+  align-items: center !important;
+}
+.super-navbar__logo,
+.super-navbar__logo-image {
+  display: flex !important;
+  align-items: center !important;
+}
+/* 로고 → 레몬 아이콘 (이미지는 JS에서 교체) */
+.super-navbar__logo-image img {
+  width: 30px !important;
+  height: 30px !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  transition: transform .15s;
+}
+.super-navbar__logo:hover .super-navbar__logo-image img {
+  transform: rotate(-8deg) scale(1.08);
+}
+/* 링크: 텍스트만, 아이콘 제거 */
+.super-navbar__item {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: var(--nz-muted-4) !important;
+  background: transparent !important;
+  padding: 6px 12px !important;
+}
+.super-navbar__item:hover {
+  color: var(--nz-ink) !important;
+  background: transparent !important;
+}
+.super-navbar__item svg,
+.super-navbar__item .notion-icon {
+  display: none !important;
+}
+
+/* 모바일: Super 기본 메뉴 버튼 숨기고 커스텀 ☰ 드롭다운 사용 */
+.nz-mobile-menu-btn { display: none; }
+@media (max-width: 768px) {
+  .super-navbar__menu-open { display: none !important; }
+  .super-navbar__content { padding: 9px 14px !important; }
+  .super-navbar__logo-image img {
+    width: 29px !important;
+    height: 29px !important;
+  }
+  .nz-mobile-menu-btn {
+    display: block;
+    font-size: 23px;
+    line-height: 1;
+    padding: 4px 6px;
+    cursor: pointer;
+    color: var(--nz-muted-4);
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .nz-mobile-menu-btn:hover { color: var(--nz-ink); }
+}
+.nz-mobile-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 10px;
+  margin-top: 6px;
+  background: var(--nz-paper);
+  border: 1px solid var(--nz-line-soft);
+  box-shadow: 0 8px 24px rgba(61, 55, 46, .14);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  min-width: 170px;
+  overflow: hidden;
+  z-index: 200;
+  animation: nz-fade-in .15s ease;
+}
+.nz-mobile-dropdown a {
+  padding: 12px 18px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--nz-muted-3);
+  text-decoration: none;
+  border-bottom: 1px solid #F0EADB;
+}
+.nz-mobile-dropdown a:last-child { border-bottom: none; }
+.nz-mobile-dropdown a:hover {
+  background: var(--nz-chip-hover);
+  color: var(--nz-ink);
+}
+.nz-mobile-menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+}
+@keyframes nz-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 
 /* ── 로딩 스크린 ── */
 #nz-loader {
@@ -60,82 +218,80 @@ a.notion-page[href="/test"] {
   display: none !important;
 }
 
-/* ── 리뷰 카운터 + 마지막 업데이트 ── */
-#nz-review-counter {
+/* ── 마스트헤드 (v2): 타이틀 → 오뮤 태그라인 → 업데이트 → 담백 CTA → 2px 갈색 실선 ── */
+.nz-masthead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
   text-align: center;
-  font-size: 13px;
-  color: #888;
-  margin: 32px 0 -20px;
-}
-@media (max-width: 768px) {
-  #nz-review-counter {
-    margin: 48px 0 -32px;
-  }
-}
-#nz-review-counter strong {
-  color: #333;
-  font-size: 15px;
-}
-
-/* ── 메인 히어로 카피 ── */
-.nz-hero-copy {
-  text-align: center !important;
-  margin: 32px auto 0;
-  padding: 0 16px;
-  max-width: 640px;
+  padding: 24px 20px 32px;
+  border-bottom: 2px solid var(--nz-rule-brown);
+  /* 노션 컨테이너 밖까지 실선이 닿도록 전폭 확장 */
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  box-sizing: border-box;
   pointer-events: auto;
 }
-.nz-hero-copy * {
-  pointer-events: auto;
+.nz-masthead * { pointer-events: auto; }
+@media (min-width: 769px) {
+  .nz-masthead { padding: 48px 24px 32px; gap: 14px; }
 }
-.nz-hero-copy__main {
-  font-size: 15px;
-  font-weight: 400;
-  line-height: 1.6;
-  color: #4a4a48;
-  margin: 0 0 12px;
-  letter-spacing: -0.1px;
-  word-break: keep-all;
-  overflow-wrap: break-word;
-}
-.nz-hero-copy__cta {
-  font-size: 13px;
-  color: #666;
-  margin: 0;
-}
-.nz-hero-copy__arrow {
-  color: #999;
-  margin: 0 2px;
-}
-.nz-hero-copy__link {
-  color: #2c2c2a;
-  text-decoration: underline;
-  text-decoration-color: #F4D35E;
-  text-decoration-thickness: 3px;
-  text-underline-offset: 3px;
-  font-weight: 500;
+.nz-masthead__title-img {
+  width: 620px;
+  max-width: 100%;
+  height: auto;
+  display: inline-block;
   cursor: pointer;
 }
-.nz-hero-copy__link:hover {
-  text-decoration-color: #E8C547;
+.nz-masthead__tagline {
+  font-family: var(--nz-font-hand);
+  font-size: 20px;
+  color: var(--nz-muted-4);
+  line-height: 1.5;
+  margin: 0;
 }
-/* PC에서는 히어로 카피를 한 줄로 */
-@media (min-width: 769px) {
-  .nz-hero-copy__br { display: none; }
+.nz-masthead__updated {
+  font-size: 12.5px;
+  color: var(--nz-muted-1);
+  margin: -6px 0 0;
 }
+.nz-masthead__cta {
+  font-size: 15px;
+  color: var(--nz-muted-3);
+  margin: 2px 0 0;
+}
+.nz-masthead__cta-arrow {
+  color: #B5AC94;
+  margin: 0 4px;
+}
+.nz-masthead__cta-link {
+  font-weight: 700;
+  color: var(--nz-ink);
+  border-bottom: 3px solid var(--nz-lemon);
+  padding-bottom: 1px;
+  line-height: 1.15;
+  text-decoration: none !important;
+  cursor: pointer;
+}
+.nz-masthead__cta-link:hover {
+  border-bottom-color: var(--nz-lemon-hover);
+  color: #000;
+}
+/* 태그라인 줄바꿈: 모바일 2줄 / PC 한 줄(· 구분) */
+.nz-masthead__br { display: none; }
+.nz-masthead__dot { margin: 0 2px; }
 @media (max-width: 768px) {
-  .nz-hero-copy {
-    margin-top: 48px;
-    padding: 0 12px;
+  .nz-masthead {
+    gap: 9px;
+    padding: 20px 16px 24px;
   }
-  .nz-hero-copy__main {
-    font-size: 14px;
-    line-height: 1.55;
-    margin: 0 0 10px;
-  }
-  .nz-hero-copy__cta {
-    font-size: 12.5px;
-  }
+  .nz-masthead__title-img { width: 340px; }
+  .nz-masthead__tagline { font-size: 19px; }
+  .nz-masthead__updated { margin-top: -4px; }
+  .nz-masthead__cta { font-size: 15.5px; }
+  .nz-masthead__br { display: inline; }
+  .nz-masthead__dot { display: none; }
 }
 
 /* ── 갤러리 카드 작성일 숨김 (NEW 뱃지 판별용으로 DOM에만 유지) ── */
@@ -169,34 +325,19 @@ a.notion-page[href="/test"] {
   }
 }
 
-/* ── 메인 페이지 타이틀 이미지 ── */
-.nz-title-img-wrap {
-  text-align: center;
-  padding: 0 16px;
-  margin-top: -120px;
-  margin-bottom: -120px;
-}
-
+/* ── 메인 페이지 타이틀 자리 보정 ── */
 /* 원래 Notion 제목 영역이 클릭을 가로채지 않도록 */
 .notion-header__title-wrapper {
   pointer-events: none !important;
 }
-.nz-title-img-wrap img {
-  pointer-events: none;
-  max-width: 590px;
-  width: 100%;
-  height: auto;
-  display: inline-block;
+/* 숨긴 노션 제목이 차지하던 세로 여백 상쇄 + 아래 잔여 여백 제거 */
+.nz-masthead {
+  margin-top: -120px;
+  margin-bottom: -16px;
 }
 @media (max-width: 768px) {
-  .nz-title-img-wrap {
-    padding: 0 12px;
+  .nz-masthead {
     margin-top: -80px;
-    margin-bottom: -90px;
-  }
-  .nz-title-img-wrap img {
-    max-width: 500px;
-    width: 100%;
   }
 }
 
@@ -580,19 +721,23 @@ a.notion-page[href="/test"] {
   background: #fff;
 }
 
-/* ── 푸터 스타일 ── */
+/* ── 푸터 스타일 (v2: 오뮤체) ── */
 .super-footer__logo { display: none !important; }
 .super-footer__divider { display: none !important; }
 .super-footer {
   text-align: center !important;
-  padding: 14px 20px 24px !important;
-  border-top: 1px solid #e8e6e1 !important;
+  padding: 20px 20px 26px !important;
+  border-top: 1px solid var(--nz-line) !important;
 }
 .super-footer__footnote {
-  font-size: 14px !important;
-  color: #999 !important;
-  font-weight: 300 !important;
+  font-family: var(--nz-font-hand) !important;
+  font-size: 16px !important;
+  color: var(--nz-muted-1) !important;
+  font-weight: 400 !important;
   line-height: 1.6 !important;
+}
+@media (max-width: 768px) {
+  .super-footer__footnote { font-size: 15px !important; }
 }
 
 /* 플레이 사진 그리드 */
@@ -2305,4 +2450,633 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
   .super-content.page__what-is-nazo .nz-wn-cta__sub {
     margin-left: auto;
   }
+}
+
+/* ════════════════════════════════════════════════════════
+   갤러리 v2 (다락방 개편 2단계) — 필터 칩 · 검색 · 카드 · 페이지네이션 · 노트 박스
+   ════════════════════════════════════════════════════════ */
+
+/* ── 컨트롤 영역 ── */
+#nz2-controls {
+  max-width: 1520px;
+  margin: 0 auto;
+  padding: 11px 12px 0;
+  box-sizing: border-box;
+}
+#nz2-chips { display: flex; gap: 5px; }
+.nz2-chip {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: 1px solid #DCD2BA;
+  color: var(--nz-muted-3);
+  font-size: clamp(10.5px, 3.2vw, 14px);
+  font-weight: 600;
+  font-family: var(--nz-font-body);
+  border-radius: 99px;
+  padding: 8px 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none !important;
+  display: block;
+  box-sizing: border-box;
+  line-height: 1.4;
+}
+.nz2-chip:hover { background: var(--nz-chip-hover); color: var(--nz-ink); }
+a.nz2-chip--link { color: var(--nz-muted-3) !important; }
+a.nz2-chip--link:hover { color: var(--nz-ink) !important; }
+.nz2-chip--active,
+.nz2-chip--active:hover {
+  background: var(--nz-ink);
+  color: var(--nz-paper);
+  border-color: var(--nz-ink);
+}
+.nz2-chip--diff { padding: 0; position: relative; }
+.nz2-chip--diff #nz2-diff-label {
+  display: block;
+  padding: 8px 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  pointer-events: none;
+}
+.nz2-chip--diff select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
+/* ── 검색 바 ── */
+#nz2-searchbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--nz-paper);
+  border: 1px solid #DCD2BA;
+  border-radius: 99px;
+  padding: 7px 14px;
+  margin: 10px 4px 0;
+}
+#nz2-search-icon { font-size: 26px; font-weight: 700; color: #A79E8A; line-height: 1; }
+#nz2-search {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 14px;
+  color: var(--nz-ink);
+  font-family: var(--nz-font-body);
+  padding: 0;
+}
+#nz2-search::placeholder { color: #A79E8A; }
+#nz2-search-clear { font-size: 12px; color: #A79E8A; cursor: pointer; line-height: 1; padding: 4px; }
+#nz2-search-clear:hover { color: var(--nz-ink); }
+#nz2-result-comment { font-size: 11.5px; color: var(--nz-muted-1); padding: 14px 16px 0; }
+
+/* ── 카드 공통 ── */
+.notion-collection-card.gallery {
+  background: var(--nz-paper) !important;
+  border: 1px solid var(--nz-card-border) !important;
+  border-radius: 0 !important;
+  box-shadow: 0 4px 14px rgba(61, 55, 46, .07) !important;
+  padding: 7px 7px 10px;
+  box-sizing: border-box;
+}
+.notion-collection-card.gallery:hover { transform: translateY(-2px); transition: transform .2s; }
+.notion-collection-card.gallery .notion-collection-card__cover { border-radius: 0 !important; }
+.nz-card-custom .notion-collection-card__property-list { padding: 8px 2px 0 !important; }
+.nz-card-custom .notion-property__title {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+.nz2-card-props { padding: 0 2px !important; margin-top: 4px !important; }
+.nz2-badges { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; min-width: 0; }
+.nz2-brand-chip { display: none; }
+.nz2-rec { font-size: 14px; font-weight: 700; border-radius: 5px; padding: 2px 8px; flex-shrink: 0; }
+.nz2-rec--strong { background: #1D5FD6; color: #FFFFFF; }
+.nz2-rec--rec    { background: #D6E6FF; color: #1D5FD6; }
+.nz2-rec--ok     { background: #EDF2F7; color: #5E7186; }
+.nz2-rec--meh    { background: #F1F2F4; color: #98A0A8; }
+.nz2-diff { display: inline-flex; align-items: center; gap: 4px; font-size: 14.5px; color: var(--nz-muted-1); white-space: nowrap; }
+.nz2-diff-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.nz2-mfy-slot { display: contents; }
+.nz2-mfy {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: var(--nz-paper-warm);
+  border: 1px solid var(--nz-line-soft);
+  color: #8A6D00;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 5px;
+  padding: 1px 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.nz2-mfy svg { width: 10px; height: 10px; }
+.nz2-brand-line {
+  font-size: 14px;
+  color: var(--nz-muted-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 6px;
+}
+.nz2-quote { display: none; }
+
+/* ── 큰 카드 ── */
+.nz2-card--big { padding: 11px 11px 13px; }
+.nz2-card--big .notion-property__title {
+  font-family: var(--nz-font-display) !important;
+  font-size: 18px !important;
+  font-weight: 400 !important;
+  white-space: normal;
+}
+.nz2-card--big .nz2-brand-chip {
+  display: inline-block;
+  background: #F1EADA;
+  color: var(--nz-muted-3);
+  font-size: 12.5px;
+  font-weight: 600;
+  border-radius: 5px;
+  padding: 2px 9px;
+  white-space: nowrap;
+}
+.nz2-card--big .nz2-rec { font-size: 12.5px; padding: 2px 9px; }
+.nz2-card--big .nz2-diff {
+  border: 1px solid #DCD2BA;
+  border-radius: 5px;
+  padding: 2px 9px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--nz-muted-3);
+}
+.nz2-card--big .nz2-mfy {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: var(--nz-paper-warm);
+  border: 1px solid var(--nz-line-soft);
+  color: #8A6D00;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 5px;
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+.nz2-card--big .nz2-brand-line { display: none; }
+.nz2-card--big .nz2-quote {
+  display: block;
+  font-family: var(--nz-font-hand);
+  font-size: 18px;
+  color: var(--nz-muted-4);
+  line-height: 1.5;
+  margin-top: 8px;
+  white-space: normal;
+}
+
+/* ── 모바일 그리드 · 커버 높이 ── */
+@media (max-width: 768px) {
+  /* 긴 글자는 말줄임 대신 줄바꿈으로 전부 표시 */
+  .nz-card-custom .notion-property__title,
+  .nz2-brand-line {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    word-break: keep-all;
+  }
+  .notion-collection-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 14px 12px !important;
+  }
+  .notion-collection-card.gallery.nz2-card--big { grid-column: 1 / -1; }
+  .notion-collection-card.gallery .notion-collection-card__cover,
+  .notion-collection-card.gallery img.notion-collection-card__cover {
+    height: 104px !important;
+    max-height: 104px !important;
+    min-height: unset !important;
+  }
+  .notion-collection-card.gallery.nz2-card--big .notion-collection-card__cover,
+  .notion-collection-card.gallery.nz2-card--big img.notion-collection-card__cover {
+    height: 170px !important;
+    max-height: 170px !important;
+  }
+}
+
+/* ── NEW 뱃지 (v2 톤) ── */
+.nz-new-badge {
+  background: var(--nz-new-badge) !important;
+  border-radius: 6px !important;
+  font-size: 10.5px !important;
+  padding: 2px 7px !important;
+  letter-spacing: 0 !important;
+}
+
+/* ── 페이지네이션 v2 ── */
+#nz-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-top: 1px solid var(--nz-line-soft);
+  padding-top: 16px;
+  margin: 18px 12px 0;
+}
+.nz2-page-btn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #DCD2BA;
+  background: var(--nz-paper);
+  color: var(--nz-muted-3);
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 7px;
+  cursor: pointer;
+  font-family: var(--nz-font-body);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nz2-page-btn:hover { background: var(--nz-chip-hover); }
+.nz2-page-btn--active,
+.nz2-page-btn--active:hover {
+  background: var(--nz-ink);
+  color: var(--nz-paper);
+  border-color: var(--nz-ink);
+  font-weight: 700;
+}
+.nz2-page-next {
+  border: none;
+  background: none;
+  color: var(--nz-muted-1);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0 2px;
+  font-family: var(--nz-font-body);
+}
+.nz2-page-next:hover { color: var(--nz-ink); }
+
+/* ── 빈 결과 상태 ── */
+#nz2-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 48px 16px;
+  text-align: center;
+}
+#nz2-empty img { width: 44px; height: 44px; }
+.nz2-empty-msg { font-family: var(--nz-font-hand); font-size: 19px; color: var(--nz-muted-4); }
+#nz2-empty-reset {
+  background: var(--nz-paper);
+  border: 1px solid #DCD2BA;
+  border-radius: 99px;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--nz-muted-3);
+  cursor: pointer;
+  font-family: var(--nz-font-body);
+}
+#nz2-empty-reset:hover { background: var(--nz-chip-hover); }
+
+/* ── 다락방 노트 박스 ── */
+#nz2-notes {
+  background: var(--nz-bg-sidebar);
+  padding: 16px 16px 18px;
+  margin: 24px 12px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.nz2-notes-title { font-family: var(--nz-font-hand); font-size: 20px; font-weight: 700; color: var(--nz-ink); }
+#nz2-notes-list { display: flex; flex-direction: column; gap: 10px; }
+.nz2-note-card {
+  background: var(--nz-paper);
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-decoration: none !important;
+  color: var(--nz-ink) !important;
+  transition: transform .15s;
+}
+.nz2-note-card:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(61, 55, 46, .1); }
+.nz2-note-card-title { font-size: 15.5px; font-weight: 700; line-height: 1.45; color: var(--nz-ink); }
+.nz2-note-card-meta { font-size: 14px; color: var(--nz-muted-1); }
+.nz2-notes-more { font-size: 14.5px; font-weight: 600; color: var(--nz-link) !important; text-decoration: none !important; }
+.nz2-notes-more:hover { text-decoration: underline !important; }
+.nz2-notes-empty {
+  background: var(--nz-paper);
+  border-radius: 8px;
+  padding: 16px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.nz2-notes-empty img { width: 20px; height: 20px; }
+.nz2-notes-empty span { font-family: var(--nz-font-hand); font-size: 16px; color: var(--nz-muted-1); }
+
+/* ── 메인: 마스트헤드 아래 빈 문단(노션 스페이서) 숨김 ── */
+.nz-home .notion-text:empty { display: none !important; }
+
+/* ── 메인: 콘텐츠 상단 기본 패딩 제거 (마스트헤드~필터 칩 간격 축소) ── */
+.nz-home .notion-page__content { padding-top: 0 !important; }
+.nz-home .notion-header { margin-bottom: 0 !important; }
+
+/* ── 메인: 노션 페이지 링크 블록 전체 숨김 (접근은 유틸 네비로) ── */
+.nz-home a.notion-page { display: none !important; }
+
+/* ════════════════════════════════════════════════════════
+   갤러리 v2 — PC 메인 (3단계): 필터 바 · 2단 레이아웃 · 카드
+   ════════════════════════════════════════════════════════ */
+
+/* 공통: PC 전용 select와 사이드바는 기본 숨김 (모바일) */
+.nz2-pc-select { display: none; }
+#nz2-sidebar { display: none; }
+#nz2-bar { display: block; }
+
+@media (min-width: 769px) {
+  /* 클로드 디자인 미리보기가 1520px 시안을 ~0.8배로 축소 표시했으므로,
+     사용자가 승인한 그 모습 그대로 재현하기 위해 PC 메인 전체를 0.8배로 표시 */
+  .nz-home .super-content {
+    zoom: 0.8;
+  }
+
+  /* PC: 마스트헤드 전폭 (zoom 0.8 좌표계 보정 — 100vw/0.8 = 125vw) */
+  .nz-masthead {
+    width: 125vw;
+    margin-left: calc(50% - 62.5vw);
+  }
+
+  /* Super 컨테이너 폭 해제 (메인만) */
+  .nz-home .super-content,
+  .nz-home .notion-page__content {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .nz-home .notion-root.max-width,
+  .nz-home .notion-root {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .nz-home .notion-root > * { width: 100%; max-width: 100%; box-sizing: border-box; }
+  .nz-home .notion-collection.inline { width: 100% !important; max-width: 100% !important; }
+
+  /* ── 필터 바: 전폭 구분선 + 내용 1520px ── */
+  #nz2-controls {
+    max-width: none;
+    width: 100%;
+    margin-left: 0;
+    padding: 0;
+    border-bottom: 1px solid var(--nz-line);
+  }
+  #nz2-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    max-width: 1520px;
+    margin: 0 auto;
+    padding: 12px 40px;
+    box-sizing: border-box;
+  }
+  #nz2-chips { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; flex: 1; min-width: 0; }
+  .nz2-chip {
+    flex: 0 0 auto;
+    font-size: 13.5px;
+    padding: 6px 16px;
+    border-color: transparent;
+  }
+  .nz2-chip:hover { background: var(--nz-chip-hover); color: var(--nz-ink); border-color: transparent; }
+  .nz2-chip--active,
+  .nz2-chip--active:hover {
+    background: var(--nz-chip-hover);
+    color: var(--nz-ink);
+    border-color: transparent;
+  }
+  #nz2-chip-diff { display: none; }
+  .nz2-pc-select {
+    display: block;
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: var(--nz-paper);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%235C554A' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 13px center;
+    border: 1px solid #DCD2BA;
+    border-radius: 99px;
+    padding: 6px 30px 6px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--nz-muted-3);
+    cursor: pointer;
+    font-family: var(--nz-font-body);
+  }
+  #nz2-searchbar {
+    width: 230px;
+    flex: 0 0 230px;
+    margin: 0 0 0 auto;
+    padding: 6px 14px;
+  }
+  #nz2-search-icon { font-size: 22px; }
+  #nz2-search { font-size: 13px; }
+  #nz2-result-comment {
+    padding: 0 0 18px;
+    font-size: 12.5px;
+  }
+
+  /* ── 2단 레이아웃 ── */
+  #nz2-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    max-width: 1520px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+    align-items: stretch;
+  }
+  #nz2-left {
+    padding: 38px 44px 44px 56px;
+    border-right: 1px solid var(--nz-line);
+    min-width: 0;
+  }
+  #nz2-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    background: var(--nz-bg-sidebar);
+    padding: 38px 56px 44px 32px;
+  }
+  #nz2-notes { display: none; }
+
+  /* ── 사이드바 ── */
+  .nz2-sb-header {
+    font-family: var(--nz-font-hand);
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--nz-ink);
+    border-bottom: 2px solid var(--nz-rule-brown);
+    padding-bottom: 8px;
+  }
+  .nz2-sb-notes { display: flex; flex-direction: column; gap: 12px; }
+  .nz2-sb-notes .nz2-note-card { border: 1px solid var(--nz-line-soft); padding: 14px 16px; }
+  .nz2-sb-notes .nz2-note-card:hover { border-color: #D9A13B; }
+  .nz2-sb-notes .nz2-note-card-title { font-size: 15px; }
+  .nz2-sb-notes .nz2-note-card-meta { font-size: 12px; }
+  #nz2-sidebar .nz2-notes-more { font-size: 13px; }
+  .nz2-upcoming {
+    border: 1.5px dashed #C9BE9F;
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-top: 10px;
+  }
+  .nz2-up-head { display: flex; align-items: baseline; justify-content: space-between; }
+  .nz2-up-head span {
+    font-family: var(--nz-font-hand);
+    font-weight: 700;
+    font-size: 19px;
+    color: var(--nz-muted-3);
+  }
+  .nz2-up-head a { font-size: 14px; font-weight: 600; color: var(--nz-link) !important; text-decoration: none !important; }
+  .nz2-up-head a:hover { text-decoration: underline !important; }
+  #nz2-upcoming-list { display: flex; flex-direction: column; gap: 9px; }
+  .nz2-up-item { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--nz-muted-4); min-width: 0; }
+  .nz2-up-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--nz-lemon); flex-shrink: 0; }
+  .nz2-up-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .nz2-up-status { margin-left: auto; font-size: 11px; color: #A79E8A; flex-shrink: 0; }
+
+  /* ── 갤러리 그리드: 큰 2 + 작은 리스트 ── */
+  .nz-home .notion-collection-gallery {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0 34px !important;
+    padding: 0 !important;
+  }
+
+  /* 큰 카드: 투명 카드 + 종이 프레임 사진 ── */
+  .nz-home .notion-collection-card.gallery.nz2-card--big {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0;
+    margin-bottom: 30px;
+  }
+  .nz-home .nz2-card--big .notion-collection-card__cover,
+  .nz-home .nz2-card--big img.notion-collection-card__cover {
+    width: calc(100% - 24px);
+    height: 240px !important;
+    min-height: unset !important;
+    max-height: none !important;
+    background: var(--nz-paper);
+    border: 1px solid var(--nz-card-border);
+    box-shadow: 0 4px 14px rgba(61, 55, 46, .07);
+    padding: 12px 12px 14px;
+    box-sizing: content-box;
+    object-fit: cover;
+  }
+  .nz-home .nz2-card--big .notion-collection-card__property-list { padding: 14px 2px 0 !important; }
+  .nz-home .nz2-card--big .notion-property__title {
+    font-family: var(--nz-font-body) !important;
+    font-size: 21px !important;
+    font-weight: 700 !important;
+    white-space: normal;
+  }
+  .nz-home .nz2-card--big .nz2-brand-chip {
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    font-size: 14.5px;
+    font-weight: 400;
+    color: var(--nz-muted-1);
+    margin-right: 4px;
+  }
+  .nz-home .nz2-card--big .nz2-quote { font-size: 19px; }
+
+  /* 작은 카드: 가로 리스트 행 ── */
+  .nz-home .notion-collection-card.gallery:not(.nz2-card--big) {
+    background: transparent !important;
+    border: none !important;
+    border-top: 1px solid var(--nz-line) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 22px 0;
+    display: grid;
+    grid-template-columns: 111px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    column-gap: 6px;
+    align-content: start;
+  }
+  .nz-home .notion-collection-card.gallery:not(.nz2-card--big):hover {
+    background: rgba(255, 253, 247, .6) !important;
+    transform: none;
+  }
+  .nz-home .notion-collection-card.gallery:not(.nz2-card--big) .notion-collection-card__cover,
+  .nz-home .notion-collection-card.gallery:not(.nz2-card--big) img.notion-collection-card__cover {
+    grid-row: 1 / span 2;
+    grid-column: 1;
+    width: 97px;
+    height: 73px !important;
+    min-height: unset !important;
+    max-height: none !important;
+    background: var(--nz-paper);
+    border: 1px solid var(--nz-card-border);
+    box-shadow: 0 2px 6px rgba(61, 55, 46, .06);
+    padding: 5px;
+    box-sizing: content-box;
+    object-fit: cover;
+  }
+  .nz-home .notion-collection-card.gallery:not(.nz2-card--big) .notion-collection-card__property-list {
+    grid-column: 2;
+    padding: 0 !important;
+  }
+  .nz-home .notion-collection-card.gallery:not(.nz2-card--big) .notion-property__title {
+    font-size: 17.5px !important;
+    white-space: normal;
+  }
+  .nz-home .notion-collection-card.gallery:not(.nz2-card--big) .nz2-card-props {
+    grid-column: 2;
+    margin-top: 6px !important;
+  }
+  .nz-home .notion-collection-card.gallery:not(.nz2-card--big) .nz2-rec { font-size: 12.5px; padding: 2px 9px; }
+  .nz-home .notion-collection-card.gallery:not(.nz2-card--big) .nz2-diff {
+    border: 1px solid #DCD2BA;
+    border-radius: 6px;
+    padding: 2px 9px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--nz-muted-3);
+    background: var(--nz-paper);
+  }
+  .nz-home .notion-collection-card.gallery:not(.nz2-card--big) .nz2-brand-line { font-size: 13.5px; margin-top: 6px; }
+
+  /* ── 페이지네이션 PC ── */
+  #nz-pagination { margin: 0; padding-top: 20px; gap: 7px; }
+  .nz2-page-btn { width: 32px; height: 32px; font-size: 13px; border-radius: 8px; }
+  .nz2-page-next { font-size: 13px; }
 }

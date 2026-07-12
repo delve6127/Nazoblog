@@ -1,13 +1,17 @@
 // ── 메인 히어로 카피 (문구 수정은 여기서) ──
 var NZ_HERO_COPY = {
-  main: '한국인 플레이어의 시선으로 <br class="nz-hero-copy__br">일본 나조토키(謎解き)를 풀고 리뷰합니다.',
+  tagline: '한국인의 시선으로 기록하는 일본 나조토키',
+  tagline_count: '지금까지 {N}작품을 풀었어요',   // {N} 자리에 리뷰 수가 들어감
   cta_before: '나조토키가 처음이라면',
   cta_link: '나조토키란?',
   cta_url: '/what-is-nazo'
 };
 
+// ── 에셋 베이스 (로컬 프리뷰에서는 window.NZ_ASSET_BASE로 덮어씀) ──
+var NZ_ASSET_BASE = window.NZ_ASSET_BASE || 'https://delve6127.github.io/Nazoblog/';
+
 // ── 외부 JSON에서 데이터 로드 (전역) ──
-var NAZO_DATA_URL = 'https://delve6127.github.io/Nazoblog/nazo_data.json';
+var NAZO_DATA_URL = NZ_ASSET_BASE + 'nazo_data.json';
 var PHONETIC_MAP = {};
 var COMPANY_MAP = {};
 var SORT_DATA = {};
@@ -89,13 +93,15 @@ function convertDates() {
   });
 }
 
-// ── 메인 페이지 타이틀을 이미지로 교체 ──
+// ── 메인 페이지 마스트헤드 (v2): 타이틀 이미지 → 오뮤 태그라인 → 업데이트 → 담백 CTA ──
 function replaceMainTitle() {
   if (window.location.pathname !== '/' && window.location.pathname !== '') return;
 
-  // 이전 이미지가 남아있으면 제거
-  var oldWrap = document.querySelector('.nz-title-img-wrap');
-  if (oldWrap) oldWrap.parentNode.removeChild(oldWrap);
+  // 이전 잔재 제거 (구버전 클래스 포함)
+  ['.nz-masthead', '.nz-title-img-wrap', '.nz-hero-copy', '#nz-review-counter'].forEach(function (sel) {
+    var old = document.querySelector(sel);
+    if (old) old.parentNode.removeChild(old);
+  });
 
   var titleEl = document.querySelector('.notion-header__title');
   if (!titleEl) return;
@@ -104,72 +110,55 @@ function replaceMainTitle() {
   titleEl.style.display = 'none';
 
   var wrap = document.createElement('div');
-  wrap.className = 'nz-title-img-wrap';
-
-  var img = document.createElement('img');
-  img.src = 'https://images.spr.so/cdn-cgi/imagedelivery/j42No7y-dcokJuNgXeA0ig/14d7b453-161f-42ba-afe1-b0cf8b388744/_-_-_-2/w=1920,quality=90,fit=scale-down';
-  img.alt = '몬빵의 나조토키 다락방';
-  img.draggable = false;
-  wrap.appendChild(img);
+  wrap.className = 'nz-masthead';
+  wrap.innerHTML =
+    '<img class="nz-masthead__title-img" src="' + NZ_ASSET_BASE + 'assets/masthead-title.png" alt="몬빵의 나조토키 다락방" draggable="false">' +
+    '<p class="nz-masthead__tagline">' + NZ_HERO_COPY.tagline +
+      '<span class="nz-masthead__dot"> · </span><br class="nz-masthead__br">' +
+      '<span id="nz-masthead-count">' + NZ_HERO_COPY.tagline_count.replace('{N}', '…') + '</span></p>' +
+    '<p class="nz-masthead__updated" id="nz-masthead-updated"></p>' +
+    '<p class="nz-masthead__cta">' + NZ_HERO_COPY.cta_before +
+      ' <span class="nz-masthead__cta-arrow">→</span> ' +
+      '<a class="nz-masthead__cta-link" href="' + NZ_HERO_COPY.cta_url + '">' + NZ_HERO_COPY.cta_link + '</a></p>';
 
   titleEl.parentNode.insertBefore(wrap, titleEl);
 
-  // 히어로 카피 생성/재삽입
-  var oldHero = document.querySelector('.nz-hero-copy');
-  if (oldHero) oldHero.parentNode.removeChild(oldHero);
+  wrap.querySelector('.nz-masthead__title-img').addEventListener('click', function () {
+    window.location.href = '/';
+  });
 
-  var heroCopy = document.createElement('div');
-  heroCopy.className = 'nz-hero-copy';
-  heroCopy.innerHTML =
-    '<p class="nz-hero-copy__main">' + NZ_HERO_COPY.main + '</p>' +
-    '<p class="nz-hero-copy__cta">' + NZ_HERO_COPY.cta_before +
-    ' <span class="nz-hero-copy__arrow">→</span> ' +
-    '<a class="nz-hero-copy__link" href="' + NZ_HERO_COPY.cta_url + '">' + NZ_HERO_COPY.cta_link + '</a></p>';
-  wrap.parentNode.insertBefore(heroCopy, wrap.nextSibling);
-
-  // 카운터 생성/재삽입 (히어로 카피 다음 위치)
-  var oldCounter = document.getElementById('nz-review-counter');
-  if (oldCounter) {
-    heroCopy.parentNode.insertBefore(oldCounter, heroCopy.nextSibling);
-  } else {
-    var counterTry = 0;
-    var counterInterval = setInterval(function () {
-      counterTry++;
-      if (document.getElementById('nz-review-counter') || counterTry > 30) {
-        clearInterval(counterInterval);
-        return;
-      }
-      var cards = document.querySelectorAll('.notion-collection-card');
-      if (!cards.length) return;
-      clearInterval(counterInterval);
-      var publishSel = '.property-54495c70';
-      var visibleCount = 0;
-      var dateSel = '.property-57636b4d';
-      var latestDate = null;
-      cards.forEach(function (card) {
-        var pubEl = card.querySelector(publishSel);
-        if (pubEl && pubEl.textContent.trim() === '비공개') return;
-        visibleCount++;
-        var dateEl = card.querySelector(dateSel);
-        if (!dateEl) return;
-        var parsed = new Date(dateEl.textContent.trim());
-        if (!isNaN(parsed.getTime()) && (!latestDate || parsed > latestDate)) latestDate = parsed;
-      });
-      var dateStr = '';
-      if (latestDate) {
-        var y = latestDate.getFullYear();
-        var m = ('0' + (latestDate.getMonth() + 1)).slice(-2);
-        var d = ('0' + latestDate.getDate()).slice(-2);
-        dateStr = y + '.' + m + '.' + d;
-      }
-      var el = document.createElement('div');
-      el.id = 'nz-review-counter';
-      el.innerHTML = '지금까지 <strong>' + visibleCount + ' 작품</strong>을 풀고 기록했어요'
-        + (dateStr ? ' · 마지막 업데이트 ' + dateStr : '');
-      var h = document.querySelector('.nz-hero-copy');
-      if (h) h.parentNode.insertBefore(el, h.nextSibling);
-    }, 200);
-  }
+  // 리뷰 수 + 마지막 업데이트 채우기 (카드 DOM에서 집계 — 기존 로직 유지)
+  var counterTry = 0;
+  var counterInterval = setInterval(function () {
+    counterTry++;
+    if (counterTry > 30) { clearInterval(counterInterval); return; }
+    var countEl = document.getElementById('nz-masthead-count');
+    if (!countEl) { clearInterval(counterInterval); return; }
+    var cards = document.querySelectorAll('.notion-collection-card');
+    if (!cards.length) return;
+    clearInterval(counterInterval);
+    var publishSel = '.property-54495c70';
+    var dateSel = '.property-57636b4d';
+    var visibleCount = 0;
+    var latestDate = null;
+    cards.forEach(function (card) {
+      var pubEl = card.querySelector(publishSel);
+      if (pubEl && pubEl.textContent.trim() === '비공개') return;
+      visibleCount++;
+      var dateEl = card.querySelector(dateSel);
+      if (!dateEl) return;
+      var parsed = new Date(dateEl.textContent.trim());
+      if (!isNaN(parsed.getTime()) && (!latestDate || parsed > latestDate)) latestDate = parsed;
+    });
+    countEl.textContent = NZ_HERO_COPY.tagline_count.replace('{N}', visibleCount);
+    if (latestDate) {
+      var y = latestDate.getFullYear();
+      var m = ('0' + (latestDate.getMonth() + 1)).slice(-2);
+      var d = ('0' + latestDate.getDate()).slice(-2);
+      var updEl = document.getElementById('nz-masthead-updated');
+      if (updEl) updEl.textContent = '마지막 업데이트 ' + y + '.' + m + '.' + d;
+    }
+  }, 200);
 }
 
 // ── SPA 네비게이션 감지 ──
@@ -956,9 +945,14 @@ function nzLightboxClose() {
 
 })();
 
-// ── 갤러리 검색 / 필터 / 정렬 ────────────────────────
+// ── 갤러리 v2: 필터 칩 / 상시 검색 / 카드 레이아웃 / 페이지네이션 / 다락방 노트 박스 ──
 (function () {
   'use strict';
+
+  // 메인 페이지에서만 동작 (노트 페이지 등 다른 갤러리/표는 건드리지 않음)
+  if (window.location.pathname !== '/' && window.location.pathname !== '') return;
+
+  document.body.classList.add('nz-home');
 
   loadNazoData(function () { initGallery(); });
 
@@ -973,140 +967,92 @@ function nzLightboxClose() {
   var PUBLISH_SEL   = '.property-54495c70';
   var MFY_REL_SEL   = '.property-517d3b40';
 
-  // ── 체감 난이도 색상 매핑 ──
+  // 체감 난이도 색 (핸드오프 그라데이션 스케일)
   var DIFF_COLORS = {
-    '아주 쉬움':   '#06b6d4',
-    '쉬움':       '#22c55e',
-    '보통':       '#eab308',
-    '어려움':     '#f97316',
-    '아주 어려움': '#ef4444'
+    '아주 쉬움':   '#8FB05E',
+    '쉬움':       '#6E9E52',
+    '보통':       '#D9A13B',
+    '어려움':     '#CD7A45',
+    '아주 어려움': '#B85742'
   };
-
-  // ── 추천도 CSS 클래스 매핑 ──
   var REC_CLASS = {
-    '강력추천': 'nz-card-rec--strong',
-    '추천':    'nz-card-rec--rec',
-    '괜찮음':  'nz-card-rec--ok',
-    '음..':    'nz-card-rec--meh'
+    '강력추천': 'nz2-rec--strong',
+    '추천':    'nz2-rec--rec',
+    '괜찮음':  'nz2-rec--ok',
+    '음..':    'nz2-rec--meh'
   };
+  var CAL_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>';
 
-  // ── 카드 커스텀 레이아웃 적용 ──
+  var state = { searchQ: '', filter: 'all', diff: '전체', brand: '전체', page: 1 };
+
+  function isMobile() { return window.innerWidth <= 768; }
+  function perPage() { return isMobile() ? 11 : 10; }
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function getText(card, sel) {
+    var el = card.querySelector(sel);
+    return el ? el.textContent.trim() : '';
+  }
+  function pillTexts(card, sel) {
+    var el = card.querySelector(sel);
+    if (!el) return [];
+    var pills = el.querySelectorAll('.notion-pill');
+    if (pills.length) return Array.from(pills).map(function (p) { return p.textContent.trim(); });
+    var t = el.textContent.trim();
+    return t ? [t] : [];
+  }
+
+  // ── 카드 커스텀 렌더 ──
+  function renderMfyChip(val) {
+    return '<span class="nz2-mfy">' + CAL_SVG + esc(val) + '</span>';
+  }
+
   function customizeCards() {
-    var cards = document.querySelectorAll(CARD_SEL);
-    cards.forEach(function (card) {
+    document.querySelectorAll(CARD_SEL).forEach(function (card) {
       if (card.classList.contains('nz-card-custom')) return;
 
-      // ── 공개여부 체크: 비공개면 카드 숨김 ──
       var publishEl = card.querySelector(PUBLISH_SEL);
       if (publishEl) {
-        var publishText = publishEl.textContent.trim();
-        if (publishText === '비공개') {
+        if (publishEl.textContent.trim() === '비공개') {
           card.classList.add('nz-card-hidden');
           card.classList.add('nz-card-custom');
           return;
         }
-        // 공개 태그는 사이트에서 안 보이게 숨김
         publishEl.style.display = 'none';
       }
 
-      var companyEl   = card.querySelector(COMPANY_SEL);
-      var recommendEl = card.querySelector(RECOMMEND_SEL);
-      var diffEl      = card.querySelector(DIFF_SEL);
-      var officialEl  = card.querySelector(OFFICIAL_SEL);
+      var title = getText(card, TITLE_SEL);
+      var data = SORT_DATA[title] || {};
+      var brands = pillTexts(card, COMPANY_SEL);
+      // 표기용: "SCRAP - Mystery For You" → "SCRAP · Mystery For You" (시안 표기)
+      var brand = brands.join(' · ').replace(/ - /g, ' · ');
+      var rating = pillTexts(card, RECOMMEND_SEL)[0] || data.rating || '';
+      var diff = pillTexts(card, DIFF_SEL)[0] || '';
+      var mfyEl = card.querySelector(MFY_REL_SEL);
+      var mfy = mfyEl ? mfyEl.textContent.trim() : '';
+      if (mfyEl) mfyEl.style.display = 'none';
 
-      // 제작사 읽기
-      var companies = [];
-      if (companyEl) {
-        var pills = companyEl.querySelectorAll('.notion-pill');
-        if (pills.length) {
-          Array.from(pills).forEach(function (p) { companies.push(p.textContent.trim()); });
-        } else {
-          var t = companyEl.textContent.trim();
-          if (t) companies.push(t);
-        }
-      }
+      var dColor = DIFF_COLORS[diff] || '#8A8272';
+      var html = '<div class="nz2-badges">'
+        + '<span class="nz2-brand-chip">' + esc(brand) + '</span>'
+        + (rating ? '<span class="nz2-rec ' + (REC_CLASS[rating] || 'nz2-rec--meh') + '">' + esc(rating) + '</span>' : '')
+        + (diff ? '<span class="nz2-diff"><span class="nz2-diff-dot" style="background:' + dColor + '"></span>' + esc(diff) + '</span>' : '')
+        + '<span class="nz2-mfy-slot">' + (mfy ? renderMfyChip(mfy) : '') + '</span>'
+        + '</div>'
+        + '<div class="nz2-brand-line">' + esc(brand) + '</div>'
+        + (data.quote ? '<div class="nz2-quote">&ldquo;' + esc(data.quote) + '&rdquo;</div>' : '');
 
-      // 추천도 읽기
-      var recText = '';
-      if (recommendEl) {
-        var recPill = recommendEl.querySelector('.notion-pill');
-        recText = recPill ? recPill.textContent.trim() : recommendEl.textContent.trim();
-      }
-
-      // 체감 난이도 읽기
-      var diffText = '';
-      if (diffEl) {
-        var diffPill = diffEl.querySelector('.notion-pill');
-        diffText = diffPill ? diffPill.textContent.trim() : diffEl.textContent.trim();
-      }
-
-      // 공식 난이도 읽기 (다중선택)
-      var officials = [];
-      if (officialEl) {
-        var oPills = officialEl.querySelectorAll('.notion-pill');
-        if (oPills.length) {
-          Array.from(oPills).forEach(function (p) { officials.push(p.textContent.trim()); });
-        } else {
-          var oText = officialEl.textContent.trim();
-          if (oText) officials.push(oText);
-        }
-      }
-
-      // MFY 발매년월 읽기
-      var mfyReleaseEl = card.querySelector(MFY_REL_SEL);
-      var mfyRelText = '';
-      if (mfyReleaseEl) {
-        mfyRelText = mfyReleaseEl.textContent.trim();
-        mfyReleaseEl.style.display = 'none';
-      }
-
-      // 새 레이아웃 조립
-      var html = '';
-
-      // 제작사
-      if (companies.length) {
-        html += '<div class="nz-card-maker">' + companies.join(' · ') + '</div>';
-      }
-
-      // 추천도 + 난이도 + 공식점수 행
-      var bottomParts = [];
-      if (recText) {
-        var recCls = REC_CLASS[recText] || 'nz-card-rec--meh';
-        bottomParts.push('<span class="nz-card-rec ' + recCls + '">' + recText + '</span>');
-      }
-      if (diffText) {
-        var dc = DIFF_COLORS[diffText] || '#78716c';
-        bottomParts.push('<span class="nz-card-diff" style="color:' + dc + '; border:1.5px solid ' + dc + ';">' + diffText + '</span>');
-      }
-      if (officials.length) {
-        var officialHtml = officials.map(function (o) {
-          return '<span class="nz-card-official">' + o + '</span>';
-        }).join('');
-        if (officials.length > 1) {
-          officialHtml = '<span class="nz-card-official-group">' + officialHtml + '</span>';
-        }
-        bottomParts.push(officialHtml);
-      } else if (officialEl) {
-        bottomParts.push('<span class="nz-card-official--none">표기 없음</span>');
-      }
-      if (mfyRelText) {
-        bottomParts.push('<span class="nz-card-mfy-release"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>' + mfyRelText + '</span>');
-      }
-
-      if (bottomParts.length) {
-        html += '<div class="nz-card-bottom">' + bottomParts.join('') + '</div>';
-      }
-
-      // 삽입
-      var propsDiv = document.createElement('div');
-      propsDiv.className = 'nz-card-props';
-      propsDiv.innerHTML = html;
-      card.appendChild(propsDiv);
+      var div = document.createElement('div');
+      div.className = 'nz-card-props nz2-card-props';
+      div.innerHTML = html;
+      card.appendChild(div);
       card.classList.add('nz-card-custom');
 
-      // MFY 발매년월: 속성이 뒤늦게 로드될 수 있으므로 폴링
-      if (!mfyRelText) {
-        (function pollMfyCard(c, tries) {
+      // MFY 발매년월이 늦게 로드되는 경우 폴링
+      if (!mfy) {
+        (function pollMfy(c, tries) {
           if (tries <= 0) return;
           setTimeout(function () {
             var el = c.querySelector(MFY_REL_SEL);
@@ -1114,16 +1060,11 @@ function nzLightboxClose() {
               var val = el.textContent.trim();
               if (val) {
                 el.style.display = 'none';
-                var bottom = c.querySelector('.nz-card-bottom');
-                if (bottom && !bottom.querySelector('.nz-card-mfy-release')) {
-                  var span = document.createElement('span');
-                  span.className = 'nz-card-mfy-release';
-                  span.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>' + val;
-                  bottom.appendChild(span);
-                }
+                var slot = c.querySelector('.nz2-mfy-slot');
+                if (slot && !slot.querySelector('.nz2-mfy')) slot.innerHTML = renderMfyChip(val);
               }
             } else {
-              pollMfyCard(c, tries - 1);
+              pollMfy(c, tries - 1);
             }
           }, 300);
         })(card, 20);
@@ -1131,400 +1072,514 @@ function nzLightboxClose() {
     });
   }
 
-  var state = {
-    searchQ:   '',
-    filterCompany:   [],
-    filterDiff:      [],
-    filterRecommend: [],
-    sortField: '',
-    sortDesc:  true,
-    originalOrder: null,
-    page: 1,
-    perPage: 10
-  };
-
-  function getCardTitle(card) {
-    var el = card.querySelector(TITLE_SEL);
-    return el ? el.textContent.trim() : '';
-  }
-  function getCardCompanies(card) {
-    var el = card.querySelector(COMPANY_SEL);
-    if (!el) return [];
-    var pills = el.querySelectorAll('.notion-pill');
-    if (pills.length) return Array.from(pills).map(function (p) { return p.textContent.trim(); });
-    return [el.textContent.trim()];
-  }
-  function getCardDiff(card) {
-    var el = card.querySelector(DIFF_SEL);
-    return el ? el.textContent.trim() : '';
-  }
-  function getCardRecommend(card) {
-    var el = card.querySelector(RECOMMEND_SEL);
-    return el ? el.textContent.trim() : '';
+  // ── 정렬: 최근에 푼 순서(리뷰 순번 내림차순) 고정 ──
+  function sortCardsByRecent() {
+    var gallery = document.querySelector(GALLERY_SEL);
+    if (!gallery) return;
+    var cards = Array.from(gallery.querySelectorAll(CARD_SEL));
+    if (cards.length < 2) return;
+    var sorted = cards.slice().sort(function (a, b) {
+      var da = SORT_DATA[getText(a, TITLE_SEL)] || {};
+      var db = SORT_DATA[getText(b, TITLE_SEL)] || {};
+      var na = (da.num != null) ? da.num : -1;
+      var nb = (db.num != null) ? db.num : -1;
+      return nb - na;
+    });
+    var changed = sorted.some(function (c, i) { return c !== cards[i]; });
+    if (changed) sorted.forEach(function (c) { gallery.appendChild(c); });
   }
 
-  // ── 카드 표시/숨김 적용 (페이지네이션 통합) ──
-  function applyVisibility() {
-    var cards = document.querySelectorAll(CARD_SEL);
+  // ── 필터 + 검색 매칭 → 표시/숨김 + 페이지네이션 ──
+  function cardMatches(card) {
+    var title = getText(card, TITLE_SEL);
+    var titleLower = title.toLowerCase();
+    var data = SORT_DATA[title] || {};
+    var brands = pillTexts(card, COMPANY_SEL);
+    var brandsLower = brands.map(function (c) { return c.toLowerCase(); });
+    var diff = pillTexts(card, DIFF_SEL)[0] || '';
+    var rating = pillTexts(card, RECOMMEND_SEL)[0] || data.rating || '';
+
     var q = state.searchQ;
+    var phonetics = PHONETIC_MAP[titleLower] || [];
+    var companyPhonetics = [];
+    brandsLower.forEach(function (c) {
+      companyPhonetics = companyPhonetics.concat(COMPANY_MAP[c.trim()] || []);
+    });
+    var searchMatch = !q
+      || titleLower.indexOf(q) > -1
+      || brandsLower.join(' ').indexOf(q) > -1
+      || phonetics.some(function (p) { return p.indexOf(q) > -1; })
+      || companyPhonetics.some(function (p) { return p.indexOf(q) > -1; });
+
+    var filterMatch = state.filter === 'all'
+      || (state.filter === 'strong' && rating === '강력추천')
+      || (state.filter === 'beginner' && data.beginner === true);
+    var diffMatch = state.diff === '전체' || diff === state.diff;
+    var brandMatch = state.brand === '전체' || brands.indexOf(state.brand) > -1;
+
+    return searchMatch && filterMatch && diffMatch && brandMatch;
+  }
+
+  function isFiltered() {
+    return !!state.searchQ || state.filter !== 'all' || state.diff !== '전체' || state.brand !== '전체';
+  }
+
+  function applyVisibility(scrollToTop) {
+    var cards = document.querySelectorAll(CARD_SEL);
     var matched = [];
-
     cards.forEach(function (card) {
-      var title    = getCardTitle(card).toLowerCase();
-      var companies = getCardCompanies(card);
-      var companiesLower = companies.map(function (c) { return c.toLowerCase(); });
-      var companyText = companiesLower.join(' ');
-      var diff     = getCardDiff(card);
-      var recommend= getCardRecommend(card);
-
-      // 검색 매칭
-      var phonetics = PHONETIC_MAP[title] || [];
-      var companyPhonetics = [];
-      companiesLower.forEach(function (c) {
-        var pm = COMPANY_MAP[c.trim()] || [];
-        companyPhonetics = companyPhonetics.concat(pm);
-      });
-      var searchMatch = !q
-        || title.indexOf(q) > -1
-        || companyText.indexOf(q) > -1
-        || phonetics.some(function (p) { return p.indexOf(q) > -1; })
-        || companyPhonetics.some(function (p) { return p.indexOf(q) > -1; });
-
-      // 필터 매칭
-      var companyMatch   = !state.filterCompany.length   || companies.some(function (c) { return state.filterCompany.indexOf(c) > -1; });
-      var diffMatch      = !state.filterDiff.length      || state.filterDiff.indexOf(diff) > -1;
-      var recommendMatch = !state.filterRecommend.length || state.filterRecommend.indexOf(recommend) > -1;
-
-      var show = searchMatch && companyMatch && diffMatch && recommendMatch;
-      if (show) {
-        matched.push(card);
-      }
+      if (card.classList.contains('nz-card-hidden')) { card.style.display = 'none'; return; }
+      if (cardMatches(card)) matched.push(card);
       card.style.display = 'none';
+      card.classList.remove('nz2-card--big');
     });
 
-    // 페이지네이션 계산
-    var totalPages = Math.max(1, Math.ceil(matched.length / state.perPage));
+    var pp = perPage();
+    var bigCount = isMobile() ? 1 : 2;
+    var totalPages = Math.max(1, Math.ceil(matched.length / pp));
     if (state.page > totalPages) state.page = totalPages;
-    var startIdx = (state.page - 1) * state.perPage;
-    var endIdx = startIdx + state.perPage;
-
-    for (var i = 0; i < matched.length; i++) {
-      if (i >= startIdx && i < endIdx) {
-        matched[i].style.display = '';
-      }
+    var startIdx = (state.page - 1) * pp;
+    for (var i = startIdx; i < Math.min(matched.length, startIdx + pp); i++) {
+      matched[i].style.display = '';
+      if (i - startIdx < bigCount) matched[i].classList.add('nz2-card--big');
     }
 
-    // 카드 수 표시
-    var countEl = document.getElementById('nz-search-count');
-    if (countEl) {
-      var isFiltered = q || state.filterCompany.length || state.filterDiff.length || state.filterRecommend.length;
-      countEl.textContent = isFiltered ? matched.length + '개' : '';
+    // 결과 코멘트
+    var comment = document.getElementById('nz2-result-comment');
+    if (comment) {
+      comment.textContent = isFiltered()
+        ? '조건에 맞는 기록 ' + matched.length + '개'
+        : '최근에 푼 순서대로 보여드려요';
     }
 
-    // 페이지네이션 UI 업데이트
-    renderPagination(matched.length, totalPages);
+    // 빈 결과
+    var empty = document.getElementById('nz2-empty');
+    if (empty) empty.style.display = matched.length === 0 ? '' : 'none';
+
+    renderPagination(totalPages);
+
+    if (scrollToTop) {
+      var controls = document.getElementById('nz2-controls');
+      if (controls) controls.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
-  // ── 페이지네이션 UI ──
-  function renderPagination(totalItems, totalPages) {
+  // ── 페이지네이션 (숫자 + 다음 →) ──
+  function renderPagination(totalPages) {
     var existing = document.getElementById('nz-pagination');
     if (existing) existing.remove();
-
     if (totalPages <= 1) return;
-
     var gallery = document.querySelector(GALLERY_SEL);
     if (!gallery) return;
 
     var wrap = document.createElement('div');
     wrap.id = 'nz-pagination';
 
-    // 이전 버튼
-    var prevBtn = document.createElement('button');
-    prevBtn.className = 'nz-page-btn' + (state.page <= 1 ? ' nz-page-disabled' : '');
-    prevBtn.textContent = '‹';
-    prevBtn.addEventListener('click', function () {
-      if (state.page > 1) { state.page--; applyVisibility(); }
-    });
-    wrap.appendChild(prevBtn);
-
-    // 페이지 번호
     var startPage = Math.max(1, state.page - 2);
     var endPage = Math.min(totalPages, startPage + 4);
     if (endPage - startPage < 4) startPage = Math.max(1, endPage - 4);
 
     for (var i = startPage; i <= endPage; i++) {
-      (function (pageNum) {
+      (function (n) {
         var btn = document.createElement('button');
-        btn.className = 'nz-page-btn' + (pageNum === state.page ? ' nz-page-active' : '');
-        btn.textContent = pageNum;
+        btn.type = 'button';
+        btn.className = 'nz2-page-btn' + (n === state.page ? ' nz2-page-btn--active' : '');
+        btn.textContent = n;
         btn.addEventListener('click', function () {
-          state.page = pageNum; applyVisibility();
+          if (n === state.page) return;
+          state.page = n;
+          applyVisibility(true);
         });
         wrap.appendChild(btn);
       })(i);
     }
 
-    // 다음 버튼
-    var nextBtn = document.createElement('button');
-    nextBtn.className = 'nz-page-btn' + (state.page >= totalPages ? ' nz-page-disabled' : '');
-    nextBtn.textContent = '›';
-    nextBtn.addEventListener('click', function () {
-      if (state.page < totalPages) { state.page++; applyVisibility(); }
-    });
-    wrap.appendChild(nextBtn);
+    if (state.page < totalPages) {
+      var next = document.createElement('button');
+      next.type = 'button';
+      next.className = 'nz2-page-next';
+      next.textContent = '다음 →';
+      next.addEventListener('click', function () {
+        state.page++;
+        applyVisibility(true);
+      });
+      wrap.appendChild(next);
+    }
 
     gallery.parentNode.insertBefore(wrap, gallery.nextSibling);
   }
 
-
-  // ── 정렬 적용 ──
-  function applySort() {
-    var gallery = document.querySelector(GALLERY_SEL);
-    if (!gallery) return;
-    var cards = Array.from(gallery.querySelectorAll(CARD_SEL));
-    if (!cards.length) return;
-
-    if (!state.originalOrder) state.originalOrder = cards.slice();
-
-    var sorted = !state.sortField ? state.originalOrder.slice() : cards.slice().sort(function (a, b) {
-      var ta = getCardTitle(a), tb = getCardTitle(b);
-      var da = SORT_DATA[ta], db = SORT_DATA[tb];
-      var va = da ? da[state.sortField] : null;
-      var vb = db ? db[state.sortField] : null;
-      if (va === null && vb === null) return 0;
-      if (va === null) return 1;
-      if (vb === null) return -1;
-      if (typeof va === 'string') return state.sortDesc ? vb.localeCompare(va) : va.localeCompare(vb);
-      return state.sortDesc ? vb - va : va - vb;
+  // ── 필터 칩 + 검색 바 + 결과 코멘트 ──
+  function setChipActive() {
+    document.querySelectorAll('#nz2-chips .nz2-chip[data-f]').forEach(function (chip) {
+      chip.classList.toggle('nz2-chip--active', chip.getAttribute('data-f') === state.filter);
     });
+    var diffChip = document.getElementById('nz2-chip-diff');
+    var diffLabel = document.getElementById('nz2-diff-label');
+    if (diffChip && diffLabel) {
+      var active = state.diff !== '전체';
+      diffChip.classList.toggle('nz2-chip--active', active);
+      diffLabel.textContent = active ? state.diff : '난이도 ▾';
+    }
+  }
 
-    sorted.forEach(function (card) { gallery.appendChild(card); });
+  function resetFilters() {
+    state.filter = 'all';
+    state.diff = '전체';
+    state.brand = '전체';
+    state.searchQ = '';
+    state.page = 1;
+    var input = document.getElementById('nz2-search');
+    if (input) input.value = '';
+    ['nz2-diff-select', 'nz2-diff-select-pc', 'nz2-brand-select'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.value = '전체';
+    });
+    var clearBtn = document.getElementById('nz2-search-clear');
+    if (clearBtn) clearBtn.style.display = 'none';
+    setChipActive();
     applyVisibility();
   }
 
-  // ── 검색 바 ──
-  function buildSearch() {
-    if (document.getElementById('nz-search-wrap')) return;
+  function buildControls() {
+    if (document.getElementById('nz2-controls')) return;
     var gallery = document.querySelector(GALLERY_SEL);
     if (!gallery) return;
 
-    var wrap = document.createElement('div');
-    wrap.id = 'nz-search-wrap';
-    wrap.innerHTML =
-      '<img id="nz-search-icon" src="https://images.spr.so/cdn-cgi/imagedelivery/j42No7y-dcokJuNgXeA0ig/61d6e642-6df3-462b-b543-05804774285c/search_-1/w=1920,quality=90,fit=scale-down" alt="검색">'
-      + '<input id="nz-search" type="text" placeholder="나조 이름 또는 브랜드로 검색">'
-      + '<span id="nz-search-count"></span>'
-      + '<button id="nz-filter-toggle" type="button" aria-label="필터/정렬 열기"><img src="https://images.spr.so/cdn-cgi/imagedelivery/j42No7y-dcokJuNgXeA0ig/0ae160ac-3c90-47e2-b9a5-f3600549997a/sliders-horizontal_-2/w=1920,quality=90,fit=scale-down" alt="필터" id="nz-filter-toggle-icon"></button>';
-    gallery.parentNode.insertBefore(wrap, gallery);
+    // 브랜드 select 옵션 (SORT_DATA 기준, 가나다순)
+    var brandSet = {};
+    Object.keys(SORT_DATA).forEach(function (k) {
+      var b = SORT_DATA[k].brand;
+      if (b) brandSet[b] = true;
+    });
+    var brandOptions = Object.keys(brandSet).sort().map(function (b) {
+      return '<option value="' + esc(b) + '">' + esc(b) + '</option>';
+    }).join('');
 
-    document.getElementById('nz-search').addEventListener('keydown', function (e) {
-      if (e.key !== 'Enter') return;
-      state.searchQ = this.value.trim().toLowerCase();
+    var DIFF_OPTIONS =
+        '<option value="전체">난이도 · 전체</option>'
+      + '<option value="아주 쉬움">아주 쉬움</option>'
+      + '<option value="쉬움">쉬움</option>'
+      + '<option value="보통">보통</option>'
+      + '<option value="어려움">어려움</option>'
+      + '<option value="아주 어려움">아주 어려움</option>';
+
+    var wrap = document.createElement('div');
+    wrap.id = 'nz2-controls';
+    wrap.innerHTML =
+      '<div id="nz2-bar">'
+      + '<div id="nz2-chips">'
+      + '<button type="button" class="nz2-chip" data-f="all">전체 리뷰</button>'
+      + '<a class="nz2-chip nz2-chip--link" href="/darakbang-note">다락방 노트</a>'
+      + '<button type="button" class="nz2-chip" data-f="strong">강력추천</button>'
+      + '<button type="button" class="nz2-chip" data-f="beginner">입문 추천</button>'
+      + '<div class="nz2-chip nz2-chip--diff" id="nz2-chip-diff">'
+      +   '<span id="nz2-diff-label">난이도 ▾</span>'
+      +   '<select id="nz2-diff-select" aria-label="체감 난이도 필터">'
+      +     '<option value="전체">난이도 ▾</option>'
+      +     '<option value="아주 쉬움">아주 쉬움</option>'
+      +     '<option value="쉬움">쉬움</option>'
+      +     '<option value="보통">보통</option>'
+      +     '<option value="어려움">어려움</option>'
+      +     '<option value="아주 어려움">아주 어려움</option>'
+      +   '</select>'
+      + '</div>'
+      + '<select id="nz2-brand-select" class="nz2-pc-select" aria-label="브랜드 필터">'
+      +   '<option value="전체">브랜드별 · 전체</option>' + brandOptions
+      + '</select>'
+      + '<select id="nz2-diff-select-pc" class="nz2-pc-select" aria-label="체감 난이도 필터">' + DIFF_OPTIONS + '</select>'
+      + '</div>'
+      + '<div id="nz2-searchbar">'
+      +   '<span id="nz2-search-icon">⌕</span>'
+      +   '<input id="nz2-search" type="text" placeholder="나조 이름 또는 브랜드 검색" autocomplete="off">'
+      +   '<span id="nz2-search-clear" style="display:none">✕</span>'
+      + '</div>'
+      + '</div>';
+
+    var anchor = document.getElementById('nz2-layout') || gallery;
+    anchor.parentNode.insertBefore(wrap, anchor);
+
+    // 결과 코멘트는 구분선 아래, 본문 컬럼 안 (갤러리 바로 위)
+    var comment = document.createElement('div');
+    comment.id = 'nz2-result-comment';
+    gallery.parentNode.insertBefore(comment, gallery);
+
+    // 칩 클릭
+    wrap.querySelectorAll('.nz2-chip[data-f]').forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        state.filter = this.getAttribute('data-f');
+        state.page = 1;
+        setChipActive();
+        applyVisibility();
+      });
+    });
+
+    // 난이도 select (모바일 투명 오버레이 + PC 알약, 상태 동기화)
+    function onDiffChange(val) {
+      state.diff = val;
+      state.page = 1;
+      var m = document.getElementById('nz2-diff-select');
+      var pc = document.getElementById('nz2-diff-select-pc');
+      if (m && m.value !== val) m.value = val;
+      if (pc && pc.value !== val) pc.value = val;
+      setChipActive();
+      applyVisibility();
+    }
+    document.getElementById('nz2-diff-select').addEventListener('change', function () { onDiffChange(this.value); });
+    document.getElementById('nz2-diff-select-pc').addEventListener('change', function () { onDiffChange(this.value); });
+    document.getElementById('nz2-brand-select').addEventListener('change', function () {
+      state.brand = this.value;
       state.page = 1;
       applyVisibility();
     });
 
-    document.getElementById('nz-filter-toggle').addEventListener('click', function () {
-      var panel = document.getElementById('nz-filter-panel');
-      if (!panel) return;
-      var isOpen = panel.classList.toggle('nz-panel-open');
-      this.classList.toggle('nz-toggle-active', isOpen);
-    });
-  }
-
-  // ── 필터 바 ──
-  function getUniqueVals(sel, multi) {
-    var vals = [];
-    document.querySelectorAll(CARD_SEL).forEach(function (card) {
-      var el = card.querySelector(sel);
-      if (!el) return;
-      if (multi) {
-        el.querySelectorAll('.notion-pill').forEach(function (p) {
-          var t = p.textContent.trim();
-          if (t && vals.indexOf(t) === -1) vals.push(t);
-        });
-      } else {
-        var t = el.textContent.trim();
-        if (t && vals.indexOf(t) === -1) vals.push(t);
-      }
-    });
-    return vals;
-  }
-
-  function buildFilterGroup(id, label, values, stateKey) {
-    var group = document.createElement('div');
-    group.className = 'nz-filter-group';
-    group.id = id;
-
-    var btn = document.createElement('button');
-    btn.className = 'nz-filter-btn';
-    btn.type = 'button';
-    btn.innerHTML = '<span class="nz-filter-arrow">▾</span> ' + label;
-    btn.setAttribute('data-label', label);
-    group.appendChild(btn);
-
-    var list = document.createElement('div');
-    list.className = 'nz-filter-list';
-
-    values.forEach(function (v) {
-      var item = document.createElement('label');
-      item.className = 'nz-filter-item';
-      var cb = document.createElement('input');
-      cb.type = 'checkbox';
-      cb.value = v;
-      cb.addEventListener('change', function () {
-        if (this.checked) {
-          state[stateKey].push(v);
-        } else {
-          state[stateKey] = state[stateKey].filter(function (x) { return x !== v; });
-        }
-        var count = state[stateKey].length;
-        btn.innerHTML = '<span class="nz-filter-arrow">▾</span> ' + label + (count ? ' (' + count + ')' : '');
+    // 검색 (입력 즉시, 디바운스)
+    var input = document.getElementById('nz2-search');
+    var clearBtn = document.getElementById('nz2-search-clear');
+    var debounce = null;
+    input.addEventListener('input', function () {
+      var v = this.value;
+      clearBtn.style.display = v ? '' : 'none';
+      if (debounce) clearTimeout(debounce);
+      debounce = setTimeout(function () {
+        state.searchQ = v.trim().toLowerCase();
         state.page = 1;
         applyVisibility();
-      });
-      var span = document.createElement('span');
-      span.textContent = v;
-      item.appendChild(cb);
-      item.appendChild(span);
-      list.appendChild(item);
+      }, 150);
     });
-
-    group.appendChild(list);
-
-    btn.addEventListener('click', function () {
-      var isOpen = group.classList.toggle('nz-filter-group-open');
-      // 다른 그룹 닫기
-      var siblings = group.parentNode.querySelectorAll('.nz-filter-group');
-      siblings.forEach(function (g) {
-        if (g !== group) g.classList.remove('nz-filter-group-open');
-      });
-    });
-
-    return group;
-  }
-
-  var DIFF_ORDER = ['아주 쉬움', '쉬움', '보통', '어려움', '아주 어려움'];
-
-  function buildFilter() {
-    if (document.getElementById('nz-filter-wrap')) return;
-
-    var companies = getUniqueVals(COMPANY_SEL, true).sort();
-    var diffs = getUniqueVals(DIFF_SEL, false).sort(function (a, b) {
-      return DIFF_ORDER.indexOf(a) - DIFF_ORDER.indexOf(b);
-    });
-    var recommends = getUniqueVals(RECOMMEND_SEL, false);
-
-    var wrap = document.createElement('div');
-    wrap.id = 'nz-filter-wrap';
-
-    wrap.appendChild(buildFilterGroup('nz-filter-company',   '제작사', companies, 'filterCompany'));
-    wrap.appendChild(buildFilterGroup('nz-filter-diff',      '난이도', diffs,     'filterDiff'));
-    wrap.appendChild(buildFilterGroup('nz-filter-recommend', '추천',   recommends,'filterRecommend'));
-
-    return wrap;
-  }
-
-  // ── 정렬 바 ──
-  function buildSort() {
-    if (document.getElementById('nz-sort-wrap')) return;
-
-    var wrap = document.createElement('div');
-    wrap.id = 'nz-sort-wrap';
-
-    var select = document.createElement('select');
-    select.id = 'nz-sort-select';
-    [
-      ['', '기본순'],
-      ['num', '나조 번호'],
-      ['date', '클리어 날짜'],
-      ['satisfaction', '개인 만족도'],
-      ['diff', '체감 난이도'],
-      ['puzzle', '문제'],
-      ['gimmick', '기믹'],
-      ['design', '연출/디자인'],
-      ['language', '언어접근성']
-    ].forEach(function (opt) {
-      var o = document.createElement('option');
-      o.value = opt[0]; o.textContent = opt[1];
-      select.appendChild(o);
-    });
-
-    var btn = document.createElement('button');
-    btn.id = 'nz-sort-dir';
-    btn.textContent = '▼';
-    btn.disabled = true;
-
-    select.addEventListener('change', function () {
-      state.sortField = this.value;
-      btn.disabled = !state.sortField;
+    clearBtn.addEventListener('click', function () {
+      input.value = '';
+      clearBtn.style.display = 'none';
+      state.searchQ = '';
       state.page = 1;
-      applySort();
+      applyVisibility();
+      input.focus();
     });
 
-    btn.addEventListener('click', function () {
-      state.sortDesc = !state.sortDesc;
-      btn.textContent = state.sortDesc ? '▼' : '▲';
-      state.page = 1;
-      applySort();
-    });
-
-    wrap.appendChild(select);
-    wrap.appendChild(btn);
-
-    return wrap;
+    setChipActive();
   }
 
-  // ── 필터/정렬 통합 패널 ──
-  function buildFilterPanel() {
-    if (document.getElementById('nz-filter-panel')) return;
-    var searchWrap = document.getElementById('nz-search-wrap');
-    if (!searchWrap) return;
+  // Esc = 검색어 지우기
+  window.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    var input = document.getElementById('nz2-search');
+    if (input && input.value) {
+      input.value = '';
+      var clearBtn = document.getElementById('nz2-search-clear');
+      if (clearBtn) clearBtn.style.display = 'none';
+      state.searchQ = '';
+      state.page = 1;
+      applyVisibility();
+    }
+  });
+
+  // ── 빈 결과 상태 ──
+  function buildEmptyState() {
+    if (document.getElementById('nz2-empty')) return;
+    var gallery = document.querySelector(GALLERY_SEL);
+    if (!gallery) return;
+    var div = document.createElement('div');
+    div.id = 'nz2-empty';
+    div.style.display = 'none';
+    div.innerHTML =
+      '<img src="' + NZ_ASSET_BASE + 'assets/lemon.png" alt="레몬" onerror="this.style.display=\'none\'">'
+      + '<div class="nz2-empty-msg">조건에 맞는 나조가 아직 다락방에 없어요</div>'
+      + '<button type="button" id="nz2-empty-reset">필터 초기화</button>';
+    gallery.parentNode.insertBefore(div, gallery.nextSibling);
+    document.getElementById('nz2-empty-reset').addEventListener('click', resetFilters);
+  }
+
+  // ── PC 2단 레이아웃 + 사이드바 ──
+  var upcomingItems = null;
+  var notesItems = null;
+
+  function buildLayout() {
+    if (document.getElementById('nz2-layout')) return;
     var gallery = document.querySelector(GALLERY_SEL);
     if (!gallery) return;
 
-    var panel = document.createElement('div');
-    panel.id = 'nz-filter-panel';
+    var layout = document.createElement('div');
+    layout.id = 'nz2-layout';
+    var left = document.createElement('div');
+    left.id = 'nz2-left';
+    var sidebar = document.createElement('div');
+    sidebar.id = 'nz2-sidebar';
+    sidebar.innerHTML =
+      '<div class="nz2-sb-header">다락방 노트</div>'
+      + '<div class="nz2-notes-target nz2-sb-notes"></div>'
+      + '<a class="nz2-notes-more" href="/darakbang-note">특집 전체 보기 →</a>'
+      + '<div class="nz2-upcoming">'
+      +   '<div class="nz2-up-head"><span>리뷰 예정</span><a href="/to-review">전체 →</a></div>'
+      +   '<div id="nz2-upcoming-list"></div>'
+      + '</div>';
 
-    var sortEl = buildSort();
-    if (sortEl) panel.appendChild(sortEl);
+    gallery.parentNode.insertBefore(layout, gallery);
+    left.appendChild(gallery);
+    layout.appendChild(left);
+    layout.appendChild(sidebar);
 
-    var filterEl = buildFilter();
-    if (filterEl) panel.appendChild(filterEl);
-
-    searchWrap.parentNode.insertBefore(panel, searchWrap.nextSibling);
+    if (notesItems !== null) renderNotes(notesItems);
+    if (upcomingItems !== null) renderUpcoming();
+    fetchUpcoming();
   }
 
-  // ── 갤러리 등장 감지 ──
-  function destroyAll() {
-    ['nz-search-wrap', 'nz-filter-panel'].forEach(function (id) {
-      var el = document.getElementById(id);
-      if (el) el.parentNode.removeChild(el);
+  // ── 리뷰 예정 티저 (/to-review 표에서 상위 3개) ──
+  var upcomingFetched = false;
+  // 실데이터(보유중/해보고싶다) + 시안 상태값 모두 지원
+  var UP_STATUSES = ['보유중', '해보고싶다', '플레이 대기', '배송 중', '위시리스트'];
+  var UP_STATUS_COLORS = {
+    '보유중': '#7AA85C',
+    '플레이 대기': '#7AA85C',
+    '배송 중': '#D9A13B',
+    '해보고싶다': '#A79E8A',
+    '위시리스트': '#A79E8A'
+  };
+  function fetchUpcoming() {
+    if (upcomingFetched) return;
+    upcomingFetched = true;
+    fetch('/to-review')
+      .then(function (r) { return r.text(); })
+      .then(function (html) {
+        var doc = new DOMParser().parseFromString(html, 'text/html');
+        var items = [];
+        doc.querySelectorAll('.notion-collection-table tr').forEach(function (tr) {
+          if (items.length >= 8) return;
+          var titleCell = tr.querySelector('.title, td:first-child');
+          var title = titleCell ? titleCell.textContent.trim() : '';
+          if (!title || title === '이름') return;
+          var status = '';
+          tr.querySelectorAll('.notion-pill').forEach(function (pill) {
+            var s = pill.textContent.trim();
+            if (UP_STATUSES.indexOf(s) > -1) status = s;
+          });
+          if (!status) return;
+          items.push({ title: title, status: status });
+        });
+        upcomingItems = items;
+        renderUpcoming();
+      })
+      .catch(function () { upcomingItems = []; renderUpcoming(); });
+  }
+  function renderUpcoming() {
+    var list = document.getElementById('nz2-upcoming-list');
+    if (!list || upcomingItems === null) return;
+    if (!upcomingItems.length) {
+      var box = document.querySelector('.nz2-upcoming');
+      if (box) box.style.display = 'none';
+      return;
+    }
+    list.innerHTML = upcomingItems.map(function (it) {
+      var dot = UP_STATUS_COLORS[it.status] || '#FFD953';
+      return '<div class="nz2-up-item">'
+        + '<span class="nz2-up-dot" style="background:' + dot + '"></span>'
+        + '<span class="nz2-up-name">' + esc(it.title) + '</span>'
+        + '<span class="nz2-up-status">' + esc(it.status) + '</span>'
+        + '</div>';
+    }).join('');
+  }
+
+  // ── 다락방 노트 박스 ──
+  var notesFetched = false;
+  function buildNotesBox() {
+    if (document.getElementById('nz2-notes')) return;
+    var gallery = document.querySelector(GALLERY_SEL);
+    if (!gallery) return;
+
+    var box = document.createElement('div');
+    box.id = 'nz2-notes';
+    box.innerHTML =
+      '<div class="nz2-notes-title">다락방 노트</div>'
+      + '<div id="nz2-notes-list" class="nz2-notes-target"></div>'
+      + '<a class="nz2-notes-more" href="/darakbang-note">특집 전체 보기 →</a>';
+    gallery.parentNode.appendChild(box);
+
+    if (notesFetched) return;
+    notesFetched = true;
+    fetch('/darakbang-note')
+      .then(function (r) { return r.text(); })
+      .then(function (html) {
+        var doc = new DOMParser().parseFromString(html, 'text/html');
+        var items = [];
+        doc.querySelectorAll('.notion-collection-table tbody tr, .notion-collection-table tr').forEach(function (tr) {
+          var link = tr.querySelector('a[href*="darakbang-note/"]');
+          if (!link) return;
+          var rowText = tr.textContent;
+          if (rowText.indexOf('비공개') > -1) return;
+          var title = '';
+          var titleCell = tr.querySelector('.title, td:first-child');
+          if (titleCell) title = titleCell.textContent.trim();
+          if (!title) title = link.textContent.trim();
+          if (!title) return;
+          var category = '';
+          var pill = tr.querySelector('.notion-pill');
+          if (pill) category = pill.textContent.trim();
+          if (category === '공개') category = '';
+          var dateText = '';
+          var dateCell = tr.querySelector('td.date, .date');
+          if (dateCell) {
+            var parsed = new Date(dateCell.textContent.trim());
+            if (!isNaN(parsed.getTime())) {
+              dateText = parsed.getFullYear() + '.' + ('0' + (parsed.getMonth() + 1)).slice(-2);
+            }
+          }
+          items.push({
+            title: title,
+            href: link.getAttribute('href'),
+            meta: [dateText, category].filter(Boolean).join(' · '),
+            sortKey: dateText || ''
+          });
+        });
+        // 최신순 상위 3개
+        items.sort(function (a, b) { return b.sortKey.localeCompare(a.sortKey); });
+        renderNotes(items.slice(0, 3));
+      })
+      .catch(function () { renderNotes([]); });
+  }
+
+  function renderNotes(items) {
+    notesItems = items;
+    var targets = document.querySelectorAll('.nz2-notes-target');
+    if (!targets.length) return;
+    var emptyHtml =
+      '<div class="nz2-notes-empty">'
+      + '<img src="' + NZ_ASSET_BASE + 'assets/lemon.png" alt="레몬" onerror="this.style.display=\'none\'">'
+      + '<span>아직 쓰는 중이에요. 첫 노트를 기대해 주세요!</span>'
+      + '</div>';
+    var cardsHtml = items.map(function (it) {
+      return '<a class="nz2-note-card" href="' + esc(it.href) + '">'
+        + '<div class="nz2-note-card-title">' + esc(it.title) + '</div>'
+        + (it.meta ? '<div class="nz2-note-card-meta">' + esc(it.meta) + '</div>' : '')
+        + '</a>';
+    }).join('');
+    targets.forEach(function (list) {
+      list.innerHTML = items.length ? cardsHtml : emptyHtml;
     });
-    document.querySelectorAll('.nz-card-props').forEach(function (el) {
-      el.parentNode.removeChild(el);
-    });
-    document.querySelectorAll('.nz-card-custom').forEach(function (el) {
-      el.classList.remove('nz-card-custom');
+    document.querySelectorAll('.nz2-notes-more').forEach(function (more) {
+      more.style.display = items.length ? '' : 'none';
     });
   }
 
+  // ── URL 검색 파라미터 ──
   function applyUrlSearch() {
     var params = new URLSearchParams(window.location.search);
     var q = params.get('search');
     if (!q) return;
-    var input = document.getElementById('nz-search');
+    var input = document.getElementById('nz2-search');
     if (input) {
       input.value = q;
+      var clearBtn = document.getElementById('nz2-search-clear');
+      if (clearBtn) clearBtn.style.display = '';
       state.searchQ = q.trim().toLowerCase();
       state.page = 1;
     }
-    // URL 파라미터 제거 (뒤로가기 시 깔끔하게)
     history.replaceState(null, '', window.location.pathname);
   }
 
   // ── 홈 로고 클릭 시 새로고침 (필터 초기화) ──
+  var logoRefreshDone = false;
   function setupLogoRefresh() {
+    if (logoRefreshDone) return;
+    logoRefreshDone = true;
     document.addEventListener('click', function (e) {
       var link = e.target.closest('a');
       if (!link) return;
@@ -1539,31 +1594,61 @@ function nzLightboxClose() {
     }, true);
   }
 
+  // ── 조립 + SPA/lazy 대응 ──
+  function destroyAll() {
+    var gallery = document.querySelector(GALLERY_SEL);
+    var layout = document.getElementById('nz2-layout');
+    if (layout) {
+      if (gallery && layout.contains(gallery)) layout.parentNode.insertBefore(gallery, layout);
+      layout.parentNode.removeChild(layout);
+    }
+    ['nz2-controls', 'nz2-result-comment', 'nz-pagination', 'nz2-empty', 'nz2-notes'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el && el.parentNode) el.parentNode.removeChild(el);
+    });
+    document.querySelectorAll('.nz-card-props').forEach(function (el) { el.parentNode.removeChild(el); });
+    document.querySelectorAll('.nz-card-custom').forEach(function (el) { el.classList.remove('nz-card-custom'); });
+  }
+
   function buildAll() {
-    buildSearch();
-    buildFilterPanel();
+    buildLayout();
+    buildControls();
     customizeCards();
+    sortCardsByRecent();
+    buildEmptyState();
     applyUrlSearch();
     applyVisibility();
+    buildNotesBox();
     setupLogoRefresh();
   }
+
+  // 화면 폭이 모바일↔PC 경계를 넘으면 페이지 크기 재계산
+  var lastMobile = isMobile();
+  window.addEventListener('resize', function () {
+    if (isMobile() !== lastMobile) {
+      lastMobile = isMobile();
+      state.page = 1;
+      applyVisibility();
+    }
+  });
 
   var galleryDebounce = null;
   var galleryObserver = new MutationObserver(function () {
     var gallery = document.querySelector(GALLERY_SEL);
     if (!gallery) return;
-    var searchWrap = document.getElementById('nz-search-wrap');
-    if (!searchWrap || searchWrap.parentNode !== gallery.parentNode) {
+    var controls = document.getElementById('nz2-controls');
+    var left = document.getElementById('nz2-left');
+    if (!controls || !left || !left.contains(gallery)) {
       destroyAll();
-      state.originalOrder = null;
       buildAll();
+      return;
     }
-    // 새 카드가 추가된 경우 커스텀 적용 + 페이지네이션 갱신 (디바운스)
     var uncustomized = gallery.querySelector(CARD_SEL + ':not(.nz-card-custom)');
     if (uncustomized) {
       customizeCards();
       if (galleryDebounce) clearTimeout(galleryDebounce);
       galleryDebounce = setTimeout(function () {
+        sortCardsByRecent();
         applyVisibility();
       }, 150);
     }
@@ -2936,4 +3021,106 @@ function nzLightboxClose() {
     _origDecorate();
     startReapplyGuard();
   };
+})();
+
+// ── 전역 크롬 v2: 네비 레몬 홈버튼 + 모바일 ☰ 드롭다운 + 푸터 문구 ──
+(function () {
+  var LEMON_URL = 'https://assets.super.so/b529abf1-8288-44d9-87eb-38228677c041/images/bcc6ec8e-275b-4bfc-b598-b2108922863e/noname.png';
+  var NAV_LINKS = [
+    { label: '나조토키란?', href: '/what-is-nazo' },
+    { label: '리뷰 예정 목록', href: '/to-review' },
+    { label: '나조 구매 정보', href: '/how-to-buy-nazotokis' },
+    { label: '레몬빵?', href: '/lemonbread' }
+  ];
+
+  // 네비 로고 → 레몬 아이콘 (hydration으로 노드가 갈려도 재적용)
+  function swapLogo() {
+    var img = document.querySelector('.super-navbar__logo-image img');
+    if (!img || img.dataset.nzLemon === '1') return;
+    img.dataset.nzLemon = '1';
+    img.removeAttribute('srcset');
+    img.src = LEMON_URL;
+    img.alt = '홈으로';
+    img.title = '홈으로';
+  }
+
+  // 모바일 ☰ 버튼 + 드롭다운
+  var menuOpen = false;
+
+  function closeMenu() {
+    menuOpen = false;
+    var dd = document.querySelector('.nz-mobile-dropdown');
+    if (dd) dd.parentNode.removeChild(dd);
+    var bd = document.querySelector('.nz-mobile-menu-backdrop');
+    if (bd) bd.parentNode.removeChild(bd);
+    var btn = document.querySelector('.nz-mobile-menu-btn');
+    if (btn) btn.textContent = '☰';
+  }
+
+  function openMenu() {
+    var nav = document.querySelector('.super-navbar');
+    if (!nav) return;
+    menuOpen = true;
+
+    var backdrop = document.createElement('div');
+    backdrop.className = 'nz-mobile-menu-backdrop';
+    backdrop.addEventListener('click', closeMenu);
+    document.body.appendChild(backdrop);
+
+    var dd = document.createElement('div');
+    dd.className = 'nz-mobile-dropdown';
+    NAV_LINKS.forEach(function (link) {
+      var a = document.createElement('a');
+      a.href = link.href;
+      a.textContent = link.label;
+      dd.appendChild(a);
+    });
+    nav.appendChild(dd);
+
+    var btn = document.querySelector('.nz-mobile-menu-btn');
+    if (btn) btn.textContent = '✕';
+  }
+
+  function ensureMobileMenuBtn() {
+    var navContent = document.querySelector('.super-navbar__content');
+    if (!navContent || navContent.querySelector('.nz-mobile-menu-btn')) return;
+    var btn = document.createElement('div');
+    btn.className = 'nz-mobile-menu-btn';
+    btn.textContent = '☰';
+    btn.setAttribute('role', 'button');
+    btn.setAttribute('aria-label', '메뉴');
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (menuOpen) closeMenu(); else openMenu();
+    });
+    navContent.appendChild(btn);
+  }
+
+  // 푸터 문구 교체
+  function fixFooter() {
+    var fn = document.querySelector('.super-footer__footnote');
+    if (!fn || fn.dataset.nzDone === '1') return;
+    fn.dataset.nzDone = '1';
+    fn.textContent = '저의 작은 기록들이 도움이 되길 바라며 · © 2026 Monbbang';
+  }
+
+  function runAll() {
+    swapLogo();
+    ensureMobileMenuBtn();
+    fixFooter();
+  }
+
+  // 초기 실행 + hydration/SPA 대응 재적용
+  runAll();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', runAll);
+  }
+  setTimeout(runAll, 800);
+  setTimeout(runAll, 2000);
+  setTimeout(runAll, 4500);
+  var chromeObserver = new MutationObserver(function () { runAll(); });
+  chromeObserver.observe(document.documentElement, { childList: true, subtree: true });
+
+  // 페이지 이동 시 열린 메뉴 정리
+  window.addEventListener('popstate', closeMenu);
 })();
