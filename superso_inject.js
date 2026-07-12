@@ -1920,9 +1920,17 @@ function nzLightboxClose() {
   }
 
   function needsRun() {
-    return isPurchasePage() &&
-      document.querySelector('.notion-callout') &&
-      !document.querySelector('[data-nz-done]');
+    if (!isPurchasePage()) return false;
+    if (!document.querySelector('.notion-callout')) return false;
+    // 하이드레이션이 마커(data-nz-done)만 남기고 꾸민 내용을 날리는 경우가 있어
+    // 마커가 아니라 실제 결과물(꾸며진 헤더) 존재 여부로 판단
+    if (!document.querySelector('.nz-shop-header')) {
+      document.querySelectorAll('[data-nz-done]').forEach(function (el) {
+        el.removeAttribute('data-nz-done');
+      });
+      return true;
+    }
+    return false;
   }
 
   function tryRun(attempt) {
