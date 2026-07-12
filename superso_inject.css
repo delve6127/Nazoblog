@@ -1979,8 +1979,8 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
 #nz-wn-cover .nz-wn-cover__spinner {
   width: 28px;
   height: 28px;
-  border: 3px solid #EEE4C7;
-  border-top-color: #D4B860;
+  border: 3px solid #F0E1AC;
+  border-top-color: #FFD953;
   border-radius: 50%;
   animation: nz-wn-cover-spin 0.8s linear infinite;
 }
@@ -1990,8 +1990,8 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
 
 /* ── 본문 타이포 ── */
 .super-content.page__what-is-nazo article.notion-root {
-  font-family: 'NanumSquareRound', -apple-system, BlinkMacSystemFont, sans-serif !important;
-  color: #3a3a38 !important;
+  font-family: var(--nz-font-body) !important;
+  color: #4A4335 !important;
   font-size: 15px;
   line-height: 1.8;
 }
@@ -1999,7 +1999,7 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
 /* ── 서브타이틀 ── */
 .super-content.page__what-is-nazo .nz-wn-subtitle {
   text-align: center !important;
-  color: #888780 !important;
+  color: #8A8272 !important;
   font-size: 13px !important;
   font-weight: 400 !important;
   margin: -8px 0 40px !important;
@@ -2009,7 +2009,7 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
 /* ── 일반 섹션 H3 (콜아웃 내부 H3는 제외) ── */
 .super-content.page__what-is-nazo article.notion-root > h3.notion-heading {
   font-weight: 700 !important;
-  color: #2c2c2a !important;
+  color: #3D372E !important;
   font-size: 19px !important;
   margin: 40px 0 14px !important;
   padding: 4px 0 4px 14px !important;
@@ -2032,7 +2032,7 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
 .super-content.page__what-is-nazo article.notion-root > p.notion-text {
   margin: 0 0 14px !important;
   word-break: keep-all !important;
-  color: #3a3a38 !important;
+  color: #4A4335 !important;
 }
 
 /* ── 콜아웃 공통 (info/guide/sub/term 전체) ── */
@@ -2085,7 +2085,7 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
   font-size: 19px !important;
   margin: 0 !important;
   padding: 0 !important;
-  color: #2c2c2a !important;
+  color: #3D372E !important;
   letter-spacing: -0.3px !important;
   line-height: 1.3 !important;
 }
@@ -2104,28 +2104,28 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
 .super-content.page__what-is-nazo .nz-wn-callout .notion-callout__content > p.notion-text {
   margin: 12px 0 0 !important;
   word-break: keep-all !important;
-  color: #3a3a38 !important;
+  color: #4A4335 !important;
   line-height: 1.8 !important;
 }
 
 /* ── 정보 콜아웃 (info1 / info2) ── */
 .super-content.page__what-is-nazo .nz-wn-info1,
 .super-content.page__what-is-nazo .nz-wn-info2 {
-  background: #FCEEC5 !important;
-  border: 1px solid #F0DE99 !important;
-  border-left: 4px solid #D4B860 !important;
+  background: #FFF7DC !important;
+  border: 1px solid #F0E1AC !important;
+  border-left: 4px solid #FFD953 !important;
   box-shadow: 0 3px 6px rgba(60, 40, 15, 0.2) !important;
 }
 .super-content.page__what-is-nazo .nz-wn-info1 .notion-callout__icon,
 .super-content.page__what-is-nazo .nz-wn-info2 .notion-callout__icon {
-  color: #8A6E1F;
+  color: #8A6D00;
 }
 
 /* ── 가이드 콜아웃 (아이콘 없음) ── */
 .super-content.page__what-is-nazo .nz-wn-guide {
-  background: #F5E6CC !important;
-  border: 1px solid #7A8AA5 !important;
-  border-left: 5px solid #283655 !important;
+  background: #FAF6EB !important;
+  border: 1px solid #8A8272 !important;
+  border-left: 5px solid #5C554A !important;
   box-shadow: 0 3px 6px rgba(40, 54, 85, 0.25) !important;
   grid-template-columns: 1fr !important;
 }
@@ -2134,16 +2134,16 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
 }
 .super-content.page__what-is-nazo .nz-wn-guide .notion-callout__content > h3.notion-heading {
   grid-column: 1;
-  color: #283655 !important;
+  color: #5C554A !important;
 }
 
 /* ── 용어 카드 (term1/2/3) ── */
 .super-content.page__what-is-nazo .nz-wn-term1,
 .super-content.page__what-is-nazo .nz-wn-term2,
 .super-content.page__what-is-nazo .nz-wn-term3 {
-  background: #FFF5E6 !important;
-  border: 1px solid #F0DBB8 !important;
-  border-left: 1px solid #F0DBB8 !important;
+  background: #FFF7DC !important;
+  border: 1px solid #F0E1AC !important;
+  border-left: 1px solid #F0E1AC !important;
   border-radius: 10px !important;
   padding: 16px 20px !important;
   box-shadow: none !important;
@@ -2153,7 +2153,7 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
 .super-content.page__what-is-nazo .nz-wn-term3 { margin: 12px 0 6px !important; }
 
 .super-content.page__what-is-nazo .nz-wn-callout[class*="nz-wn-term"] .notion-callout__icon {
-  color: #8A6E1F;
+  color: #8A6D00;
   width: 24px !important;
   height: 24px !important;
 }
@@ -2171,7 +2171,7 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
   grid-row: 1;
   align-self: center !important;
   font-weight: 700 !important;
-  color: #2c2c2a !important;
+  color: #3D372E !important;
   font-size: 15px !important;
   display: block;
 }
@@ -2181,15 +2181,15 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
   display: block;
   font-size: 14px !important;
   line-height: 1.75 !important;
-  color: #3a3a38 !important;
+  color: #4A4335 !important;
   word-break: keep-all;
 }
 
 /* ── Sub-callout (점수 기준, 가이드 콜아웃 내부 중첩) ── */
 .super-content.page__what-is-nazo .nz-wn-sub {
-  background: #EEF1F5 !important;
-  border: 1px solid #C8D1DD !important;
-  border-left: 1px solid #C8D1DD !important;
+  background: #F1EADA !important;
+  border: 1px solid #D9CFB6 !important;
+  border-left: 1px solid #D9CFB6 !important;
   border-radius: 8px !important;
   padding: 16px 20px !important;
   margin: 16px 0 6px !important;
@@ -2203,7 +2203,7 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
   grid-column: 1;
   font-size: 15px !important;
   margin: 0 0 10px !important;
-  color: #2c2c2a !important;
+  color: #3D372E !important;
 }
 .super-content.page__what-is-nazo .nz-wn-sub .nz-wn-metric {
   display: block !important;
@@ -2218,16 +2218,16 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
   border-top: 1px dashed rgba(0,0,0,0.1);
 }
 .super-content.page__what-is-nazo .nz-wn-sub .nz-wn-metric b {
-  color: #283655 !important;
+  color: #5C554A !important;
   margin-right: 6px;
   font-weight: 700 !important;
 }
 
 /* ── 🏷️ "추가 정보" 콜아웃 (점수 기준과 같은 nested 패턴) ── */
 .super-content.page__what-is-nazo .nz-wn-tags {
-  background: #F5F7FA !important;
-  border: 1px solid #D9E0E9 !important;
-  border-left: 1px solid #D9E0E9 !important;
+  background: #FAF6EB !important;
+  border: 1px solid #E0D7C2 !important;
+  border-left: 1px solid #E0D7C2 !important;
   border-radius: 8px !important;
   padding: 16px 20px !important;
   margin: 16px 0 6px !important;
@@ -2241,7 +2241,7 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
   grid-column: 1;
   font-size: 15px !important;
   margin: 0 0 10px !important;
-  color: #2c2c2a !important;
+  color: #3D372E !important;
   font-weight: 700 !important;
   line-height: 1.4 !important;
 }
@@ -2265,7 +2265,7 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
   flex-wrap: wrap;
   gap: 5px;
   margin-bottom: 6px;
-  color: #283655;
+  color: #5C554A;
   font-weight: 700;
   font-size: 14.5px;
 }
@@ -2279,7 +2279,7 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
   font-weight: 700;
 }
 .super-content.page__what-is-nazo .nz-wn-info-item__body {
-  color: #3a3a38;
+  color: #4A4335;
 }
 .super-content.page__what-is-nazo .nz-wn-info-item__body + .nz-wn-info-item__body {
   margin-top: 8px;
@@ -2294,8 +2294,8 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
   display: inline-flex;
   align-items: center;
   padding: 3px 10px;
-  background: #ccfbf1;
-  color: #0d7377;
+  background: #EEF4EF;
+  color: #5E7F6A;
   border-radius: 20px;
   font-size: 11px;
   font-weight: 500;
@@ -2331,8 +2331,8 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
   gap: 8px;
   padding: 20px 14px;
   border-radius: 10px;
-  background: #E0E7D4;
-  border: 1px solid #C3D0B8;
+  background: var(--nz-featured-bg);
+  border: 1px solid var(--nz-featured-border);
   color: #3A4830;
   text-decoration: none;
   font-size: 14px;
@@ -2346,7 +2346,7 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
 }
 .super-content.page__what-is-nazo .nz-wn-cta__icon {
   line-height: 0;
-  color: #5A6B4E;
+  color: var(--nz-link);
 }
 .super-content.page__what-is-nazo .nz-wn-cta__icon svg {
   width: 24px;
@@ -3496,4 +3496,10 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
   .nz-about-card { padding: 22px 20px; }
   .nz-about-card .notion-text,
   .nz-about-card li { font-size: 13.5px; }
+}
+
+/* ── 나조토키란? 페이지: 제목 Jua (6단계 리터치) ── */
+.nz-guide .notion-header__title {
+  font-family: var(--nz-font-display) !important;
+  font-weight: 400 !important;
 }

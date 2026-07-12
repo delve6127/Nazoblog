@@ -3189,6 +3189,7 @@ function nzLightboxClose() {
     document.body.classList.toggle('nz-home', path === '/' || path === '');
     document.body.classList.toggle('nz-review', path.indexOf('/nazotoki-reviews/') === 0);
     document.body.classList.toggle('nz-about', path.indexOf('/lemonbread') === 0);
+    document.body.classList.toggle('nz-guide', path.indexOf('/what-is-nazo') === 0);
   }
 
   // 홈으로 가는 내부 링크는 항상 전체 로드 (SPA 복원 시 갤러리 커스텀이 누락되는 문제 방지)
