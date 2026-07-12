@@ -3104,7 +3104,15 @@ function nzLightboxClose() {
     fn.textContent = '저의 작은 기록들이 도움이 되길 바라며 · © 2026 Monbbang';
   }
 
+  function ensureHomeClass() {
+    // React 하이드레이션이 body class를 리셋하므로 계속 재적용
+    if (window.location.pathname === '/' || window.location.pathname === '') {
+      if (!document.body.classList.contains('nz-home')) document.body.classList.add('nz-home');
+    }
+  }
+
   function runAll() {
+    ensureHomeClass();
     swapLogo();
     ensureMobileMenuBtn();
     fixFooter();
