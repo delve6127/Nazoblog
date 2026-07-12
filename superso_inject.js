@@ -7,6 +7,9 @@ var NZ_HERO_COPY = {
   cta_url: '/what-is-nazo'
 };
 
+// ── 다락방 노트 공개 스위치 (5단계 완료 시 true로 바꾸면 칩·박스·사이드바 노출) ──
+var NZ_NOTES_READY = false;
+
 // ── 에셋 베이스 (로컬 프리뷰에서는 window.NZ_ASSET_BASE로 덮어씀) ──
 var NZ_ASSET_BASE = window.NZ_ASSET_BASE || 'https://delve6127.github.io/Nazoblog/';
 
@@ -1270,7 +1273,7 @@ function nzLightboxClose() {
       '<div id="nz2-bar">'
       + '<div id="nz2-chips">'
       + '<button type="button" class="nz2-chip" data-f="all">전체 리뷰</button>'
-      + '<a class="nz2-chip nz2-chip--link" href="/darakbang-note">다락방 노트</a>'
+      + (NZ_NOTES_READY ? '<a class="nz2-chip nz2-chip--link" href="/darakbang-note">다락방 노트</a>' : '')
       + '<button type="button" class="nz2-chip" data-f="strong">강력추천</button>'
       + '<button type="button" class="nz2-chip" data-f="beginner">입문 추천</button>'
       + '<div class="nz2-chip nz2-chip--diff" id="nz2-chip-diff">'
@@ -1405,9 +1408,11 @@ function nzLightboxClose() {
     var sidebar = document.createElement('div');
     sidebar.id = 'nz2-sidebar';
     sidebar.innerHTML =
-      '<div class="nz2-sb-header">다락방 노트</div>'
-      + '<div class="nz2-notes-target nz2-sb-notes"></div>'
-      + '<a class="nz2-notes-more" href="/darakbang-note">특집 전체 보기 →</a>'
+      (NZ_NOTES_READY
+        ? '<div class="nz2-sb-header">다락방 노트</div>'
+          + '<div class="nz2-notes-target nz2-sb-notes"></div>'
+          + '<a class="nz2-notes-more" href="/darakbang-note">특집 전체 보기 →</a>'
+        : '')
       + '<div class="nz2-upcoming">'
       +   '<div class="nz2-up-head"><span>리뷰 예정</span><a href="/to-review">전체 →</a></div>'
       +   '<div id="nz2-upcoming-list"></div>'
@@ -1481,6 +1486,7 @@ function nzLightboxClose() {
   // ── 다락방 노트 박스 ──
   var notesFetched = false;
   function buildNotesBox() {
+    if (!NZ_NOTES_READY) return;
     if (document.getElementById('nz2-notes')) return;
     var gallery = document.querySelector(GALLERY_SEL);
     if (!gallery) return;
@@ -1619,7 +1625,6 @@ function nzLightboxClose() {
     applyUrlSearch();
     applyVisibility();
     buildNotesBox();
-    setupLogoRefresh();
   }
 
   // 화면 폭이 모바일↔PC 경계를 넘으면 페이지 크기 재계산
@@ -3105,14 +3110,43 @@ function nzLightboxClose() {
   }
 
   function ensureHomeClass() {
-    // React 하이드레이션이 body class를 리셋하므로 계속 재적용
-    if (window.location.pathname === '/' || window.location.pathname === '') {
-      if (!document.body.classList.contains('nz-home')) document.body.classList.add('nz-home');
-    }
+    // React 하이드레이션이 body class를 리셋하므로 계속 재적용 (홈 아니면 제거)
+    var isHome = window.location.pathname === '/' || window.location.pathname === '';
+    document.body.classList.toggle('nz-home', isHome);
+  }
+
+  // 홈으로 가는 내부 링크는 항상 전체 로드 (SPA 복원 시 갤러리 커스텀이 누락되는 문제 방지)
+  var homeNavInstalled = false;
+  function installHomeNav() {
+    if (homeNavInstalled) return;
+    homeNavInstalled = true;
+    document.addEventListener('click', function (e) {
+      var link = e.target.closest('a');
+      if (!link) return;
+      if (link.href === window.location.origin + '/' || link.href === window.location.origin) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (window.location.pathname === '/' || window.location.pathname === '') {
+          window.location.reload();
+        } else {
+          window.location.assign('/');
+        }
+      }
+    }, true);
+    // 뒤로가기로 홈에 SPA 복원됐는데 커스텀 UI가 없으면 새로고침
+    window.addEventListener('popstate', function () {
+      setTimeout(function () {
+        if ((window.location.pathname === '/' || window.location.pathname === '')
+            && !document.getElementById('nz2-controls')) {
+          window.location.reload();
+        }
+      }, 400);
+    });
   }
 
   function runAll() {
     ensureHomeClass();
+    installHomeNav();
     swapLogo();
     ensureMobileMenuBtn();
     fixFooter();
