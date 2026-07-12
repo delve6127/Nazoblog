@@ -3188,6 +3188,7 @@ function nzLightboxClose() {
     var path = window.location.pathname;
     document.body.classList.toggle('nz-home', path === '/' || path === '');
     document.body.classList.toggle('nz-review', path.indexOf('/nazotoki-reviews/') === 0);
+    document.body.classList.toggle('nz-about', path.indexOf('/lemonbread') === 0);
   }
 
   // 홈으로 가는 내부 링크는 항상 전체 로드 (SPA 복원 시 갤러리 커스텀이 누락되는 문제 방지)
@@ -3240,4 +3241,62 @@ function nzLightboxClose() {
 
   // 페이지 이동 시 열린 메뉴 정리
   window.addEventListener('popstate', closeMenu);
+})();
+
+
+// ── 레몬빵? 페이지: 시안 마스킹테이프 소개 카드 ──
+(function () {
+  'use strict';
+
+  function isAboutPage() {
+    return window.location.pathname.indexOf('/lemonbread') === 0;
+  }
+
+  function run() {
+    if (!isAboutPage()) return;
+    if (document.querySelector('.nz-about-card')) return;
+    var root = document.querySelector('.notion-root');
+    if (!root) return;
+
+    var blocks = Array.from(root.children).filter(function (el) {
+      return !el.classList.contains('nz-about-card')
+        && !el.classList.contains('notion-header')
+        && el.tagName !== 'SCRIPT';
+    });
+    if (!blocks.length) return;
+
+    var card = document.createElement('div');
+    card.className = 'nz-about-card';
+    root.appendChild(card);
+    blocks.forEach(function (el) { card.appendChild(el); });
+  }
+
+  // 하이드레이션이 카드를 해체하면 재적용 (결과물 존재 기준)
+  var aboutDebounce = null;
+  var aboutObserver = new MutationObserver(function () {
+    if (!isAboutPage()) return;
+    if (aboutDebounce) return;
+    aboutDebounce = setTimeout(function () {
+      aboutDebounce = null;
+      var card = document.querySelector('.nz-about-card');
+      var root = document.querySelector('.notion-root');
+      if (!root) return;
+      var strayText = Array.from(root.children).some(function (el) {
+        return el.classList.contains('notion-text') || el.classList.contains('notion-bulleted-list');
+      });
+      if (!card || strayText) {
+        if (card && strayText) card.parentNode.removeChild(card);
+        run();
+      }
+    }, 250);
+  });
+  aboutObserver.observe(document.body, { childList: true, subtree: true });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  setTimeout(run, 1200);
+  setTimeout(run, 3500);
 })();

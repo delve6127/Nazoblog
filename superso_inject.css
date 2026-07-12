@@ -900,15 +900,16 @@ a.notion-page[href="/test"] {
 .nz-purchase-subtitle {
   text-align: center;
   font-size: 14px;
-  color: #a8a29e;
+  color: var(--nz-muted-1);
   font-weight: 400;
   margin: 4px 0 0 0;
   padding-bottom: 8px;
 }
 .nz-purchase-page .notion-callout {
-  background: #fff !important;
-  border: 1px solid #f0eeec !important;
-  border-radius: 14px !important;
+  background: var(--nz-paper) !important;
+  border: 1px solid var(--nz-card-border) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 14px rgba(61, 55, 46, .07);
   padding: 0 !important;
   margin-bottom: 12px !important;
   box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.02);
@@ -939,7 +940,7 @@ a.notion-page[href="/test"] {
 .nz-purchase-page .notion-callout h3 {
   font-size: 16px !important;
   font-weight: 700 !important;
-  color: #1c1917 !important;
+  color: var(--nz-ink) !important;
   margin: 0 !important;
   padding: 0 !important;
   letter-spacing: -0.01em;
@@ -952,16 +953,17 @@ a.notion-page[href="/test"] {
   gap: 4px;
   font-size: 11px;
   font-weight: 600;
-  color: #3b82f6;
+  color: var(--nz-link);
   text-decoration: none;
   padding: 4px 10px;
   border-radius: 6px;
-  background: #eff6ff;
+  background: var(--nz-featured-bg);
+  border: 1px solid var(--nz-featured-border);
   white-space: nowrap;
   flex-shrink: 0;
   transition: background 0.15s;
 }
-.nz-shop-link:hover { background: #dbeafe; }
+.nz-shop-link:hover { background: #FFF3C9; }
 .nz-shop-link svg { width: 12px; height: 12px; flex-shrink: 0; }
 
 /* 태그 행 */
@@ -978,10 +980,10 @@ a.notion-page[href="/test"] {
   border-radius: 20px;
   display: inline-block;
 }
-.nz-shop-tag--ship { background: #dbeafe; color: #1d4ed8; }
-.nz-shop-tag--merit { background: #dcfce7; color: #166534; }
-.nz-shop-tag--brand { background: #ede9fe; color: #5b21b6; }
-.nz-shop-tag--warn { background: #fef3c7; color: #92400e; }
+.nz-shop-tag--ship { background: #EDF2F9; color: #5A78A0; }
+.nz-shop-tag--merit { background: #EEF4EF; color: #5E7F6A; }
+.nz-shop-tag--brand { background: #F1EADA; color: #5C554A; }
+.nz-shop-tag--warn { background: #F8F0EA; color: #A0705C; }
 
 /* 원본 URL 행 & 해시태그 숨김 */
 .nz-purchase-page .notion-callout .nz-shop-url-row { display: none !important; }
@@ -990,7 +992,7 @@ a.notion-page[href="/test"] {
 .nz-purchase-page .notion-callout .notion-text {
   font-size: 13.5px !important;
   line-height: 1.75 !important;
-  color: #57534e !important;
+  color: var(--nz-muted-3) !important;
 }
 
 /* 섹션 헤딩 */
@@ -1003,10 +1005,10 @@ a.notion-page[href="/test"] {
   gap: 10px;
   font-size: 17px !important;
   font-weight: 700 !important;
-  color: #1c1917 !important;
+  color: var(--nz-ink) !important;
   margin: 28px 0 14px !important;
   padding-bottom: 10px !important;
-  border-bottom: 2px solid #e8e0d5;
+  border-bottom: 2px solid var(--nz-rule-brown);
 }
 .nz-section-num {
   width: 26px;
@@ -1014,9 +1016,9 @@ a.notion-page[href="/test"] {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #3b82f6;
-  color: #fff;
-  border-radius: 7px;
+  background: var(--nz-lemon);
+  color: var(--nz-ink);
+  border-radius: 99px;
   font-size: 12px;
   font-weight: 800;
   flex-shrink: 0;
@@ -1057,7 +1059,7 @@ a.notion-page[href="/test"] {
 .nz-review-list-page .nz-review-subtitle {
   text-align: center;
   font-size: 14px;
-  color: #a8a29e;
+  color: var(--nz-muted-1);
   font-weight: 400;
   margin: 4px 0 0 0;
   padding-bottom: 8px;
@@ -1157,10 +1159,10 @@ a.notion-page[href="/test"] {
 /* 제목 셀 볼드 */
 .nz-review-list-page .notion-collection-table__cell.title {
   font-weight: 600 !important;
-  color: #1c1917 !important;
+  color: var(--nz-ink) !important;
 }
 .nz-review-list-page .notion-collection-table__cell.title a {
-  color: #1c1917 !important;
+  color: var(--nz-ink) !important;
   text-decoration: none !important;
   pointer-events: none !important;
 }
@@ -3447,4 +3449,51 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
   .nz4-body .nz-desc > *:first-child { font-size: 12.5px; color: #A79E8A; }
   /* 플레이 일기 본문: 모바일 13px */
   .nz4-body .nz-diary-content { font-size: 13px; }
+}
+
+/* ════ 레몬빵? 페이지 (6단계) — 시안 마스킹테이프 소개 카드 ════ */
+.nz-about .notion-root {
+  max-width: 660px !important;
+}
+.nz-about .notion-header__title {
+  font-family: var(--nz-font-display) !important;
+  font-size: 34px !important;
+}
+.nz-about-card {
+  position: relative;
+  background: var(--nz-paper);
+  border: 1px solid var(--nz-line-soft);
+  border-radius: 12px;
+  padding: 26px 30px;
+  margin: 14px 0 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(61, 55, 46, .07);
+}
+.nz-about-card::before {
+  content: '';
+  position: absolute;
+  top: -11px;
+  left: 34px;
+  transform: rotate(-3deg);
+  width: 74px;
+  height: 20px;
+  background: var(--nz-lemon);
+  opacity: .85;
+  border-radius: 2px;
+}
+.nz-about-card .notion-text,
+.nz-about-card li {
+  font-size: 14.5px;
+  line-height: 1.9;
+  color: #4A4335;
+}
+.nz-about-card .notion-text:empty { min-height: 8px; }
+@media (max-width: 768px) {
+  .nz-about .notion-root { padding-left: 12px !important; padding-right: 12px !important; }
+  .nz-about .notion-header__title { font-size: 26px !important; }
+  .nz-about-card { padding: 22px 20px; }
+  .nz-about-card .notion-text,
+  .nz-about-card li { font-size: 13.5px; }
 }
