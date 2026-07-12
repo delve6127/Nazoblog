@@ -3447,6 +3447,6 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
   /* 나조 설명: 0.9배 + 연하게 (부가 정보) */
   .nz4-body .nz-desc { font-size: 13px; color: var(--nz-muted-1); }
   .nz4-body .nz-desc > *:first-child { font-size: 12.5px; color: #A79E8A; }
-  /* 플레이 일기 본문: 모바일 12px */
-  .nz4-body .nz-diary-content { font-size: 12px; }
+  /* 플레이 일기 본문: 모바일 13px */
+  .nz4-body .nz-diary-content { font-size: 13px; }
 }
