@@ -3080,3 +3080,361 @@ a.nz2-chip--link:hover { color: var(--nz-ink) !important; }
   .nz2-page-btn { width: 32px; height: 32px; font-size: 13px; border-radius: 8px; }
   .nz2-page-next { font-size: 13px; }
 }
+
+/* ════════════════════════════════════════════════════════
+   리뷰 상세 v2 (다락방 개편 4단계) — 시안 리뷰 페이지.dc.html
+   ════════════════════════════════════════════════════════ */
+
+/* 리뷰 페이지도 승인된 미리보기 배율로 */
+@media (min-width: 769px) {
+  .nz-review .super-content { zoom: 0.8; }
+  .nz-review .notion-root { max-width: 100% !important; }
+}
+
+.nz-review-wrap.nz4 {
+  max-width: 880px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: nz4-fade .3s ease;
+}
+@keyframes nz4-fade {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ── 종이 시트 ── */
+.nz4-sheet {
+  background: var(--nz-paper);
+  border: 1px solid var(--nz-card-border);
+  box-shadow: 0 4px 14px rgba(61, 55, 46, .07);
+}
+.nz4-banner {
+  display: block;
+  width: 100%;
+  height: 345px;
+  object-fit: cover;
+}
+.nz4-body {
+  padding: 34px 48px 46px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+/* ── 제목 블록 ── */
+.nz4-head {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-bottom: 2px solid var(--nz-rule-brown);
+  padding-bottom: 22px;
+}
+.nz4-title-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.nz4-title { font-family: var(--nz-font-display); font-size: 34px; line-height: 1.25; color: var(--nz-ink); }
+.nz4-num { font-size: 15px; font-weight: 600; color: #A79E8A; }
+.nz4-badges { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+.nz4-chip-brand {
+  background: #F1EADA;
+  color: var(--nz-muted-3);
+  font-size: 12.5px;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 4px 11px;
+  white-space: nowrap;
+}
+.nz4-chip-date {
+  border: 1px solid #DCD2BA;
+  font-size: 12.5px;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 4px 11px;
+  color: var(--nz-muted-3);
+  white-space: nowrap;
+}
+.nz4-rec.nz2-rec { font-size: 12.5px; padding: 4px 11px; border-radius: 6px; }
+.nz4-chip-mfy {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--nz-paper-warm);
+  border: 1px solid var(--nz-line-soft);
+  color: #8A6D00;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+
+/* ── 2단 ── */
+.nz4-cols { display: grid; grid-template-columns: minmax(0, 1fr) 310px; gap: 28px; }
+.nz4-left { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.nz4-right { display: flex; flex-direction: column; min-width: 0; }
+.nz4-sec--radar { display: flex; flex-direction: column; flex: 1; }
+
+.nz4-sec { display: flex; flex-direction: column; gap: 10px; }
+.nz4-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--nz-muted-1);
+  letter-spacing: .06em;
+  margin: 0;
+}
+
+/* ── 난이도 박스 ── */
+.nz4-diffbox {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border: 1px solid var(--nz-line-soft);
+  border-radius: 10px;
+  padding: 15px 18px;
+  background: var(--nz-paper-warm);
+}
+.nz4-diffrow { display: flex; align-items: center; gap: 9px; min-width: 0; }
+.nz4-difflabel { font-size: 11px; color: var(--nz-muted-1); font-weight: 600; white-space: nowrap; width: 60px; flex-shrink: 0; }
+.nz4-diffsep { height: 1px; background: var(--nz-card-border); }
+.nz4-opills { display: flex; gap: 5px; flex-wrap: wrap; }
+.nz4-opill {
+  color: #FFFFFF;
+  border-radius: 6px;
+  padding: 5px 13px;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.nz4-opill--none { background: #ECE7DB; color: var(--nz-muted-1); }
+.nz4-steps { display: flex; gap: 4px; flex: 1; min-width: 0; }
+.nz4-step {
+  text-align: center;
+  font-size: 11px;
+  border-radius: 6px;
+  padding: 6px 3px;
+  white-space: nowrap;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* ── 플레이 기록 표 ── */
+.nz4-table {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--nz-line);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--nz-paper);
+}
+.nz4-td { padding: 14px 18px; display: flex; flex-direction: column; gap: 3px; }
+.nz4-td:nth-child(1) { border-right: 1px solid var(--nz-card-border); border-bottom: 1px solid var(--nz-card-border); }
+.nz4-td:nth-child(2) { border-bottom: 1px solid var(--nz-card-border); }
+.nz4-td:nth-child(3) { border-right: 1px solid var(--nz-card-border); }
+.nz4-td-label { font-size: 11px; color: var(--nz-muted-1); font-weight: 600; margin: 0; }
+.nz4-td-value { font-size: 14.5px; font-weight: 700; margin: 0; color: var(--nz-ink); }
+.nz4-td-value--none { color: #A79E8A; }
+
+/* ── 점수 분석 (레이더) ── */
+.nz4-radarbox {
+  flex: 1;
+  border: 1px solid var(--nz-line-soft);
+  border-radius: 10px;
+  background: var(--nz-paper-warm);
+  padding: 14px 10px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.nz4-quote {
+  margin: auto 10px 0;
+  border-top: 1px dashed var(--nz-line);
+  padding: 10px 0 8px;
+  font-family: var(--nz-font-hand);
+  font-size: 16px;
+  color: var(--nz-muted-4);
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* ── 추가 정보 · 구입처 ── */
+.nz4-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.nz4-info {
+  border: 1px solid transparent;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 99px;
+  padding: 4px 12px;
+  white-space: nowrap;
+}
+.nz4-info--buy { background: var(--nz-featured-bg); border-color: var(--nz-featured-border); color: var(--nz-link); }
+
+/* ── 나조 설명 ── */
+.nz4-sec--desc { border-top: 1px solid var(--nz-line); padding-top: 24px; }
+.nz4-body .nz-desc { font-size: 14.5px; color: #4A4335; line-height: 1.8; }
+.nz4-body .nz-desc p { margin: 0 0 6px; }
+.nz4-body .nz-desc p:first-child { font-size: 14px; color: var(--nz-muted-1); }
+.nz4-body .nz-desc p:last-child { margin-bottom: 0; }
+
+/* ── 플레이 사진 ── */
+.nz4-body .nz-photos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.nz4-body .nz-photos-grid img {
+  width: 100%;
+  height: 130px;
+  aspect-ratio: auto;
+  object-fit: cover;
+  border-radius: 4px;
+  display: block;
+}
+
+/* ── 플레이 일기 ── */
+.nz4-body .nz-diary-box {
+  max-width: none;
+  margin: 0;
+  background: var(--nz-paper-warm);
+  border: 1px solid #E9E0CB;
+  border-radius: 12px;
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.nz4-body .nz-diary-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--nz-ink);
+  margin: 0;
+}
+.nz4-body .nz-diary-content { font-size: 14.5px; line-height: 1.95; color: #4A4335; }
+.nz4-body .nz-diary-content p { margin: 0 0 12px; }
+/* 노션 노랑 하이라이트 → 레몬 형광펜 */
+.nz4-body .nz-diary-content [class*="highlight-yellow"] {
+  background: linear-gradient(transparent 58%, var(--nz-lemon-hi) 58%) !important;
+  padding: 0 3px;
+  font-weight: 600;
+}
+
+/* ── 잘 읽었어요 (기존 모듈 재스타일) ── */
+.nz4-body .nz-like-wrap { display: flex; justify-content: center; margin: 4px 0 0; }
+
+/* ── 같은 브랜드 다른 리뷰 ── */
+.nz4-body .nz-brand-reviews {
+  border-top: 1px solid var(--nz-line);
+  padding-top: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.nz4-body .nz-br-title { font-size: 14px; font-weight: 700; color: var(--nz-muted-3); }
+.nz4-body .nz-br-count { font-size: 13px; font-weight: 600; color: #A79E8A; }
+.nz4-body .nz-br-pills { display: flex; gap: 7px; flex-wrap: wrap; }
+.nz4-body .nz-br-pills a {
+  border: 1px solid #DCD2BA;
+  background: var(--nz-paper);
+  font-size: 12.5px;
+  font-weight: 600;
+  border-radius: 99px;
+  padding: 5px 14px;
+  color: var(--nz-muted-3) !important;
+  text-decoration: none !important;
+}
+.nz4-body .nz-br-pills a:hover { border-color: #C9BE9F; }
+.nz4-body .nz-br-more {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--nz-link) !important;
+  text-decoration: none !important;
+  align-self: flex-start;
+}
+.nz4-body .nz-br-more:hover { color: var(--nz-link-hover) !important; }
+
+/* ── 이전/다음 + 돌아가기 ── */
+.nz4-nav { display: flex; gap: 14px; }
+.nz4-nav-card {
+  flex: 1;
+  min-width: 0;
+  background: var(--nz-paper);
+  border: 1px solid var(--nz-line-soft);
+  border-radius: 10px;
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-decoration: none !important;
+  color: var(--nz-ink) !important;
+}
+a.nz4-nav-card:hover { border-color: #C9BE9F; }
+.nz4-nav-card--next { text-align: right; }
+.nz4-nav-dir { font-size: 11.5px; color: var(--nz-muted-1); }
+.nz4-nav-name { font-size: 14px; font-weight: 700; color: var(--nz-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nz4-nav-name--none { color: #A79E8A; }
+.nz4-back {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--nz-link) !important;
+  text-decoration: none !important;
+  align-self: flex-start;
+  margin-top: 2px;
+}
+.nz4-back:hover { text-decoration: underline !important; }
+
+/* ── 모바일 ── */
+@media (max-width: 768px) {
+  .nz-review-wrap.nz4 { gap: 14px; }
+  .nz4-banner { height: 195px; }
+  .nz4-body { padding: 22px 18px 30px; gap: 22px; }
+  .nz4-head { gap: 10px; padding-bottom: 18px; }
+  .nz4-title { font-size: 26px; }
+  .nz4-num { font-size: 14px; }
+  .nz4-cols { grid-template-columns: 1fr; gap: 22px; }
+  .nz4-diffbox { padding: 14px 14px; gap: 13px; }
+  .nz4-difflabel { font-size: 11.5px; }
+  .nz4-steps { gap: 3px; }
+  .nz4-step { font-size: 10.5px; padding: 6px 1px; }
+  .nz4-opill { padding: 5px 12px; }
+  .nz4-td { padding: 12px 14px; }
+  .nz4-td-label { font-size: 11.5px; }
+  .nz4-td-value { font-size: 14px; }
+  .nz4-quote { font-size: 17px; }
+  /* 사진: 가로 스와이프 */
+  .nz4-body .nz-photos-grid {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 4px;
+  }
+  .nz4-body .nz-photos-grid img {
+    width: 78%;
+    flex-shrink: 0;
+    height: 210px;
+    scroll-snap-align: start;
+  }
+  .nz4-body .nz-diary-box { padding: 20px 18px; gap: 13px; }
+  /* 이전/다음 세로 쌓기 (제목 잘림 방지) */
+  .nz4-nav { flex-direction: column; gap: 10px; }
+  .nz4-nav-card--next { text-align: left; }
+  .nz4-nav-name { white-space: normal; }
+}
+
+/* 나조 설명: 일어 원문(첫 블록) 흐리게 + 빈 문단 제거 */
+.nz4-body .nz-desc > * { margin: 0 0 6px; }
+.nz4-body .nz-desc > *:first-child { color: var(--nz-muted-1); font-size: 14px; }
+.nz4-body .nz-desc > *:empty { display: none; }
+.nz4-body .nz-desc .notion-text:empty { display: none; }
+
+/* ── 잘 읽었어요: 레몬 버전 (v4) ── */
+.nz-like-pill {
+  border: 1.5px solid var(--nz-line-soft) !important;
+  background: var(--nz-paper) !important;
+  gap: 8px !important;
+  padding: 10px 24px !important;
+}
+.nz-like-pill:hover { border-color: #D9A13B !important; }
+.nz-like-pill.active {
+  border-color: #D9A13B !important;
+  background: var(--nz-featured-bg) !important;
+}
+.nz-like-lemon { width: 18px; height: 18px; display: block; object-fit: contain; }
+.nz-like-pill .nz-like-text { font-size: 13.5px !important; font-weight: 600 !important; color: var(--nz-muted-3) !important; }
+.nz-like-pill .nz-like-count { font-size: 13.5px !important; font-weight: 700 !important; color: #B08900 !important; }

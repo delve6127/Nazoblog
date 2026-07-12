@@ -429,13 +429,13 @@ function nzLightboxClose() {
     '음..':     { bg: '#f0eeec', color: '#78716c', weight: '600' }
   };
 
-  // ── 체감 난이도 단계별 색상 ──────────────────────────
+  // ── 체감 난이도 단계별 색상 (v2: 그라데이션 솔리드) ──
   var DIFF_STEP_COLORS = {
-    '아주 쉬움':  { bg: '#ccfbf1', color: '#0d7377', border: '#7eddd0' },
-    '쉬움':       { bg: '#dcfce7', color: '#166534', border: '#86e5a0' },
-    '보통':       { bg: '#fef3c7', color: '#92700e', border: '#f0d87a' },
-    '어려움':     { bg: '#fed7aa', color: '#9a3412', border: '#f0b080' },
-    '아주 어려움': { bg: '#fde8e8', color: '#c05050', border: '#f0a0a0' }
+    '아주 쉬움':  '#8FB05E',
+    '쉬움':       '#6E9E52',
+    '보통':       '#D9A13B',
+    '어려움':     '#CD7A45',
+    '아주 어려움': '#B85742'
   };
 
   // ── O/X 사용여부 뱃지 생성 ───────────────────────────
@@ -457,84 +457,73 @@ function nzLightboxClose() {
   function buildDiffSteps(selected) {
     return DIFF_STEPS.map(function (s) {
       var isActive = s === selected;
-      var label = s === '아주 쉬움'   ? '아주<br>쉬움'
-                : s === '아주 어려움' ? '아주<br>어려움'
-                : s;
       var c = DIFF_STEP_COLORS[s];
-      var style = isActive && c
-        ? ' style="background:' + c.bg + ';color:' + c.color + ';font-weight:600;border:1.5px solid ' + c.border + ';"'
-        : '';
-      return '<div class="nz-diff-step"' + style + '>' + label + '</div>';
+      var flex = (s === '아주 쉬움' || s === '아주 어려움') ? '1.35' : '1';
+      var style = isActive
+        ? 'flex:' + flex + ';background:' + c + ';color:#FFFFFF;font-weight:700;box-shadow:0 2px 5px ' + c + '66;'
+        : 'flex:' + flex + ';background:#F1EADA;color:#B5AC94;font-weight:600;';
+      return '<div class="nz4-step" style="' + style + '">' + s + '</div>';
     }).join('');
   }
 
-  // ── 레이더 차트 SVG 생성 ─────────────────────────────
+  // ── 레이더 차트 SVG (시안 리뷰 페이지.dc.html 구조 그대로) ──
   function buildRadar(s) {
-    // 5축 단위벡터 (위쪽부터 시계방향: 만족도→문제→기믹→연출→언어장벽)
+    // 중심 (100,100), 최대 반지름 70. 위에서 시계방향: 만족도→문제→기믹→연출→언어접근성
     var AXES = [
-      { label: '만족도',      ux:  0,       uy: -1      },
-      { label: '문제',        ux:  0.9511,  uy: -0.3090 },
-      { label: '기믹',        ux:  0.5878,  uy:  0.8090 },
-      { label: '연출/디자인', ux: -0.5878,  uy:  0.8090 },
-      { label: '언어접근성',   ux: -0.9511,  uy: -0.3090 }
+      { ux: 0,       uy: -1      },
+      { ux: 0.9511,  uy: -0.309  },
+      { ux: 0.5878,  uy: 0.809   },
+      { ux: -0.5878, uy: 0.809   },
+      { ux: -0.9511, uy: -0.309  }
     ];
     var vals = [s.satisfaction, s.puzzle, s.gimmick, s.design, s.language];
-    var MAX_R = 90; // 점수 5 = 반지름 90 (18 * 5)
+    var CX = 100, CY = 100, R = 70;
 
-    // 그리드 오각형 (점수 1~5)
-    var grids = [1, 2, 3, 4, 5].map(function (n) {
-      var r = n * 18;
-      var pts = AXES.map(function (a) {
-        return (a.ux * r).toFixed(1) + ',' + (a.uy * r).toFixed(1);
+    function ringPts(r) {
+      return AXES.map(function (a) {
+        return (CX + a.ux * r).toFixed(1) + ',' + (CY + a.uy * r).toFixed(1);
       }).join(' ');
-      return '<polygon points="' + pts + '" fill="none" stroke="rgba(0,0,0,0.15)" stroke-width="0.5"/>';
-    }).join('');
+    }
+
+    // 그리드: 외곽 + 중간 + 안쪽 3겹만 (시안과 동일)
+    var grids =
+        '<polygon points="' + ringPts(70) + '" fill="none" stroke="#D9CFB6" stroke-width="1"/>'
+      + '<polygon points="' + ringPts(42) + '" fill="none" stroke="#E5DCC6" stroke-width="1"/>'
+      + '<polygon points="' + ringPts(14) + '" fill="none" stroke="#E5DCC6" stroke-width="1"/>';
 
     // 축선
     var lines = AXES.map(function (a) {
-      return '<line x1="0" y1="0" x2="' + (a.ux * MAX_R).toFixed(1) + '" y2="' + (a.uy * MAX_R).toFixed(1) + '" stroke="rgba(0,0,0,0.1)" stroke-width="0.5"/>';
+      return '<line x1="' + CX + '" y1="' + CY + '" x2="' + (CX + a.ux * R).toFixed(1) + '" y2="' + (CY + a.uy * R).toFixed(1) + '" stroke="#E5DCC6" stroke-width="1"/>';
     }).join('');
 
-    // 데이터 포인트 계산
-    var dataPoints = AXES.map(function (a, i) {
-      return { x: a.ux * vals[i] * 18, y: a.uy * vals[i] * 18 };
+    // 데이터
+    var pts = AXES.map(function (a, i) {
+      var r = Math.max(0, Math.min(5, vals[i])) / 5 * R;
+      return { x: CX + a.ux * r, y: CY + a.uy * r };
     });
-    var dataPtsStr = dataPoints.map(function (p) {
-      return p.x.toFixed(1) + ',' + p.y.toFixed(1);
-    }).join(' ');
-
-    // 데이터 폴리곤
-    var polygon = '<polygon points="' + dataPtsStr + '" fill="#AFA9EC" fill-opacity="0.35" stroke="#7F77DD" stroke-width="2"/>';
-
-    // 데이터 점
-    var dots = dataPoints.map(function (p) {
-      return '<circle cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="4" fill="#7F77DD"/>';
+    var polygon = '<polygon points="' + pts.map(function (p) { return p.x.toFixed(1) + ',' + p.y.toFixed(1); }).join(' ')
+      + '" fill="#FFD953" fill-opacity="0.45" stroke="#D9A13B" stroke-width="2" stroke-linejoin="round"/>';
+    var dots = pts.map(function (p) {
+      return '<circle cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="3" fill="#D9A13B"/>';
     }).join('');
 
-    // 점수 레이블 (데이터 점 약간 안쪽)
-    var scoreLabels = dataPoints.map(function (p, i) {
-      var lx = (p.x - AXES[i].ux * 14).toFixed(1);
-      var ly = (p.y - AXES[i].uy * 14 + 4).toFixed(1);
-      return '<text x="' + lx + '" y="' + ly + '" text-anchor="middle" font-size="11" font-weight="500" fill="#534AB7" font-family="sans-serif">' + vals[i] + '</text>';
-    }).join('');
+    // 레이블 + 점수 (축 바깥, 시안 좌표)
+    function fmt(v) { return (Math.round(v * 10) / 10).toFixed(1); }
+    var FONT = "'IBM Plex Sans KR',sans-serif";
+    var labels =
+        '<text x="100" y="12" text-anchor="middle" font-size="12" font-weight="700" fill="#5C554A" font-family="' + FONT + '">만족도 <tspan fill="#B08900">' + fmt(vals[0]) + '</tspan></text>'
+      + '<text x="174" y="70" text-anchor="start" font-size="12" font-weight="700" fill="#5C554A" font-family="' + FONT + '">문제</text>'
+      + '<text x="174" y="86" text-anchor="start" font-size="12" font-weight="700" fill="#B08900" font-family="' + FONT + '">' + fmt(vals[1]) + '</text>'
+      + '<text x="146" y="166" text-anchor="start" font-size="12" font-weight="700" fill="#5C554A" font-family="' + FONT + '">기믹</text>'
+      + '<text x="146" y="182" text-anchor="start" font-size="12" font-weight="700" fill="#B08900" font-family="' + FONT + '">' + fmt(vals[2]) + '</text>'
+      + '<text x="54" y="166" text-anchor="end" font-size="12" font-weight="700" fill="#5C554A" font-family="' + FONT + '">연출/디자인</text>'
+      + '<text x="54" y="182" text-anchor="end" font-size="12" font-weight="700" fill="#B08900" font-family="' + FONT + '">' + fmt(vals[3]) + '</text>'
+      + '<text x="26" y="70" text-anchor="end" font-size="12" font-weight="700" fill="#5C554A" font-family="' + FONT + '">언어접근성</text>'
+      + '<text x="26" y="86" text-anchor="end" font-size="12" font-weight="700" fill="#B08900" font-family="' + FONT + '">' + fmt(vals[4]) + '</text>';
 
-    // 축 레이블 (축 끝에서 약간 바깥)
-    var axisLabels = AXES.map(function (a, i) {
-      var lx = (a.ux * 103).toFixed(1);
-      var ly = (a.uy * 103).toFixed(1);
-      var anchor = i === 0 ? 'middle' : a.ux > 0.2 ? 'start' : a.ux < -0.2 ? 'end' : 'middle';
-      return '<text x="' + lx + '" y="' + ly + '" text-anchor="' + anchor + '" font-size="11" fill="#444441" font-family="sans-serif">' + a.label + '</text>';
-    }).join('');
-
-    // 그리드 숫자 (1~5)
-    var gridNums = [1, 2, 3, 4, 5].map(function (n) {
-      return '<text x="3" y="' + (-n * 18 + 3).toFixed(1) + '" font-size="9" fill="#888780" font-family="sans-serif">' + n + '</text>';
-    }).join('');
-
-    return '<svg viewBox="0 0 300 220" width="100%" xmlns="http://www.w3.org/2000/svg">'
-      + '<g transform="translate(150,120)">'
-      + grids + lines + polygon + dots + scoreLabels + axisLabels + gridNums
-      + '</g></svg>';
+    return '<svg width="100%" height="223" viewBox="-42 -14 284 234" xmlns="http://www.w3.org/2000/svg">'
+      + grids + lines + polygon + dots + labels
+      + '</svg>';
   }
 
   // ── 메인 렌더링 ───────────────────────────────────────
@@ -575,91 +564,120 @@ function nzLightboxClose() {
     );
     var nazoTitle = titleEl ? titleEl.textContent.trim() : '';
 
+    // ── v2 (4단계): 시안 리뷰 페이지.dc.html 구조 ──
+    var data = (typeof SORT_DATA !== 'undefined' && SORT_DATA[nazoTitle]) ? SORT_DATA[nazoTitle] : {};
+    var quote = data.quote || '';
+    var reviewNum = data.num || null;
+    var brandDisplay = (company.text || '').replace(/ - /g, ' · ');
+    var dateYm = '';
+    if (data.date && /^\d{4}-\d{2}/.test(data.date)) {
+      dateYm = data.date.slice(0, 4) + '.' + data.date.slice(5, 7);
+    }
+
+    // 공식 난이도: 모티브색 알약 (표기 없음 = 회색)
+    var MOTIF_COLORS = { '花の謎': '#B0616E', '月の謎': '#8171A8', '雪の謎': '#5F8CA3' };
+    function officialPill(text) {
+      if (text === '표기 없음') return '<span class="nz4-opill nz4-opill--none">표기 없음</span>';
+      var base = text.replace('(추정)', '').trim();
+      var bg = MOTIF_COLORS[base] || '#B0616E';
+      return '<span class="nz4-opill" style="background:' + bg + '">' + text + '</span>';
+    }
+    var officialHtml = officialDiffs.length
+      ? officialDiffs.map(function (d) { return officialPill(d.text); }).join('')
+      : officialPill('표기 없음');
+
+    // 추천도 뱃지 (메인 카드와 동일 클래스 재사용)
+    var REC_CLASS_V2 = { '강력추천': 'nz2-rec--strong', '추천': 'nz2-rec--rec', '괜찮음': 'nz2-rec--ok', '음..': 'nz2-rec--meh' };
+    var recHtml = recommend.text
+      ? '<span class="nz4-rec nz2-rec ' + (REC_CLASS_V2[recommend.text] || 'nz2-rec--meh') + '">' + recommend.text + '</span>'
+      : '';
+
+    // 추가 정보 파스텔 칩 (해당되는 것만)
+    var infoChips = [];
+    if (web.text.trim() === 'O')     infoChips.push('<span class="nz4-info" style="background:#EDF2F9;border-color:#D5DFEC;color:#5A78A0">WEB 사용</span>');
+    if (line.text.trim() === 'O')    infoChips.push('<span class="nz4-info" style="background:#F3F0F9;border-color:#DED6EC;color:#7A6B9D">LINE 사용 필요</span>');
+    if (audio.text.trim() === 'O')   infoChips.push('<span class="nz4-info" style="background:#FBF3E7;border-color:#EEDFC5;color:#A8834A">듣기 필요</span>');
+    if (recycle.text.trim() === 'X') infoChips.push('<span class="nz4-info" style="background:#F8F0EA;border-color:#EBD9CF;color:#A0705C">재활용 불가</span>');
+    if (pad.text.trim() === 'O')     infoChips.push('<span class="nz4-info" style="background:#EEF4EF;border-color:#D7E3DA;color:#5E7F6A">패드 사용 권장</span>');
+    if (purchase.text)               infoChips.push('<span class="nz4-info nz4-info--buy">&#128722; ' + purchase.text + '</span>');
+
+    // 배너: 노션 커버 이미지를 종이 시트 상단으로
+    var bannerHtml = '';
+    var coverImg = document.querySelector('.notion-header__cover img, img.notion-header__cover');
+    if (coverImg && coverImg.src) {
+      bannerHtml = '<img class="nz4-banner" src="' + coverImg.src + '" alt="">';
+      var coverBox = document.querySelector('.notion-header__cover');
+      if (coverBox) coverBox.style.display = 'none';
+    }
+
     var html = ''
-      + '<div class="nz-review-wrap"><div class="nz-card">'
-      + '<div class="nz-pc-layout">'
-      + '<div class="nz-col-left">'
-      + '<div class="nz-header">'
-      +   '<div class="nz-title-row">'
-      +     '<span class="nz-title-main">' + nazoTitle + '</span>'
-      +     (mNum ? '<span class="nz-title-sub">' + mNum + '</span>' : '')
+      + '<div class="nz-review-wrap nz4">'
+      + '<div class="nz4-sheet">'
+      + bannerHtml
+      + '<div class="nz4-body">'
+
+      // 제목 블록
+      + '<div class="nz4-head">'
+      +   '<div class="nz4-title-row">'
+      +     '<span class="nz4-title">' + nazoTitle + '</span>'
+      +     (reviewNum ? '<span class="nz4-num">#' + reviewNum + '</span>' : (mNum ? '<span class="nz4-num">' + mNum + '</span>' : ''))
       +   '</div>'
-      +   '<div class="nz-badges">'
-      +     (company.text ? '<span class="badge ' + pillToColor(company.cls) + '">' + company.text + '</span>' : '')
-      +     (mfyRelease ? '<span class="badge badge-mfy-release"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg> ' + mfyRelease + '</span>' : '')
-      +     (function() {
-              if (!recommend.text) return '';
-              var rc = REC_COLORS[recommend.text];
-              if (rc) return '<span class="badge" style="background:' + rc.bg + ';color:' + rc.color + ';font-weight:' + rc.weight + ';">' + recommend.text + '</span>';
-              return '<span class="badge ' + pillToColor(recommend.cls) + '">' + recommend.text + '</span>';
-            })()
+      +   '<div class="nz4-badges">'
+      +     (brandDisplay ? '<span class="nz4-chip-brand">' + brandDisplay + '</span>' : '')
+      +     (dateYm ? '<span class="nz4-chip-date">' + dateYm + '</span>' : '')
+      +     recHtml
+      +     (mfyRelease ? '<span class="nz4-chip-mfy"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg> ' + mfyRelease + '</span>' : '')
       +   '</div>'
       + '</div>'
 
-      + '<div class="nz-section">'
-      +   '<p class="nz-section-title">난이도</p>'
-      +   '<div class="nz-grid2">'
-      +     '<div class="nz-cell nz-cell-center">'
-      +       '<p class="nz-cell-label">공식 난이도</p>'
-      +       (officialDiffs.length
-               ? '<div class="nz-official-diff-wrap' + (officialDiffs.length > 1 ? ' nz-official-diff-wrap--multi' : '') + '">'
-                 + officialDiffs.map(function (d) {
-                     var isMulti = officialDiffs.length > 1;
-                     var len = d.text.length;
-                     var sizeClass = len > 20 ? ' badge-lg-xxs'
-                                   : (len > 14 || (isMulti && len > 10)) ? ' badge-lg-xs'
-                                   : (isMulti || len > 8) ? ' badge-lg-sm' : '';
-                     if (d.text.indexOf('/') > -1 || d.text.indexOf('&') > -1) return buildGradBadge(d.text, sizeClass);
-                     return '<span class="badge badge-lg' + sizeClass + ' ' + pillToColor(d.cls) + '">' + d.text + '</span>';
-                   }).join('')
-                 + '</div>'
-               : '<span class="nz-cell-value">-</span>')
+      // 2단: 난이도+기록 / 레이더
+      + '<div class="nz4-cols">'
+      + '<div class="nz4-left">'
+
+      + '<div class="nz4-sec">'
+      +   '<p class="nz4-label">난이도</p>'
+      +   '<div class="nz4-diffbox">'
+      +     '<div class="nz4-diffrow">'
+      +       '<span class="nz4-difflabel">공식 난이도</span>'
+      +       '<div class="nz4-opills">' + officialHtml + '</div>'
       +     '</div>'
-      +     '<div class="nz-cell">'
-      +       '<p class="nz-cell-label">체감 난이도</p>'
-      +       '<div class="nz-diff-steps">' + buildDiffSteps(personalDiff.text) + '</div>'
+      +     '<div class="nz4-diffsep"></div>'
+      +     '<div class="nz4-diffrow">'
+      +       '<span class="nz4-difflabel">체감 난이도</span>'
+      +       '<div class="nz4-steps">' + buildDiffSteps(personalDiff.text) + '</div>'
       +     '</div>'
       +   '</div>'
       + '</div>'
 
-      + '<div class="nz-section">'
-      +   '<p class="nz-section-title">플레이 기록</p>'
-      +   '<div class="nz-grid2">'
-      +     '<div class="nz-cell"><p class="nz-cell-label">클리어 날짜</p><p class="nz-cell-value">' + (playDate || '-') + '</p></div>'
-      +     '<div class="nz-cell"><p class="nz-cell-label">참여 인원</p><p class="nz-cell-value">' + (players || '-') + '</p></div>'
-      +     '<div class="nz-cell"><p class="nz-cell-label">공식 소요시간</p><p class="nz-cell-value">' + (officialTime || '-') + '</p></div>'
-      +     '<div class="nz-cell"><p class="nz-cell-label">실제 소요시간</p><p class="nz-cell-value">' + (actualTime || '-') + '</p></div>'
+      + '<div class="nz4-sec">'
+      +   '<p class="nz4-label">플레이 기록</p>'
+      +   '<div class="nz4-table">'
+      +     '<div class="nz4-td"><p class="nz4-td-label">클리어 날짜</p><p class="nz4-td-value">' + (playDate || '표기 없음') + '</p></div>'
+      +     '<div class="nz4-td"><p class="nz4-td-label">참여 인원</p><p class="nz4-td-value">' + (players ? players + (/명|인/.test(players) ? '' : '명') : '표기 없음') + '</p></div>'
+      +     '<div class="nz4-td"><p class="nz4-td-label">공식 소요시간</p><p class="nz4-td-value' + (officialTime ? '' : ' nz4-td-value--none') + '">' + (officialTime || '표기 없음') + '</p></div>'
+      +     '<div class="nz4-td"><p class="nz4-td-label">실제 소요시간</p><p class="nz4-td-value">' + (actualTime || '표기 없음') + '</p></div>'
       +   '</div>'
       + '</div>'
 
       + '</div>'
-      + '<div class="nz-col-right">'
-      + '<div class="nz-section">'
-      +   '<p class="nz-section-title">점수 분석</p>'
-      +   buildRadar(scores)
-      + '</div>'
-
-      + '<div class="nz-section">'
-      +   '<p class="nz-section-title">추가 정보</p>'
-      +   '<div class="nz-badges">'
-      +     usageBadge('line', line)
-      +     usageBadge('web', web)
-      +     usageBadge('audio', audio)
-      +     usageBadge('recycle', recycle)
-      +     (pad.text.trim() === 'O' ? '<span class="badge badge-teal">패드 사용 권장</span>' : '')
+      + '<div class="nz4-right">'
+      + '<div class="nz4-sec nz4-sec--radar">'
+      +   '<p class="nz4-label">점수 분석</p>'
+      +   '<div class="nz4-radarbox">'
+      +     buildRadar(scores)
+      +     (quote ? '<div class="nz4-quote">&ldquo;' + quote + '&rdquo;</div>' : '')
       +   '</div>'
       + '</div>'
-
-      + '<div class="nz-section">'
-      +   '<p class="nz-section-title">구입처</p>'
-      +   '<div class="nz-badges">'
-      +     (purchase.text ? '<span class="badge ' + pillToColor(purchase.cls) + '">' + purchase.text + '</span>' : '<span class="nz-cell-value">-</span>')
-      +   '</div>'
+      + '</div>'
       + '</div>'
 
-      + '</div>'
-      + '</div>'
-      + '</div></div>';
+      // 추가 정보 · 구입처
+      + (infoChips.length
+          ? '<div class="nz4-sec"><p class="nz4-label">추가 정보 · 구입처</p><div class="nz4-chips">' + infoChips.join('') + '</div></div>'
+          : '')
+
+      + '</div>'  // nz4-body
+      + '</div>'; // nz4-sheet
 
     var propsContainer = document.querySelector(
       '.notion-page__properties, [class*="notion-page__properties"]'
@@ -706,13 +724,13 @@ function nzLightboxClose() {
       var contentEl = calloutEl.querySelector('.notion-callout__content');
       if (contentEl) {
         var section = document.createElement('div');
-        section.className = 'nz-section';
-        section.innerHTML = '<p class="nz-section-title">나조 설명</p>';
+        section.className = 'nz4-sec nz4-sec--desc';
+        section.innerHTML = '<p class="nz4-label">나조 설명</p>';
         var descDiv = document.createElement('div');
         descDiv.className = 'nz-desc';
         descDiv.innerHTML = contentEl.innerHTML;
         section.appendChild(descDiv);
-        document.querySelector('.nz-card').appendChild(section);
+        document.querySelector('.nz4-body').appendChild(section);
       }
       calloutEl.style.display = 'none';
     }
@@ -722,8 +740,8 @@ function nzLightboxClose() {
       var photoLinks = photoEl.querySelectorAll('a[href]');
       if (photoLinks.length > 0) {
         var photoSection = document.createElement('div');
-        photoSection.className = 'nz-section';
-        photoSection.innerHTML = '<p class="nz-section-title">플레이 사진</p>';
+        photoSection.className = 'nz4-sec nz4-sec--photos';
+        photoSection.innerHTML = '<p class="nz4-label">플레이 사진</p>';
         var grid = document.createElement('div');
         grid.className = 'nz-photos-grid';
         photoLinks.forEach(function (a) {
@@ -737,13 +755,47 @@ function nzLightboxClose() {
           grid.appendChild(img);
         });
         photoSection.appendChild(grid);
-        document.querySelector('.nz-card').appendChild(photoSection);
+        document.querySelector('.nz4-body').appendChild(photoSection);
       }
     }
 
     nzLightboxInit();
 
+    buildPrevNext(reviewNum);
+
     console.log('[나조토키] 리뷰 레이아웃 적용 완료');
+  }
+
+  // ── 이전/다음 리뷰 내비 + 메인으로 돌아가기 ──
+  function buildPrevNext(currentNum) {
+    var wrap = document.querySelector('.nz-review-wrap.nz4');
+    if (!wrap || wrap.querySelector('.nz4-nav')) return;
+
+    var prev = null, next = null;
+    if (currentNum && typeof SORT_DATA !== 'undefined') {
+      for (var key in SORT_DATA) {
+        var d = SORT_DATA[key];
+        if (d.num === currentNum - 1) prev = { title: key, url: d.url };
+        if (d.num === currentNum + 1) next = { title: key, url: d.url };
+      }
+    }
+
+    var nav = document.createElement('div');
+    nav.className = 'nz4-nav';
+    nav.innerHTML =
+      (prev
+        ? '<a class="nz4-nav-card" href="' + prev.url + '"><span class="nz4-nav-dir">&larr; 이전 리뷰 #' + (currentNum - 1) + '</span><span class="nz4-nav-name">' + prev.title + '</span></a>'
+        : '<div class="nz4-nav-card nz4-nav-card--empty"><span class="nz4-nav-dir">&larr; 이전 리뷰</span><span class="nz4-nav-name nz4-nav-name--none">아직 없어요</span></div>')
+      + (next
+        ? '<a class="nz4-nav-card nz4-nav-card--next" href="' + next.url + '"><span class="nz4-nav-dir">다음 리뷰 &rarr;</span><span class="nz4-nav-name">' + next.title + '</span></a>'
+        : '<div class="nz4-nav-card nz4-nav-card--next nz4-nav-card--empty"><span class="nz4-nav-dir">다음 리뷰 &rarr;</span><span class="nz4-nav-name nz4-nav-name--none">아직 없어요</span></div>');
+    wrap.appendChild(nav);
+
+    var back = document.createElement('a');
+    back.className = 'nz4-back';
+    back.href = '/';
+    back.textContent = '← 메인으로 돌아가기';
+    wrap.appendChild(back);
   }
 
   // ── 플레이 일기 박스 감싸기 ──────────────────────────────
@@ -755,7 +807,10 @@ function nzLightboxClose() {
     var elements = [];
     var sibling = propsEl.nextElementSibling;
     while (sibling) {
-      if (sibling.style.display !== 'none') {
+      if (sibling.style.display !== 'none'
+          && !sibling.classList.contains('nz-like-wrap')
+          && !sibling.classList.contains('nz-brand-reviews')
+          && !sibling.querySelector('.nz-like-wrap')) {
         elements.push(sibling);
       }
       sibling = sibling.nextElementSibling;
@@ -775,7 +830,13 @@ function nzLightboxClose() {
     elements.forEach(function (el) { content.appendChild(el); });
     box.appendChild(content);
 
-    propsEl.parentNode.appendChild(box);
+    var body4 = document.querySelector('.nz4-body');
+    if (body4) body4.appendChild(box);
+    else propsEl.parentNode.appendChild(box);
+
+    // 이미 만들어진 좋아요 버튼이 있으면 일기 뒤로 (시안 위치)
+    var likeWrap = document.querySelector('.nz-like-wrap');
+    if (likeWrap && body4) body4.appendChild(likeWrap);
   }
 
   // ── 좋아요 버튼 (별도 파이프라인) ───────────────────────
@@ -787,7 +848,7 @@ function nzLightboxClose() {
     // 현재 페이지 타이틀로 SORT_DATA에서 현재 리뷰 찾기
     var currentTitle = null;
     var currentData = null;
-    var pageTitle = document.querySelector('.nz-title-main');
+    var pageTitle = document.querySelector('.nz4-title') || document.querySelector('.nz-title-main');
     if (!pageTitle) return;
     var pageTitleText = pageTitle.textContent.trim();
 
@@ -810,7 +871,7 @@ function nzLightboxClose() {
     // DOM에서 제작사 읽기 (fallback)
     var brand = currentData ? currentData.brand : null;
     if (!brand) {
-      var companyEl = document.querySelector('.nz-badges .badge');
+      var companyEl = document.querySelector('.nz4-chip-brand');
       if (companyEl) brand = companyEl.textContent.trim();
     }
     if (!brand) return;
@@ -846,7 +907,7 @@ function nzLightboxClose() {
 
     var title = document.createElement('div');
     title.className = 'nz-br-title';
-    title.innerHTML = '<span class="nz-br-bullet">&#8226;</span>' + brand + '의 다른 리뷰 <span class="nz-br-count">(' + totalCount + ')</span>';
+    title.innerHTML = brand.replace(/ - /g, ' · ') + '의 다른 리뷰 <span class="nz-br-count">(' + totalCount + ')</span>';
     box.appendChild(title);
 
     var pills = document.createElement('div');
@@ -867,9 +928,12 @@ function nzLightboxClose() {
       box.appendChild(more);
     }
 
-    // 삽입 위치: 플레이 일기 박스 바로 뒤
+    // 삽입 위치: 종이 시트 안 맨 아래 (일기 뒤)
+    var body4 = document.querySelector('.nz4-body');
     var diaryBox = document.querySelector('.nz-diary-box');
-    if (diaryBox) {
+    if (body4) {
+      body4.appendChild(box);
+    } else if (diaryBox) {
       diaryBox.parentNode.insertBefore(box, diaryBox.nextSibling);
     } else {
       // 플레이 일기가 없으면 페이지 마지막에 추가
@@ -2108,7 +2172,7 @@ function nzLightboxClose() {
 
   var SUPABASE_URL = 'https://llwdqogseeddnffradej.supabase.co';
   var SUPABASE_KEY = 'sb_publishable_8cOoT2cGQ0x7Is57k-VT5A_fqgVKr6f';
-  var LIKE_COLORS = ['#E24B4A', '#FF6B6B', '#FF8787', '#FFA8A8', '#e55b3c', '#f2847c'];
+  var LIKE_COLORS = ['#FFD953', '#FFCF33', '#FFDE59', '#F0C93D', '#D9A13B', '#FFE98A'];
 
   function getSessionId() {
     var id = localStorage.getItem('nz_session_id');
@@ -2139,15 +2203,15 @@ function nzLightboxClose() {
 
   // 보이는 DOM에서 삽입 지점 찾기
   function findVisibleAnchor() {
-    // 보이는 diary box 안에 삽입 (맨 아래 자식으로)
-    var diaries = document.querySelectorAll('.nz-diary-box');
-    for (var i = 0; i < diaries.length; i++) {
-      if (diaries[i].offsetWidth > 0) return { el: diaries[i], position: 'inside' };
-    }
-    // diary box 없으면 보이는 brand reviews 앞에
+    // 브랜드 다른 리뷰 앞 (시안: 일기 다음, 브랜드 앞)
     var brands = document.querySelectorAll('.nz-brand-reviews');
     for (var i = 0; i < brands.length; i++) {
       if (brands[i].offsetWidth > 0) return { el: brands[i], position: 'before' };
+    }
+    // 브랜드 박스가 아직 없으면 일기 박스 안 맨 아래
+    var diaries = document.querySelectorAll('.nz-diary-box');
+    for (var i = 0; i < diaries.length; i++) {
+      if (diaries[i].offsetWidth > 0) return { el: diaries[i], position: 'inside' };
     }
     // 둘 다 없으면 보이는 notion-page__properties 뒤에
     var props = document.querySelectorAll('.notion-page__properties');
@@ -2184,7 +2248,7 @@ function nzLightboxClose() {
     pill.innerHTML =
       '<div class="nz-like-particles"></div>' +
       '<div class="nz-like-icon">' +
-        '<svg width="18" height="18" viewBox="0 0 24 24"><path class="nz-heart-path" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="none" stroke="#E24B4A" stroke-width="2"/></svg>' +
+        '<img class="nz-like-lemon" src="' + NZ_ASSET_BASE + 'assets/lemon.png" alt="">' +
       '</div>' +
       '<span class="nz-like-text">잘 읽었어요</span>' +
       '<span class="nz-like-count">…</span>';
@@ -2202,7 +2266,6 @@ function nzLightboxClose() {
     }
 
     var countEl = pill.querySelector('.nz-like-count');
-    var heartPath = pill.querySelector('.nz-heart-path');
 
     // 총 좋아요 수
     supabaseRequest('GET', 'likes?page_slug=eq.' + encodeURIComponent(slug) + '&select=id')
@@ -2219,9 +2282,6 @@ function nzLightboxClose() {
       .then(function (rows) {
         if (rows.length > 0) {
           pill.classList.add('active');
-          heartPath.setAttribute('fill', '#E24B4A');
-          heartPath.removeAttribute('stroke');
-          heartPath.removeAttribute('stroke-width');
         }
       })
       .catch(function () {});
@@ -2233,16 +2293,10 @@ function nzLightboxClose() {
 
       if (isActive) {
         pill.classList.remove('active');
-        heartPath.setAttribute('fill', 'none');
-        heartPath.setAttribute('stroke', '#E24B4A');
-        heartPath.setAttribute('stroke-width', '2');
         countEl.textContent = Math.max(0, currentCount - 1);
         supabaseRequest('DELETE', 'likes?page_slug=eq.' + encodeURIComponent(slug) + '&session_id=eq.' + encodeURIComponent(sessionId));
       } else {
         pill.classList.add('active');
-        heartPath.setAttribute('fill', '#E24B4A');
-        heartPath.removeAttribute('stroke');
-        heartPath.removeAttribute('stroke-width');
         countEl.textContent = currentCount + 1;
         nzBurstParticles(pill.querySelector('.nz-like-particles'));
         supabaseRequest('POST', 'likes', { page_slug: slug, session_id: sessionId });
@@ -3110,9 +3164,10 @@ function nzLightboxClose() {
   }
 
   function ensureHomeClass() {
-    // React 하이드레이션이 body class를 리셋하므로 계속 재적용 (홈 아니면 제거)
-    var isHome = window.location.pathname === '/' || window.location.pathname === '';
-    document.body.classList.toggle('nz-home', isHome);
+    // React 하이드레이션이 body class를 리셋하므로 계속 재적용 (페이지별 마커)
+    var path = window.location.pathname;
+    document.body.classList.toggle('nz-home', path === '/' || path === '');
+    document.body.classList.toggle('nz-review', path.indexOf('/nazotoki-reviews/') === 0);
   }
 
   // 홈으로 가는 내부 링크는 항상 전체 로드 (SPA 복원 시 갤러리 커스텀이 누락되는 문제 방지)
