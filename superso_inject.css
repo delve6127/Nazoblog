@@ -3299,9 +3299,10 @@ a.nz2-chip--link:hover { color: var(--nz-ink) !important; }
   gap: 14px;
 }
 .nz4-body .nz-diary-title {
-  font-size: 16px;
+  font-size: 12px;
   font-weight: 700;
-  color: var(--nz-ink);
+  color: var(--nz-muted-1);
+  letter-spacing: .06em;
   margin: 0;
 }
 .nz4-body .nz-diary-content { font-size: 14.5px; line-height: 1.95; color: #4A4335; }
@@ -3446,6 +3447,6 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
   /* 나조 설명: 0.9배 + 연하게 (부가 정보) */
   .nz4-body .nz-desc { font-size: 13px; color: var(--nz-muted-1); }
   .nz4-body .nz-desc > *:first-child { font-size: 12.5px; color: #A79E8A; }
-  /* 플레이 일기: 본문은 원래대로, '플레이 일기' 타이틀만 작게 */
-  .nz4-body .nz-diary-title { font-size: 9px; color: var(--nz-muted-1); letter-spacing: .06em; }
+  /* 플레이 일기 본문: 모바일 12px */
+  .nz4-body .nz-diary-content { font-size: 12px; }
 }
