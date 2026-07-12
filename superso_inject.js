@@ -3144,7 +3144,9 @@ function nzLightboxClose() {
       a.textContent = link.label;
       dd.appendChild(a);
     });
-    nav.appendChild(dd);
+    // 네비바 스태킹 컨텍스트(z-index 40) 밖으로 — 백드롭(150)에 덮이지 않도록 body 직속 + fixed
+    dd.style.top = (nav.getBoundingClientRect().bottom + 6) + 'px';
+    document.body.appendChild(dd);
 
     var btn = document.querySelector('.nz-mobile-menu-btn');
     if (btn) btn.textContent = '✕';

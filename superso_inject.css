@@ -121,10 +121,8 @@ body,
   .nz-mobile-menu-btn:hover { color: var(--nz-ink); }
 }
 .nz-mobile-dropdown {
-  position: absolute;
-  top: 100%;
+  position: fixed;
   right: 10px;
-  margin-top: 6px;
   background: var(--nz-paper);
   border: 1px solid var(--nz-line-soft);
   box-shadow: 0 8px 24px rgba(61, 55, 46, .14);
