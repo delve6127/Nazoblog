@@ -574,17 +574,32 @@ function nzLightboxClose() {
       dateYm = data.date.slice(0, 4) + '.' + data.date.slice(5, 7);
     }
 
-    // 공식 난이도: 모티브색 알약 (표기 없음 = 회색)
-    var MOTIF_COLORS = { '花の謎': '#B0616E', '月の謎': '#8171A8', '雪の謎': '#5F8CA3' };
-    function officialPill(text) {
-      if (text === '표기 없음') return '<span class="nz4-opill nz4-opill--none">표기 없음</span>';
-      var base = text.replace('(추정)', '').trim();
-      var bg = MOTIF_COLORS[base] || '#B0616E';
-      return '<span class="nz4-opill" style="background:' + bg + '">' + text + '</span>';
+    // 공식 난이도: 노션 지정 색 → 다락방 톤의 짙은 색으로 변환 (표기 없음 = 회색)
+    var NOTION_DEEP = {
+      'pill-pink':   '#B0616E',  // 花の謎 계열
+      'pill-purple': '#8171A8',  // 月の謎 계열
+      'pill-blue':   '#5F8CA3',  // 雪の謎 계열
+      'pill-red':    '#B25E5E',
+      'pill-orange': '#C07A48',
+      'pill-yellow': '#B08900',
+      'pill-green':  '#6E9E52',
+      'pill-brown':  '#96705A',
+      'pill-gray':   '#8A8272'
+    };
+    var MOTIF_FIXED = { '花の謎': '#B0616E', '月の謎': '#8171A8', '雪の謎': '#5F8CA3' };
+    function officialPill(d) {
+      if (d.text === '표기 없음') return '<span class="nz4-opill nz4-opill--none">표기 없음</span>';
+      var bg = '#8A8272';
+      for (var key in NOTION_DEEP) {
+        if ((d.cls || '').indexOf(key) > -1) { bg = NOTION_DEEP[key]; break; }
+      }
+      var base = d.text.replace('(추정)', '').trim();
+      if (MOTIF_FIXED[base]) bg = MOTIF_FIXED[base];
+      return '<span class="nz4-opill" style="background:' + bg + '">' + d.text + '</span>';
     }
     var officialHtml = officialDiffs.length
-      ? officialDiffs.map(function (d) { return officialPill(d.text); }).join('')
-      : officialPill('표기 없음');
+      ? officialDiffs.map(officialPill).join('')
+      : officialPill({ text: '표기 없음', cls: '' });
 
     // 추천도 뱃지 (메인 카드와 동일 클래스 재사용)
     var REC_CLASS_V2 = { '강력추천': 'nz2-rec--strong', '추천': 'nz2-rec--rec', '괜찮음': 'nz2-rec--ok', '음..': 'nz2-rec--meh' };
