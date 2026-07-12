@@ -3380,8 +3380,10 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
 /* ── 모바일 ── */
 @media (max-width: 768px) {
   .nz-review-wrap.nz4 { gap: 14px; }
+  /* 가장자리 여백 축소 → 콘텐츠 폭 확대 */
+  .nz-review .notion-root { padding-left: 8px !important; padding-right: 8px !important; }
   .nz4-banner { height: 195px; }
-  .nz4-body { padding: 22px 18px 30px; gap: 22px; }
+  .nz4-body { padding: 22px 16px 30px; gap: 22px; }
   .nz4-head { gap: 10px; padding-bottom: 18px; }
   .nz4-title { font-size: 26px; }
   .nz4-num { font-size: 14px; }
@@ -3438,3 +3440,12 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
 .nz-like-lemon { width: 18px; height: 18px; display: block; object-fit: contain; }
 .nz-like-pill .nz-like-text { font-size: 13.5px !important; font-weight: 600 !important; color: var(--nz-muted-3) !important; }
 .nz-like-pill .nz-like-count { font-size: 13.5px !important; font-weight: 700 !important; color: #B08900 !important; }
+
+/* ── 모바일 리뷰: 본문 폰트 조정 (사용자 피드백) ── */
+@media (max-width: 768px) {
+  /* 나조 설명: 0.9배 + 연하게 (부가 정보) */
+  .nz4-body .nz-desc { font-size: 13px; color: var(--nz-muted-1); }
+  .nz4-body .nz-desc > *:first-child { font-size: 12.5px; color: #A79E8A; }
+  /* 플레이 일기: 폰트 축소 */
+  .nz4-body .nz-diary-content { font-size: 13.5px; }
+}
