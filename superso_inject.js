@@ -569,10 +569,6 @@ function nzLightboxClose() {
     var quote = data.quote || '';
     var reviewNum = data.num || null;
     var brandDisplay = (company.text || '').replace(/ - /g, ' · ');
-    var dateYm = '';
-    if (data.date && /^\d{4}-\d{2}/.test(data.date)) {
-      dateYm = data.date.slice(0, 4) + '.' + data.date.slice(5, 7);
-    }
 
     // 공식 난이도: 노션 지정 색 → 다락방 톤의 짙은 색으로 변환 (표기 없음 = 회색)
     var NOTION_DEEP = {
@@ -639,7 +635,6 @@ function nzLightboxClose() {
       +   '</div>'
       +   '<div class="nz4-badges">'
       +     (brandDisplay ? '<span class="nz4-chip-brand">' + brandDisplay + '</span>' : '')
-      +     (dateYm ? '<span class="nz4-chip-date">' + dateYm + '</span>' : '')
       +     recHtml
       +     (mfyRelease ? '<span class="nz4-chip-mfy"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg> ' + mfyRelease + '</span>' : '')
       +   '</div>'
