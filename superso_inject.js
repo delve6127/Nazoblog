@@ -1158,8 +1158,9 @@ function nzLightboxClose() {
     var sorted = cards.slice().sort(function (a, b) {
       var da = SORT_DATA[getText(a, TITLE_SEL)] || {};
       var db = SORT_DATA[getText(b, TITLE_SEL)] || {};
-      var na = (da.num != null) ? da.num : -1;
-      var nb = (db.num != null) ? db.num : -1;
+      // 순번을 모르는 카드(방금 공개된 신규 리뷰)는 최신으로 간주 → 맨 앞
+      var na = (da.num != null) ? da.num : 999999;
+      var nb = (db.num != null) ? db.num : 999999;
       return nb - na;
     });
     var changed = sorted.some(function (c, i) { return c !== cards[i]; });
