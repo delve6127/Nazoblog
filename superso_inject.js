@@ -134,8 +134,17 @@ function convertDates() {
 }
 
 // ── 메인 페이지 마스트헤드 (v2): 타이틀 이미지 → 오뮤 태그라인 → 업데이트 → 담백 CTA ──
+var nzMastheadCountText = null;   // 마지막으로 계산한 카운트 문구 (재생성 시 즉시 사용)
+var nzMastheadUpdatedText = null; // 마지막 업데이트 문구
 function replaceMainTitle() {
   if (window.location.pathname !== '/' && window.location.pathname !== '') return;
+
+  // 이미 정상 마스트헤드가 있으면 재생성하지 않는다 (깜빡임 방지)
+  if (document.querySelector('.nz-masthead')) {
+    var dupTitle = document.querySelector('.notion-header__title');
+    if (dupTitle) dupTitle.style.display = 'none'; // 하이드레이션이 원제목을 되살렸을 때만 재숨김
+    return;
+  }
 
   // 이전 잔재 제거 (구버전 클래스 포함)
   ['.nz-masthead', '.nz-title-img-wrap', '.nz-hero-copy', '#nz-review-counter'].forEach(function (sel) {
@@ -155,8 +164,8 @@ function replaceMainTitle() {
     '<img class="nz-masthead__title-img" src="' + NZ_ASSET_BASE + 'assets/masthead-title.png" alt="몬빵의 나조토키 다락방" draggable="false">' +
     '<p class="nz-masthead__tagline">' + NZ_HERO_COPY.tagline +
       '<span class="nz-masthead__dot"> · </span><br class="nz-masthead__br">' +
-      '<span id="nz-masthead-count">' + NZ_HERO_COPY.tagline_count.replace('{N}', '…') + '</span></p>' +
-    '<p class="nz-masthead__updated" id="nz-masthead-updated"></p>' +
+      '<span id="nz-masthead-count">' + (nzMastheadCountText || NZ_HERO_COPY.tagline_count.replace('{N}', '…')) + '</span></p>' +
+    '<p class="nz-masthead__updated" id="nz-masthead-updated">' + (nzMastheadUpdatedText || '') + '</p>' +
     '<p class="nz-masthead__cta">' + NZ_HERO_COPY.cta_before +
       ' <span class="nz-masthead__cta-arrow">→</span> ' +
       '<a class="nz-masthead__cta-link" href="' + NZ_HERO_COPY.cta_url + '">' + NZ_HERO_COPY.cta_link + '</a></p>';
@@ -190,15 +199,26 @@ function replaceMainTitle() {
       var parsed = new Date(dateEl.textContent.trim());
       if (!isNaN(parsed.getTime()) && (!latestDate || parsed > latestDate)) latestDate = parsed;
     });
-    countEl.textContent = NZ_HERO_COPY.tagline_count.replace('{N}', visibleCount);
+    nzMastheadCountText = NZ_HERO_COPY.tagline_count.replace('{N}', visibleCount);
+    countEl.textContent = nzMastheadCountText;
     if (latestDate) {
       var y = latestDate.getFullYear();
       var m = ('0' + (latestDate.getMonth() + 1)).slice(-2);
       var d = ('0' + latestDate.getDate()).slice(-2);
+      nzMastheadUpdatedText = '마지막 업데이트 ' + y + '.' + m + '.' + d;
       var updEl = document.getElementById('nz-masthead-updated');
-      if (updEl) updEl.textContent = '마지막 업데이트 ' + y + '.' + m + '.' + d;
+      if (updEl) updEl.textContent = nzMastheadUpdatedText;
     }
   }, 200);
+}
+
+// 마스트헤드 보장 루프: 하이드레이션이 지워도 150ms 내 복구 (있으면 즉시 통과)
+function ensureMastheadLoop() {
+  var started = Date.now();
+  var iv = setInterval(function () {
+    replaceMainTitle();
+    if (Date.now() - started > 3000) clearInterval(iv);
+  }, 150);
 }
 
 // ── SPA 네비게이션 감지 ──
@@ -209,9 +229,7 @@ function replaceMainTitle() {
     showLoader();
     setTimeout(convertDates, 500);
     setTimeout(convertDates, 1500);
-    setTimeout(replaceMainTitle, 300);
-    setTimeout(replaceMainTitle, 800);
-    setTimeout(replaceMainTitle, 1500);
+    ensureMastheadLoop();
     waitAndHideLoader();
   }
 
@@ -247,9 +265,7 @@ setTimeout(convertDates, 500);
 setTimeout(convertDates, 1000);
 setTimeout(convertDates, 2000);
 setTimeout(convertDates, 3000);
-setTimeout(replaceMainTitle, 300);
-setTimeout(replaceMainTitle, 800);
-setTimeout(replaceMainTitle, 1500);
+ensureMastheadLoop();
 
 // ── 공용 라이트박스 ────────────────────────────────────────
 function nzLightboxInit() {
