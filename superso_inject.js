@@ -76,6 +76,8 @@ function waitAndHideLoader() {
   var isReview = path.indexOf('/nazotoki-reviews/') === 0;
   var stableSince = null;
   var checkReady = setInterval(function() {
+    // 하이드레이션이 로더를 지워버리는 경우가 있어, 공개 전까지는 다시 그려 넣는다
+    if (!document.getElementById('nz-loader')) showLoader();
     var ready;
     if (isHome) {
       ready = document.getElementById('nz2-layout') && document.querySelector('.nz-card-custom');
