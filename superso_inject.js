@@ -47,11 +47,12 @@ function loadNazoData(callback) {
 // ── 로딩 스크린 ──
 function showLoader() {
   if (document.getElementById('nz-loader')) return;
-  document.body.classList.add('nz-loading');
+  if (document.body) document.body.classList.add('nz-loading');
   var loader = document.createElement('div');
   loader.id = 'nz-loader';
   loader.innerHTML = '<div id="nz-loader-lemon"><img src="https://assets.super.so/b529abf1-8288-44d9-87eb-38228677c041/images/bcc6ec8e-275b-4bfc-b598-b2108922863e/noname.png" alt="lemon" /></div><div id="nz-loader-spinner"></div>';
-  document.body.appendChild(loader);
+  // 하이드레이션이 body를 갈아끼우는 찰나에는 html에 붙인다 (position:fixed라 위치 동일)
+  (document.body || document.documentElement).appendChild(loader);
 }
 
 // 하이드레이션이 로더를 지우는 즉시 되살리는 감시자 (공개 전까지만)

@@ -168,6 +168,7 @@ body.nz-ready .super-root { opacity: 1; }
 }
 
 /* ── 로딩 스크린 ── */
+html { background: #FAF7F2; }
 #nz-loader {
   position: fixed;
   inset: 0;
