@@ -3513,3 +3513,7 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
   font-family: var(--nz-font-display) !important;
   font-weight: 400 !important;
 }
+
+/* ── 리뷰 페이지: 원시 속성 표는 CSS 차원에서 상시 차단 ──
+   (하이드레이션이 커스텀을 갈아엎는 순간에도 흉한 표가 노출되지 않도록) */
+.nz-review .notion-page__properties { display: none !important; }

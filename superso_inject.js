@@ -70,26 +70,32 @@ function hideLoader() {
 }
 
 function waitAndHideLoader() {
-  var maxWait = setTimeout(hideLoader, 4000);
+  var maxWait = setTimeout(hideLoader, 4500);
   var path = window.location.pathname;
   var isHome = path === '/' || path === '';
   var isReview = path.indexOf('/nazotoki-reviews/') === 0;
+  var stableSince = null;
   var checkReady = setInterval(function() {
     var ready;
     if (isHome) {
-      // 메인: 커스텀 레이아웃 + 카드 커스텀까지 준비되면
       ready = document.getElementById('nz2-layout') && document.querySelector('.nz-card-custom');
     } else if (isReview) {
-      // 리뷰: 리뷰 커스텀 렌더 완료되면 (원시 화면 노출 방지)
       ready = document.querySelector('.nz-review-wrap');
     } else {
       ready = document.querySelector('.super-content');
     }
+    // 하이드레이션이 커스텀을 갈아엎는 순간이 있으므로,
+    // 준비 상태가 400ms 연속 유지될 때만 화면을 연다
     if (ready) {
-      clearInterval(checkReady);
-      clearTimeout(maxWait);
-      replaceMainTitle();
-      setTimeout(hideLoader, 300);
+      if (stableSince === null) stableSince = Date.now();
+      if (Date.now() - stableSince >= 400) {
+        clearInterval(checkReady);
+        clearTimeout(maxWait);
+        replaceMainTitle();
+        hideLoader();
+      }
+    } else {
+      stableSince = null;
     }
   }, 100);
 }
