@@ -53,6 +53,16 @@ body,
 /* ── 비공개 카드 숨김 ── */
 .nz-card-hidden { display: none !important; }
 
+/* ── 로딩 전 원시 화면 선가림 (JS가 nz-ready를 붙일 때까지) ──
+   스크립트보다 CSS가 먼저 로드되므로, 커스텀 적용 전 원시 노션 화면이
+   찰나에 노출되는 것을 막는다. JS가 실패해도 4.5초 뒤 자동 표시. */
+body:not(.nz-ready) .super-root {
+  opacity: 0;
+  animation: nz-failsafe-show 0s 4.5s forwards;
+}
+body.nz-ready .super-root { opacity: 1; }
+@keyframes nz-failsafe-show { to { opacity: 1; } }
+
 /* ── 유틸 네비 (v2): 레몬 홈버튼 + 텍스트 링크 ── */
 .super-navbar,
 .super-navbar.simple {

@@ -55,8 +55,13 @@ function showLoader() {
 }
 
 function hideLoader() {
+  window.__nzReadyOnce = true;
+  document.body.classList.add('nz-ready');  // CSS 선가림 해제
   var loader = document.getElementById('nz-loader');
-  if (!loader) return;
+  if (!loader) {
+    document.body.classList.remove('nz-loading');
+    return;
+  }
   document.body.classList.remove('nz-loading');
   loader.classList.add('nz-loader-hide');
   setTimeout(function() {
@@ -66,12 +71,23 @@ function hideLoader() {
 
 function waitAndHideLoader() {
   var maxWait = setTimeout(hideLoader, 4000);
+  var path = window.location.pathname;
+  var isHome = path === '/' || path === '';
+  var isReview = path.indexOf('/nazotoki-reviews/') === 0;
   var checkReady = setInterval(function() {
-    var content = document.querySelector('.notion-collection-gallery') || document.querySelector('.super-content');
-    if (content) {
+    var ready;
+    if (isHome) {
+      // 메인: 커스텀 레이아웃 + 카드 커스텀까지 준비되면
+      ready = document.getElementById('nz2-layout') && document.querySelector('.nz-card-custom');
+    } else if (isReview) {
+      // 리뷰: 리뷰 커스텀 렌더 완료되면 (원시 화면 노출 방지)
+      ready = document.querySelector('.nz-review-wrap');
+    } else {
+      ready = document.querySelector('.super-content');
+    }
+    if (ready) {
       clearInterval(checkReady);
       clearTimeout(maxWait);
-      // 타이틀 이미지 + 카운터 준비 후 로딩 해제
       replaceMainTitle();
       setTimeout(hideLoader, 300);
     }
@@ -3186,6 +3202,9 @@ function nzLightboxClose() {
 
   function ensureHomeClass() {
     // React 하이드레이션이 body class를 리셋하므로 계속 재적용 (페이지별 마커)
+    if (window.__nzReadyOnce && !document.body.classList.contains('nz-ready')) {
+      document.body.classList.add('nz-ready');
+    }
     var path = window.location.pathname;
     document.body.classList.toggle('nz-home', path === '/' || path === '');
     document.body.classList.toggle('nz-review', path.indexOf('/nazotoki-reviews/') === 0);
