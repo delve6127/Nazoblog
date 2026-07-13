@@ -54,8 +54,19 @@ function showLoader() {
   document.body.appendChild(loader);
 }
 
+// 하이드레이션이 로더를 지우는 즉시 되살리는 감시자 (공개 전까지만)
+var nzLoaderGuard = null;
+function startLoaderGuard() {
+  if (nzLoaderGuard || typeof MutationObserver === 'undefined') return;
+  nzLoaderGuard = new MutationObserver(function () {
+    if (!window.__nzReadyOnce && !document.getElementById('nz-loader')) showLoader();
+  });
+  nzLoaderGuard.observe(document.documentElement, { childList: true, subtree: true });
+}
+
 function hideLoader() {
   window.__nzReadyOnce = true;
+  if (nzLoaderGuard) { nzLoaderGuard.disconnect(); nzLoaderGuard = null; }
   document.body.classList.add('nz-ready');  // CSS 선가림 해제
   var loader = document.getElementById('nz-loader');
   if (!loader) {
@@ -104,6 +115,7 @@ function waitAndHideLoader() {
 
 // 최초 로드 시 로딩 표시
 showLoader();
+startLoaderGuard();
 waitAndHideLoader();
 
 // ── 날짜 변환 ──
