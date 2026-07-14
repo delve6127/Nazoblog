@@ -49,7 +49,7 @@
     "anothervision": ["어나더비젼", "어나더비전", "어나더 비전", "어나더 비젼", "도쿄대 걔네"]
   },
   "SORT_DATA": {
-    "무비무드 디저트 퍼즐 팩": { "num": 1, "date": "2026-03-07", "diff": 2, "satisfaction": 3, "puzzle": 3.7, "gimmick": 3, "design": 3.5, "language": 5, "brand": "키이스케이프", "url": "/nazotoki-reviews/moviemood-dessert-puzzle-pack", "rating": "추천", "quote": "잘 만든, 귀한 한국어 나조. 나조가 무엇인지 궁금하다면 추천!", "beginner": true },
+    "무비무드 디저트 퍼즐 팩": { "num": 1, "date": "2026-03-07", "diff": 2, "satisfaction": 3, "puzzle": 3.7, "gimmick": 3, "design": 3.5, "language": 5, "brand": "키이스케이프", "url": "/nazotoki-reviews/moviemood-dessert-puzzle-pack", "rating": "추천", "quote": "잘 만든, 귀한 한국어 나조토키. 나조토키가 무엇인지 궁금하다면 추천!", "beginner": true },
     "Twelve Trick Tiles": { "num": 2, "date": "2026-03-18", "diff": 3, "satisfaction": 5, "puzzle": 3.5, "gimmick": 5, "design": 3.7, "language": 2.8, "brand": "Tumbleweed", "url": "/nazotoki-reviews/twelve-trick-tiles", "rating": "강력추천", "quote": "기믹의 극한은 마법이 된다. 너무나도 아름다운 강력 추천 나조", "beginner": true },
     "26": { "num": 3, "date": "2026-03-22", "diff": 4, "satisfaction": 5, "puzzle": 4.5, "gimmick": 5, "design": 3, "language": 2.8, "brand": "Tumbleweed", "url": "/nazotoki-reviews/26", "rating": "강력추천", "quote": "압도적 간지를 뿜어낸다. 내 첫 인생 나조.", "beginner": false },
     "ONE OPERATION": { "num": 4, "date": "2026-03-25", "diff": 3, "satisfaction": 5, "puzzle": 4, "gimmick": 4.5, "design": 4.5, "language": 2, "brand": "Tumbleweed", "url": "/nazotoki-reviews/one-operation", "rating": "강력추천", "quote": "듣기가 된다면 반드시 추천! 어디서 보기 힘든 형식의 나조", "beginner": false },
@@ -97,6 +97,7 @@
     "カナロス -絵日記編-": { "num": 46, "date": "2026-06-24", "diff": 3, "satisfaction": 3.7, "puzzle": 3.5, "gimmick": 3.4, "design": 3.6, "language": 3.4, "brand": "Tumbleweed", "rating": "추천", "quote": "잔잔한 일상 감성, 도감편과 함께 완성되는 한 쌍", "beginner": false, "url": "/nazotoki-reviews/kanaloss-grimeelgi" },
     "母の日に思い出して": { "num": 47, "date": "2026-06-28", "diff": 2, "satisfaction": 3.5, "puzzle": 3.6, "gimmick": 3.4, "design": 3.5, "language": 3.6, "brand": "SCRAP - Mystery For You", "rating": "추천", "quote": "어머니날의 잔잔한 감동, 눈나조지만 공작요소도 즐겁다", "beginner": false, "url": "/nazotoki-reviews/mothersdayrecall" },
     "スケルトンフリーク": { "num": 48, "date": "2026-06-28", "diff": 2, "satisfaction": 2.9, "puzzle": 3.3, "gimmick": 3.1, "design": 3, "language": 3, "brand": "SCRAP - Mystery For You", "rating": "괜찮음", "quote": "스켈레톤 좋아하신다면 추천, 아니라면 꼭 추천은 아닌 느낌", "beginner": false, "url": "/nazotoki-reviews/skeletonfreak" },
-    "タンブルなななぞ": { "num": 49, "date": "2026-07-11", "diff": 2, "satisfaction": 3.9, "puzzle": 3.7, "gimmick": 3.5, "design": 3.6, "language": 3.5, "brand": "Tumbleweed", "rating": "추천", "quote": "“나조 해 볼래?” 하고 건네기 딱 좋은 입문용 나조", "beginner": true, "url": "/nazotoki-reviews/nananazo" }
+    "タンブルなななぞ": { "num": 49, "date": "2026-07-11", "diff": 2, "satisfaction": 3.9, "puzzle": 3.7, "gimmick": 3.5, "design": 3.6, "language": 3.5, "brand": "Tumbleweed", "rating": "추천", "quote": "“나조 해 볼래?” 하고 건네기 딱 좋은 입문용 나조", "beginner": true, "url": "/nazotoki-reviews/nananazo" },
+    "KORON -コロン-": { "num": 50, "date": "2026-07-11", "diff": 3, "satisfaction": 4.2, "puzzle": 3.7, "gimmick": 4, "design": 3.6, "language": 3, "brand": "ねずみの巣", "rating": "추천", "quote": "작고 얇은 키트에서 데굴, 하고 굴러나오는 작지 않은 볼륨", "beginner": true, "url": "/nazotoki-reviews/koron" }
   }
 }
