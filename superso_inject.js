@@ -86,8 +86,20 @@ function waitAndHideLoader() {
   var path = window.location.pathname;
   var isHome = path === '/' || path === '';
   var isReview = path.indexOf('/nazotoki-reviews/') === 0;
+  var isGuide = path.indexOf('/what-is-nazo') === 0;
+  var isAbout = path.indexOf('/lemonbread') === 0;
+  var isShop = path.indexOf('/how-to-buy-nazotokis') === 0;
   var stableSince = null;
+  var opened = false;
+  function openScreen() {
+    if (opened) return;
+    opened = true;
+    clearTimeout(maxWait);
+    replaceMainTitle();
+    hideLoader();
+  }
   var checkReady = setInterval(function() {
+    if (opened) { clearInterval(checkReady); return; }
     // 하이드레이션이 로더를 지워버리는 경우가 있어, 공개 전까지는 다시 그려 넣는다
     if (!document.getElementById('nz-loader')) showLoader();
     var ready;
@@ -95,6 +107,13 @@ function waitAndHideLoader() {
       ready = document.getElementById('nz2-layout') && document.querySelector('.nz-card-custom');
     } else if (isReview) {
       ready = document.querySelector('.nz-review-wrap');
+    } else if (isGuide) {
+      // 새 톤은 body 클래스에 달려 있으므로 적용 확인 후 공개
+      ready = document.querySelector('.super-content') && document.body.classList.contains('nz-guide');
+    } else if (isAbout) {
+      ready = document.querySelector('.super-content') && document.body.classList.contains('nz-about');
+    } else if (isShop) {
+      ready = document.querySelector('.nz-shop-header');
     } else {
       ready = document.querySelector('.super-content');
     }
@@ -104,9 +123,13 @@ function waitAndHideLoader() {
       if (stableSince === null) stableSince = Date.now();
       if (Date.now() - stableSince >= 400) {
         clearInterval(checkReady);
-        clearTimeout(maxWait);
-        replaceMainTitle();
-        hideLoader();
+        // 폰트가 아직이면 시스템 글씨로 떴다가 확 바뀌므로, 완료를 기다린다 (최대 2.5초)
+        if (document.fonts && document.fonts.status === 'loading') {
+          var fontCap = setTimeout(openScreen, 2500);
+          document.fonts.ready.then(function () { clearTimeout(fontCap); openScreen(); });
+        } else {
+          openScreen();
+        }
       }
     } else {
       stableSince = null;
