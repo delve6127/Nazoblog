@@ -3450,8 +3450,10 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
   background: var(--nz-featured-bg) !important;
 }
 .nz-like-lemon { width: 18px; height: 18px; display: block; object-fit: contain; }
-.nz-like-pill .nz-like-text { font-size: 13.5px !important; font-weight: 600 !important; color: var(--nz-muted-3) !important; }
-.nz-like-pill .nz-like-count { font-size: 13.5px !important; font-weight: 700 !important; color: #B08900 !important; }
+/* 텍스트·숫자에 동일한 고정 줄높이: 안드로이드에서 한글/숫자 시스템 폰트 키 차이로
+   숫자만 위로 떠 보이는 문제 방지 (기준선 통일) */
+.nz-like-pill .nz-like-text { font-size: 13.5px !important; font-weight: 600 !important; color: var(--nz-muted-3) !important; line-height: 18px !important; }
+.nz-like-pill .nz-like-count { font-size: 13.5px !important; font-weight: 700 !important; color: #B08900 !important; line-height: 18px !important; }
 
 /* ── 모바일 리뷰: 본문 폰트 조정 (사용자 피드백) ── */
 @media (max-width: 768px) {
