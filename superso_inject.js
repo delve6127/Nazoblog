@@ -2246,12 +2246,20 @@ function nzLightboxClose() {
   var SUPABASE_KEY = 'sb_publishable_8cOoT2cGQ0x7Is57k-VT5A_fqgVKr6f';
   var LIKE_COLORS = ['#FFD953', '#FFCF33', '#FFDE59', '#F0C93D', '#D9A13B', '#FFE98A'];
 
+  function readCookie(name) {
+    var m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+    return m ? decodeURIComponent(m[1]) : null;
+  }
   function getSessionId() {
-    var id = localStorage.getItem('nz_session_id');
-    if (!id) {
-      id = 'nz_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
-      localStorage.setItem('nz_session_id', id);
-    }
+    var id = null;
+    try { id = localStorage.getItem('nz_session_id'); } catch (e) {}
+    if (!id) id = readCookie('nz_session_id'); // localStorage가 지워지는 브라우저 대비
+    if (!id) id = 'nz_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
+    try { localStorage.setItem('nz_session_id', id); } catch (e) {}
+    try {
+      document.cookie = 'nz_session_id=' + encodeURIComponent(id) +
+        '; max-age=' + (60 * 60 * 24 * 400) + '; path=/; SameSite=Lax; Secure';
+    } catch (e) {}
     return id;
   }
 
@@ -2358,21 +2366,41 @@ function nzLightboxClose() {
       })
       .catch(function () {});
 
+    // 서버 진실과 재동기화: 총 개수 + 내 눌림 상태를 다시 받아 표시를 맞춘다
+    var resyncTimer = null;
+    function resyncFromServer() {
+      supabaseRequest('GET', 'likes?page_slug=eq.' + encodeURIComponent(slug) + '&select=session_id')
+        .then(function (res) { return res.json(); })
+        .then(function (rows) {
+          countEl.textContent = rows.length;
+          var mine = rows.some(function (r) { return r.session_id === sessionId; });
+          pill.classList.toggle('active', mine);
+        })
+        .catch(function () {});
+    }
+
     // 클릭 이벤트
     pill.addEventListener('click', function () {
       var isActive = pill.classList.contains('active');
       var currentCount = parseInt(countEl.textContent) || 0;
+      var req;
 
       if (isActive) {
         pill.classList.remove('active');
         countEl.textContent = Math.max(0, currentCount - 1);
-        supabaseRequest('DELETE', 'likes?page_slug=eq.' + encodeURIComponent(slug) + '&session_id=eq.' + encodeURIComponent(sessionId));
+        req = supabaseRequest('DELETE', 'likes?page_slug=eq.' + encodeURIComponent(slug) + '&session_id=eq.' + encodeURIComponent(sessionId));
       } else {
         pill.classList.add('active');
         countEl.textContent = currentCount + 1;
         nzBurstParticles(pill.querySelector('.nz-like-particles'));
-        supabaseRequest('POST', 'likes', { page_slug: slug, session_id: sessionId });
+        req = supabaseRequest('POST', 'likes', { page_slug: slug, session_id: sessionId });
       }
+
+      // 요청이 끝나면(성공/실패 모두) 서버 진실로 표시를 맞춘다
+      req.catch(function () {}).then(function () {
+        if (resyncTimer) clearTimeout(resyncTimer);
+        resyncTimer = setTimeout(resyncFromServer, 800);
+      });
     });
 
     console.log('[나조토키] 좋아요 버튼 렌더링 완료');
@@ -2445,12 +2473,20 @@ function nzLightboxClose() {
   }
 
   // ── 세션 ID (좋아요 모듈과 공유) ──
+  function readCookie(name) {
+    var m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+    return m ? decodeURIComponent(m[1]) : null;
+  }
   function getSessionId() {
-    var id = localStorage.getItem('nz_session_id');
-    if (!id) {
-      id = 'nz_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
-      localStorage.setItem('nz_session_id', id);
-    }
+    var id = null;
+    try { id = localStorage.getItem('nz_session_id'); } catch (e) {}
+    if (!id) id = readCookie('nz_session_id'); // localStorage가 지워지는 브라우저 대비
+    if (!id) id = 'nz_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
+    try { localStorage.setItem('nz_session_id', id); } catch (e) {}
+    try {
+      document.cookie = 'nz_session_id=' + encodeURIComponent(id) +
+        '; max-age=' + (60 * 60 * 24 * 400) + '; path=/; SameSite=Lax; Secure';
+    } catch (e) {}
     return id;
   }
 
