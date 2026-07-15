@@ -229,30 +229,44 @@ startLoaderGuard();
 waitAndHideLoader();
 
 // ── 본 CSS 이탈 감시: 하이드레이션이 <link>를 재부착하는 동안 화면을 닫아 원본 노출 차단 ──
+// 폴링이 아니라 DOM 변경 즉시(페인트 전 microtask) 반응해야 원본이 한 프레임도 안 보인다
 (function () {
   var seenActive = false;
   var lostMode = false;
-  var started = Date.now();
-  var iv = setInterval(function () {
+  var recoverPoll = null;
+
+  function closeForCssLoss() {
+    if (lostMode) return;
+    lostMode = true;
+    nzInjectCssMirror();     // 미러가 있으면 스타일을 즉시 대체 유지
+    nzInjectCriticalStyle(); // 가림막·로더 규칙 생존 보장
+    window.__nzReadyOnce = false;
+    if (document.body) document.body.classList.remove('nz-ready');
+    showLoader();
+    startLoaderGuard();
+    // CSS가 돌아오면 준비 조건 재확인 후 재공개
+    if (recoverPoll) clearInterval(recoverPoll);
+    recoverPoll = setInterval(function () {
+      if (nzMainCssActive()) {
+        clearInterval(recoverPoll);
+        recoverPoll = null;
+        lostMode = false;
+        waitAndHideLoader();
+      }
+    }, 100);
+  }
+
+  function checkNow() {
     var active = nzMainCssActive();
-    if (!seenActive) {
-      if (active) seenActive = true; // 최초 로드 완료 후부터 감시 시작
-      return;
-    }
-    if (!active && !lostMode) {
-      lostMode = true;
-      nzInjectCssMirror(); // 미러가 있으면 이걸로 즉시 복구 (다음 틱에 active 처리)
-      window.__nzReadyOnce = false;
-      if (document.body) document.body.classList.remove('nz-ready');
-      nzInjectCriticalStyle();
-      showLoader();
-      startLoaderGuard();
-    } else if (active && lostMode) {
-      lostMode = false;
-      waitAndHideLoader(); // 준비 조건 재확인 후 재공개
-    }
-    if (Date.now() - started > 20000 && !lostMode) clearInterval(iv);
-  }, 80);
+    if (!seenActive) { if (active) seenActive = true; return; }
+    if (!active) closeForCssLoss();
+  }
+
+  // head/문서 변경 즉시 확인 — mutation microtask는 페인트보다 먼저 실행된다
+  var mo = new MutationObserver(checkNow);
+  mo.observe(document.documentElement, { childList: true, subtree: true });
+  // 보험: 저빈도 폴링 (감시자가 놓치는 경우 대비)
+  setInterval(checkNow, 300);
 })();
 
 // ── 날짜 변환 ──
