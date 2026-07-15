@@ -44,6 +44,45 @@ function loadNazoData(callback) {
     });
 }
 
+// ── 크리티컬 스타일 (인라인 주입) ──
+// 하이드레이션이 head의 CSS <link>를 뽑았다 다시 꽂는 동안(재다운로드 ~수백ms)
+// 가림막·로더 규칙이 함께 죽어 노션 원본이 노출된다.
+// 생존에 필요한 최소 규칙을 JS가 직접 <style>로 심어 네트워크와 무관하게 유지한다.
+var NZ_CRITICAL_CSS = ''
+  + 'html { background: #FAF7F2; }'
+  + 'body:not(.nz-ready) .super-root { opacity: 0 !important; }'
+  + 'body.nz-loading .super-root, body.nz-loading #__next > *:not(#nz-loader) { opacity: 0 !important; }'
+  + '#nz-loader { position: fixed; inset: 0; z-index: 99999; background: #FAF7F2;'
+  +   ' display: flex; flex-direction: column; align-items: center; justify-content: center;'
+  +   ' gap: 16px; transition: opacity 0.4s ease; }'
+  + '#nz-loader.nz-loader-hide { opacity: 0; pointer-events: none; }'
+  + '#nz-loader-lemon { width: 48px; height: 48px; animation: nz-c-bounce 1s ease-in-out infinite; }'
+  + '#nz-loader-lemon img { width: 100%; height: 100%; object-fit: contain; }'
+  + '#nz-loader-spinner { width: 24px; height: 24px; border: 3px solid #E8E0D5;'
+  +   ' border-top-color: #C8B888; border-radius: 50%; animation: nz-c-spin 0.7s linear infinite; }'
+  + '@keyframes nz-c-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }'
+  + '@keyframes nz-c-spin { to { transform: rotate(360deg); } }';
+
+function nzInjectCriticalStyle() {
+  if (document.getElementById('nz-critical')) return;
+  var s = document.createElement('style');
+  s.id = 'nz-critical';
+  s.textContent = NZ_CRITICAL_CSS;
+  (document.head || document.documentElement).appendChild(s);
+}
+nzInjectCriticalStyle();
+
+// 본 CSS(<link>)가 실제 적용 중인지 — 하이드레이션 재부착 중엔 목록에서 사라진다
+function nzMainCssActive() {
+  try {
+    for (var i = 0; i < document.styleSheets.length; i++) {
+      var href = document.styleSheets[i].href || '';
+      if (href.indexOf('superso_inject.css') > -1) return true;
+    }
+  } catch (e) {}
+  return false;
+}
+
 // ── 로딩 스크린 ──
 function showLoader() {
   if (document.getElementById('nz-loader')) return;
@@ -60,6 +99,7 @@ var nzLoaderGuard = null;
 function startLoaderGuard() {
   if (nzLoaderGuard || typeof MutationObserver === 'undefined') return;
   nzLoaderGuard = new MutationObserver(function () {
+    nzInjectCriticalStyle(); // 크리티컬 스타일이 지워지면 즉시 재주입
     if (!window.__nzReadyOnce && !document.getElementById('nz-loader')) showLoader();
   });
   nzLoaderGuard.observe(document.documentElement, { childList: true, subtree: true });
@@ -126,6 +166,8 @@ function waitAndHideLoader(prevTitle) {
     }
     // SPA 전환 중에는 옛 페이지 내용이 남아 있으므로, 제목이 바뀌기 전엔 준비로 치지 않는다
     if (ready && needTitleChange && nzPageTitleText() === prevTitle) ready = false;
+    // 본 CSS가 (재부착 등으로) 빠져 있는 동안엔 열지 않는다
+    if (ready && !nzMainCssActive()) ready = false;
     // 하이드레이션이 커스텀을 갈아엎는 순간이 있으므로,
     // 준비 상태가 400ms 연속 유지될 때만 화면을 연다
     if (ready) {
@@ -150,6 +192,32 @@ function waitAndHideLoader(prevTitle) {
 showLoader();
 startLoaderGuard();
 waitAndHideLoader();
+
+// ── 본 CSS 이탈 감시: 하이드레이션이 <link>를 재부착하는 동안 화면을 닫아 원본 노출 차단 ──
+(function () {
+  var seenActive = false;
+  var lostMode = false;
+  var started = Date.now();
+  var iv = setInterval(function () {
+    var active = nzMainCssActive();
+    if (!seenActive) {
+      if (active) seenActive = true; // 최초 로드 완료 후부터 감시 시작
+      return;
+    }
+    if (!active && !lostMode) {
+      lostMode = true;
+      window.__nzReadyOnce = false;
+      if (document.body) document.body.classList.remove('nz-ready');
+      nzInjectCriticalStyle();
+      showLoader();
+      startLoaderGuard();
+    } else if (active && lostMode) {
+      lostMode = false;
+      waitAndHideLoader(); // 준비 조건 재확인 후 재공개
+    }
+    if (Date.now() - started > 20000 && !lostMode) clearInterval(iv);
+  }, 80);
+})();
 
 // ── 날짜 변환 ──
 function convertDates() {
