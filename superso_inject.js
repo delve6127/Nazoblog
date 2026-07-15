@@ -44,6 +44,38 @@ function loadNazoData(callback) {
     });
 }
 
+// ── CSS 미러: 본 CSS 전문을 브라우저 저장소에 복사해두고, 다음 방문부터
+// JS 실행 즉시 적용한다. 하이드레이션이 <link>를 재부착하며 재다운로드하는 동안에도
+// 미러가 살아 있어 원본 노출 공백이 사라진다 (첫 방문만 기존 방어로 커버).
+var NZ_CSS_URL = NZ_ASSET_BASE + 'superso_inject.css';
+function nzInjectCssMirror() {
+  if (document.getElementById('nz-css-mirror')) return;
+  var txt = null;
+  try { txt = localStorage.getItem('nz_css_mirror_v1'); } catch (e) {}
+  if (!txt) return;
+  var s = document.createElement('style');
+  s.id = 'nz-css-mirror';
+  s.textContent = txt;
+  var head = document.head || document.documentElement;
+  // 링크보다 앞에 둬서, 새로 배포된 CSS(링크)가 항상 우선하게 한다
+  head.insertBefore(s, head.firstChild);
+}
+nzInjectCssMirror();
+
+// 미러 갱신: 페이지 로드가 끝나고 한가할 때 최신 CSS를 받아 저장
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    fetch(NZ_CSS_URL)
+      .then(function (r) { return r.ok ? r.text() : null; })
+      .then(function (txt) {
+        if (txt && txt.indexOf('nz-loader') > -1) {
+          try { localStorage.setItem('nz_css_mirror_v1', txt); } catch (e) {}
+        }
+      })
+      .catch(function () {});
+  }, 1500);
+});
+
 // ── 크리티컬 스타일 (인라인 주입) ──
 // 하이드레이션이 head의 CSS <link>를 뽑았다 다시 꽂는 동안(재다운로드 ~수백ms)
 // 가림막·로더 규칙이 함께 죽어 노션 원본이 노출된다.
@@ -74,6 +106,8 @@ nzInjectCriticalStyle();
 
 // 본 CSS(<link>)가 실제 적용 중인지 — 하이드레이션 재부착 중엔 목록에서 사라진다
 function nzMainCssActive() {
+  var mirror = document.getElementById('nz-css-mirror');
+  if (mirror && mirror.textContent) return true; // 미러가 전체 스타일을 대신 유지 중
   try {
     for (var i = 0; i < document.styleSheets.length; i++) {
       var href = document.styleSheets[i].href || '';
@@ -100,6 +134,7 @@ function startLoaderGuard() {
   if (nzLoaderGuard || typeof MutationObserver === 'undefined') return;
   nzLoaderGuard = new MutationObserver(function () {
     nzInjectCriticalStyle(); // 크리티컬 스타일이 지워지면 즉시 재주입
+    nzInjectCssMirror();     // CSS 미러도 지워지면 즉시 재주입
     if (!window.__nzReadyOnce && !document.getElementById('nz-loader')) showLoader();
   });
   nzLoaderGuard.observe(document.documentElement, { childList: true, subtree: true });
@@ -206,6 +241,7 @@ waitAndHideLoader();
     }
     if (!active && !lostMode) {
       lostMode = true;
+      nzInjectCssMirror(); // 미러가 있으면 이걸로 즉시 복구 (다음 틱에 active 처리)
       window.__nzReadyOnce = false;
       if (document.body) document.body.classList.remove('nz-ready');
       nzInjectCriticalStyle();
