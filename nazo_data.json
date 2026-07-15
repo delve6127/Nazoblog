@@ -98,6 +98,7 @@
     "母の日に思い出して": { "num": 47, "date": "2026-06-28", "diff": 2, "satisfaction": 3.5, "puzzle": 3.6, "gimmick": 3.4, "design": 3.5, "language": 3.6, "brand": "SCRAP - Mystery For You", "rating": "추천", "quote": "어머니날의 잔잔한 감동, 눈나조지만 공작요소도 즐겁다", "beginner": false, "url": "/nazotoki-reviews/mothersdayrecall" },
     "スケルトンフリーク": { "num": 48, "date": "2026-06-28", "diff": 2, "satisfaction": 2.9, "puzzle": 3.3, "gimmick": 3.1, "design": 3, "language": 3, "brand": "SCRAP - Mystery For You", "rating": "괜찮음", "quote": "스켈레톤 좋아하신다면 추천, 아니라면 꼭 추천은 아닌 느낌", "beginner": false, "url": "/nazotoki-reviews/skeletonfreak" },
     "タンブルなななぞ": { "num": 49, "date": "2026-07-11", "diff": 2, "satisfaction": 3.9, "puzzle": 3.7, "gimmick": 3.5, "design": 3.6, "language": 3.5, "brand": "Tumbleweed", "rating": "추천", "quote": "“나조 해 볼래?” 하고 건네기 딱 좋은 입문용 나조", "beginner": true, "url": "/nazotoki-reviews/nananazo" },
-    "KORON -コロン-": { "num": 50, "date": "2026-07-11", "diff": 3, "satisfaction": 4.2, "puzzle": 3.7, "gimmick": 4, "design": 3.6, "language": 3, "brand": "ねずみの巣", "rating": "추천", "quote": "작고 얇은 키트에서 데굴, 하고 굴러나오는 작지 않은 볼륨", "beginner": true, "url": "/nazotoki-reviews/koron" }
+    "KORON -コロン-": { "num": 50, "date": "2026-07-11", "diff": 3, "satisfaction": 4.2, "puzzle": 3.7, "gimmick": 4, "design": 3.6, "language": 3, "brand": "ねずみの巣", "rating": "추천", "quote": "작고 얇은 키트에서 데굴, 하고 굴러나오는 작지 않은 볼륨", "beginner": true, "url": "/nazotoki-reviews/koron" },
+    "封筒RUSH": { "num": 51, "date": "2026-07-12", "diff": 4, "satisfaction": 3.9, "puzzle": 3.8, "gimmick": 3.7, "design": 3.5, "language": 3.3, "brand": "SCRAP - Mystery For You", "rating": "추천", "quote": "봉투 일곱 개의 즐거움, 오오나조는 살짝 아쉬움", "beginner": false, "url": "/nazotoki-reviews/enveloperush" }
   }
 }
