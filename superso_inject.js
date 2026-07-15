@@ -190,10 +190,14 @@ function waitAndHideLoader(prevTitle) {
     } else if (isReview) {
       ready = document.querySelector('.nz-review-wrap');
     } else if (isGuide) {
-      // 새 톤은 body 클래스에 달려 있으므로 적용 확인 후 공개
-      ready = document.querySelector('.super-content') && document.body.classList.contains('nz-guide');
+      // 리뷰 페이지와 동일 원칙: JS 장식 결과물이 실제로 존재해야 준비로 판정
+      // (nz-wn 장식 모듈이 콜아웃 전부에 클래스를 붙이고 ending까지 만든 상태)
+      var art = document.querySelector('article.notion-root');
+      ready = art && art.querySelector('.nz-wn-ending') &&
+              !art.querySelector('.notion-callout:not(.nz-wn-callout)');
     } else if (isAbout) {
-      ready = document.querySelector('.super-content') && document.body.classList.contains('nz-about');
+      // 레몬빵?도 동일: 소개 카드(커스텀 DOM) 존재로 판정
+      ready = document.querySelector('.nz-about-card');
     } else if (isShop) {
       ready = document.querySelector('.nz-shop-header');
     } else {
