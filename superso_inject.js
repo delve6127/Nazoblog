@@ -81,7 +81,14 @@ function hideLoader() {
   }, 500);
 }
 
-function waitAndHideLoader() {
+function nzPageTitleText() {
+  var el = document.querySelector('.notion-header__title');
+  return el ? el.textContent.trim() : '';
+}
+
+function waitAndHideLoader(prevTitle) {
+  // SPA 전환이면 이전 페이지 제목을 받아, 내용이 실제로 교체된 뒤에만 연다
+  var needTitleChange = typeof prevTitle === 'string';
   var maxWait = setTimeout(hideLoader, 4500);
   var path = window.location.pathname;
   var isHome = path === '/' || path === '';
@@ -117,6 +124,8 @@ function waitAndHideLoader() {
     } else {
       ready = document.querySelector('.super-content');
     }
+    // SPA 전환 중에는 옛 페이지 내용이 남아 있으므로, 제목이 바뀌기 전엔 준비로 치지 않는다
+    if (ready && needTitleChange && nzPageTitleText() === prevTitle) ready = false;
     // 하이드레이션이 커스텀을 갈아엎는 순간이 있으므로,
     // 준비 상태가 400ms 연속 유지될 때만 화면을 연다
     if (ready) {
@@ -253,12 +262,13 @@ function ensureMastheadLoop() {
     // 새 내용이 꾸며지기 전까지 CSS 선가림이 다시 작동하게 한다
     window.__nzReadyOnce = false;
     if (document.body) document.body.classList.remove('nz-ready');
+    var prevTitle = nzPageTitleText(); // 아직 옛 페이지 제목 — 교체 감지 기준
     showLoader();
     startLoaderGuard(); // 첫 공개 때 해제된 로더 감시자 재가동
     setTimeout(convertDates, 500);
     setTimeout(convertDates, 1500);
     ensureMastheadLoop();
-    waitAndHideLoader();
+    waitAndHideLoader(prevTitle);
   }
 
   // popstate (뒤로/앞으로 가기)
