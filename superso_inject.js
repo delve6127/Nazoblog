@@ -3464,15 +3464,29 @@ function nzLightboxClose() {
     fixFooter();
   }
 
+  // body 클래스 감시: React가 className을 초기화하면 페인트 전에 즉시 되붙인다
+  // (나조토키란?/레몬빵? 페이지는 디자인 전체가 body 클래스에 걸려 있어 이 공백이 원본 노출로 보임)
+  var watchedBody = null;
+  function watchBodyClass() {
+    if (!document.body || document.body === watchedBody) return;
+    watchedBody = document.body;
+    new MutationObserver(function () { ensureHomeClass(); })
+      .observe(watchedBody, { attributes: true, attributeFilter: ['class'] });
+  }
+
   // 초기 실행 + hydration/SPA 대응 재적용
   runAll();
+  watchBodyClass();
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', runAll);
+    document.addEventListener('DOMContentLoaded', function () { runAll(); watchBodyClass(); });
   }
   setTimeout(runAll, 800);
   setTimeout(runAll, 2000);
   setTimeout(runAll, 4500);
-  var chromeObserver = new MutationObserver(function () { runAll(); });
+  var chromeObserver = new MutationObserver(function () {
+    runAll();
+    watchBodyClass(); // body 요소 자체가 교체됐을 수도 있으니 감시 재설치
+  });
   chromeObserver.observe(document.documentElement, { childList: true, subtree: true });
 
   // 페이지 이동 시 열린 메뉴 정리
