@@ -249,7 +249,12 @@ function ensureMastheadLoop() {
   var lastUrl = location.href;
 
   function onNavigate() {
+    // SPA 전환: 이전 페이지에서 켜둔 '화면 열림' 상태를 되돌려
+    // 새 내용이 꾸며지기 전까지 CSS 선가림이 다시 작동하게 한다
+    window.__nzReadyOnce = false;
+    if (document.body) document.body.classList.remove('nz-ready');
     showLoader();
+    startLoaderGuard(); // 첫 공개 때 해제된 로더 감시자 재가동
     setTimeout(convertDates, 500);
     setTimeout(convertDates, 1500);
     ensureMastheadLoop();
