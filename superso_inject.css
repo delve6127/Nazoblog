@@ -2065,7 +2065,7 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
   margin: 40px 0 0 !important;
   line-height: 1.4 !important;
 }
-.super-content.page__what-is-nazo .nz-wn-callout h3.notion-heading {
+.super-content.page__what-is-nazo article.notion-root .nz-wn-callout h3.notion-heading {
   margin: 0 !important;
 }
 
@@ -2075,6 +2075,12 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
   line-height: 1.85 !important;
   color: #3D372E !important;
   margin: 14px 0 0 !important;
+}
+
+/* 노션 빈 문단 = 공백 제거 */
+.super-content.page__what-is-nazo article.notion-root p.notion-text.nz-wn-blank {
+  display: none !important;
+  margin: 0 !important;
 }
 
 /* ── 레몬 형광펜 (노션 노랑 하이라이트) ── */
@@ -2161,7 +2167,7 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
   margin: 0 !important;
   padding: 0 !important;
 }
-.super-content.page__what-is-nazo p.nz-wn-term__row {
+.super-content.page__what-is-nazo article.notion-root p.notion-text.nz-wn-term__row {
   font-size: 15px !important;
   line-height: 1.78 !important;
   margin: 0 !important;
@@ -2196,8 +2202,8 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
   margin: 0 !important;
   padding: 0 !important;
 }
-.super-content.page__what-is-nazo .nz-wn-sub h3.notion-heading,
-.super-content.page__what-is-nazo .nz-wn-tags h3.notion-heading {
+.super-content.page__what-is-nazo article.notion-root .nz-wn-sub h3.notion-heading,
+.super-content.page__what-is-nazo article.notion-root .nz-wn-tags h3.notion-heading {
   font-family: var(--nz-font-hand) !important;
   font-weight: 400 !important;
   font-size: 19px !important;
@@ -2206,7 +2212,7 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
 }
 
 /* 점수 기준: 라벨 150px 2컬럼 행 */
-.super-content.page__what-is-nazo p.nz-wn-metric {
+.super-content.page__what-is-nazo article.notion-root p.notion-text.nz-wn-metric {
   display: flex !important;
   align-items: baseline;
   gap: 14px;
@@ -2226,7 +2232,7 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
 }
 
 /* 미포유 모티브 알약 3종 */
-.super-content.page__what-is-nazo p.nz-wn-motif-row {
+.super-content.page__what-is-nazo article.notion-root p.notion-text.nz-wn-motif-row {
   display: flex !important;
   align-items: center;
   flex-wrap: wrap;
@@ -2377,9 +2383,10 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
     width: 18px;
     height: 18px;
   }
-  .super-content.page__what-is-nazo p.nz-wn-term__row {
+  .super-content.page__what-is-nazo article.notion-root p.notion-text.nz-wn-term__row {
     font-size: 14px !important;
     line-height: 1.72 !important;
+    margin: 0 !important;
   }
   .super-content.page__what-is-nazo .nz-wn-sub,
   .super-content.page__what-is-nazo .nz-wn-tags {
@@ -2387,12 +2394,12 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
     margin-top: 12px !important;
   }
   .super-content.page__what-is-nazo .nz-wn-tags { margin-top: 10px !important; }
-  .super-content.page__what-is-nazo .nz-wn-sub h3.notion-heading,
-  .super-content.page__what-is-nazo .nz-wn-tags h3.notion-heading {
+  .super-content.page__what-is-nazo article.notion-root .nz-wn-sub h3.notion-heading,
+  .super-content.page__what-is-nazo article.notion-root .nz-wn-tags h3.notion-heading {
     font-size: 17px !important;
   }
   /* 점수 행: 모바일은 인라인 (라벨 · 설명 한 흐름) */
-  .super-content.page__what-is-nazo p.nz-wn-metric {
+  .super-content.page__what-is-nazo article.notion-root p.notion-text.nz-wn-metric {
     display: block !important;
     margin-top: 12px !important;
   }
@@ -2407,7 +2414,7 @@ body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
     font-size: 13.5px !important;
     line-height: 1.7 !important;
   }
-  .super-content.page__what-is-nazo p.nz-wn-motif-row {
+  .super-content.page__what-is-nazo article.notion-root p.notion-text.nz-wn-motif-row {
     padding-left: 0;
     gap: 6px;
     margin-top: 12px !important;

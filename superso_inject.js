@@ -3277,6 +3277,11 @@ function nzLightboxClose() {
     var article = document.querySelector('article.notion-root');
     if (!article) return;
 
+    // 노션 빈 문단은 공백만 차지하므로 숨김 표시
+    article.querySelectorAll('p.notion-text').forEach(function (el) {
+      if (!el.textContent.trim() && !el.querySelector('img')) el.classList.add('nz-wn-blank');
+    });
+
     markSubtitle(article);
 
     var callouts = article.querySelectorAll('.notion-callout');
