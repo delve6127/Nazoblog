@@ -3033,13 +3033,13 @@ function nzLightboxClose() {
 
   // 이모지 → 타입/아이콘 매핑 (variation selector FE0F 처리)
   var EMOJI_MAP = [
-    { emoji: '💬',  type: 'info1', icon: 'message-circle-question' },
-    { emoji: '🔀',  type: 'info2', icon: 'git-compare-arrows' },
-    { emoji: '✂️', type: 'term1', icon: 'square-scissors' },
-    { emoji: '✂',  type: 'term1', icon: 'square-scissors' },
-    { emoji: '👑',  type: 'term2', icon: 'crown' },
-    { emoji: '♻️', type: 'term3', icon: 'recycle' },
-    { emoji: '♻',  type: 'term3', icon: 'recycle' },
+    { emoji: '💬',  type: 'info1', icon: null },
+    { emoji: '🔀',  type: 'info2', icon: null },
+    { emoji: '✂️', type: 'term1', icon: 'lemon' },
+    { emoji: '✂',  type: 'term1', icon: 'lemon' },
+    { emoji: '👑',  type: 'term2', icon: 'lemon' },
+    { emoji: '♻️', type: 'term3', icon: 'lemon' },
+    { emoji: '♻',  type: 'term3', icon: 'lemon' },
     { emoji: '🗺️', type: 'guide', icon: null },
     { emoji: '🗺',  type: 'guide', icon: null },
     { emoji: '📊',  type: 'sub',   icon: null },
@@ -3079,15 +3079,24 @@ function nzLightboxClose() {
     return LUCIDE[name].replace(/^<svg /, '<svg class="ico" ');
   }
   function replaceContentEmojis(html) {
+    // 시안 2a: 태그 박스 안 이모지는 표기하지 않음
     return html
-      .replace(/📲\uFE0F?/g, tagsLucide('link'))
-      .replace(/📱\uFE0F?/g, tagsLucide('tablet'))
-      .replace(/♻\uFE0F?/g, tagsLucide('recycle'));
+      .replace(/📲\uFE0F?\s*/g, '')
+      .replace(/📱\uFE0F?\s*/g, '')
+      .replace(/♻\uFE0F?\s*/g, '');
+  }
+  function tagChipClass(label) {
+    if (label.indexOf('LINE') !== -1) return 'nz-wn-tag--line';
+    if (label.indexOf('WEB') !== -1) return 'nz-wn-tag--web';
+    if (label.indexOf('패드') !== -1) return 'nz-wn-tag--pad';
+    if (label.indexOf('재활용') !== -1) return 'nz-wn-tag--recycle';
+    return '';
   }
   function replaceContentCodes(html) {
-    // 노션 인라인 코드 <code>X</code> → 틸 태그 뱃지
-    return html.replace(/<code[^>]*>([\s\S]*?)<\/code>/g,
-      '<span class="nz-wn-tag">$1</span>');
+    // 노션 인라인 코드 <code>X</code> → 파스텔 태그 칩 (시안 2a 색)
+    return html.replace(/<code[^>]*>([\s\S]*?)<\/code>/g, function (_, label) {
+      return '<span class="nz-wn-tag ' + tagChipClass(label) + '">' + label + '</span>';
+    });
   }
   function isTagsHeader(p) {
     var text = p.textContent || '';
@@ -3153,8 +3162,11 @@ function nzLightboxClose() {
     callout.classList.add('nz-wn-callout', 'nz-wn-' + m.type);
     callout.dataset.nzWnDone = '1';
 
-    // 노션 이모지 아이콘 → Lucide SVG 교체 (info/term만; guide/sub는 아이콘 없음)
-    if (m.icon && LUCIDE[m.icon]) {
+    // 노션 이모지 아이콘 교체: 매력 불릿 = 레몬 이미지 (시안 2a)
+    if (m.icon === 'lemon') {
+      iconBox.textContent = '';
+      iconBox.innerHTML = '<img class="nz-wn-bullet-lemon" src="' + NZ_ASSET_BASE + 'assets/lemon.png" alt="">';
+    } else if (m.icon && LUCIDE[m.icon]) {
       iconBox.textContent = '';
       iconBox.innerHTML = LUCIDE[m.icon];
     }
@@ -3182,12 +3194,24 @@ function nzLightboxClose() {
       if (subContent) {
         var ps = subContent.querySelectorAll('p.notion-text');
         ps.forEach(function (p) {
+          var hasMotif = p.textContent.indexOf('달의 나조') !== -1;
           var parsed = splitTitleDesc(p);
           if (parsed) {
+            // '대체로 달의 나조가...' 꼬리 문장은 알약 줄로 대체하므로 설명에서 제거 (시안 2a)
+            var desc = hasMotif ? parsed.desc.replace(/대체로[\s\S]*$/, '').trim() : parsed.desc;
             p.classList.add('nz-wn-metric');
             p.innerHTML =
               '<b>' + escHtml(parsed.title) + '</b>' +
-              '<span>' + escHtml(parsed.desc) + '</span>';
+              '<span>' + escHtml(desc) + '</span>';
+          }
+          if (hasMotif && !subContent.querySelector('.nz-wn-motif-row')) {
+            var row = document.createElement('p');
+            row.className = 'notion-text nz-wn-motif-row';
+            row.innerHTML =
+              '<span class="nz-wn-motif"><span class="nz-wn-opill" style="background:#8171A8">月の謎</span><span class="nz-wn-motif__cap">고난이도 퍼즐</span></span>' +
+              '<span class="nz-wn-motif"><span class="nz-wn-opill" style="background:#B0616E">花の謎</span><span class="nz-wn-motif__cap">기믹 위주</span></span>' +
+              '<span class="nz-wn-motif"><span class="nz-wn-opill" style="background:#5F8CA3">雪の謎</span><span class="nz-wn-motif__cap">스토리 나조</span></span>';
+            p.parentNode.insertBefore(row, p.nextSibling);
           }
         });
       }
@@ -3213,25 +3237,26 @@ function nzLightboxClose() {
   function injectEnding(article) {
     if (article.querySelector('.nz-wn-ending')) return;
 
-    // article 직속 마지막 실제 p(텍스트 있음) = "그럼 즐거운..."
-    var lastP = null;
-    var directPs = article.querySelectorAll(':scope > p.notion-text');
-    for (var i = directPs.length - 1; i >= 0; i--) {
-      if ((directPs[i].innerText || '').trim()) {
-        lastP = directPs[i];
-        break;
-      }
-    }
-
     var ending = document.createElement('div');
     ending.className = 'nz-wn-ending';
 
-    if (lastP && lastP.textContent.indexOf('즐거운') !== -1) {
-      var lead = document.createElement('p');
-      lead.className = 'nz-wn-ending__lead';
-      lead.innerHTML = lastP.innerHTML;
-      ending.appendChild(lead);
-      lastP.remove();
+    // '어떤 작품부터'가 나오는 문단부터 문서 끝까지를 맺음 박스로 이동 (시안 2a)
+    // (해당 문단은 '둘러보는 법' 콜아웃 안에 있으므로 article 전체를 문서 순서로 검색)
+    var allPs = Array.prototype.slice.call(article.querySelectorAll('p.notion-text'));
+    var startIdx = -1;
+    for (var i = 0; i < allPs.length; i++) {
+      if (allPs[i].textContent.indexOf('어떤 작품부터') !== -1) { startIdx = i; break; }
+    }
+    if (startIdx !== -1) {
+      for (var j = startIdx; j < allPs.length; j++) {
+        if (!(allPs[j].innerText || '').trim()) continue;
+        if (allPs[j].closest('.nz-wn-ending')) continue;
+        var lead = document.createElement('p');
+        lead.className = 'nz-wn-ending__lead';
+        lead.innerHTML = allPs[j].innerHTML;
+        ending.appendChild(lead);
+        allPs[j].remove();
+      }
     } else {
       var fallback = document.createElement('p');
       fallback.className = 'nz-wn-ending__lead';
@@ -3239,24 +3264,11 @@ function nzLightboxClose() {
       ending.appendChild(fallback);
     }
 
-    var CTAS = [
-      { href: '/',                      icon: 'book-open-check', label: '리뷰 둘러보기',              sub: '메인 페이지로' },
-      { href: '/how-to-buy-nazotokis',  icon: 'package-plus',    label: '나조를 구하는 방법',          sub: '구매 정보 페이지로' },
-      { href: '/to-review',             icon: 'list-checks',     label: '올라올 리뷰가 궁금하다면?',   sub: '리뷰 예정 목록으로' }
-    ];
-    var wrap = document.createElement('div');
-    wrap.className = 'nz-wn-cta-wrap';
-    CTAS.forEach(function (c) {
-      var a = document.createElement('a');
-      a.className = 'nz-wn-cta';
-      a.href = c.href;
-      a.innerHTML =
-        '<span class="nz-wn-cta__icon">' + LUCIDE[c.icon] + '</span>' +
-        '<span class="nz-wn-cta__label">' + escHtml(c.label) + '</span>' +
-        '<span class="nz-wn-cta__sub">' + escHtml(c.sub) + '</span>';
-      wrap.appendChild(a);
-    });
-    ending.appendChild(wrap);
+    var cta = document.createElement('a');
+    cta.className = 'nz-wn-go';
+    cta.href = '/';
+    cta.textContent = '리뷰 구경하러 가기 →';
+    ending.appendChild(cta);
     article.appendChild(ending);
   }
 
