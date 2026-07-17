@@ -3560,8 +3560,8 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
   padding: 8px 48px 50px !important;
   box-sizing: border-box;
 }
-/* 리스트형(나조 추천)은 넓은 시트 */
-.super-content.parent-page__darakbang-note .notion-header:has(+ * .nz-dn-list),
+/* 리스트형(나조 추천)은 넓은 시트 — 헤더와 본문 폭 동기화 */
+.super-content.parent-page__darakbang-note .notion-header:has(~ article.nz-dn-list),
 .super-content.parent-page__darakbang-note article.nz-dn-list {
   max-width: 1080px !important;
 }
@@ -3756,6 +3756,58 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
   background: #FFFDF7;
 }
 
+/* ── 번외 항목 콜아웃 (회색 등 — 썸네일 + 텍스트) ── */
+.super-content.parent-page__darakbang-note .nz-dn-extra {
+  background: transparent !important;
+  border: none !important;
+  border-left: 3px solid #E0D7C2 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 2px 0 2px 18px !important;
+  margin: 18px 0 0 !important;
+  display: block !important;
+  max-width: 800px;
+}
+.super-content.parent-page__darakbang-note .nz-dn-extra > .notion-callout__icon {
+  display: none !important;
+}
+.super-content.parent-page__darakbang-note .nz-dn-extra > .notion-callout__content {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.super-content.parent-page__darakbang-note .nz-dn-extra .notion-callout__content > p.notion-text {
+  font-size: 14.5px !important;
+  line-height: 1.95 !important;
+  margin: 6px 0 0 !important;
+  max-width: none;
+}
+.super-content.parent-page__darakbang-note .nz-dn-extra__img {
+  float: left;
+  width: 92px !important;
+  margin: 4px 16px 8px 0 !important;
+}
+.super-content.parent-page__darakbang-note .nz-dn-extra__img img {
+  width: 92px !important;
+  height: 92px !important;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #E0D7C2;
+  background: #FFFDF7;
+}
+.super-content.parent-page__darakbang-note .nz-dn-extra::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.super-content.parent-page__darakbang-note .nz-dn-extra__go a.notion-link {
+  text-decoration: none !important;
+}
+.super-content.parent-page__darakbang-note .nz-dn-extra__go a.notion-link:hover {
+  text-decoration: underline !important;
+}
+
 /* ── 맺음 박스 ── */
 .super-content.parent-page__darakbang-note .nz-dn-close {
   background: #FFF7DC !important;
@@ -3882,6 +3934,20 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
     font-size: 14px !important;
   }
   .super-content.parent-page__darakbang-note article.notion-root .notion-quote .notion-image img {
+    width: 64px !important;
+    height: 64px !important;
+  }
+  .super-content.parent-page__darakbang-note .nz-dn-extra {
+    padding-left: 14px !important;
+  }
+  .super-content.parent-page__darakbang-note .nz-dn-extra .notion-callout__content > p.notion-text {
+    font-size: 14px !important;
+  }
+  .super-content.parent-page__darakbang-note .nz-dn-extra__img {
+    width: 64px !important;
+    margin: 4px 12px 6px 0 !important;
+  }
+  .super-content.parent-page__darakbang-note .nz-dn-extra__img img {
     width: 64px !important;
     height: 64px !important;
   }

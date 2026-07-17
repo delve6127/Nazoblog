@@ -3488,16 +3488,23 @@ function nzLightboxClose() {
       }
     }
 
-    // 콜아웃 분류: 제목(h2/h3) 있으면 작품 카드, 없으면 맺음 박스
+    // 콜아웃 분류 (색 기반 규칙 + 제목 유무 보조):
+    //   노랑 = 맺음 박스 · 제목 있는 콜아웃 = 작품 카드 · 그 외 = 번외 항목
+    //   (하위 호환: 제목 없는 갈색도 맺음으로 취급)
     article.querySelectorAll(':scope > .notion-callout').forEach(function (callout) {
       var content = callout.querySelector('.notion-callout__content');
       if (!content) return;
       var heading = content.querySelector('h2, h3');
-      if (heading) {
+      var isYellow = /bg-yellow/.test(callout.className);
+      var isBrown = /bg-brown/.test(callout.className);
+      if (isYellow || (!heading && isBrown)) {
+        callout.classList.add('nz-dn-close');
+      } else if (heading) {
         callout.classList.add('nz-dn-card');
         decorateCard(callout, content, heading);
       } else {
-        callout.classList.add('nz-dn-close');
+        callout.classList.add('nz-dn-extra');
+        decorateExtra(callout, content);
       }
     });
 
@@ -3539,6 +3546,18 @@ function nzLightboxClose() {
       var bodyStart = ps[1] || null; // 메타 다음 문단
       if (bodyStart) content.insertBefore(img, bodyStart);
     }
+  }
+
+  // 번외 항목: 썸네일을 왼쪽 플로트로
+  function decorateExtra(callout, content) {
+    var img = content.querySelector('.notion-image');
+    if (img && !img.classList.contains('nz-dn-extra__img')) {
+      img.classList.add('nz-dn-extra__img');
+      content.insertBefore(img, content.firstChild);
+    }
+    content.querySelectorAll('p.notion-text').forEach(function (p) {
+      if (p.textContent.indexOf('리뷰 전문 보기') !== -1) p.classList.add('nz-dn-extra__go');
+    });
   }
 
   // ── 돌아가기 링크 ──
