@@ -3558,16 +3558,27 @@ function nzLightboxClose() {
     }
   }
 
-  // 번외 항목: 썸네일을 왼쪽 플로트로
+  // 번외 항목: 썸네일 왼쪽 플로트 + 제작사·링크 줄을 제목 우측에 인라인 (시안)
   function decorateExtra(callout, content) {
     var img = content.querySelector('.notion-image');
     if (img && !img.classList.contains('nz-dn-extra__img')) {
       img.classList.add('nz-dn-extra__img');
       content.insertBefore(img, content.firstChild);
     }
-    content.querySelectorAll('p.notion-text').forEach(function (p) {
-      if (p.textContent.indexOf('리뷰 전문 보기') !== -1) p.classList.add('nz-dn-extra__go');
-    });
+    var heading = content.querySelector('h2, h3');
+    if (heading && !heading.querySelector('.nz-dn-extra__meta')) {
+      var ps = content.querySelectorAll('p.notion-text');
+      for (var i = 0; i < ps.length; i++) {
+        if (ps[i].textContent.indexOf('리뷰 전문 보기') !== -1) {
+          var meta = document.createElement('span');
+          meta.className = 'nz-dn-extra__meta';
+          meta.innerHTML = ps[i].innerHTML;
+          heading.appendChild(meta);
+          ps[i].remove();
+          break;
+        }
+      }
+    }
   }
 
   // ── 돌아가기 링크 ──

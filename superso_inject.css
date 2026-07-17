@@ -3811,6 +3811,21 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
   display: block;
   clear: both;
 }
+.super-content.parent-page__darakbang-note .nz-dn-extra__meta {
+  font-family: var(--nz-font-body) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #8A8272 !important;
+  margin-left: 8px;
+  white-space: normal;
+}
+.super-content.parent-page__darakbang-note .nz-dn-extra__meta a.notion-link {
+  font-size: 13px !important;
+  text-decoration: none !important;
+}
+.super-content.parent-page__darakbang-note .nz-dn-extra__meta a.notion-link:hover {
+  text-decoration: underline !important;
+}
 .super-content.parent-page__darakbang-note .nz-dn-extra__go a.notion-link {
   text-decoration: none !important;
 }
