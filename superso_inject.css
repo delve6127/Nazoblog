@@ -3509,3 +3509,386 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
 /* ── 리뷰 페이지: 원시 속성 표는 CSS 차원에서 상시 차단 ──
    (하이드레이션이 커스텀을 갈아엎는 순간에도 흉한 표가 노출되지 않도록) */
 .nz-review .notion-page__properties { display: none !important; }
+
+/* ============================================================
+ *  다락방 노트 상세 (5단계)
+ *  스펙: 핸드오프 §6 + 리스트형(N선) — 입문작 5선.dc.html 실측
+ * ============================================================ */
+
+/* ── 종이 시트 (가이드 페이지와 같은 헤더+본문 이어붙임) ── */
+.super-content.parent-page__darakbang-note .notion-header {
+  max-width: 880px;
+  margin: 44px auto 0 !important;
+  background: #FFFDF7;
+  border: 1px solid #E5DCC6;
+  border-bottom: none;
+  padding: 44px 48px 0 !important;
+  box-sizing: border-box;
+}
+.super-content.parent-page__darakbang-note .notion-header__cover.no-cover {
+  display: none !important;
+}
+.super-content.parent-page__darakbang-note .notion-header__content {
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+}
+.super-content.parent-page__darakbang-note .notion-header__title-wrapper {
+  margin: 0 !important;
+  padding: 0 !important;
+  justify-content: flex-start !important;
+}
+.super-content.parent-page__darakbang-note .notion-header__title {
+  font-family: var(--nz-font-display) !important;
+  font-weight: 400 !important;
+  font-size: 32px !important;
+  color: #3D372E !important;
+  text-align: left !important;
+  margin: 14px 0 0 !important;
+  line-height: 1.35 !important;
+}
+.super-content.parent-page__darakbang-note article.notion-root {
+  font-family: var(--nz-font-body) !important;
+  color: #4A4335 !important;
+  max-width: 880px !important;
+  margin: 0 auto !important;
+  background: #FFFDF7;
+  border: 1px solid #E5DCC6;
+  border-top: none;
+  box-shadow: 0 4px 14px rgba(61, 55, 46, .07);
+  padding: 8px 48px 50px !important;
+  box-sizing: border-box;
+}
+/* 리스트형(나조 추천)은 넓은 시트 */
+.super-content.parent-page__darakbang-note .notion-header:has(+ * .nz-dn-list),
+.super-content.parent-page__darakbang-note article.nz-dn-list {
+  max-width: 1080px !important;
+}
+
+/* 속성 표 숨김 (머리글이 대신) */
+.super-content.parent-page__darakbang-note .notion-page__properties {
+  display: none !important;
+}
+
+/* ── 머리글: 뱃지 + 날짜 ── */
+.super-content.parent-page__darakbang-note .nz-dn-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.super-content.parent-page__darakbang-note .nz-dn-badge {
+  background: #FFD953;
+  color: #5C4B00;
+  font-size: 12.5px;
+  font-weight: 700;
+  border-radius: 6px;
+  padding: 3px 11px;
+  font-family: var(--nz-font-body);
+}
+.super-content.parent-page__darakbang-note .nz-dn-date {
+  font-size: 13.5px;
+  color: #8A8272;
+  font-family: var(--nz-font-body);
+}
+
+/* ── 리드문 + 실선 ── */
+.super-content.parent-page__darakbang-note article.notion-root p.notion-text.nz-dn-lead {
+  font-family: var(--nz-font-hand) !important;
+  font-size: 19px !important;
+  color: #6B6353 !important;
+  line-height: 1.55 !important;
+  margin: 0 !important;
+  border-bottom: 2px solid #C4B695;
+  padding-bottom: 24px;
+}
+.super-content.parent-page__darakbang-note .nz-dn-hide {
+  display: none !important;
+}
+.super-content.parent-page__darakbang-note article.notion-root p.notion-text.nz-dn-blank {
+  display: none !important;
+  margin: 0 !important;
+}
+
+/* ── 본문 문단 ── */
+.super-content.parent-page__darakbang-note article.notion-root p.notion-text {
+  font-size: 14.5px !important;
+  line-height: 1.95 !important;
+  color: #4A4335 !important;
+  margin: 16px 0 0 !important;
+  max-width: 800px;
+}
+
+/* ── 형광펜 ── */
+.super-content.parent-page__darakbang-note article.notion-root [class*="highlight-yellow"] {
+  background: linear-gradient(transparent 58%, #FFDE59 58%) !important;
+  padding: 0 3px;
+  font-weight: 600;
+  color: #3D372E !important;
+}
+
+/* ── 본문 링크 ── */
+.super-content.parent-page__darakbang-note article.notion-root a.notion-link {
+  color: #8A6D00 !important;
+  font-weight: 600 !important;
+  text-decoration: underline !important;
+  text-underline-offset: 3px !important;
+  text-decoration-color: #D9C46A !important;
+  opacity: 1 !important;
+}
+.super-content.parent-page__darakbang-note article.notion-root a.notion-link:hover {
+  color: #5C4B00 !important;
+}
+
+/* ── 섹션 소제목 (번외 등, 본문 직속 h2/h3) ── */
+.super-content.parent-page__darakbang-note article.notion-root > .notion-heading,
+.super-content.parent-page__darakbang-note article.notion-root > h2,
+.super-content.parent-page__darakbang-note article.notion-root > h3 {
+  font-family: var(--nz-font-display) !important;
+  font-weight: 400 !important;
+  font-size: 23px !important;
+  color: #3D372E !important;
+  margin: 14px 0 0 !important;
+  line-height: 1.4 !important;
+}
+
+/* ── 구분선: 얇은 룰 ── */
+.super-content.parent-page__darakbang-note article.notion-root .notion-divider {
+  border: none !important;
+  border-top: 1px solid #D9CFB6 !important;
+  margin: 26px 0 0 !important;
+}
+
+/* ── 작품 카드 (리스트형) ── */
+.super-content.parent-page__darakbang-note .nz-dn-card {
+  background: #FAF6EB !important;
+  border: 1px solid #E0D7C2 !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+  padding: 24px 28px !important;
+  margin: 16px 0 0 !important;
+  display: block !important;
+}
+.super-content.parent-page__darakbang-note .nz-dn-card > .notion-callout__icon {
+  display: none !important;
+}
+.super-content.parent-page__darakbang-note .nz-dn-card > .notion-callout__content {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.super-content.parent-page__darakbang-note .nz-dn-card .notion-heading {
+  font-family: var(--nz-font-display) !important;
+  font-weight: 700 !important;
+  font-size: 21px !important;
+  color: #3D372E !important;
+  margin: 0 !important;
+  line-height: 1.4 !important;
+}
+.super-content.parent-page__darakbang-note .nz-dn-card__sub {
+  font-size: 16px !important;
+  color: #6B6353 !important;
+  font-weight: 400;
+}
+.super-content.parent-page__darakbang-note article.notion-root p.notion-text.nz-dn-card__meta {
+  font-size: 13px !important;
+  color: #6B6353 !important;
+  line-height: 1.75 !important;
+  margin: 12px 0 0 !important;
+  max-width: none;
+}
+.super-content.parent-page__darakbang-note .nz-dn-card .notion-callout__content > p.notion-text {
+  margin: 12px 0 0 !important;
+  max-width: none;
+}
+.super-content.parent-page__darakbang-note .nz-dn-card__img {
+  float: right;
+  width: 180px !important;
+  margin: 14px 0 14px 22px !important;
+}
+.super-content.parent-page__darakbang-note .nz-dn-card__img img {
+  width: 180px !important;
+  height: 180px !important;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #E0D7C2;
+  background: #FFFDF7;
+}
+.super-content.parent-page__darakbang-note article.notion-root p.notion-text.nz-dn-card__go {
+  text-align: right;
+  margin: 14px 0 0 !important;
+  font-size: 13px !important;
+  clear: both;
+}
+.super-content.parent-page__darakbang-note .nz-dn-card__go a.notion-link {
+  text-decoration: none !important;
+  font-weight: 600 !important;
+}
+.super-content.parent-page__darakbang-note .nz-dn-card__go a.notion-link:hover {
+  text-decoration: underline !important;
+}
+
+/* ── 번외 인용 항목 ── */
+.super-content.parent-page__darakbang-note article.notion-root .notion-quote {
+  border-left: 3px solid #E0D7C2 !important;
+  padding: 2px 0 2px 18px !important;
+  margin: 18px 0 0 !important;
+  font-size: 14.5px !important;
+  line-height: 1.95 !important;
+  color: #4A4335 !important;
+  font-style: normal !important;
+  background: transparent !important;
+  max-width: 800px;
+}
+.super-content.parent-page__darakbang-note article.notion-root .notion-quote p.notion-text {
+  margin: 6px 0 0 !important;
+}
+.super-content.parent-page__darakbang-note article.notion-root .notion-quote p.notion-text:first-child {
+  margin-top: 0 !important;
+}
+.super-content.parent-page__darakbang-note article.notion-root .notion-quote .notion-image img {
+  width: 92px !important;
+  height: 92px !important;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #E0D7C2;
+  background: #FFFDF7;
+}
+
+/* ── 맺음 박스 ── */
+.super-content.parent-page__darakbang-note .nz-dn-close {
+  background: #FFF7DC !important;
+  border: 1px solid #F0E1AC !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+  padding: 20px 24px !important;
+  margin: 26px 0 0 !important;
+  display: block !important;
+}
+.super-content.parent-page__darakbang-note .nz-dn-close > .notion-callout__icon {
+  display: none !important;
+}
+.super-content.parent-page__darakbang-note .nz-dn-close > .notion-callout__content {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.super-content.parent-page__darakbang-note .nz-dn-close p.notion-text {
+  font-family: var(--nz-font-hand) !important;
+  font-size: 18px !important;
+  color: #8A6D00 !important;
+  line-height: 1.7 !important;
+  text-align: center;
+  margin: 0 !important;
+  max-width: none;
+}
+.super-content.parent-page__darakbang-note .nz-dn-close p.notion-text + p.notion-text {
+  margin-top: 4px !important;
+}
+
+/* ── 잘 읽었어요(전역 모듈) · 돌아가기 ── */
+.super-content.parent-page__darakbang-note .nz-like-wrap {
+  border-top: 1px solid #D9CFB6;
+  padding: 24px 0 0;
+  margin-top: 26px;
+}
+.super-content.parent-page__darakbang-note .nz-dn-back {
+  display: block;
+  text-align: center;
+  margin-top: 22px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #8A6D00;
+  text-decoration: none;
+}
+.super-content.parent-page__darakbang-note .nz-dn-back:hover {
+  color: #5C4B00;
+}
+
+/* ── Mobile (≤768px): 시트 없이 평면 ── */
+@media (max-width: 768px) {
+  .super-content.parent-page__darakbang-note .notion-header {
+    max-width: none;
+    margin: 0 !important;
+    background: transparent;
+    border: none;
+    padding: 24px 20px 0 !important;
+  }
+  .super-content.parent-page__darakbang-note .notion-header__title {
+    font-size: 25px !important;
+    margin-top: 12px !important;
+  }
+  .super-content.parent-page__darakbang-note article.notion-root,
+  .super-content.parent-page__darakbang-note article.nz-dn-list {
+    max-width: none !important;
+    margin: 0 !important;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 6px 20px 40px !important;
+  }
+  .super-content.parent-page__darakbang-note .nz-dn-badge {
+    font-size: 12px;
+    padding: 3px 10px;
+  }
+  .super-content.parent-page__darakbang-note .nz-dn-date {
+    font-size: 13px;
+  }
+  .super-content.parent-page__darakbang-note article.notion-root p.notion-text.nz-dn-lead {
+    font-size: 17px !important;
+    padding-bottom: 18px;
+  }
+  .super-content.parent-page__darakbang-note article.notion-root p.notion-text {
+    font-size: 14px !important;
+    line-height: 1.9 !important;
+    margin-top: 14px !important;
+  }
+  .super-content.parent-page__darakbang-note article.notion-root > .notion-heading,
+  .super-content.parent-page__darakbang-note article.notion-root > h2,
+  .super-content.parent-page__darakbang-note article.notion-root > h3 {
+    font-size: 20px !important;
+  }
+  .super-content.parent-page__darakbang-note .nz-dn-card {
+    padding: 18px 16px !important;
+    margin-top: 14px !important;
+  }
+  .super-content.parent-page__darakbang-note .nz-dn-card .notion-heading {
+    font-size: 19px !important;
+  }
+  .super-content.parent-page__darakbang-note .nz-dn-card__sub {
+    display: block;
+    font-size: 14px !important;
+    margin-top: 4px;
+  }
+  .super-content.parent-page__darakbang-note article.notion-root p.notion-text.nz-dn-card__meta {
+    font-size: 12.5px !important;
+    margin-top: 10px !important;
+  }
+  .super-content.parent-page__darakbang-note .nz-dn-card .notion-callout__content > p.notion-text {
+    margin-top: 10px !important;
+  }
+  .super-content.parent-page__darakbang-note .nz-dn-card__img {
+    width: 124px !important;
+    margin: 10px 0 10px 14px !important;
+  }
+  .super-content.parent-page__darakbang-note .nz-dn-card__img img {
+    width: 124px !important;
+    height: 124px !important;
+  }
+  .super-content.parent-page__darakbang-note article.notion-root .notion-quote {
+    padding-left: 14px !important;
+    font-size: 14px !important;
+  }
+  .super-content.parent-page__darakbang-note article.notion-root .notion-quote .notion-image img {
+    width: 64px !important;
+    height: 64px !important;
+  }
+  .super-content.parent-page__darakbang-note .nz-dn-close {
+    padding: 16px 18px !important;
+  }
+  .super-content.parent-page__darakbang-note .nz-dn-close p.notion-text {
+    font-size: 16px !important;
+  }
+}

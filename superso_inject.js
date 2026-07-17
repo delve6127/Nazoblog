@@ -169,6 +169,7 @@ function waitAndHideLoader(prevTitle) {
   var isHome = path === '/' || path === '';
   var isReview = path.indexOf('/nazotoki-reviews/') === 0;
   var isGuide = path.indexOf('/what-is-nazo') === 0;
+  var isNoteDetail = /^\/darakbang-note\/.+/.test(path);
   var isAbout = path.indexOf('/lemonbread') === 0;
   var isShop = path.indexOf('/how-to-buy-nazotokis') === 0;
   var stableSince = null;
@@ -195,6 +196,9 @@ function waitAndHideLoader(prevTitle) {
       var art = document.querySelector('article.notion-root');
       ready = art && art.querySelector('.nz-wn-ending') &&
               !art.querySelector('.notion-callout:not(.nz-wn-callout)');
+    } else if (isNoteDetail) {
+      // 노트 상세: 머리글+본문 장식 결과물 존재로 판정
+      ready = document.querySelector('.nz-dn-head') && document.querySelector('.nz-dn-article');
     } else if (isAbout) {
       // 레몬빵?도 동일: 소개 카드(커스텀 DOM) 존재로 판정
       ready = document.querySelector('.nz-about-card');
@@ -2453,12 +2457,24 @@ function nzLightboxClose() {
     for (var i = 0; i < diaries.length; i++) {
       if (diaries[i].offsetWidth > 0) return { el: diaries[i], position: 'inside' };
     }
+    // 노트 상세: 본문 맨 끝(맺음 박스 뒤)에 부착
+    if (isNoteDetailPage()) {
+      var arts = document.querySelectorAll('article.notion-root');
+      for (var i = 0; i < arts.length; i++) {
+        if (arts[i].offsetWidth > 0) return { el: arts[i], position: 'inside' };
+      }
+      return null;
+    }
     // 둘 다 없으면 보이는 notion-page__properties 뒤에
     var props = document.querySelectorAll('.notion-page__properties');
     for (var i = 0; i < props.length; i++) {
       if (props[i].offsetWidth > 0) return { el: props[i], position: 'after-last-sibling' };
     }
     return null;
+  }
+
+  function isNoteDetailPage() {
+    return /^\/darakbang-note\/.+/.test(location.pathname);
   }
 
   function hasVisibleLikeButton() {
@@ -2471,7 +2487,7 @@ function nzLightboxClose() {
 
   function renderLikeButton() {
     if (hasVisibleLikeButton()) return;
-    if (location.pathname.indexOf('/nazotoki-reviews/') === -1) return;
+    if (location.pathname.indexOf('/nazotoki-reviews/') === -1 && !isNoteDetailPage()) return;
 
     var anchor = findVisibleAnchor();
     if (!anchor) return;
@@ -2594,7 +2610,8 @@ function nzLightboxClose() {
 
   // 자체 옵저버: 보이는 DOM에 좋아요 버튼이 없으면 계속 시도
   var likeObserver = new MutationObserver(function () {
-    if (!hasVisibleLikeButton() && location.pathname.indexOf('/nazotoki-reviews/') > -1) {
+    if (!hasVisibleLikeButton() &&
+        (location.pathname.indexOf('/nazotoki-reviews/') > -1 || isNoteDetailPage())) {
       renderLikeButton();
     }
   });
@@ -3365,6 +3382,241 @@ function nzLightboxClose() {
     _origDecorate();
     startReapplyGuard();
   };
+})();
+
+
+/* ============================================================
+ *  다락방 노트 상세 (5단계)
+ *  스펙: 핸드오프 §6 + 리스트형(N선) 변형 — 입문작 5선.dc.html
+ *  스킨 규칙: 카테고리에 '나조 추천' 포함 → 리스트형(.nz-dn-list)
+ * ============================================================ */
+(function () {
+  'use strict';
+
+  var PROP_DATE = 'property-4b763f5c';
+  var PROP_CATEGORY = 'property-59627443';
+
+  function isNotePage() {
+    return /^\/darakbang-note\/.+/.test(location.pathname);
+  }
+
+  // 속성 셀에서 개별 값들(멀티 셀렉트 알약) 추출
+  function leafTexts(root) {
+    if (!root) return [];
+    var out = [];
+    root.querySelectorAll('*').forEach(function (el) {
+      if (!el.children.length) {
+        var txt = el.textContent.trim();
+        if (txt) out.push(txt);
+      }
+    });
+    if (!out.length && root.textContent.trim()) out.push(root.textContent.trim());
+    // 중복 제거 (라벨 '카테고리' 텍스트 등 소음 제거는 값 사용처에서)
+    return out.filter(function (v, i) { return out.indexOf(v) === i; });
+  }
+
+  function readNoteProps() {
+    var catCell = document.querySelector('.notion-page__properties .' + PROP_CATEGORY);
+    var dateCell = document.querySelector('.notion-page__properties .' + PROP_DATE);
+    var cats = leafTexts(catCell).filter(function (v) { return v !== '카테고리'; });
+    var dateText = '';
+    if (dateCell) {
+      var parsed = new Date(dateCell.textContent.trim().replace(/^[^A-Z가-힣0-9]*/, ''));
+      // 셀 텍스트에 라벨이 섞여도 날짜 부분만 파싱 시도
+      if (isNaN(parsed.getTime())) {
+        var m = dateCell.textContent.match(/[A-Z][a-z]+ \d{1,2}, \d{4}/);
+        if (m) parsed = new Date(m[0]);
+      }
+      if (!isNaN(parsed.getTime())) {
+        dateText = parsed.getFullYear() + '.' + ('0' + (parsed.getMonth() + 1)).slice(-2);
+      }
+    }
+    return { categories: cats, date: dateText };
+  }
+
+  function isRecommendNote(cats) {
+    return cats.some(function (c) { return c.indexOf('나조 추천') !== -1; });
+  }
+
+  // ── 머리글: 뱃지 + 날짜 (제목 위에 삽입) ──
+  function buildHead(props) {
+    if (document.querySelector('.nz-dn-head')) return;
+    var headerContent = document.querySelector('.notion-header__content');
+    if (!headerContent) return;
+    var row = document.createElement('div');
+    row.className = 'nz-dn-head';
+    props.categories.slice(0, 2).forEach(function (c) {
+      var b = document.createElement('span');
+      b.className = 'nz-dn-badge';
+      b.textContent = c;
+      row.appendChild(b);
+    });
+    if (props.date) {
+      var d = document.createElement('span');
+      d.className = 'nz-dn-date';
+      d.textContent = props.date;
+      row.appendChild(d);
+    }
+    headerContent.insertBefore(row, headerContent.firstChild);
+  }
+
+  // ── 본문 장식 ──
+  function decorateArticle(article, listSkin) {
+    if (listSkin) article.classList.add('nz-dn-list');
+    article.classList.add('nz-dn-article');
+
+    // 빈 문단 숨김
+    article.querySelectorAll('p.notion-text').forEach(function (el) {
+      if (!el.textContent.trim() && !el.querySelector('img')) el.classList.add('nz-dn-blank');
+    });
+
+    // 리드문: 첫 콜아웃 전의 첫 실문단 → 오뮤 리드 + 실선. 그 주변 구분선은 숨김
+    var lead = null;
+    var kids = Array.prototype.slice.call(article.children);
+    var firstCalloutIdx = kids.findIndex(function (el) { return el.classList.contains('notion-callout'); });
+    for (var i = 0; i < kids.length; i++) {
+      if (firstCalloutIdx !== -1 && i >= firstCalloutIdx) break;
+      var el = kids[i];
+      if (!lead && el.tagName === 'P' && el.textContent.trim()) {
+        lead = el;
+        el.classList.add('nz-dn-lead');
+      }
+      if (el.classList.contains('notion-divider') && !lead) el.classList.add('nz-dn-hide');
+      if (el.classList.contains('notion-divider') && lead) {
+        el.classList.add('nz-dn-hide'); // 리드 아래 구분선도 숨김 (실선은 리드의 border로)
+        break;
+      }
+    }
+
+    // 콜아웃 분류: 제목(h2/h3) 있으면 작품 카드, 없으면 맺음 박스
+    article.querySelectorAll(':scope > .notion-callout').forEach(function (callout) {
+      var content = callout.querySelector('.notion-callout__content');
+      if (!content) return;
+      var heading = content.querySelector('h2, h3');
+      if (heading) {
+        callout.classList.add('nz-dn-card');
+        decorateCard(callout, content, heading);
+      } else {
+        callout.classList.add('nz-dn-close');
+      }
+    });
+
+    // 인용 = 번외 항목 (CSS 처리) / 이후 구분선은 얇은 룰 (CSS 기본)
+  }
+
+  function decorateCard(callout, content, heading) {
+    // 제목 "작품명 - 부제" → 부제를 흐린 서브 스팬으로
+    if (!heading.querySelector('.nz-dn-card__sub')) {
+      var txt = heading.textContent;
+      var m = txt.match(/^(.*?)\s+[-—–]\s+(.+)$/);
+      if (m) {
+        heading.textContent = '';
+        heading.appendChild(document.createTextNode(m[1] + ' '));
+        var sub = document.createElement('span');
+        sub.className = 'nz-dn-card__sub';
+        sub.textContent = '— ' + m[2];
+        heading.appendChild(sub);
+      }
+    }
+
+    var ps = Array.prototype.slice.call(content.querySelectorAll('p.notion-text'))
+      .filter(function (p) { return p.textContent.trim(); });
+
+    // 메타 줄: 제목 다음 첫 문단
+    if (ps[0] && !ps[0].classList.contains('nz-dn-card__meta')) {
+      ps[0].classList.add('nz-dn-card__meta');
+    }
+
+    // 링크 줄: '리뷰 전문 보기' 문단
+    ps.forEach(function (p) {
+      if (p.textContent.indexOf('리뷰 전문 보기') !== -1) p.classList.add('nz-dn-card__go');
+    });
+
+    // 사진: 본문 첫 문단 앞으로 이동해 우측 플로트
+    var img = content.querySelector('.notion-image');
+    if (img && !img.classList.contains('nz-dn-card__img')) {
+      img.classList.add('nz-dn-card__img');
+      var bodyStart = ps[1] || null; // 메타 다음 문단
+      if (bodyStart) content.insertBefore(img, bodyStart);
+    }
+  }
+
+  // ── 돌아가기 링크 ──
+  function injectBack(article) {
+    if (article.querySelector('.nz-dn-back')) return;
+    var a = document.createElement('a');
+    a.className = 'nz-dn-back';
+    a.href = '/';
+    a.textContent = '← 메인으로 돌아가기';
+    article.appendChild(a);
+  }
+
+  function ensureOrder(article) {
+    // 시안 순서: 맺음 → 잘 읽었어요 → 돌아가기 (좋아요 버튼이 늦게 붙어도 유지)
+    var back = article.querySelector('.nz-dn-back');
+    var like = article.querySelector('.nz-like-wrap');
+    if (back && like && (back.compareDocumentPosition(like) & Node.DOCUMENT_POSITION_FOLLOWING)) {
+      article.appendChild(back);
+    }
+  }
+
+  function renderAll() {
+    if (!isNotePage()) return;
+    var article = document.querySelector('article.notion-root');
+    if (!article) return;
+    var props = readNoteProps();
+    buildHead(props);
+    decorateArticle(article, isRecommendNote(props.categories));
+    injectBack(article);
+    ensureOrder(article);
+    // 좋아요 버튼은 1~5초 지연 부착이라 뒤늦게라도 순서 보정
+    [1500, 3500, 5500].forEach(function (ms) {
+      setTimeout(function () {
+        var a = document.querySelector('article.notion-root');
+        if (a) ensureOrder(a);
+      }, ms);
+    });
+  }
+
+  function isDecorated() {
+    return !!document.querySelector('.nz-dn-head') &&
+           !!document.querySelector('.nz-dn-article');
+  }
+
+  function tryRender(attempt) {
+    attempt = attempt || 0;
+    if (!isNotePage()) return;
+    if (document.querySelector('article.notion-root') && document.querySelector('.notion-header__content')) {
+      renderAll();
+    } else if (attempt < 40) {
+      setTimeout(function () { tryRender(attempt + 1); }, 200);
+    }
+  }
+
+  // 하이드레이션이 장식을 갈아엎으면 재적용
+  var dnObserver = new MutationObserver(function () {
+    if (isNotePage() && !isDecorated()) tryRender();
+  });
+
+  function boot() {
+    tryRender();
+    dnObserver.observe(document.body || document.documentElement, { childList: true, subtree: true });
+  }
+
+  // SPA 이동 대응
+  var dnLastUrl = location.href;
+  setInterval(function () {
+    if (location.href !== dnLastUrl) {
+      dnLastUrl = location.href;
+      if (isNotePage()) tryRender();
+    }
+  }, 300);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
 })();
 
 // ── 전역 크롬 v2: 네비 레몬 홈버튼 + 모바일 ☰ 드롭다운 + 푸터 문구 ──
