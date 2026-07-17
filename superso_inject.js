@@ -3497,8 +3497,18 @@ function nzLightboxClose() {
       var heading = content.querySelector('h2, h3');
       var isYellow = /bg-yellow/.test(callout.className);
       var isBrown = /bg-brown/.test(callout.className);
-      if (isYellow || (!heading && isBrown)) {
+      var isGray = /bg-gray/.test(callout.className);
+      // 색 우선 규칙: 노랑=맺음 · 갈색=작품 카드 · 회색=번외 (제목 유무는 색 없을 때만 참고)
+      if (isYellow) {
         callout.classList.add('nz-dn-close');
+      } else if (isGray) {
+        callout.classList.add('nz-dn-extra');
+        decorateExtra(callout, content);
+      } else if (isBrown && heading) {
+        callout.classList.add('nz-dn-card');
+        decorateCard(callout, content, heading);
+      } else if (isBrown) {
+        callout.classList.add('nz-dn-close'); // 갈색인데 제목 없음 = 구버전 맺음 호환
       } else if (heading) {
         callout.classList.add('nz-dn-card');
         decorateCard(callout, content, heading);
