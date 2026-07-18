@@ -3793,10 +3793,21 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
   margin: 6px 0 0 !important;
   max-width: none;
 }
+/* 썸네일이 있으면 2단 그리드: 이미지 왼쪽 기둥 + 글 전체 오른쪽 기둥 (시안) */
+.super-content.parent-page__darakbang-note .nz-dn-extra:has(.nz-dn-extra__img) > .notion-callout__content {
+  display: grid !important;
+  grid-template-columns: 92px minmax(0, 1fr);
+  column-gap: 16px;
+  align-items: start;
+}
 .super-content.parent-page__darakbang-note .nz-dn-extra__img {
-  float: left;
+  grid-column: 1;
+  grid-row: 1 / span 99;
   width: 92px !important;
-  margin: 4px 16px 8px 0 !important;
+  margin: 4px 0 0 !important;
+}
+.super-content.parent-page__darakbang-note .nz-dn-extra .notion-callout__content > *:not(.nz-dn-extra__img) {
+  grid-column: 2;
 }
 .super-content.parent-page__darakbang-note .nz-dn-extra__img img {
   width: 92px !important;
@@ -3978,9 +3989,13 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
 .super-content.parent-page__darakbang-note .nz-dn-extra .notion-callout__content > p.notion-text {
     font-size: 14px !important;
   }
+  .super-content.parent-page__darakbang-note .nz-dn-extra:has(.nz-dn-extra__img) > .notion-callout__content {
+    grid-template-columns: 64px minmax(0, 1fr);
+    column-gap: 12px;
+  }
   .super-content.parent-page__darakbang-note .nz-dn-extra__img {
     width: 64px !important;
-    margin: 4px 12px 6px 0 !important;
+    margin: 4px 0 0 !important;
   }
   .super-content.parent-page__darakbang-note .nz-dn-extra__img img {
     width: 64px !important;
