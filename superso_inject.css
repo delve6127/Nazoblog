@@ -3863,7 +3863,7 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
   margin: 0 !important;
   padding: 0 !important;
 }
-.super-content.parent-page__darakbang-note .nz-dn-close p.notion-text {
+.super-content.parent-page__darakbang-note article.notion-root .nz-dn-close p.notion-text {
   font-family: var(--nz-font-hand) !important;
   font-size: 18px !important;
   color: #8A6D00 !important;
@@ -3872,7 +3872,7 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
   margin: 0 !important;
   max-width: none;
 }
-.super-content.parent-page__darakbang-note .nz-dn-close p.notion-text + p.notion-text {
+.super-content.parent-page__darakbang-note article.notion-root .nz-dn-close p.notion-text + p.notion-text {
   margin-top: 4px !important;
 }
 
@@ -4004,7 +4004,7 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
   .super-content.parent-page__darakbang-note .nz-dn-close {
     padding: 16px 18px !important;
   }
-  .super-content.parent-page__darakbang-note .nz-dn-close p.notion-text {
+  .super-content.parent-page__darakbang-note article.notion-root .nz-dn-close p.notion-text {
     font-size: 16px !important;
   }
 }
