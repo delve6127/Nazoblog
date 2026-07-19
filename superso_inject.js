@@ -2811,8 +2811,7 @@ function nzLightboxClose() {
       if (!g.items.length) continue;
       chipHtml += '<button type="button" class="nz-tr-chip" data-status="' + esc(g.st.key) + '">'
         + '<span class="nz-tr-chip__dot" style="background:' + g.color + '"></span>'
-        + '<span class="nz-tr-chip__full">' + esc(g.st.key) + '</span>'
-        + '<span class="nz-tr-chip__short">' + esc(g.st.shortLabel) + '</span>'
+        + '<span class="nz-tr-chip__label">' + esc(g.st.key) + '</span>'
         + '<span class="nz-tr-chip__n">' + g.items.length + '</span></button>'
         + '<span class="nz-tr-chip-arrow">→</span>';
     }

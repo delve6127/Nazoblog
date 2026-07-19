@@ -1845,7 +1845,6 @@ a[href*="%EC%A0%90%EC%88%98-%EC%A1%B0%EC%A0%88%EC%9A%A9-%ED%8E%98%EC%9D%B4%EC%A7
   border-radius: 50%;
   flex-shrink: 0;
 }
-.nz-tr-chip__short { display: none; }
 .nz-tr-chip__n { font-weight: 600; opacity: .8; }
 .nz-tr-chip-arrow { color: #C4B695; font-size: 13px; }
 .nz-tr-chip--goal {
