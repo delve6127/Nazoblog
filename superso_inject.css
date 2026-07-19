@@ -1742,217 +1742,418 @@ a[href*="%EC%A0%90%EC%88%98-%EC%A1%B0%EC%A0%88%EC%9A%A9-%ED%8E%98%EC%9D%B4%EC%A7
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-/* 리뷰 예정 목록 - 투표 버튼 (ReviewRequests)        */
-/* /to-review 페이지에서만 동작 (body.nz-vote-page)   */
-/* 기본 표 스타일은 .nz-review-list-page 섹션 참조    */
+/* 리뷰 예정 목록 v2 (nz-tr) — 시안 3a                */
+/* 상태 그룹 + sticky 파이프라인 + 기대돼요(ReviewRequests) */
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-/* === 안내 배너: 손 아이콘 의미 설명 (표 위, 표 헤더와 자연스럽게 연결) === */
-body.nz-vote-page .nz-vote-banner {
+/* 원본(노션 표·소개 문단)은 커스텀이 대체 — 상시 숨김 */
+.super-content.page__to-review article.notion-root > *:not(.nz-tr-wrap) {
+  display: none !important;
+}
+
+/* 머리글: 제목은 노션 헤더 재사용 */
+.super-content.page__to-review .notion-header__cover.no-cover { display: none !important; }
+.super-content.page__to-review .notion-header {
+  max-width: 880px;
+  margin: 44px auto 0 !important;
+  padding: 0 24px !important;
+  box-sizing: border-box;
+}
+.super-content.page__to-review .notion-header__content {
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+}
+.super-content.page__to-review .notion-header__title-wrapper {
+  margin: 0 !important;
+  padding: 0 !important;
+  justify-content: flex-start !important;
+}
+.super-content.page__to-review .notion-header__title {
+  font-family: var(--nz-font-display) !important;
+  font-weight: 400 !important;
+  font-size: 34px !important;
+  color: #3D372E !important;
+  text-align: left !important;
+  margin: 0 !important;
+}
+.super-content.page__to-review article.notion-root {
+  max-width: 880px !important;
+  margin: 0 auto !important;
+  padding: 0 24px 48px !important;
+  box-sizing: border-box;
+  font-family: var(--nz-font-body) !important;
+}
+
+.nz-tr-wrap {
+  animation: nz-tr-fadeup .3s ease;
+}
+@keyframes nz-tr-fadeup {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.nz-tr-lead {
+  font-family: var(--nz-font-hand);
+  font-size: 20px;
+  color: #6B6353;
+  line-height: 1.5;
+  margin: 8px 0 0;
+}
+.nz-tr-lead__short { display: none; }
+.nz-tr-sortnote {
+  font-size: 12.5px;
+  color: #8A8272;
+  margin: 8px 0 0;
+}
+
+/* ── 파이프라인 칩 바 (sticky) ── */
+.nz-tr-chipbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: #FAF7F2;
+  padding: 10px 0;
+  margin-top: 12px;
+}
+.nz-tr-chipbar__inner {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: #eef3fb;
-  /* border 대신 inset box-shadow로 1px 라인을 그려서
-     둥근 모서리에서도 균일한 두께/컬러로 또렷하게 보임 */
-  border: none;
-  box-shadow: inset 0 0 0 1px #c4d6f0;
-  border-radius: 8px;
-  padding: 10px 14px;
-  /* 표 헤더와 시각적으로 연결되도록 간격 절반으로 줄임 */
-  margin: 0 0 6px 0;
-  line-height: 1.5;
+  gap: 6px;
+  flex-wrap: wrap;
 }
-body.nz-vote-page .nz-vote-banner-icon {
+.nz-tr-chip {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 16px;
-  color: #4a7fd4;
-  flex-shrink: 0;
-}
-body.nz-vote-page .nz-vote-banner-icon svg {
-  width: 100%;
-  height: 100%;
-}
-body.nz-vote-page .nz-vote-banner-text {
-  font-size: 12px;
-  color: #555;
-}
-body.nz-vote-page .nz-vote-banner-text strong {
-  color: #4a7fd4;
+  gap: 6px;
+  background: #FFFDF7;
+  border: 1px solid #DCD2BA;
+  border-radius: 99px;
+  padding: 5px 14px;
+  font-size: 13px;
   font-weight: 700;
-}
-body.nz-vote-page .nz-vote-banner-sub {
-  color: #888;
-}
-
-/* === '상태' 헤더 모바일 전용 접미사: PC에서는 숨김 === */
-body.nz-vote-page .nz-vote-head-mobile-suffix {
-  display: none;
-}
-
-/* === 표 세로줄 제거 (예정 목록 표는 칼럼 구분선 없이 깔끔하게) === */
-body.nz-vote-page .notion-collection-table table {
-  border-collapse: collapse;
-}
-body.nz-vote-page .notion-collection-table__cell,
-body.nz-vote-page .notion-collection-table__head-cell {
-  border-left: none !important;
-  border-right: none !important;
-}
-
-/* === 상태 pill: 둥근 캡슐 모양 + 목업 컬러로 강조 (select 셀 한정) === */
-body.nz-vote-page .notion-collection-table__cell.select .notion-pill {
-  border-radius: 16px !important;
-  padding: 3px 10px !important;
-  border: none !important;
-}
-body.nz-vote-page .notion-collection-table__cell.select .pill-green {
-  background: #e8f5e9 !important;
-  color: #4caf50 !important;
-}
-body.nz-vote-page .notion-collection-table__cell.select .pill-red {
-  background: #fde8e8 !important;
-  color: #c05050 !important;
-}
-body.nz-vote-page .notion-collection-table__cell.select .pill-blue {
-  background: #e3f2fd !important;
-  color: #2196f3 !important;
-}
-
-/* === 투표 버튼 === */
-.nz-vote-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  padding: 4px 10px;
-  border-radius: 14px;
-  border: 1px solid #ddd;
-  background: transparent;
-  color: #b0b0b0;
-  font-size: 11px;
-  font-weight: 600;
+  color: #8A6D00;
+  font-family: var(--nz-font-body);
   cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-  font-family: inherit;
-  user-select: none;
-  line-height: 1;
+  transition: background .15s ease;
 }
-.nz-vote-btn:hover {
-  border-color: #4a7fd4;
-  color: #4a7fd4;
-}
-.nz-vote-btn.voted {
-  border-color: #4a7fd4;
-  background: #eef3fb;
-  color: #4a7fd4;
-}
-.nz-vote-btn .nz-vote-icon {
-  display: inline-flex;
-  width: 11px;
-  height: 11px;
+.nz-tr-chip:hover,
+.nz-tr-chip.active { background: #FFF3C9; }
+.nz-tr-chip__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
   flex-shrink: 0;
 }
-.nz-vote-btn.voted .nz-vote-icon {
-  animation: nzVotePop 0.4s ease;
+.nz-tr-chip__short { display: none; }
+.nz-tr-chip__n { font-weight: 600; opacity: .8; }
+.nz-tr-chip-arrow { color: #C4B695; font-size: 13px; }
+.nz-tr-chip--goal {
+  background: #FFD953;
+  border: none;
+  color: #3D372E;
+  padding: 6px 14px;
+  cursor: default;
 }
-.nz-vote-btn .nz-vote-icon svg {
+.nz-tr-chip--goal img { width: 14px; height: 14px; }
+.nz-tr-rule { border-bottom: 2px solid #C4B695; margin-top: 22px; }
+
+/* ── 상태 그룹 ── */
+.nz-tr-group { scroll-margin-top: 64px; }
+.nz-tr-ghead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 36px;
+  flex-wrap: wrap;
+}
+.nz-tr-group:first-of-type .nz-tr-ghead { margin-top: 34px; }
+.nz-tr-ghead__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.nz-tr-ghead__name {
+  font-family: var(--nz-font-hand);
+  font-size: 22px;
+  color: #3D372E;
+}
+.nz-tr-ghead__n {
+  background: #EEE8D6;
+  border-radius: 99px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #6B6353;
+}
+.nz-tr-ghead__comment {
+  font-family: var(--nz-font-hand);
+  font-size: 19px;
+  color: #8A8272;
+}
+
+.nz-tr-card {
+  background: #FFFDF7;
+  border: 1px solid #E5DCC6;
+  box-shadow: 0 4px 14px rgba(61, 55, 46, .07);
+  border-radius: 12px;
+  margin-top: 12px;
+  overflow: hidden;
+}
+.nz-tr-card--featured {
+  background: #FFF7DC;
+  border-color: #F0E1AC;
+}
+
+.nz-tr-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 22px;
+  border-bottom: 1px solid #F0EADA;
+  transition: all .15s ease;
+}
+.nz-tr-row:last-of-type { border-bottom: none; }
+.nz-tr-row:hover {
+  background: #FFFDF0;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(61, 55, 46, .08);
+}
+.nz-tr-card--featured .nz-tr-row:hover { background: #FFF3C9; }
+/* 접힘: PC 5행 노출 */
+.nz-tr-card.collapsed .nz-tr-row:nth-of-type(n+6) { display: none; }
+
+.nz-tr-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: #EEE8D6;
+  border: 1px solid #DCD2BA;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.nz-tr-thumb img {
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  display: block;
 }
-.nz-vote-btn.loading {
-  opacity: 0.6;
-  cursor: wait;
-  pointer-events: none;
+.nz-tr-thumb--empty img {
+  width: 20px;
+  height: 20px;
+  opacity: .4;
+  object-fit: contain;
 }
-
-@keyframes nzVotePop {
-  0% { transform: translateY(0) scale(1); }
-  30% { transform: translateY(-3px) scale(1.15); }
-  60% { transform: translateY(0) scale(0.95); }
-  100% { transform: translateY(0) scale(1); }
+.nz-tr-row__body { flex: 1; min-width: 0; }
+.nz-tr-row__title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #3D372E;
+  line-height: 1.4;
 }
-
-/* === 모바일 (~767px): 상태 셀 안에 [상태 pill + 투표 버튼] 세로 스택 === */
-@media (max-width: 767px) {
-  /* status 셀의 inner div를 세로 정렬로 전환 */
-  body.nz-vote-page .notion-collection-table__cell.select > div {
-    flex-direction: column !important;
-    align-items: center !important;
-    gap: 7px !important;
-  }
-  /* PC 전용 4번째 컬럼은 모바일에서 숨김 */
-  body.nz-vote-page .nz-vote-cell,
-  body.nz-vote-page .nz-vote-cell-header {
-    display: none !important;
-  }
-  /* PC 전용 버튼은 모바일에서 숨김 */
-  body.nz-vote-page .nz-vote-btn--pc {
-    display: none !important;
-  }
-  /* 모바일 헤더: '상태' 옆에 '/ 리뷰 요청' inline 노출 */
-  body.nz-vote-page .nz-vote-head-mobile-suffix {
-    display: inline;
-  }
+.nz-tr-row__brand {
+  font-size: 13px;
+  color: #8A8272;
+  margin-top: 2px;
 }
 
-/* === PC (768px+): 4번째 '리뷰 요청' 컬럼 === */
-@media (min-width: 768px) {
-  /* 모바일용(상태 셀 안) 버튼은 PC에서 숨김 */
-  body.nz-vote-page .nz-vote-btn--mobile {
-    display: none !important;
-  }
-  /* PC 헤더는 노션 원본 '상태' 그대로 (별도 처리 불필요) */
+/* ── 기대돼요 버튼 ── */
+.nz-tr-expect {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #FFFDF7;
+  border: 1px solid #E0D7C2;
+  border-radius: 99px;
+  padding: 6px 14px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #8A6D00;
+  font-family: var(--nz-font-body);
+  cursor: pointer;
+  transition: all .15s ease;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.nz-tr-expect img { width: 15px; height: 15px; object-fit: contain; }
+.nz-tr-expect:hover {
+  background: #FFD953;
+  border-color: #FFD953;
+  color: #3D372E;
+}
+.nz-tr-expect.on {
+  background: #FFD953;
+  border-color: #E8B93E;
+  color: #3D372E;
+  box-shadow: 0 2px 6px rgba(61, 55, 46, .12);
+}
+.nz-tr-expect__count { font-weight: 600; opacity: .75; }
+.nz-tr-expect__count--loading {
+  display: inline-block;
+  width: 16px;
+  height: 12px;
+  border-radius: 99px;
+  background: #F1EADA;
+  animation: nz-tr-shimmer 1.1s ease-in-out infinite;
+}
+@keyframes nz-tr-shimmer {
+  0%, 100% { opacity: .5; }
+  50% { opacity: 1; }
+}
+.nz-tr-expect.pop { animation: nz-tr-pop .25s ease; }
+@keyframes nz-tr-pop {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
 
-  /* 컬럼 폭 재배분: 제목 43% / 제작사 25% / 상태 15% / 투표 17% */
-  body.nz-vote-page .notion-collection-table__head-cell.title,
-  body.nz-vote-page .notion-collection-table__cell.title {
-    width: 43% !important;
-  }
-  body.nz-vote-page .notion-collection-table__head-cell.multi_select,
-  body.nz-vote-page .notion-collection-table__cell.multi_select {
-    width: 25% !important;
-  }
-  body.nz-vote-page .notion-collection-table__head-cell.select,
-  body.nz-vote-page .notion-collection-table__cell.select {
-    width: 15% !important;
-  }
+/* ── 더 보기 ── */
+.nz-tr-more {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 12px;
+  border: none;
+  border-top: 1px solid #F0EADA;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 600;
+  color: #8A6D00;
+  font-family: var(--nz-font-body);
+  cursor: pointer;
+  transition: background .15s ease;
+}
+.nz-tr-more:hover { background: #FFFDF0; }
+.nz-tr-more--mo-only { display: none; }
+.nz-tr-more__mo { display: none; }
+.nz-tr-more__close { display: none; }
+.nz-tr-card.expanded .nz-tr-more__pc,
+.nz-tr-card.expanded .nz-tr-more__mo { display: none !important; }
+.nz-tr-card.expanded .nz-tr-more__close { display: inline; }
+/* 펼쳐진 행 등장 애니메이션 */
+.nz-tr-card.expanded .nz-tr-row { animation: nz-tr-fadeup .25s ease; }
 
-  /* 투표 셀 */
-  body.nz-vote-page .nz-vote-cell,
-  body.nz-vote-page .nz-vote-cell-header {
-    width: 17% !important;
-    padding: 12px 18px !important;
-    text-align: center !important;
-    vertical-align: middle !important;
-    border-bottom: 1px solid #f5f3f0 !important;
-  }
-  body.nz-vote-page .nz-vote-cell-header {
-    background: #faf7f2 !important;
-    border-bottom: 1.5px solid #ece8e1 !important;
-    padding: 13px 18px !important;
-  }
-  body.nz-vote-page .nz-vote-cell-header-content {
-    font-size: 12px !important;
-    font-weight: 700 !important;
-    color: #a8a29e !important;
-    letter-spacing: 0.03em;
-    text-align: center !important;
-  }
+/* ── 꼬리 안내 · 최근 리뷰 박스 ── */
+.nz-tr-tail {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 34px;
+  font-size: 13.5px;
+  color: #8A8272;
+}
+.nz-tr-tail img { width: 18px; height: 18px; object-fit: contain; }
+.nz-tr-tail a {
+  color: #8A6D00 !important;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: #D9C46A;
+}
+.nz-tr-recent {
+  background: #EEE8D6;
+  border-radius: 12px;
+  padding: 22px 26px;
+  margin-top: 24px;
+}
+.nz-tr-recent__title {
+  font-family: var(--nz-font-hand);
+  font-size: 19px;
+  color: #5C554A;
+}
+.nz-tr-recent__chips {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.nz-tr-recent__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #FFFDF7;
+  border: 1px solid #DCD2BA;
+  border-radius: 99px;
+  padding: 6px 15px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #5C554A !important;
+  text-decoration: none !important;
+  transition: background .15s ease;
+}
+.nz-tr-recent__chip:hover { background: #FFF3C9; }
+.nz-tr-recent__chip img { width: 13px; height: 13px; object-fit: contain; }
+.nz-tr-recent__chip--all { color: #8A6D00 !important; }
 
-  /* PC 버튼 살짝 크게 */
-  body.nz-vote-page .nz-vote-cell .nz-vote-btn {
-    padding: 6px 14px;
-    font-size: 12px;
+/* ── 빈 상태 ── */
+.nz-tr-empty {
+  text-align: center;
+  padding: 48px 0;
+}
+.nz-tr-empty img { width: 44px; height: 44px; object-fit: contain; }
+.nz-tr-empty p {
+  font-family: var(--nz-font-hand);
+  font-size: 19px;
+  color: #8A8272;
+  margin: 12px 0 0;
+}
+
+/* ── Mobile (≤768px) ── */
+@media (max-width: 768px) {
+  .super-content.page__to-review .notion-header {
+    margin: 24px auto 0 !important;
+    padding: 0 16px !important;
   }
-  body.nz-vote-page .nz-vote-cell .nz-vote-btn .nz-vote-icon {
-    width: 13px;
-    height: 13px;
+  .super-content.page__to-review .notion-header__title { font-size: 26px !important; }
+  .super-content.page__to-review article.notion-root { padding: 0 16px 40px !important; }
+  .nz-tr-lead { font-size: 17px; }
+  .nz-tr-lead__long { display: none; }
+  .nz-tr-lead__short { display: inline; }
+  .nz-tr-sortnote { font-size: 11.5px; }
+  /* 칩 바: 가로 스크롤 + 축약 라벨 */
+  .nz-tr-chipbar__inner {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
   }
+  .nz-tr-chipbar__inner::-webkit-scrollbar { display: none; }
+  .nz-tr-chip {
+    font-size: 11.5px;
+    padding: 5px 11px;
+    flex-shrink: 0;
+  }
+  .nz-tr-chip__dot { width: 7px; height: 7px; }
+  .nz-tr-chip__full { display: none; }
+  .nz-tr-chip__short { display: inline; }
+  .nz-tr-ghead__dot { width: 9px; height: 9px; }
+  .nz-tr-ghead__name { font-size: 19px; }
+  .nz-tr-ghead__comment {
+    flex-basis: 100%;
+    font-size: 14.5px;
+    margin-left: 17px;
+  }
+  .nz-tr-row { padding: 12px 14px; gap: 12px; }
+  .nz-tr-thumb { width: 40px; height: 40px; }
+  .nz-tr-row__title { font-size: 14px; }
+  .nz-tr-row__brand { font-size: 12px; }
+  .nz-tr-expect { font-size: 12px; padding: 5px 12px; gap: 6px; }
+  .nz-tr-expect img { width: 14px; height: 14px; }
+  /* 접힘: 모바일 3행 노출 */
+  .nz-tr-card.collapsed .nz-tr-row:nth-of-type(n+4) { display: none; }
+  .nz-tr-more--mo-only { display: block; }
+  .nz-tr-more__pc { display: none; }
+  .nz-tr-more__mo { display: inline; }
+  .nz-tr-card.expanded .nz-tr-more__mo { display: none !important; }
+  .nz-tr-recent { padding: 18px 18px; }
+  .nz-tr-tail { font-size: 12.5px; text-align: center; }
 }
 
 /* ============================================================

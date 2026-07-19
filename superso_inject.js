@@ -170,6 +170,7 @@ function waitAndHideLoader(prevTitle) {
   var isReview = path.indexOf('/nazotoki-reviews/') === 0;
   var isGuide = path.indexOf('/what-is-nazo') === 0;
   var isNoteDetail = /^\/darakbang-note\/.+/.test(path);
+  var isToReview = path.replace(/\/$/, '') === '/to-review';
   var isAbout = path.indexOf('/lemonbread') === 0;
   var isShop = path.indexOf('/how-to-buy-nazotokis') === 0;
   var stableSince = null;
@@ -202,6 +203,9 @@ function waitAndHideLoader(prevTitle) {
     } else if (isAbout) {
       // 레몬빵?도 동일: 소개 카드(커스텀 DOM) 존재로 판정
       ready = document.querySelector('.nz-about-card');
+    } else if (isToReview) {
+      // 커스텀 목록(행 또는 빈 상태)이 실제로 그려진 뒤에만 공개
+      ready = document.querySelector('.nz-tr-wrap .nz-tr-row') || document.querySelector('.nz-tr-empty');
     } else if (isShop) {
       ready = document.querySelector('.nz-shop-header');
     } else {
@@ -2190,7 +2194,7 @@ function nzLightboxClose() {
   'use strict';
 
   function isReviewListPage() {
-    return location.pathname.indexOf('to-review') !== -1;
+    return false; // nz-tr 모듈(시안 3a)이 대체 — 구 표 재스타일 비활성화
   }
 
   function run() {
@@ -2632,21 +2636,18 @@ function nzLightboxClose() {
   }, 500);
 })();
 
-// ── 리뷰 예정 목록 - 투표 버튼 (ReviewRequests) ────────────────
-// /to-review 페이지에서 각 행에 "리뷰 읽고 싶어요" 버튼 삽입
-// PC: 4번째 컬럼 / Mobile: 상태 셀 안 세로 스택
+// ── 리뷰 예정 목록 v2 (nz-tr): 상태 그룹 재조립 + 기대돼요 ────
+// 노션 표(제목·제작사·상태·사진·생성일시)를 읽어 시안 3a 레이아웃으로 재조립.
+// 기대돼요는 기존 ReviewRequests 테이블(nazo_slug/session_id)을 그대로 이어받는다.
 (function () {
   'use strict';
 
   var SUPABASE_URL = 'https://llwdqogseeddnffradej.supabase.co';
   var SUPABASE_KEY = 'sb_publishable_8cOoT2cGQ0x7Is57k-VT5A_fqgVKr6f';
-  var TABLE        = 'ReviewRequests';
-  var BODY_CLASS   = 'nz-vote-page';
+  var TABLE = 'ReviewRequests';
 
-  // ── 페이지 판별: 리뷰 예정 목록(/to-review)에서만 동작 ──
-  function isVotePage() {
-    var p = location.pathname.replace(/\/$/, '');
-    return p === '/to-review';
+  function isTrPage() {
+    return location.pathname.replace(/\/$/, '') === '/to-review';
   }
 
   // ── 세션 ID (좋아요 모듈과 공유) ──
@@ -2657,7 +2658,7 @@ function nzLightboxClose() {
   function getSessionId() {
     var id = null;
     try { id = localStorage.getItem('nz_session_id'); } catch (e) {}
-    if (!id) id = readCookie('nz_session_id'); // localStorage가 지워지는 브라우저 대비
+    if (!id) id = readCookie('nz_session_id');
     if (!id) id = 'nz_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
     try { localStorage.setItem('nz_session_id', id); } catch (e) {}
     try {
@@ -2667,7 +2668,6 @@ function nzLightboxClose() {
     return id;
   }
 
-  // ── Supabase 호출 ──
   function supaReq(method, endpoint, body) {
     var opts = {
       method: method,
@@ -2682,10 +2682,26 @@ function nzLightboxClose() {
     return fetch(SUPABASE_URL + '/rest/v1/' + endpoint, opts);
   }
 
-  // ── 행에서 슬러그 추출 ──
-  // 1순위: /to-review/{slug} href (정상 케이스)
-  // 2순위: id="block-to-review-{slug}" (백업)
-  // 3순위: 블록 UUID (Super.so가 슬러그 생성 못한 신규 행 - 충돌, 신규 등)
+  // ── 상태 정의 (표시 순서 = 리뷰 임박 순, 표기 = 노션 값 그대로) ──
+  var STATUS = [
+    { key: '리뷰 작성 중', comment: '며칠 내 리뷰 업로드 예정이에요', shortLabel: '작성 중', fallback: '#B08900', featured: true },
+    { key: '플레이 완료', comment: '플레이 완료 되어 리뷰 대기 중인 작품이에요', shortLabel: '플레이', fallback: '#A0705C' },
+    { key: '보유중', comment: '나조 책장에 보관 중인 나조예요', shortLabel: '보유', fallback: '#7AA85C' },
+    { key: '구입 완료', comment: '배송 중인 나조예요', shortLabel: '구매', fallback: '#5A78A0' },
+    { key: '해보고 싶다', comment: '언젠가 꼭 해보고 싶은 나조예요', shortLabel: '위시', fallback: '#A79E8A' }
+  ];
+  // 노션 지정색 → 다락방 딥톤 (리뷰 공식 난이도 알약과 동일 체계)
+  var TR_NOTION_DEEP = {
+    'pill-pink': '#B0616E', 'pill-purple': '#8171A8', 'pill-blue': '#5F8CA3',
+    'pill-red': '#B25E5E', 'pill-orange': '#C07A48', 'pill-yellow': '#B08900',
+    'pill-green': '#6E9E52', 'pill-brown': '#96705A', 'pill-gray': '#8A8272'
+  };
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  // ── 행 슬러그 (기존 투표 데이터와 호환 유지) ──
   function getRowSlug(row) {
     var anchor = row.querySelector('a[href*="/to-review/"]');
     if (anchor) {
@@ -2695,303 +2711,333 @@ function nzLightboxClose() {
     }
     var idAnchor = row.querySelector('a[id^="block-to-review-"]');
     if (idAnchor) return idAnchor.id.replace('block-to-review-', '');
-    // 슬러그 없는 행 → block UUID 사용 (id="block-XXXX" 그대로)
     var blockAnchor = row.querySelector('a.notion-link[id^="block-"]');
-    if (blockAnchor && blockAnchor.id.length > 'block-'.length) {
-      return blockAnchor.id; // "block-344d25cb..." 형식 그대로 저장
-    }
+    if (blockAnchor && blockAnchor.id.length > 'block-'.length) return blockAnchor.id;
     return null;
   }
 
-  // ── 손 아이콘 SVG ──
-  var HAND_OUTLINE =
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
-      '<path d="M18 16v-5a2 2 0 0 0-4 0"/>' +
-      '<path d="M14 11V6a2 2 0 0 0-4 0v6"/>' +
-      '<path d="M10 11V5a2 2 0 0 0-4 0v9"/>' +
-      '<path d="M6 14v-3a2 2 0 0 0-4 0v6a8 8 0 0 0 16 0v-3a2 2 0 0 0-4 0"/>' +
-    '</svg>';
-  var HAND_FILLED =
-    '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.9">' +
-      '<path d="M18 16v-5a2 2 0 0 0-4 0"/>' +
-      '<path d="M14 11V6a2 2 0 0 0-4 0v6"/>' +
-      '<path d="M10 11V5a2 2 0 0 0-4 0v9"/>' +
-      '<path d="M6 14v-3a2 2 0 0 0-4 0v6a8 8 0 0 0 16 0v-3a2 2 0 0 0-4 0"/>' +
-    '</svg>';
-
-  // ── 버튼 생성 ──
-  function makeBtn(slug, variant) {
-    var btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'nz-vote-btn nz-vote-btn--' + variant;
-    btn.setAttribute('data-slug', slug);
-    btn.setAttribute('aria-label', '리뷰 읽고 싶어요');
-    btn.innerHTML =
-      '<span class="nz-vote-icon">' + HAND_OUTLINE + '</span>' +
-      '<span class="nz-vote-count"></span>';
-    return btn;
-  }
-
-  // ── 버튼 상태 적용 ──
-  function applyState(btn, voted, count) {
-    if (voted) btn.classList.add('voted');
-    else btn.classList.remove('voted');
-    var icon = btn.querySelector('.nz-vote-icon');
-    if (icon) icon.innerHTML = voted ? HAND_FILLED : HAND_OUTLINE;
-    var c = btn.querySelector('.nz-vote-count');
-    if (c) c.textContent = count > 0 ? count : '';
-  }
-
-  // ── 같은 슬러그의 모든 버튼 동기화 (PC + Mobile) ──
-  function syncBtns(slug, voted, count) {
-    var btns = document.querySelectorAll('.nz-vote-btn[data-slug="' + slug + '"]');
-    for (var i = 0; i < btns.length; i++) applyState(btns[i], voted, count);
-  }
-
-  // ── 로딩 상태 토글 ──
-  function setLoading(slug, loading) {
-    var btns = document.querySelectorAll('.nz-vote-btn[data-slug="' + slug + '"]');
-    for (var i = 0; i < btns.length; i++) {
-      if (loading) btns[i].classList.add('loading');
-      else btns[i].classList.remove('loading');
-    }
-  }
-
-  // ── 헤더 보장 ──
-  function ensureHeader(table) {
-    var headRow = table.querySelector('thead tr');
-    if (!headRow) return;
-    if (headRow.querySelector('.nz-vote-cell-header')) return;
-    var th = document.createElement('th');
-    th.className = 'nz-vote-cell-header notion-collection-table__head-cell';
-    th.innerHTML = '<div class="nz-vote-cell-header-content">리뷰 요청</div>';
-    headRow.appendChild(th);
-  }
-
-  // ── '상태' 헤더에 모바일 전용 접미사 span 추가 ──
-  // ⚠️ 노션 원본 구조(__head-cell-content + 아이콘 래퍼 + 텍스트 노드)는 그대로 두고
-  //    그 뒤에 inline span만 append → flex row 안에서 자연스럽게 인라인으로 보임
-  function ensureSelectHeaderText(table) {
-    var selectHead = table.querySelector('thead .notion-collection-table__head-cell.select');
-    if (!selectHead) return;
-    if (selectHead.querySelector('.nz-vote-head-mobile-suffix')) return; // 이미 처리됨
-    selectHead.classList.add('nz-vote-select-head');
-    var content = selectHead.querySelector('.notion-collection-table__head-cell-content');
-    if (!content) return;
-    var suffix = document.createElement('span');
-    suffix.className = 'nz-vote-head-mobile-suffix';
-    suffix.textContent = ' / 리뷰 요청';
-    content.appendChild(suffix);
-  }
-
-  // ── 안내 배너 보장 (표 위에 1개) ──
-  function ensureBanner(table) {
-    if (document.querySelector('.nz-vote-banner')) return;
-    var banner = document.createElement('div');
-    banner.className = 'nz-vote-banner';
-    banner.innerHTML =
-      '<span class="nz-vote-banner-icon">' + HAND_OUTLINE + '</span>' +
-      '<span class="nz-vote-banner-text">' +
-        '<strong>리뷰 읽고 싶어요!</strong>' +
-        '<span class="nz-vote-banner-sub"> — 버튼을 누르면 우선 리뷰 대상에 반영돼요</span>' +
-      '</span>';
-    if (table.parentNode) table.parentNode.insertBefore(banner, table);
-  }
-
-  // ── 행별 버튼 보장 (미주입 행만 처리) ──
-  // 모든 행에 data-nz-vote-seen 마커를 붙임 → 옵저버가 신규 행 감지 가능
-  function ensureRowButtons(table) {
-    var freshSlugs = [];
-    var allSlugs   = [];
-    var rows = table.querySelectorAll('tbody tr');
-    for (var i = 0; i < rows.length; i++) {
-      var row  = rows[i];
-      // 이미 검사한 행: 슬러그가 있으면 allSlugs에만 추가하고 스킵
-      if (row.hasAttribute('data-nz-vote-seen')) {
-        var existing = row.getAttribute('data-nz-vote-row');
-        if (existing) allSlugs.push(existing);
-        continue;
-      }
-      // 신규 행: 마커부터 찍기 (슬러그 없는 행도 포함 → 무한 재시도 방지)
-      row.setAttribute('data-nz-vote-seen', '1');
-
-      var slug = getRowSlug(row);
-      if (!slug) continue; // 슬러그 추출 실패한 행은 스킵 (마커는 이미 찍음)
-
-      row.setAttribute('data-nz-vote-row', slug);
-      allSlugs.push(slug);
-      freshSlugs.push(slug);
-
-      // 1) PC: 4번째 컬럼 추가
-      var td = document.createElement('td');
-      td.className = 'nz-vote-cell notion-collection-table__cell';
-      td.appendChild(makeBtn(slug, 'pc'));
-      row.appendChild(td);
-
-      // 2) Mobile: 상태 셀 안에 버튼 추가 (CSS로 세로 스택 처리)
-      var statusCell = row.querySelector('.notion-collection-table__cell.select');
-      if (statusCell) {
-        var inner = statusCell.querySelector('div') || statusCell;
-        inner.appendChild(makeBtn(slug, 'mobile'));
-      }
-    }
-    return { fresh: freshSlugs, all: allSlugs };
-  }
-
-  // ── 클릭 리스너 보장 (table에 1번만) ──
-  function ensureClickHandler(table) {
-    if (table.hasAttribute('data-nz-vote-listener')) return;
-    table.addEventListener('click', function (e) {
-      var btn = e.target.closest && e.target.closest('.nz-vote-btn');
-      if (!btn) return;
-      e.preventDefault();
-      e.stopPropagation();
-      toggleVote(btn);
+  // ── 노션 표 파싱 ──
+  function parseTable() {
+    var table = document.querySelector('.notion-collection-table');
+    if (!table) return null;
+    var headCells = table.querySelectorAll('thead .notion-collection-table__head-cell');
+    if (!headCells.length) return null;
+    var idx = {};
+    headCells.forEach(function (th, i) {
+      var t = th.textContent;
+      if (t.indexOf('제목') !== -1) idx.title = i;
+      else if (t.indexOf('제작사') !== -1) idx.brand = i;
+      else if (t.indexOf('상태') !== -1) idx.status = i;
+      else if (t.indexOf('사진') !== -1) idx.photo = i;
+      else if (t.indexOf('생성') !== -1) idx.created = i;
     });
-    table.setAttribute('data-nz-vote-listener', '1');
+    if (idx.title === undefined || idx.status === undefined) return null;
+
+    var items = [];
+    var statusColor = {};
+    table.querySelectorAll('tbody tr').forEach(function (tr) {
+      var cells = tr.children;
+      if (!cells.length) return;
+      var cell = function (i) { return i !== undefined && cells[i] ? cells[i] : null; };
+
+      var titleCell = cell(idx.title);
+      var title = titleCell ? titleCell.textContent.trim() : '';
+      if (!title) return;
+
+      var statusEl = cell(idx.status) ? cell(idx.status).querySelector('.notion-pill') : null;
+      var status = statusEl ? statusEl.textContent.trim() : '';
+      if (statusEl && !statusColor[status]) {
+        var cm = statusEl.className.match(/pill-[a-z]+/);
+        if (cm && TR_NOTION_DEEP[cm[0]]) statusColor[status] = TR_NOTION_DEEP[cm[0]];
+      }
+
+      var brandPills = cell(idx.brand) ? cell(idx.brand).querySelectorAll('.notion-pill') : [];
+      var brand = brandPills.length
+        ? Array.prototype.map.call(brandPills, function (p) { return p.textContent.trim(); }).filter(Boolean).join(' · ')
+        : (cell(idx.brand) ? cell(idx.brand).textContent.trim() : '');
+
+      var imgEl = cell(idx.photo) ? cell(idx.photo).querySelector('img') : null;
+      var img = imgEl ? (imgEl.getAttribute('src') || '') : '';
+
+      var createdText = cell(idx.created) ? cell(idx.created).textContent.trim() : '';
+      var created = createdText ? new Date(createdText).getTime() : 0;
+      if (isNaN(created)) created = 0;
+
+      items.push({ title: title, brand: brand, status: status, img: img, created: created, slug: getRowSlug(tr) });
+    });
+    return { items: items, statusColor: statusColor };
   }
 
-  // ── Supabase에서 투표 데이터 로드 ──
-  function loadVotes(slugs) {
-    if (!slugs || slugs.length === 0) return;
+  // ── 렌더 ──
+  var LEMON_SRC = NZ_ASSET_BASE + 'assets/lemon.png';
+
+  function makeExpectBtnHtml(slug) {
+    return '<button type="button" class="nz-tr-expect" data-slug="' + esc(slug || '') + '" aria-label="기대돼요">'
+      + '<img src="' + LEMON_SRC + '" alt="">기대돼요 <span class="nz-tr-expect__count nz-tr-expect__count--loading"></span>'
+      + '</button>';
+  }
+
+  function rowHtml(item) {
+    var thumb = item.img
+      ? '<div class="nz-tr-thumb"><img src="' + esc(item.img) + '" alt="" loading="lazy"></div>'
+      : '<div class="nz-tr-thumb nz-tr-thumb--empty"><img src="' + LEMON_SRC + '" alt=""></div>';
+    return '<div class="nz-tr-row">'
+      + thumb
+      + '<div class="nz-tr-row__body"><div class="nz-tr-row__title">' + esc(item.title) + '</div>'
+      + (item.brand ? '<div class="nz-tr-row__brand">' + esc(item.brand) + '</div>' : '')
+      + '</div>'
+      + (item.slug ? makeExpectBtnHtml(item.slug) : '')
+      + '</div>';
+  }
+
+  function buildWrap(parsed) {
+    var groups = STATUS.map(function (st) {
+      var arr = parsed.items.filter(function (it) { return it.status === st.key; });
+      arr.sort(function (a, b) { return a.created - b.created; }); // 들어온 순서 (오래된 것부터)
+      return { st: st, items: arr, color: parsed.statusColor[st.key] || st.fallback };
+    });
+
+    var wrap = document.createElement('div');
+    wrap.className = 'nz-tr-wrap';
+
+    var html = ''
+      + '<p class="nz-tr-lead">다음 순서를 기다리는 나조들이에요.<span class="nz-tr-lead__long"> 궁금한 작품에 기대돼요를 눌러주시면 우선적으로 플레이할게요!</span><span class="nz-tr-lead__short"> 궁금한 작품에 기대돼요를 눌러주시면 우선 플레이할게요!</span></p>'
+      + '<p class="nz-tr-sortnote">모든 목록은 들어온 순서(오래된 것부터)로 정렬돼요</p>';
+
+    // 파이프라인 칩 바 (여정 순 = 표시 역순) + 리뷰!
+    var chipHtml = '';
+    for (var i = groups.length - 1; i >= 0; i--) {
+      var g = groups[i];
+      if (!g.items.length) continue;
+      chipHtml += '<button type="button" class="nz-tr-chip" data-status="' + esc(g.st.key) + '">'
+        + '<span class="nz-tr-chip__dot" style="background:' + g.color + '"></span>'
+        + '<span class="nz-tr-chip__full">' + esc(g.st.key) + '</span>'
+        + '<span class="nz-tr-chip__short">' + esc(g.st.shortLabel) + '</span>'
+        + '<span class="nz-tr-chip__n">' + g.items.length + '</span></button>'
+        + '<span class="nz-tr-chip-arrow">→</span>';
+    }
+    chipHtml += '<span class="nz-tr-chip nz-tr-chip--goal"><img src="' + LEMON_SRC + '" alt="">리뷰!</span>';
+    html += '<div class="nz-tr-chipbar"><div class="nz-tr-chipbar__inner">' + chipHtml + '</div></div>'
+      + '<div class="nz-tr-rule"></div>';
+
+    // 상태 그룹
+    var any = false;
+    groups.forEach(function (g) {
+      if (!g.items.length) return;
+      any = true;
+      var total = g.items.length;
+      var rowsHtml = g.items.map(rowHtml).join('');
+      var moreHtml = '';
+      if (total > 3) {
+        var pcExtra = total - 5;
+        var moExtra = total - 3;
+        moreHtml = '<button type="button" class="nz-tr-more' + (pcExtra <= 0 ? ' nz-tr-more--mo-only' : '') + '">'
+          + (pcExtra > 0 ? '<span class="nz-tr-more__pc">' + esc(g.st.key) + ' ' + pcExtra + '개 더 보기 ▾</span>' : '')
+          + '<span class="nz-tr-more__mo">' + esc(g.st.key) + ' ' + moExtra + '개 더 보기 ▾</span>'
+          + '<span class="nz-tr-more__close">접기 ▴</span>'
+          + '</button>';
+      }
+      html += '<section class="nz-tr-group" data-status="' + esc(g.st.key) + '">'
+        + '<div class="nz-tr-ghead">'
+        + '<span class="nz-tr-ghead__dot" style="background:' + g.color + '"></span>'
+        + '<span class="nz-tr-ghead__name">' + esc(g.st.key) + '</span>'
+        + '<span class="nz-tr-ghead__n">' + total + '</span>'
+        + '<span class="nz-tr-ghead__comment">' + esc(g.st.comment) + '</span>'
+        + '</div>'
+        + '<div class="nz-tr-card collapsed' + (g.st.featured ? ' nz-tr-card--featured' : '') + '">'
+        + rowsHtml + moreHtml
+        + '</div></section>';
+    });
+
+    if (!any) {
+      html += '<div class="nz-tr-empty"><img src="' + LEMON_SRC + '" alt="">'
+        + '<p>지금은 기다리는 나조가 없어요</p></div>';
+    }
+
+    // 꼬리 안내 + 최근 리뷰 박스
+    html += '<div class="nz-tr-tail"><img src="' + LEMON_SRC + '" alt="">'
+      + '<span>리뷰가 완성된 나조들은 이 목록에서 내려와 <a href="/">리뷰</a>로 올라가요</span></div>'
+      + '<div class="nz-tr-recent"><div class="nz-tr-recent__title">최근 리뷰로 올라간 나조들</div>'
+      + '<div class="nz-tr-recent__chips"></div></div>';
+
+    wrap.innerHTML = html;
+    return wrap;
+  }
+
+  // ── 최근 리뷰 3건 (nazo_data) ──
+  function fillRecent(wrap) {
+    if (typeof loadNazoData !== 'function') return;
+    loadNazoData(function () {
+      var box = wrap.querySelector('.nz-tr-recent__chips');
+      if (!box || box.children.length) return;
+      var entries = [];
+      try {
+        Object.keys(SORT_DATA).forEach(function (t) {
+          var d = SORT_DATA[t];
+          if (d && d.num && d.url) entries.push({ title: t, num: d.num, url: d.url });
+        });
+      } catch (e) { return; }
+      entries.sort(function (a, b) { return b.num - a.num; });
+      var html = entries.slice(0, 3).map(function (e) {
+        return '<a class="nz-tr-recent__chip" href="' + esc(e.url) + '">'
+          + '<img src="' + LEMON_SRC + '" alt="">' + esc(e.title) + '</a>';
+      }).join('');
+      html += '<a class="nz-tr-recent__chip nz-tr-recent__chip--all" href="/">리뷰 전체 보기 →</a>';
+      box.innerHTML = html;
+    });
+  }
+
+  // ── 기대돼요 데이터 ──
+  function loadExpects(wrap) {
+    var btns = wrap.querySelectorAll('.nz-tr-expect[data-slug]');
+    var slugs = [];
+    btns.forEach(function (b) { if (b.dataset.slug) slugs.push(b.dataset.slug); });
+    if (!slugs.length) return;
     var sessionId = getSessionId();
-    var slugList  = slugs.map(function (s) { return '"' + s + '"'; }).join(',');
-    supaReq('GET', TABLE + '?nazo_slug=in.(' + slugList + ')&select=nazo_slug,session_id')
+    var slugList = slugs.map(function (s) { return '"' + s + '"'; }).join(',');
+    supaReq('GET', TABLE + '?nazo_slug=in.(' + encodeURIComponent(slugList) + ')&select=nazo_slug,session_id')
       .then(function (res) { return res.json(); })
       .then(function (rows) {
         var counts = {}, mine = {};
         if (Array.isArray(rows)) {
-          for (var i = 0; i < rows.length; i++) {
-            var r = rows[i];
+          rows.forEach(function (r) {
             counts[r.nazo_slug] = (counts[r.nazo_slug] || 0) + 1;
             if (r.session_id === sessionId) mine[r.nazo_slug] = true;
-          }
+          });
         }
-        for (var j = 0; j < slugs.length; j++) {
-          syncBtns(slugs[j], !!mine[slugs[j]], counts[slugs[j]] || 0);
-        }
+        btns.forEach(function (b) {
+          applyExpect(b, !!mine[b.dataset.slug], counts[b.dataset.slug] || 0);
+        });
       })
-      .catch(function (err) {
-        console.warn('[나조토키] 투표 데이터 로딩 실패:', err);
-        for (var k = 0; k < slugs.length; k++) syncBtns(slugs[k], false, 0);
+      .catch(function () {
+        btns.forEach(function (b) { applyExpect(b, false, 0); });
       });
   }
 
-  // ── 클릭 핸들러 (낙관적 업데이트 + 실패 시 롤백) ──
-  function toggleVote(btn) {
-    var slug = btn.getAttribute('data-slug');
-    if (!slug) return;
-    if (btn.classList.contains('loading')) return;
+  function applyExpect(btn, on, count) {
+    btn.classList.toggle('on', on);
+    btn.dataset.count = count;
+    var c = btn.querySelector('.nz-tr-expect__count');
+    if (c) {
+      c.classList.remove('nz-tr-expect__count--loading');
+      c.textContent = count;
+    }
+  }
 
+  var expectBusy = {};
+  function onExpectClick(btn) {
+    var slug = btn.dataset.slug;
+    if (!slug || expectBusy[slug]) return;
+    expectBusy[slug] = true;
+    var wasOn = btn.classList.contains('on');
+    var count = parseInt(btn.dataset.count || '0', 10) || 0;
+    var next = wasOn ? Math.max(0, count - 1) : count + 1;
+    applyExpect(btn, !wasOn, next); // 낙관적 업데이트
+    if (!wasOn) {
+      btn.classList.remove('pop');
+      void btn.offsetWidth;
+      btn.classList.add('pop');
+    }
     var sessionId = getSessionId();
-    var wasVoted  = btn.classList.contains('voted');
-    var countEl   = btn.querySelector('.nz-vote-count');
-    var prevCount = parseInt(countEl && countEl.textContent, 10) || 0;
-
-    setLoading(slug, true);
-
-    if (wasVoted) {
-      // 취소: DELETE (낙관적 감소)
-      syncBtns(slug, false, Math.max(0, prevCount - 1));
-      supaReq('DELETE',
-        TABLE + '?nazo_slug=eq.' + encodeURIComponent(slug) +
-        '&session_id=eq.' + encodeURIComponent(sessionId))
-        .then(function (res) {
-          setLoading(slug, false);
-          if (!res.ok) throw new Error('DELETE ' + res.status);
-        })
-        .catch(function (err) {
-          console.warn('[나조토키] 투표 취소 실패:', err);
-          syncBtns(slug, true, prevCount); // 롤백
-          setLoading(slug, false);
-        });
-    } else {
-      // 투표: POST (낙관적 증가)
-      syncBtns(slug, true, prevCount + 1);
-      supaReq('POST', TABLE, { nazo_slug: slug, session_id: sessionId })
-        .then(function (res) {
-          setLoading(slug, false);
-          if (!res.ok) throw new Error('POST ' + res.status);
-        })
-        .catch(function (err) {
-          console.warn('[나조토키] 투표 등록 실패:', err);
-          syncBtns(slug, false, prevCount); // 롤백
-          setLoading(slug, false);
-        });
-    }
+    var req = wasOn
+      ? supaReq('DELETE', TABLE + '?nazo_slug=eq.' + encodeURIComponent(slug) + '&session_id=eq.' + encodeURIComponent(sessionId))
+      : supaReq('POST', TABLE, { nazo_slug: slug, session_id: sessionId });
+    req.then(function (res) {
+      if (!res.ok && res.status !== 409) applyExpect(btn, wasOn, count); // 롤백
+    }).catch(function () {
+      applyExpect(btn, wasOn, count);
+    }).then(function () {
+      expectBusy[slug] = false;
+    });
   }
 
-  // ── 비-투표 페이지로 전환 시 흔적 제거 ──
-  function cleanupVoteUI() {
-    document.body.classList.remove(BODY_CLASS);
-    var stale = document.querySelector('.nz-vote-banner');
-    if (stale) stale.remove();
-  }
-
-  // ── 주입 (idempotent) ──
-  function injectAll() {
-    if (!isVotePage()) {
-      cleanupVoteUI();
-      return;
-    }
-    var table = document.querySelector('.notion-collection-table');
-    if (!table) return;
-
-    document.body.classList.add(BODY_CLASS);
-    ensureBanner(table);
-    ensureSelectHeaderText(table);
-    ensureHeader(table);
-    ensureClickHandler(table);
-    var result = ensureRowButtons(table);
-    // 신규 행이 있을 때만 데이터 요청 (불필요한 Supabase 호출 방지)
-    if (result.fresh.length > 0) loadVotes(result.fresh);
-  }
-
-  // ── 테이블 렌더 대기 후 시도 ──
-  function tryInject(attempt) {
-    attempt = attempt || 0;
-    if (!isVotePage()) {
-      document.body.classList.remove(BODY_CLASS);
-      return;
-    }
-    if (document.querySelector('.notion-collection-table tbody tr')) {
-      injectAll();
-    } else if (attempt < 30) {
-      setTimeout(function () { tryInject(attempt + 1); }, 300);
-    }
-  }
-
-  // ── 옵저버: SPA 네비게이션 + 테이블 재렌더 대응 ──
-  var voteLastUrl = location.href;
-  var voteDebounce = null;
-  var voteObserver = new MutationObserver(function () {
-    // URL 변경 감지
-    if (location.href !== voteLastUrl) {
-      voteLastUrl = location.href;
-      if (!isVotePage()) {
-        cleanupVoteUI();
-      } else {
-        tryInject();
+  // ── 상호작용 (위임) ──
+  function bindEvents(wrap) {
+    wrap.addEventListener('click', function (e) {
+      var expect = e.target.closest('.nz-tr-expect');
+      if (expect) { onExpectClick(expect); return; }
+      var more = e.target.closest('.nz-tr-more');
+      if (more) {
+        var card = more.closest('.nz-tr-card');
+        card.classList.toggle('collapsed');
+        card.classList.toggle('expanded');
+        return;
       }
-      return;
-    }
-    if (!isVotePage()) return;
-    if (voteDebounce) return;
-    voteDebounce = setTimeout(function () {
-      voteDebounce = null;
-      var table = document.querySelector('.notion-collection-table');
-      if (!table) return;
-      // 검사 안 한 행이 하나라도 있으면 재주입 (신규 행, 필터/정렬 등으로 재렌더된 경우 모두 커버)
-      if (table.querySelector('tbody tr:not([data-nz-vote-seen])')) injectAll();
-    }, 250);
-  });
-  voteObserver.observe(document.body, { childList: true, subtree: true });
+      var chip = e.target.closest('.nz-tr-chip[data-status]');
+      if (chip) {
+        var target = wrap.querySelector('.nz-tr-group[data-status="' + chip.dataset.status + '"]');
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
 
-  // ── 초기 시도 ──
+    // 스크롤 스파이: 현재 섹션 칩 하이라이트
+    var ticking = false;
+    window.addEventListener('scroll', function () {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () {
+        ticking = false;
+        if (!document.body.contains(wrap)) return;
+        var groups = wrap.querySelectorAll('.nz-tr-group');
+        var current = null;
+        groups.forEach(function (g) {
+          if (g.getBoundingClientRect().top <= 120) current = g.dataset.status;
+        });
+        wrap.querySelectorAll('.nz-tr-chip[data-status]').forEach(function (c) {
+          c.classList.toggle('active', c.dataset.status === current);
+        });
+      });
+    }, { passive: true });
+  }
+
+  // ── 조립 ──
+  function render() {
+    if (!isTrPage()) return;
+    if (document.querySelector('.nz-tr-wrap')) return;
+    var parsed = parseTable();
+    if (!parsed) return;
+    var article = document.querySelector('article.notion-root');
+    if (!article) return;
+    var wrap = buildWrap(parsed);
+    article.insertBefore(wrap, article.firstChild);
+    bindEvents(wrap);
+    loadExpects(wrap);
+    fillRecent(wrap);
+  }
+
+  function tryRender(attempt) {
+    attempt = attempt || 0;
+    if (!isTrPage()) return;
+    if (document.querySelector('.notion-collection-table tbody tr')) {
+      render();
+    } else if (attempt < 40) {
+      setTimeout(function () { tryRender(attempt + 1); }, 200);
+    }
+  }
+
+  // 하이드레이션이 커스텀을 갈아엎으면 재적용
+  var trObserver = new MutationObserver(function () {
+    if (isTrPage() && !document.querySelector('.nz-tr-wrap')) tryRender();
+  });
+
+  function boot() {
+    tryRender();
+    trObserver.observe(document.body || document.documentElement, { childList: true, subtree: true });
+  }
+
+  // SPA 이동 대응
+  var trLastUrl = location.href;
+  setInterval(function () {
+    if (location.href !== trLastUrl) {
+      trLastUrl = location.href;
+      if (isTrPage()) tryRender();
+    }
+  }, 300);
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () { tryInject(); });
+    document.addEventListener('DOMContentLoaded', boot);
   } else {
-    tryInject();
+    boot();
   }
 })();
 
