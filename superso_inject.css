@@ -1801,7 +1801,6 @@ a[href*="%EC%A0%90%EC%88%98-%EC%A1%B0%EC%A0%88%EC%9A%A9-%ED%8E%98%EC%9D%B4%EC%A7
   line-height: 1.5;
   margin: 8px 0 0;
 }
-.nz-tr-lead__short { display: none; }
 .nz-tr-sortnote {
   font-size: 12.5px;
   color: #8A8272;
@@ -2038,29 +2037,12 @@ a[href*="%EC%A0%90%EC%88%98-%EC%A1%B0%EC%A0%88%EC%9A%A9-%ED%8E%98%EC%9D%B4%EC%A7
 /* 펼쳐진 행 등장 애니메이션 */
 .nz-tr-card.expanded .nz-tr-row { animation: nz-tr-fadeup .25s ease; }
 
-/* ── 꼬리 안내 · 최근 리뷰 박스 ── */
-.nz-tr-tail {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 34px;
-  font-size: 13.5px;
-  color: #8A8272;
-}
-.nz-tr-tail img { width: 18px; height: 18px; object-fit: contain; }
-.nz-tr-tail a {
-  color: #8A6D00 !important;
-  font-weight: 600;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-color: #D9C46A;
-}
+/* ── 최근 리뷰 박스 ── */
 .nz-tr-recent {
   background: #EEE8D6;
   border-radius: 12px;
   padding: 22px 26px;
-  margin-top: 24px;
+  margin-top: 34px;
 }
 .nz-tr-recent__title {
   font-family: var(--nz-font-hand);
@@ -2113,8 +2095,6 @@ a[href*="%EC%A0%90%EC%88%98-%EC%A1%B0%EC%A0%88%EC%9A%A9-%ED%8E%98%EC%9D%B4%EC%A7
   .super-content.page__to-review .notion-header__title { font-size: 26px !important; }
   .super-content.page__to-review article.notion-root { padding: 0 16px 40px !important; }
   .nz-tr-lead { font-size: 17px; }
-  .nz-tr-lead__long { display: none; }
-  .nz-tr-lead__short { display: inline; }
   .nz-tr-sortnote { font-size: 11.5px; }
   /* 칩 바: 가로 스크롤 + 축약 라벨 */
   .nz-tr-chipbar__inner {
@@ -2153,7 +2133,6 @@ a[href*="%EC%A0%90%EC%88%98-%EC%A1%B0%EC%A0%88%EC%9A%A9-%ED%8E%98%EC%9D%B4%EC%A7
   .nz-tr-more__mo { display: inline; }
   .nz-tr-card.expanded .nz-tr-more__mo { display: none !important; }
   .nz-tr-recent { padding: 18px 18px; }
-  .nz-tr-tail { font-size: 12.5px; text-align: center; }
 }
 
 /* ============================================================

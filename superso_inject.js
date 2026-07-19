@@ -2801,7 +2801,7 @@ function nzLightboxClose() {
     wrap.className = 'nz-tr-wrap';
 
     var html = ''
-      + '<p class="nz-tr-lead">다음 순서를 기다리는 나조들이에요.<span class="nz-tr-lead__long"> 궁금한 작품에 기대돼요를 눌러주시면 우선적으로 플레이할게요!</span><span class="nz-tr-lead__short"> 궁금한 작품에 기대돼요를 눌러주시면 우선 플레이할게요!</span></p>'
+      + '<p class="nz-tr-lead">다음 순서를 기다리는 나조들이에요. 궁금한 작품에 기대돼요를 눌러주시면 플레이 우선 순위가 올라갑니다.</p>'
       + '<p class="nz-tr-sortnote">모든 목록은 들어온 순서(오래된 것부터)로 정렬돼요</p>';
 
     // 파이프라인 칩 바 (여정 순 = 표시 역순) + 리뷰!
@@ -2854,10 +2854,8 @@ function nzLightboxClose() {
         + '<p>지금은 기다리는 나조가 없어요</p></div>';
     }
 
-    // 꼬리 안내 + 최근 리뷰 박스
-    html += '<div class="nz-tr-tail"><img src="' + LEMON_SRC + '" alt="">'
-      + '<span>리뷰가 완성된 나조들은 이 목록에서 내려와 <a href="/">리뷰</a>로 올라가요</span></div>'
-      + '<div class="nz-tr-recent"><div class="nz-tr-recent__title">최근 리뷰로 올라간 나조들</div>'
+    // 최근 리뷰 박스
+    html += '<div class="nz-tr-recent"><div class="nz-tr-recent__title">최근 리뷰로 올라간 나조들</div>'
       + '<div class="nz-tr-recent__chips"></div></div>';
 
     wrap.innerHTML = html;
