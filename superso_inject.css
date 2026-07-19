@@ -2096,23 +2096,12 @@ a[href*="%EC%A0%90%EC%88%98-%EC%A1%B0%EC%A0%88%EC%9A%A9-%ED%8E%98%EC%9D%B4%EC%A7
   .super-content.page__to-review article.notion-root { padding: 0 16px 40px !important; }
   .nz-tr-lead { font-size: 17px; }
   .nz-tr-sortnote { font-size: 11.5px; }
-  /* 칩 바: 가로 스크롤 + 축약 라벨 */
-  .nz-tr-chipbar__inner {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding-bottom: 2px;
-  }
-  .nz-tr-chipbar__inner::-webkit-scrollbar { display: none; }
+  /* 칩 바: PC와 동일 — 전체 라벨 + 줄바꿈 */
   .nz-tr-chip {
     font-size: 11.5px;
     padding: 5px 11px;
-    flex-shrink: 0;
   }
   .nz-tr-chip__dot { width: 7px; height: 7px; }
-  .nz-tr-chip__full { display: none; }
-  .nz-tr-chip__short { display: inline; }
   .nz-tr-ghead__dot { width: 9px; height: 9px; }
   .nz-tr-ghead__name { font-size: 19px; }
   .nz-tr-ghead__comment {
