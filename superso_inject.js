@@ -3808,19 +3808,22 @@ function nzLightboxClose() {
     }
   }
 
-  // ── 돌아가기 링크 ──
+  // ── 돌아가기 링크 (노트 목록 + 메인) ──
   function injectBack(article) {
-    if (article.querySelector('.nz-dn-back')) return;
-    var a = document.createElement('a');
-    a.className = 'nz-dn-back';
-    a.href = '/';
-    a.textContent = '← 메인으로 돌아가기';
-    article.appendChild(a);
+    if (article.querySelector('.nz-dn-back-wrap')) return;
+    var old = article.querySelector('.nz-dn-back');
+    if (old) old.remove();
+    var wrap = document.createElement('div');
+    wrap.className = 'nz-dn-back-wrap';
+    wrap.innerHTML =
+      '<a class="nz-dn-back" href="/darakbang-note">← 다락방 노트 목록으로</a>' +
+      '<a class="nz-dn-back nz-dn-back--sub" href="/">← 메인으로 돌아가기</a>';
+    article.appendChild(wrap);
   }
 
   function ensureOrder(article) {
     // 시안 순서: 맺음 → 잘 읽었어요 → 돌아가기 (좋아요 버튼이 늦게 붙어도 유지)
-    var back = article.querySelector('.nz-dn-back');
+    var back = article.querySelector('.nz-dn-back-wrap');
     var like = article.querySelector('.nz-like-wrap');
     if (back && like && (back.compareDocumentPosition(like) & Node.DOCUMENT_POSITION_FOLLOWING)) {
       article.appendChild(back);
