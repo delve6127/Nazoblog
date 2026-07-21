@@ -171,6 +171,7 @@ function waitAndHideLoader(prevTitle) {
   var isGuide = path.indexOf('/what-is-nazo') === 0;
   var isNoteDetail = /^\/darakbang-note\/.+/.test(path);
   var isToReview = path.replace(/\/$/, '') === '/to-review';
+  var isNoteList = path.replace(/\/$/, '') === '/darakbang-note';
   var isAbout = path.indexOf('/lemonbread') === 0;
   var isShop = path.indexOf('/how-to-buy-nazotokis') === 0;
   var stableSince = null;
@@ -203,6 +204,8 @@ function waitAndHideLoader(prevTitle) {
     } else if (isAbout) {
       // 레몬빵?도 동일: 소개 카드(커스텀 DOM) 존재로 판정
       ready = document.querySelector('.nz-about-card');
+    } else if (isNoteList) {
+      ready = document.querySelector('.nz-dl-card') || document.querySelector('.nz-dl-empty');
     } else if (isToReview) {
       // 커스텀 목록(행 또는 빈 상태)이 실제로 그려진 뒤에만 공개
       ready = document.querySelector('.nz-tr-wrap .nz-tr-row') || document.querySelector('.nz-tr-empty');
@@ -2648,6 +2651,173 @@ function nzLightboxClose() {
       setTimeout(function () { renderLikeButton(); }, 1500);
     }
   }, 500);
+})();
+
+// ── 다락방 노트 목록 (nz-dl): 노트목록_핸드오프.md 스펙 ────────
+// 노션 표(제목·카테고리·날짜·공개)를 카드 목록으로 재조립.
+// 대표 이미지는 각 글 본문의 첫 이미지를 자동 추출 (세션 캐시).
+(function () {
+  'use strict';
+
+  function isDlPage() {
+    return location.pathname.replace(/\/$/, '') === '/darakbang-note';
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  var DL_LEMON = NZ_ASSET_BASE + 'assets/lemon.png';
+
+  // ── 노션 표 파싱 ──
+  function parseNotes() {
+    var table = document.querySelector('.notion-collection-table');
+    if (!table) return null;
+    var items = [];
+    table.querySelectorAll('tbody tr').forEach(function (tr) {
+      var link = tr.querySelector('a[href*="/darakbang-note/"]');
+      if (!link) return;
+      var href = link.getAttribute('data-link-uri') || link.getAttribute('href') || '';
+      if (/^https?:/.test(href)) {
+        try { href = new URL(href).pathname; } catch (e) { return; }
+      }
+      if (href.indexOf('/darakbang-note/') !== 0) return;
+      if (/\/test$/.test(href)) return; // 테스트 글 제외
+      var title = '';
+      var cats = [];
+      var dateText = '';
+      var isPublic = false;
+      var cells = tr.children;
+      for (var i = 0; i < cells.length; i++) {
+        var cell = cells[i];
+        var pills = cell.querySelectorAll('.notion-pill');
+        var text = cell.textContent.trim();
+        if (cell.querySelector('a[href*="/darakbang-note/"]')) {
+          title = text;
+        } else if (pills.length && text.indexOf('공개') === -1) {
+          pills.forEach(function (p) {
+            var t = p.textContent.trim();
+            if (t) cats.push(t);
+          });
+        } else if (text === '공개') {
+          isPublic = true;
+        } else if (/\d{4}/.test(text)) {
+          dateText = text;
+        }
+      }
+      if (!title || !isPublic) return;
+      var parsed = new Date(dateText);
+      var ts = isNaN(parsed.getTime()) ? 0 : parsed.getTime();
+      var dateFmt = ts
+        ? parsed.getFullYear() + '.' + ('0' + (parsed.getMonth() + 1)).slice(-2) + '.' + ('0' + parsed.getDate()).slice(-2)
+        : '';
+      items.push({ title: title, cats: cats, date: dateFmt, ts: ts, href: href });
+    });
+    items.sort(function (a, b) { return b.ts - a.ts; }); // 최신 글 위
+    return items;
+  }
+
+  // ── 본문 첫 이미지 자동 추출 (세션 캐시) ──
+  function fillCover(card, href) {
+    var key = 'nz_dl_img_' + href;
+    var cached = null;
+    try { cached = sessionStorage.getItem(key); } catch (e) {}
+    if (cached === 'none') return;
+    if (cached) { setCover(card, cached); return; }
+    fetch(href)
+      .then(function (r) { return r.text(); })
+      .then(function (html) {
+        var doc = new DOMParser().parseFromString(html, 'text/html');
+        var img = doc.querySelector('article .notion-image img, article img.notion-image');
+        var src = img ? (img.getAttribute('src') || '') : '';
+        try { sessionStorage.setItem(key, src || 'none'); } catch (e) {}
+        if (src) setCover(card, src);
+      })
+      .catch(function () {});
+  }
+  function setCover(card, src) {
+    var box = card.querySelector('.nz-dl-card__img');
+    if (!box || box.querySelector('img')) return;
+    var img = document.createElement('img');
+    img.src = src;
+    img.alt = '';
+    img.loading = 'lazy';
+    box.appendChild(img);
+    box.classList.add('nz-dl-card__img--loaded');
+  }
+
+  // ── 렌더 ──
+  function buildWrap(items) {
+    var wrap = document.createElement('div');
+    wrap.className = 'nz-dl-wrap';
+    if (!items.length) {
+      wrap.innerHTML = '<div class="nz-dl-empty">'
+        + '<img src="' + DL_LEMON + '" alt="">'
+        + '<p>첫 번째 노트를 열심히 쓰고 있어요.<br>조금만 기다려 주세요!</p>'
+        + '<a class="nz-dl-empty__btn" href="/">리뷰 구경하기</a>'
+        + '</div>';
+      return wrap;
+    }
+    wrap.innerHTML = items.map(function (it) {
+      return '<a class="nz-dl-card" href="' + esc(it.href) + '">'
+        + '<div class="nz-dl-card__img"><img class="nz-dl-card__ph" src="' + DL_LEMON + '" alt=""></div>'
+        + '<div class="nz-dl-card__body">'
+        + '<div class="nz-dl-card__badges">' + it.cats.map(function (c) {
+            return '<span class="nz-dl-badge">' + esc(c) + '</span>';
+          }).join('') + '</div>'
+        + '<div class="nz-dl-card__title">' + esc(it.title) + '</div>'
+        + (it.date ? '<div class="nz-dl-card__date">' + esc(it.date) + '</div>' : '')
+        + '</div></a>';
+    }).join('');
+    return wrap;
+  }
+
+  function render() {
+    if (!isDlPage()) return;
+    if (document.querySelector('.nz-dl-wrap')) return;
+    var items = parseNotes();
+    if (items === null) return;
+    var article = document.querySelector('article.notion-root');
+    if (!article) return;
+    var wrap = buildWrap(items);
+    article.insertBefore(wrap, article.firstChild);
+    wrap.querySelectorAll('.nz-dl-card').forEach(function (card) {
+      fillCover(card, card.getAttribute('href'));
+    });
+  }
+
+  function tryRender(attempt) {
+    attempt = attempt || 0;
+    if (!isDlPage()) return;
+    if (document.querySelector('.notion-collection-table tbody tr') || attempt >= 25) {
+      render();
+    } else if (attempt < 40) {
+      setTimeout(function () { tryRender(attempt + 1); }, 200);
+    }
+  }
+
+  var dlObserver = new MutationObserver(function () {
+    if (isDlPage() && !document.querySelector('.nz-dl-wrap')) tryRender();
+  });
+
+  function boot() {
+    tryRender();
+    dlObserver.observe(document.body || document.documentElement, { childList: true, subtree: true });
+  }
+
+  var dlLastUrl = location.href;
+  setInterval(function () {
+    if (location.href !== dlLastUrl) {
+      dlLastUrl = location.href;
+      if (isDlPage()) tryRender();
+    }
+  }, 300);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
 })();
 
 // ── 리뷰 예정 목록 v2 (nz-tr): 상태 그룹 재조립 + 기대돼요 ────

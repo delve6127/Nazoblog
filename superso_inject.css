@@ -4182,3 +4182,174 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
     font-size: 16px !important;
   }
 }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* 다락방 노트 목록 (nz-dl) — 노트목록_핸드오프.md      */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* 원본(노션 표·본문)은 커스텀이 대체 */
+.super-content.page__darakbang-note article.notion-root > *:not(.nz-dl-wrap) {
+  display: none !important;
+}
+.super-content.page__darakbang-note .notion-page__properties { display: none !important; }
+.super-content.page__darakbang-note .notion-header__cover.no-cover { display: none !important; }
+.super-content.page__darakbang-note .notion-header {
+  max-width: 860px;
+  margin: 38px auto 0 !important;
+  padding: 0 56px !important;
+  box-sizing: border-box;
+}
+.super-content.page__darakbang-note .notion-header__content {
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+}
+.super-content.page__darakbang-note .notion-header__title-wrapper {
+  margin: 0 !important;
+  padding: 0 !important;
+  justify-content: flex-start !important;
+}
+.super-content.page__darakbang-note .notion-header__title {
+  font-family: var(--nz-font-hand) !important;
+  font-weight: 700 !important;
+  font-size: 28px !important;
+  color: #3D372E !important;
+  text-align: left !important;
+  margin: 0 !important;
+}
+.super-content.page__darakbang-note article.notion-root {
+  max-width: 860px !important;
+  margin: 0 auto !important;
+  padding: 24px 56px 60px !important;
+  box-sizing: border-box;
+  font-family: var(--nz-font-body) !important;
+}
+
+.nz-dl-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  animation: nz-dl-fadeup .3s ease;
+}
+@keyframes nz-dl-fadeup {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── 카드 (PC 가로형) ── */
+.nz-dl-card {
+  display: flex;
+  background: #FFFDF7;
+  border: 1px solid #E0D7C2;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  text-decoration: none !important;
+  color: #3D372E !important;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.nz-dl-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(61, 55, 46, .12);
+}
+.nz-dl-card__img {
+  width: 200px;
+  flex-shrink: 0;
+  align-self: stretch;
+  background: #EEE8D6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 140px;
+}
+.nz-dl-card__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.nz-dl-card__img img.nz-dl-card__ph {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  opacity: .4;
+}
+.nz-dl-card__img--loaded img.nz-dl-card__ph { display: none; }
+.nz-dl-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px 28px;
+  flex: 1;
+  min-width: 0;
+}
+.nz-dl-card__badges { display: flex; gap: 6px; flex-wrap: wrap; }
+.nz-dl-badge {
+  background: #FFD953;
+  color: #5C4B00;
+  font-size: 11.5px;
+  font-weight: 700;
+  border-radius: 6px;
+  padding: 3px 9px;
+  align-self: flex-start;
+}
+.nz-dl-card__title {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.nz-dl-card__date {
+  font-size: 14.5px;
+  color: #8A8272;
+  margin-top: auto;
+}
+
+/* ── 빈 상태 ── */
+.nz-dl-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 56px 0;
+  text-align: center;
+}
+.nz-dl-empty img { width: 44px; height: 44px; object-fit: contain; }
+.nz-dl-empty p {
+  font-family: var(--nz-font-hand) !important;
+  font-size: 19px !important;
+  color: #6B6353 !important;
+  line-height: 1.6 !important;
+  margin: 0 !important;
+}
+.nz-dl-empty__btn {
+  display: inline-block;
+  background: #FFFDF7;
+  border: 1px solid #DCD2BA;
+  border-radius: 99px;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #5C554A !important;
+  text-decoration: none !important;
+  transition: background .15s ease;
+}
+.nz-dl-empty__btn:hover { background: #FFF3C9; }
+
+/* ── Mobile (≤768px): 세로 스택, 대표 이미지 없음 ── */
+@media (max-width: 768px) {
+  .super-content.page__darakbang-note .notion-header {
+    margin: 22px auto 0 !important;
+    padding: 0 16px !important;
+  }
+  .super-content.page__darakbang-note .notion-header__title { font-size: 24px !important; }
+  .super-content.page__darakbang-note article.notion-root { padding: 16px 16px 40px !important; }
+  .nz-dl-wrap { gap: 16px; }
+  .nz-dl-card { flex-direction: column; padding: 18px; }
+  .nz-dl-card__img { display: none; }
+  .nz-dl-card__body { padding: 0; gap: 8px; }
+  .nz-dl-badge { font-size: 11px; }
+  .nz-dl-card__title { font-size: 16px; }
+  .nz-dl-card__date { font-size: 14px; margin-top: 0; }
+  .nz-dl-empty { padding: 48px 0; }
+}
