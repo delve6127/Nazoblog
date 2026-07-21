@@ -3765,6 +3765,32 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
   color: #8A8272;
   font-family: var(--nz-font-body);
 }
+.super-content.parent-page__darakbang-note .nz-dn-listbtn {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #FFFDF7;
+  border: 1px solid #DCD2BA;
+  border-radius: 99px;
+  padding: 5px 14px 5px 9px;
+  text-decoration: none !important;
+  color: #5C554A !important;
+  font-family: var(--nz-font-hand) !important;
+  font-size: 15px;
+  font-weight: 700;
+  transition: all .15s ease;
+}
+.super-content.parent-page__darakbang-note .nz-dn-listbtn img {
+  width: 18px;
+  height: 18px;
+  display: block;
+  object-fit: contain;
+}
+.super-content.parent-page__darakbang-note .nz-dn-listbtn:hover {
+  background: #FFF3C9;
+  transform: translateY(-1px);
+}
 
 /* ── 리드문 + 실선 ── */
 .super-content.parent-page__darakbang-note article.notion-root p.notion-text.nz-dn-lead {
@@ -4107,6 +4133,18 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
   }
   .super-content.parent-page__darakbang-note .nz-dn-date {
     font-size: 13px;
+  }
+  .super-content.parent-page__darakbang-note .nz-dn-listbtn {
+    gap: 5px;
+    padding: 4px 12px 4px 8px;
+    font-size: 14px;
+  }
+  .super-content.parent-page__darakbang-note .nz-dn-listbtn img {
+    width: 16px;
+    height: 16px;
+  }
+  .super-content.parent-page__darakbang-note .nz-dn-listbtn:hover {
+    transform: none;
   }
   .super-content.parent-page__darakbang-note article.notion-root p.notion-text.nz-dn-lead {
     font-size: 17px !important;

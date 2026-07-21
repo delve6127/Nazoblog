@@ -3684,6 +3684,12 @@ function nzLightboxClose() {
       d.textContent = props.date;
       row.appendChild(d);
     }
+    // 우측 끝: [레몬 + 노트 목록으로] 알약 버튼 (노트목록버튼_핸드오프)
+    var listBtn = document.createElement('a');
+    listBtn.className = 'nz-dn-listbtn';
+    listBtn.href = '/darakbang-note';
+    listBtn.innerHTML = '<img src="' + NZ_ASSET_BASE + 'assets/lemon.png" alt="">노트 목록으로';
+    row.appendChild(listBtn);
     headerContent.insertBefore(row, headerContent.firstChild);
   }
 
