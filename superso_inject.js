@@ -1724,17 +1724,15 @@ function nzLightboxClose() {
     fetchUpcoming();
   }
 
-  // ── 리뷰 예정 티저 (/to-review 표에서 상위 3개) ──
+  // ── 리뷰 예정 티저: 실제 /to-review 페이지 상단 순서와 동일 (임박 순 + 등록 오래된 순) ──
   var upcomingFetched = false;
-  // 실데이터(보유중/해보고싶다) + 시안 상태값 모두 지원
-  var UP_STATUSES = ['보유중', '해보고싶다', '플레이 대기', '배송 중', '위시리스트'];
-  var UP_STATUS_COLORS = {
-    '보유중': '#7AA85C',
-    '플레이 대기': '#7AA85C',
-    '배송 중': '#D9A13B',
-    '해보고싶다': '#A79E8A',
-    '위시리스트': '#A79E8A'
+  var UP_PRIORITY = ['리뷰 작성 중', '플레이 완료', '보유중', '구입 완료', '해보고 싶다', '해보고싶다'];
+  var UP_NOTION_DEEP = {
+    'pill-pink': '#B0616E', 'pill-purple': '#8171A8', 'pill-blue': '#5F8CA3',
+    'pill-red': '#B25E5E', 'pill-orange': '#C07A48', 'pill-yellow': '#B08900',
+    'pill-green': '#6E9E52', 'pill-brown': '#96705A', 'pill-gray': '#8A8272'
   };
+  var UP_FALLBACK = { '리뷰 작성 중': '#B08900', '플레이 완료': '#A0705C', '보유중': '#7AA85C', '구입 완료': '#5A78A0', '해보고 싶다': '#A79E8A', '해보고싶다': '#A79E8A' };
   function fetchUpcoming() {
     if (upcomingFetched) return;
     upcomingFetched = true;
@@ -1742,21 +1740,37 @@ function nzLightboxClose() {
       .then(function (r) { return r.text(); })
       .then(function (html) {
         var doc = new DOMParser().parseFromString(html, 'text/html');
-        var items = [];
-        doc.querySelectorAll('.notion-collection-table tr').forEach(function (tr) {
-          if (items.length >= 8) return;
-          var titleCell = tr.querySelector('.title, td:first-child');
-          var title = titleCell ? titleCell.textContent.trim() : '';
-          if (!title || title === '이름') return;
-          var status = '';
-          tr.querySelectorAll('.notion-pill').forEach(function (pill) {
-            var s = pill.textContent.trim();
-            if (UP_STATUSES.indexOf(s) > -1) status = s;
-          });
-          if (!status) return;
-          items.push({ title: title, status: status });
+        var table = doc.querySelector('.notion-collection-table');
+        if (!table) { upcomingItems = []; renderUpcoming(); return; }
+        // 헤더 텍스트로 컬럼 인덱스 매핑 (nz-tr와 동일 방식)
+        var idx = {};
+        table.querySelectorAll('thead .notion-collection-table__head-cell').forEach(function (th, i) {
+          var s = th.textContent;
+          if (s.indexOf('제목') !== -1) idx.title = i;
+          else if (s.indexOf('상태') !== -1) idx.status = i;
+          else if (s.indexOf('생성') !== -1) idx.created = i;
         });
-        upcomingItems = items;
+        var items = [];
+        table.querySelectorAll('tbody tr').forEach(function (tr) {
+          var cells = tr.children;
+          var title = idx.title !== undefined && cells[idx.title] ? cells[idx.title].textContent.trim() : '';
+          if (!title) return;
+          var pill = idx.status !== undefined && cells[idx.status] ? cells[idx.status].querySelector('.notion-pill') : null;
+          var status = pill ? pill.textContent.trim() : '';
+          var prio = UP_PRIORITY.indexOf(status);
+          if (prio === -1) return; // 리뷰 완료 등 5그룹 외 제외
+          var colorCls = pill && (pill.className.match(/pill-[a-z]+/) || [])[0];
+          var created = 0;
+          if (idx.created !== undefined && cells[idx.created]) {
+            created = new Date(cells[idx.created].textContent.trim()).getTime() || 0;
+          }
+          items.push({
+            title: title, status: status, prio: prio, created: created,
+            color: (colorCls && UP_NOTION_DEEP[colorCls]) || UP_FALLBACK[status] || '#FFD953'
+          });
+        });
+        items.sort(function (a, b) { return (a.prio - b.prio) || (a.created - b.created); });
+        upcomingItems = items.slice(0, 8);
         renderUpcoming();
       })
       .catch(function () { upcomingItems = []; renderUpcoming(); });
@@ -1770,7 +1784,7 @@ function nzLightboxClose() {
       return;
     }
     list.innerHTML = upcomingItems.map(function (it) {
-      var dot = UP_STATUS_COLORS[it.status] || '#FFD953';
+      var dot = it.color || '#FFD953';
       return '<div class="nz2-up-item">'
         + '<span class="nz2-up-dot" style="background:' + dot + '"></span>'
         + '<span class="nz2-up-name">' + esc(it.title) + '</span>'
