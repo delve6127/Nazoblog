@@ -2737,7 +2737,7 @@ function nzLightboxClose() {
   }
   function setCover(card, src) {
     var box = card.querySelector('.nz-dl-card__img');
-    if (!box || box.querySelector('img')) return;
+    if (!box || box.querySelector('img:not(.nz-dl-card__ph)')) return; // 자리표시자 레몬은 무시
     var img = document.createElement('img');
     img.src = src;
     img.alt = '';
