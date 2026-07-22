@@ -105,6 +105,6 @@
     "まほうのキッチン": { "num": 54, "date": "2026-07-18", "diff": 3, "satisfaction": 3.5, "puzzle": 3.7, "gimmick": 3.4, "design": 3.5, "language": 3.3, "brand": "SCRAP - Mystery For You", "rating": "추천", "quote": "살짝 아쉬운 부분도 있지만, 이전작들보다 확실히 쉬운 달의 나조", "beginner": false, "url": "/nazotoki-reviews/magickitchen" },
     "COUST": { "num": 55, "date": "2026-07-18", "diff": 4, "satisfaction": 4.1, "puzzle": 3.7, "gimmick": 4, "design": 3.8, "language": 2.9, "brand": "AnotherVision", "rating": "추천", "quote": "가성비 컨셉, 하지만 기믹은 고심과 정성이 가득", "beginner": false, "url": "/nazotoki-reviews/coust" },
     "イツツボシ": { "num": 56, "date": "2026-07-19", "diff": 2, "satisfaction": 3.6, "puzzle": 3.3, "gimmick": 3.7, "design": 3.8, "language": 3.5, "brand": "リドラ", "rating": "추천", "quote": "5개의 피스를 만지작, 짧지만 아름다운 퍼즐 나조", "beginner": true, "url": "/nazotoki-reviews/itsutsuboshi" },
-    "メモリアート": { "num": 57, "date": "2026-07-19", "diff": 2, "satisfaction": 3.6, "puzzle": 3.4, "gimmick": 3.7, "design": 3.8, "language": 3.5, "brand": "リドラ", "rating": "추천", "quote": null, "beginner": true, "url": "/nazotoki-reviews/memoryart" }
+    "メモリアート": { "num": 57, "date": "2026-07-19", "diff": 2, "satisfaction": 3.6, "puzzle": 3.4, "gimmick": 3.7, "design": 3.8, "language": 3.5, "brand": "リドラ", "rating": "추천", "quote": "아트도 퍼즐도 전작 대비 한 층 더 진화한 나조", "beginner": true, "url": "/nazotoki-reviews/memoryart" }
   }
 }
