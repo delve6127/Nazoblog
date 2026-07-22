@@ -8,7 +8,7 @@ var NZ_HERO_COPY = {
 };
 
 // ── 다락방 노트 공개 스위치 (5단계 완료 시 true로 바꾸면 칩·박스·사이드바 노출) ──
-var NZ_NOTES_READY = false;
+var NZ_NOTES_READY = true; // 2026-07-23 다락방 노트 오픈 (사용자 승인)
 
 // ── 에셋 베이스 (로컬 프리뷰에서는 window.NZ_ASSET_BASE로 덮어씀) ──
 var NZ_ASSET_BASE = window.NZ_ASSET_BASE || 'https://delve6127.github.io/Nazoblog/';
