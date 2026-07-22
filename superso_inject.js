@@ -164,7 +164,13 @@ function nzPageTitleText() {
 function waitAndHideLoader(prevTitle) {
   // SPA 전환이면 이전 페이지 제목을 받아, 내용이 실제로 교체된 뒤에만 연다
   var needTitleChange = typeof prevTitle === 'string';
-  var maxWait = setTimeout(hideLoader, 4500);
+  // 페일세이프: 4.5초 내 준비가 안 되면 폴링까지 완전히 멈추고 화면을 연다
+  // (멈추지 않으면 로더 재생성 폴링이 계속 돌아 화면이 영영 가려짐)
+  var maxWait = setTimeout(function () {
+    opened = true;
+    clearInterval(checkReady);
+    hideLoader();
+  }, 4500);
   var path = window.location.pathname;
   var isHome = path === '/' || path === '';
   var isReview = path.indexOf('/nazotoki-reviews/') === 0;
