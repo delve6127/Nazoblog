@@ -3762,16 +3762,13 @@ function nzLightboxClose() {
 
   function decorateCard(callout, content, heading) {
     // 제목 "작품명 - 부제" → 부제를 흐린 서브 스팬으로
+    // (innerHTML 기준 분리 — 노션에서 지정한 글자색 스팬을 보존해야 함)
     if (!heading.querySelector('.nz-dn-card__sub')) {
-      var txt = heading.textContent;
-      var m = txt.match(/^(.*?)\s+[-—–]\s+(.+)$/);
-      if (m) {
-        heading.textContent = '';
-        heading.appendChild(document.createTextNode(m[1] + ' '));
-        var sub = document.createElement('span');
-        sub.className = 'nz-dn-card__sub';
-        sub.textContent = '— ' + m[2];
-        heading.appendChild(sub);
+      var html = heading.innerHTML;
+      var sep = html.match(/\s[-—–]\s(?![^<]*>)/); // 태그 내부가 아닌 구분자만
+      if (sep) {
+        heading.innerHTML = html.slice(0, sep.index) +
+          ' <span class="nz-dn-card__sub">— ' + html.slice(sep.index + sep[0].length) + '</span>';
       }
     }
 
