@@ -2991,7 +2991,7 @@ a.nz2-chip--link:hover { color: var(--nz-ink) !important; }
   /* PC: 마스트헤드 전폭 (1배율 — 보정 불필요) */
   .nz-masthead {
     width: 100vw;
-    margin-left: calc(50% - 62.5vw);
+    margin-left: calc(50% - 50vw);
   }
 
   /* Super 컨테이너 폭 해제 (메인만) */
