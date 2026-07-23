@@ -4494,7 +4494,7 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
 }
 .nz-profile-card__btn:hover { background: #FFF3C9; }
 
-/* ── SNS 푸터 (메인 제외) ── */
+/* ── SNS 푸터 (메인은 모바일에서만 SNS 줄 노출) ── */
 .nz-snsf {
   display: flex;
   flex-direction: column;
@@ -4535,6 +4535,16 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
   font-family: var(--nz-font-hand);
   font-size: 15px;
   color: #8A8272;
+}
+
+/* 메인 데스크톱: SNS 줄 숨기고 기존처럼 저작권 한 줄만 */
+@media (min-width: 769px) {
+  .nz-snsf--home { gap: 0; padding: 0; }
+  .nz-snsf--home .nz-snsf__row { display: none; }
+  .nz-snsf--home .nz-snsf__copy {
+    font-size: 16px;
+    color: var(--nz-muted-1);
+  }
 }
 
 @media (max-width: 768px) {

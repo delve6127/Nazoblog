@@ -3987,7 +3987,7 @@ function nzLightboxClose() {
     navContent.appendChild(btn);
   }
 
-  // 푸터: 메인 = 저작권 한 줄 / 그 외 = SNS 푸터 (SNS팔로우_핸드오프)
+  // 푸터: 전 페이지 SNS 푸터 — 단, 메인 데스크톱은 CSS로 SNS 줄을 숨겨 저작권 한 줄만 (SNS팔로우_핸드오프)
   var SNSF_IG = '<svg class="nz-snsf__ig" viewBox="0 0 24 24" fill="none" stroke="#5C554A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.5" fill="#5C554A"></circle></svg>';
   var SNSF_X = '<svg class="nz-snsf__x" viewBox="0 0 24 24" fill="#5C554A"><path d="M18.9 1.2h3.7l-8.1 9.3L24 23.2h-7.5l-5.9-7.7-6.7 7.7H.2l8.7-9.9L-.2 1.2h7.7l5.3 7 6.1-7z"></path></svg>';
   function fixFooter() {
@@ -3997,12 +3997,8 @@ function nzLightboxClose() {
     var mode = isHome ? 'home' : 'sns';
     if (fn.dataset.nzDone === mode) return;
     fn.dataset.nzDone = mode;
-    if (isHome) {
-      fn.textContent = '저의 작은 기록들이 도움이 되길 바라며 · © 2026 Monbbang';
-      return;
-    }
     fn.innerHTML =
-      '<div class="nz-snsf">'
+      '<div class="nz-snsf' + (isHome ? ' nz-snsf--home' : '') + '">'
       + '<div class="nz-snsf__row">'
       +   '<span class="nz-snsf__msg">새 다락방 소식은 여기에 먼저 올라와요</span>'
       +   '<span class="nz-snsf__icons">'
