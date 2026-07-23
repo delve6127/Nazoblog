@@ -1713,7 +1713,21 @@ function nzLightboxClose() {
     var sidebar = document.createElement('div');
     sidebar.id = 'nz2-sidebar';
     sidebar.innerHTML =
-      (NZ_NOTES_READY
+      '<div class="nz-profile-card">'
+      +   '<div class="nz-profile-card__head">'
+      +     '<div class="nz-profile-card__avatar"><img src="' + NZ_ASSET_BASE + 'assets/lemon.png" alt=""></div>'
+      +     '<div class="nz-profile-card__id">'
+      +       '<div class="nz-profile-card__name">레몬빵</div>'
+      +       '<div class="nz-profile-card__tag">나조토키에 빠진 한국인</div>'
+      +     '</div>'
+      +   '</div>'
+      +   '<p class="nz-profile-card__bio">방탈출을 천 번 넘게 하다가 일본의 나조토키를 만나 푹 빠진 방탈러(+나조러)입니다. 직접 풀어본 나조토키를 하나씩 기록하고 있어요. 레몬빵이 조금 더 궁금하다면? 우상단 <a class="nz-profile-card__lemon" href="/lemonbread">레몬빵?</a> 페이지로!</p>'
+      +   '<div class="nz-profile-card__sns">'
+      +     '<a class="nz-profile-card__btn" href="https://instagram.com/seohyun_pika" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5C554A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.5" fill="#5C554A"></circle></svg>Instagram</a>'
+      +     '<a class="nz-profile-card__btn" href="https://x.com/Monbbread" target="_blank" rel="noopener"><svg width="12" height="12" viewBox="0 0 24 24" fill="#5C554A"><path d="M18.9 1.2h3.7l-8.1 9.3L24 23.2h-7.5l-5.9-7.7-6.7 7.7H.2l8.7-9.9L-.2 1.2h7.7l5.3 7 6.1-7z"></path></svg>X</a>'
+      +   '</div>'
+      + '</div>'
+      + (NZ_NOTES_READY
         ? '<div class="nz2-sb-header">다락방 노트</div>'
           + '<div class="nz2-notes-target nz2-sb-notes"></div>'
           + '<a class="nz2-notes-more" href="/darakbang-note">특집 전체 보기 →</a>'
@@ -3973,12 +3987,31 @@ function nzLightboxClose() {
     navContent.appendChild(btn);
   }
 
-  // 푸터 문구 교체
+  // 푸터: 메인 = 저작권 한 줄 / 그 외 = SNS 푸터 (SNS팔로우_핸드오프)
+  var SNSF_IG = '<svg class="nz-snsf__ig" viewBox="0 0 24 24" fill="none" stroke="#5C554A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.5" fill="#5C554A"></circle></svg>';
+  var SNSF_X = '<svg class="nz-snsf__x" viewBox="0 0 24 24" fill="#5C554A"><path d="M18.9 1.2h3.7l-8.1 9.3L24 23.2h-7.5l-5.9-7.7-6.7 7.7H.2l8.7-9.9L-.2 1.2h7.7l5.3 7 6.1-7z"></path></svg>';
   function fixFooter() {
     var fn = document.querySelector('.super-footer__footnote');
-    if (!fn || fn.dataset.nzDone === '1') return;
-    fn.dataset.nzDone = '1';
-    fn.textContent = '저의 작은 기록들이 도움이 되길 바라며 · © 2026 Monbbang';
+    if (!fn) return;
+    var isHome = location.pathname === '/' || location.pathname === '';
+    var mode = isHome ? 'home' : 'sns';
+    if (fn.dataset.nzDone === mode) return;
+    fn.dataset.nzDone = mode;
+    if (isHome) {
+      fn.textContent = '저의 작은 기록들이 도움이 되길 바라며 · © 2026 Monbbang';
+      return;
+    }
+    fn.innerHTML =
+      '<div class="nz-snsf">'
+      + '<div class="nz-snsf__row">'
+      +   '<span class="nz-snsf__msg">새 다락방 소식은 여기에 먼저 올라와요</span>'
+      +   '<span class="nz-snsf__icons">'
+      +     '<a class="nz-snsf__btn" href="https://instagram.com/seohyun_pika" target="_blank" rel="noopener" title="Instagram" aria-label="Instagram">' + SNSF_IG + '</a>'
+      +     '<a class="nz-snsf__btn" href="https://x.com/Monbbread" target="_blank" rel="noopener" title="X" aria-label="X">' + SNSF_X + '</a>'
+      +   '</span>'
+      + '</div>'
+      + '<div class="nz-snsf__copy">저의 작은 기록들이 도움이 되길 바라며 · © 2026 Monbbang</div>'
+      + '</div>';
   }
 
   function ensureHomeClass() {
