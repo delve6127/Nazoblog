@@ -2983,15 +2983,14 @@ a.nz2-chip--link:hover { color: var(--nz-ink) !important; }
 #nz2-bar { display: block; }
 
 @media (min-width: 769px) {
-  /* 클로드 디자인 미리보기가 1520px 시안을 ~0.8배로 축소 표시했으므로,
-     사용자가 승인한 그 모습 그대로 재현하기 위해 PC 메인 전체를 0.8배로 표시 */
+  /* 1배율 실험 (2026-07-23): zoom 0.8 제거 — 되돌리려면 zoom: 0.8 복원 + 아래 보정들 원복 */
   .nz-home .super-content {
-    zoom: 0.8;
+    zoom: 1;
   }
 
-  /* PC: 마스트헤드 전폭 (zoom 0.8 좌표계 보정 — 100vw/0.8 = 125vw) */
+  /* PC: 마스트헤드 전폭 (1배율 — 보정 불필요) */
   .nz-masthead {
-    width: 125vw;
+    width: 100vw;
     margin-left: calc(50% - 62.5vw);
   }
 
@@ -3167,8 +3166,7 @@ a.nz2-chip--link:hover { color: var(--nz-ink) !important; }
     min-height: unset !important;
     max-height: none !important;
     background: var(--nz-paper);
-    /* zoom 0.8 보정: 1.25px × 0.8 = 1px — 1px 그대로 두면 우측 변이 반올림에 사라짐 */
-    border: 1.25px solid var(--nz-card-border);
+    border: 1px solid var(--nz-card-border);
     box-shadow: 0 4px 14px rgba(61, 55, 46, .07);
     padding: 12px 12px 14px;
     box-sizing: content-box;
@@ -3219,7 +3217,7 @@ a.nz2-chip--link:hover { color: var(--nz-ink) !important; }
     min-height: unset !important;
     max-height: none !important;
     background: var(--nz-paper);
-    border: 1.25px solid var(--nz-card-border); /* zoom 0.8 보정 */
+    border: 1px solid var(--nz-card-border);
     box-shadow: 0 2px 6px rgba(61, 55, 46, .06);
     padding: 5px;
     box-sizing: content-box;
@@ -3261,7 +3259,7 @@ a.nz2-chip--link:hover { color: var(--nz-ink) !important; }
 
 /* 리뷰 페이지도 승인된 미리보기 배율로 */
 @media (min-width: 769px) {
-  .nz-review .super-content { zoom: 0.8; }
+  .nz-review .super-content { zoom: 1; } /* 1배율 실험 */
   .nz-review .notion-root { max-width: 100% !important; }
 }
 
