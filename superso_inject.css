@@ -3085,9 +3085,13 @@ a.nz2-chip--link:hover { color: var(--nz-ink) !important; }
     box-sizing: border-box;
     align-items: stretch;
   }
-  /* 시안: 사이드바가 화면 오른쪽 끝까지 — 레이아웃 우측 여백을 사이드바 배경으로 채움 */
-  #nz2-sidebar {
-    box-shadow: 100vw 0 0 var(--nz-bg-sidebar);
+  /* 시안: 사이드바가 화면 오른쪽 끝까지 — 노션 단(컬럼) 폭 제한 해제 */
+  .nz-home .notion-column {
+    width: 100% !important;
+  }
+  .nz-home .notion-column-list {
+    --column-spacing: 0px;
+    width: 100% !important;
   }
   #nz2-left {
     padding: 38px 44px 44px 56px;
