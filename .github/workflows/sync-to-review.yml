@@ -1,0 +1,42 @@
+# 리뷰 예정 목록 자동 동기화
+# Notion DB → data/to-review.json + data/images/
+# 6시간마다 자동 실행되며, Actions 탭에서 수동 실행(Run workflow)도 가능하다.
+name: Sync to-review list
+
+on:
+  schedule:
+    - cron: '0 */6 * * *' # 6시간마다 (UTC 기준 0시/6시/12시/18시)
+  workflow_dispatch: # 수동 실행 버튼
+
+permissions:
+  contents: write # 결과를 저장소에 커밋하기 위해 필요
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Node.js 설정
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Notion DB 동기화 스크립트 실행
+        run: node scripts/fetch-to-review.js
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DB_ID: ${{ secrets.NOTION_DB_ID }}
+
+      - name: 변경사항이 있으면 커밋 & 푸시
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/
+          if git diff --staged --quiet; then
+            echo "변경사항 없음 — 커밋 생략"
+          else
+            git commit -m "chore: 리뷰 예정 목록 자동 동기화"
+            git push
+          fi
