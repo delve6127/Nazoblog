@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-07-29T14:12:45.331Z",
-  "count": 68,
+  "updatedAt": "2026-07-29T19:18:33.921Z",
+  "count": 67,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -15,13 +15,6 @@
       "maker": "ナゾトキアドベンチャー",
       "status": "보유중",
       "image": "data/images/32cd25cb2dd48032b66bea8013bb1c77.png"
-    },
-    {
-      "id": "32cd25cb2dd480718227eaac1f53f95a",
-      "name": "XI",
-      "maker": "Tumbleweed",
-      "status": "플레이 완료",
-      "image": "data/images/32cd25cb2dd480718227eaac1f53f95a.jpg"
     },
     {
       "id": "32cd25cb2dd4803eb376d4eb15ad78e9",
