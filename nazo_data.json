@@ -107,6 +107,7 @@
     "イツツボシ": { "num": 56, "date": "2026-07-19", "diff": 2, "satisfaction": 3.6, "puzzle": 3.3, "gimmick": 3.7, "design": 3.8, "language": 3.5, "brand": "リドラ", "rating": "추천", "quote": "5개의 피스를 만지작, 짧지만 아름다운 퍼즐 나조", "beginner": true, "url": "/nazotoki-reviews/itsutsuboshi" },
     "メモリアート": { "num": 57, "date": "2026-07-19", "diff": 2, "satisfaction": 3.6, "puzzle": 3.4, "gimmick": 3.7, "design": 3.8, "language": 3.5, "brand": "リドラ", "rating": "추천", "quote": "아트도 퍼즐도 전작 대비 한 층 더 진화한 나조", "beginner": true, "url": "/nazotoki-reviews/memoryart" },
     "HIRAMEKI TRUMP RED": { "num": 58, "date": "2026-07-25", "diff": 3, "satisfaction": 3.8, "puzzle": 3.7, "gimmick": 3.8, "design": 3.4, "language": 3, "brand": "Tumbleweed", "rating": "추천", "quote": "54문제가 착착, 트럼프 입문은 레드를 추천", "beginner": false, "url": "/nazotoki-reviews/hirameki-trump-red" },
-    "HIRAMEKI TRUMP": { "num": 59, "date": "2026-07-26", "diff": 4, "satisfaction": 3.2, "puzzle": 3.7, "gimmick": 3.7, "design": 3.4, "language": 1.8, "brand": "Tumbleweed", "rating": "괜찮음", "quote": "언어의 장벽, 발이 턱턱. 아무튼 지쳤다.", "beginner": false, "url": "/nazotoki-reviews/hirameki-trump" }
+    "HIRAMEKI TRUMP": { "num": 59, "date": "2026-07-26", "diff": 4, "satisfaction": 3.2, "puzzle": 3.7, "gimmick": 3.7, "design": 3.4, "language": 1.8, "brand": "Tumbleweed", "rating": "괜찮음", "quote": "언어의 장벽, 발이 턱턱. 아무튼 지쳤다.", "beginner": false, "url": "/nazotoki-reviews/hirameki-trump" },
+    "XI": { "num": 60, "date": "2026-07-26", "diff": 2, "satisfaction": 3.5, "puzzle": 3.7, "gimmick": 3.6, "design": 3.1, "language": 2.9, "brand": "Tumbleweed", "rating": "추천", "quote": "구하기 힘든 게 단점, 클래식한 히라메키가 반짝이는 입문 추천작.", "beginner": true, "url": "/nazotoki-reviews/xi" }
   }
 }
