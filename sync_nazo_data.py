@@ -176,12 +176,14 @@ def resolve_new_urls(new_titles: list, sort_data: dict, sitemap_paths: list) -> 
         title_by_url[path] = t
 
     url_by_title = {}
-    # 1차: 정확 일치, 2차: 공백 무시 일치 (Super.so SEO 제목의 띄어쓰기 차이 흡수)
+    # 1차: 정확 일치, 2차: 공백 무시 일치 (Super.so SEO 제목의 띄어쓰기 차이 흡수),
+    # 3차: 접미 일치 — 페이지 제목이 "한글 독음 + 원제"(예: "컨트롤러 CONTROLLER")인 경우 흡수
     squash = lambda s: re.sub(r"\s+", "", s)
     for title in new_titles:
         exact = [u for u, t in title_by_url.items() if t == title]
         loose = [u for u, t in title_by_url.items() if squash(t) == squash(title)]
-        match = exact or loose
+        suffix = [u for u, t in title_by_url.items() if squash(t).endswith(squash(title))]
+        match = exact or loose or suffix
         if len(match) == 1:
             url_by_title[title] = match[0]
         elif len(match) > 1:
