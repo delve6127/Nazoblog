@@ -323,10 +323,13 @@ def read_xlsx_keywords() -> tuple:
         kws = [k.strip() for k in row[2].split(",") if k.strip()]
         if not kws:
             continue
-        if not sep_seen:
-            review_keywords[row[1]] = kws
-        else:
+        # '구분' 열 값이 있으면 그것을 우선 사용 (행 위치와 무관하게 분류),
+        # 비어 있으면 기존 방식대로 빈 행 구분선 기준으로 분류
+        gubun = row[0].strip() if isinstance(row[0], str) else None
+        if gubun == "브랜드" or (not gubun and sep_seen):
             brand_keywords[row[1]] = kws
+        else:
+            review_keywords[row[1]] = kws
     return review_keywords, brand_keywords
 
 
