@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-07-30T08:29:14.475Z",
-  "count": 67,
+  "updatedAt": "2026-07-30T14:05:58.863Z",
+  "count": 66,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -407,13 +407,6 @@
       "maker": "AnotherVision",
       "status": "보유중",
       "image": "data/images/39dd25cb2dd480cb818bebbb956be67a.jpeg"
-    },
-    {
-      "id": "39dd25cb2dd48053b5abe8e66544bee3",
-      "name": "CONTROLLER",
-      "maker": "Tumbleweed",
-      "status": "플레이 완료",
-      "image": "data/images/39dd25cb2dd48053b5abe8e66544bee3.jpeg"
     },
     {
       "id": "3a2d25cb2dd480c0812ad22ff10cbeb9",
