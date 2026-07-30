@@ -49,7 +49,7 @@
     "anothervision": ["어나더비젼", "어나더비전", "어나더 비전", "어나더 비젼", "도쿄대 걔네"]
   },
   "SORT_DATA": {
-    "무비무드 디저트 퍼즐 팩": { "num": 1, "date": "2026-03-07", "diff": 2, "satisfaction": 3, "puzzle": 3.7, "gimmick": 3, "design": 3.5, "language": 5, "brand": "키이스케이프", "url": "/nazotoki-reviews/moviemood-dessert-puzzle-pack", "rating": "추천", "quote": "잘 만든, 귀한 한국어 나조토키. 나조토키가 무엇인지 궁금하다면 추천!", "beginner": true },
+    "무비무드 디저트 퍼즐 팩": { "num": 1, "date": "2026-03-07", "diff": 2, "satisfaction": 3.5, "puzzle": 3.7, "gimmick": 3, "design": 3.5, "language": 5, "brand": "키이스케이프", "url": "/nazotoki-reviews/moviemood-dessert-puzzle-pack", "rating": "추천", "quote": "잘 만든, 귀한 한국어 나조토키. 나조토키가 무엇인지 궁금하다면 추천!", "beginner": true },
     "Twelve Trick Tiles": { "num": 2, "date": "2026-03-18", "diff": 3, "satisfaction": 5, "puzzle": 3.5, "gimmick": 5, "design": 4, "language": 2.8, "brand": "Tumbleweed", "url": "/nazotoki-reviews/twelve-trick-tiles", "rating": "강력추천", "quote": "기믹의 극한은 마법이 된다. 너무나도 아름다운 강력 추천 나조", "beginner": true },
     "26": { "num": 3, "date": "2026-03-22", "diff": 4, "satisfaction": 5, "puzzle": 4.5, "gimmick": 5, "design": 3, "language": 2.8, "brand": "Tumbleweed", "url": "/nazotoki-reviews/26", "rating": "강력추천", "quote": "압도적 간지를 뿜어낸다. 내 첫 인생 나조.", "beginner": false },
     "ONE OPERATION": { "num": 4, "date": "2026-03-25", "diff": 3, "satisfaction": 5, "puzzle": 4, "gimmick": 4.5, "design": 4.5, "language": 2, "brand": "Tumbleweed", "url": "/nazotoki-reviews/one-operation", "rating": "강력추천", "quote": "듣기가 된다면 반드시 추천! 어디서 보기 힘든 형식의 나조", "beginner": false },
@@ -109,6 +109,7 @@
     "HIRAMEKI TRUMP RED": { "num": 58, "date": "2026-07-25", "diff": 3, "satisfaction": 3.8, "puzzle": 3.7, "gimmick": 3.8, "design": 3.4, "language": 3, "brand": "Tumbleweed", "rating": "추천", "quote": "54문제가 착착, 트럼프 입문은 레드를 추천", "beginner": false, "url": "/nazotoki-reviews/hirameki-trump-red" },
     "HIRAMEKI TRUMP": { "num": 59, "date": "2026-07-26", "diff": 4, "satisfaction": 3.2, "puzzle": 3.7, "gimmick": 3.7, "design": 3.4, "language": 1.8, "brand": "Tumbleweed", "rating": "괜찮음", "quote": "언어의 장벽, 발이 턱턱. 아무튼 지쳤다.", "beginner": false, "url": "/nazotoki-reviews/hirameki-trump" },
     "XI": { "num": 60, "date": "2026-07-26", "diff": 2, "satisfaction": 3.5, "puzzle": 3.7, "gimmick": 3.6, "design": 3.1, "language": 2.9, "brand": "Tumbleweed", "rating": "추천", "quote": "구하기 힘든 게 단점, 클래식한 히라메키가 반짝이는 입문 추천작.", "beginner": true, "url": "/nazotoki-reviews/xi" },
-    "CONTROLLER": { "num": 61, "date": "2026-07-26", "diff": 4, "satisfaction": 5, "puzzle": 4.3, "gimmick": 5, "design": 4.3, "language": 3, "brand": "Tumbleweed", "rating": "강력추천", "quote": "기믹, 퍼즐, 연출, 전부 고점! 여섯번째 만점 나조", "beginner": false, "url": "/nazotoki-reviews/controller" }
+    "CONTROLLER": { "num": 61, "date": "2026-07-26", "diff": 4, "satisfaction": 5, "puzzle": 4.3, "gimmick": 5, "design": 4.3, "language": 3, "brand": "Tumbleweed", "rating": "강력추천", "quote": "기믹, 퍼즐, 연출, 전부 고점! 여섯번째 만점 나조", "beginner": false, "url": "/nazotoki-reviews/controller" },
+    "ドキドキ謎解き肝試し": { "num": 62, "date": "2026-07-26", "diff": 3, "satisfaction": 2.7, "puzzle": 2.7, "gimmick": 3.5, "design": 3.6, "language": 2.2, "brand": "SCRAP - Mystery For You", "rating": "괜찮음", "quote": "공포 컨셉은 신박, 문제가 좀 아쉽다", "beginner": false, "url": "/nazotoki-reviews/dokidoki-test-of-courage" }
   }
 }
