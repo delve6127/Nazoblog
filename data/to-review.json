@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-02T02:54:09.846Z",
+  "updatedAt": "2026-08-02T08:26:09.200Z",
   "count": 66,
   "items": [
     {
@@ -419,21 +419,21 @@
       "id": "3a2d25cb2dd480ed92aac2dc98914f98",
       "name": "謎のマティーニ",
       "maker": "リドラ",
-      "status": "보유중",
+      "status": "플레이 완료",
       "image": "data/images/3a2d25cb2dd480ed92aac2dc98914f98.webp"
     },
     {
       "id": "3a2d25cb2dd480b082dfd158f93e81d8",
       "name": "謎のカシスオレンジ",
       "maker": "リドラ",
-      "status": "보유중",
+      "status": "플레이 완료",
       "image": "data/images/3a2d25cb2dd480b082dfd158f93e81d8.webp"
     },
     {
       "id": "3a2d25cb2dd480e498aafec6a5bd8a92",
       "name": "最後まで解けたら天才！激ムズクロスワード",
       "maker": "リドラ",
-      "status": "보유중",
+      "status": "플레이 완료",
       "image": "data/images/3a2d25cb2dd480e498aafec6a5bd8a92.webp"
     },
     {
@@ -454,15 +454,15 @@
       "id": "3a9d25cb2dd48000b607e422629d13e2",
       "name": "SCRAPPIESのひみつきち (미포유 26.7 花)",
       "maker": "SCRAP - Mystery For You",
-      "status": "보유중",
-      "image": null
+      "status": "플레이 완료",
+      "image": "data/images/3a9d25cb2dd48000b607e422629d13e2.jpeg"
     },
     {
       "id": "3a9d25cb2dd4800483e9efa71b6b0c3d",
       "name": "パズル専門 修復センター (미포유 26.7 月)",
       "maker": "SCRAP - Mystery For You",
-      "status": "보유중",
-      "image": null
+      "status": "플레이 완료",
+      "image": "data/images/3a9d25cb2dd4800483e9efa71b6b0c3d.jpeg"
     }
   ]
 }
