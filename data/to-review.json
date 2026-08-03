@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-08-03T09:48:40.683Z",
-  "count": 66,
+  "updatedAt": "2026-08-03T14:42:01.177Z",
+  "count": 65,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -442,13 +442,6 @@
       "maker": "SCRAP",
       "status": "보유중",
       "image": "data/images/3a5d25cb2dd480a99531ce23770f9391.jpeg"
-    },
-    {
-      "id": "3a9d25cb2dd4807f88e8c4d1a4a584ac",
-      "name": "ドキドキ謎解き肝試し (미포유 26.7 雪)",
-      "maker": "SCRAP - Mystery For You",
-      "status": "플레이 완료",
-      "image": "data/images/3a9d25cb2dd4807f88e8c4d1a4a584ac.jpg"
     },
     {
       "id": "3a9d25cb2dd48000b607e422629d13e2",
