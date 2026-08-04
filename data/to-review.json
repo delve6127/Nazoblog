@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-08-04T08:39:05.008Z",
-  "count": 65,
+  "updatedAt": "2026-08-04T14:17:14.404Z",
+  "count": 63,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -414,20 +414,6 @@
       "maker": "SCRAP",
       "status": "보유중",
       "image": "data/images/3a2d25cb2dd480c0812ad22ff10cbeb9.jpeg"
-    },
-    {
-      "id": "3a2d25cb2dd480ed92aac2dc98914f98",
-      "name": "謎のマティーニ",
-      "maker": "リドラ",
-      "status": "플레이 완료",
-      "image": "data/images/3a2d25cb2dd480ed92aac2dc98914f98.webp"
-    },
-    {
-      "id": "3a2d25cb2dd480b082dfd158f93e81d8",
-      "name": "謎のカシスオレンジ",
-      "maker": "リドラ",
-      "status": "플레이 완료",
-      "image": "data/images/3a2d25cb2dd480b082dfd158f93e81d8.webp"
     },
     {
       "id": "3a2d25cb2dd480e498aafec6a5bd8a92",
