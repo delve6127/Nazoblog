@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-08-05T14:12:02.385Z",
-  "count": 63,
+  "updatedAt": "2026-08-05T19:36:46.628Z",
+  "count": 60,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -209,7 +209,7 @@
       "id": "354d25cb2dd48060a09ad0e60636611e",
       "name": "ALPHABETZ",
       "maker": "リドラ",
-      "status": "보유중",
+      "status": "리뷰 작성 중",
       "image": "data/images/354d25cb2dd48060a09ad0e60636611e.png"
     },
     {
@@ -416,32 +416,11 @@
       "image": "data/images/3a2d25cb2dd480c0812ad22ff10cbeb9.jpeg"
     },
     {
-      "id": "3a2d25cb2dd480e498aafec6a5bd8a92",
-      "name": "最後まで解けたら天才！激ムズクロスワード",
-      "maker": "リドラ",
-      "status": "플레이 완료",
-      "image": "data/images/3a2d25cb2dd480e498aafec6a5bd8a92.webp"
-    },
-    {
       "id": "3a5d25cb2dd480a99531ce23770f9391",
       "name": "ジョジョの奇妙な悪夢からの脱出 謎付きクリアファイルセット",
       "maker": "SCRAP",
       "status": "보유중",
       "image": "data/images/3a5d25cb2dd480a99531ce23770f9391.jpeg"
-    },
-    {
-      "id": "3a9d25cb2dd48000b607e422629d13e2",
-      "name": "SCRAPPIESのひみつきち (미포유 26.7 花)",
-      "maker": "SCRAP - Mystery For You",
-      "status": "플레이 완료",
-      "image": "data/images/3a9d25cb2dd48000b607e422629d13e2.jpeg"
-    },
-    {
-      "id": "3a9d25cb2dd4800483e9efa71b6b0c3d",
-      "name": "パズル専門 修復センター (미포유 26.7 月)",
-      "maker": "SCRAP - Mystery For You",
-      "status": "플레이 완료",
-      "image": "data/images/3a9d25cb2dd4800483e9efa71b6b0c3d.jpeg"
     }
   ]
 }
