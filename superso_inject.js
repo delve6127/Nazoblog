@@ -1747,49 +1747,31 @@ function nzLightboxClose() {
     fetchUpcoming();
   }
 
-  // ── 리뷰 예정 티저: 실제 /to-review 페이지 상단 순서와 동일 (임박 순 + 등록 오래된 순) ──
+  // ── 리뷰 예정 티저: 동기화 JSON 사용 (표시는 /to-review와 동일: 임박 순 + 등록 오래된 순) ──
   var upcomingFetched = false;
   var UP_PRIORITY = ['리뷰 작성 중', '플레이 완료', '보유중', '구입 완료', '해보고 싶다', '해보고싶다'];
-  var UP_NOTION_DEEP = {
-    'pill-pink': '#B0616E', 'pill-purple': '#8171A8', 'pill-blue': '#5F8CA3',
-    'pill-red': '#B25E5E', 'pill-orange': '#C07A48', 'pill-yellow': '#B08900',
-    'pill-green': '#6E9E52', 'pill-brown': '#96705A', 'pill-gray': '#8A8272'
+  var UP_STATUS_COLOR = {
+    '리뷰 작성 중': '#B0616E', '플레이 완료': '#8171A8', '보유중': '#6E9E52',
+    '구입 완료': '#5F8CA3', '해보고 싶다': '#B25E5E', '해보고싶다': '#B25E5E'
   };
-  var UP_FALLBACK = { '리뷰 작성 중': '#B08900', '플레이 완료': '#A0705C', '보유중': '#7AA85C', '구입 완료': '#5A78A0', '해보고 싶다': '#A79E8A', '해보고싶다': '#A79E8A' };
   function fetchUpcoming() {
     if (upcomingFetched) return;
     upcomingFetched = true;
-    fetch('/to-review')
-      .then(function (r) { return r.text(); })
-      .then(function (html) {
-        var doc = new DOMParser().parseFromString(html, 'text/html');
-        var table = doc.querySelector('.notion-collection-table');
-        if (!table) { upcomingItems = []; renderUpcoming(); return; }
-        // 헤더 텍스트로 컬럼 인덱스 매핑 (nz-tr와 동일 방식)
-        var idx = {};
-        table.querySelectorAll('thead .notion-collection-table__head-cell').forEach(function (th, i) {
-          var s = th.textContent;
-          if (s.indexOf('제목') !== -1) idx.title = i;
-          else if (s.indexOf('상태') !== -1) idx.status = i;
-          else if (s.indexOf('생성') !== -1) idx.created = i;
-        });
+    fetch(NZ_ASSET_BASE + 'data/to-review.json')
+      .then(function (r) {
+        if (!r.ok) throw new Error('to-review.json HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function (json) {
         var items = [];
-        table.querySelectorAll('tbody tr').forEach(function (tr) {
-          var cells = tr.children;
-          var title = idx.title !== undefined && cells[idx.title] ? cells[idx.title].textContent.trim() : '';
-          if (!title) return;
-          var pill = idx.status !== undefined && cells[idx.status] ? cells[idx.status].querySelector('.notion-pill') : null;
-          var status = pill ? pill.textContent.trim() : '';
+        (json.items || []).forEach(function (it, i) {
+          var status = it.status || '';
           var prio = UP_PRIORITY.indexOf(status);
           if (prio === -1) return; // 리뷰 완료 등 5그룹 외 제외
-          var colorCls = pill && (pill.className.match(/pill-[a-z]+/) || [])[0];
-          var created = 0;
-          if (idx.created !== undefined && cells[idx.created]) {
-            created = new Date(cells[idx.created].textContent.trim()).getTime() || 0;
-          }
           items.push({
-            title: title, status: status, prio: prio, created: created,
-            color: (colorCls && UP_NOTION_DEEP[colorCls]) || UP_FALLBACK[status] || '#FFD953'
+            title: it.name || '', status: status, prio: prio,
+            created: i, // JSON은 등록순(생성일 오름차순) 정렬
+            color: UP_STATUS_COLOR[status] || '#FFD953'
           });
         });
         items.sort(function (a, b) { return (a.prio - b.prio) || (a.created - b.created); });
@@ -2894,82 +2876,39 @@ function nzLightboxClose() {
     { key: '구입 완료', comment: '배송 중인 나조예요', shortLabel: '구매', fallback: '#5A78A0' },
     { key: '해보고 싶다', comment: '언젠가 꼭 해보고 싶은 나조예요', shortLabel: '위시', fallback: '#A79E8A' }
   ];
-  // 노션 지정색 → 다락방 딥톤 (리뷰 공식 난이도 알약과 동일 체계)
-  var TR_NOTION_DEEP = {
-    'pill-pink': '#B0616E', 'pill-purple': '#8171A8', 'pill-blue': '#5F8CA3',
-    'pill-red': '#B25E5E', 'pill-orange': '#C07A48', 'pill-yellow': '#B08900',
-    'pill-green': '#6E9E52', 'pill-brown': '#96705A', 'pill-gray': '#8A8272'
+  // 상태별 표시색 — 기존 노션 지정색(핑크·퍼플·그린·블루·레드)의 다락방 딥톤 고정값
+  var TR_STATUS_COLOR = {
+    '리뷰 작성 중': '#B0616E', '플레이 완료': '#8171A8', '보유중': '#6E9E52',
+    '구입 완료': '#5F8CA3', '해보고 싶다': '#B25E5E'
   };
 
   function esc(s) {
     return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
-  // ── 행 슬러그 (기존 투표 데이터와 호환 유지) ──
-  function getRowSlug(row) {
-    var anchor = row.querySelector('a[href*="/to-review/"]');
-    if (anchor) {
-      var href = anchor.getAttribute('href') || '';
-      var m = href.match(/\/to-review\/([^\/?#]+)/);
-      if (m) return decodeURIComponent(m[1]);
-    }
-    var idAnchor = row.querySelector('a[id^="block-to-review-"]');
-    if (idAnchor) return idAnchor.id.replace('block-to-review-', '');
-    var blockAnchor = row.querySelector('a.notion-link[id^="block-"]');
-    if (blockAnchor && blockAnchor.id.length > 'block-'.length) return blockAnchor.id;
-    return null;
-  }
-
-  // ── 노션 표 파싱 ──
-  function parseTable() {
-    var table = document.querySelector('.notion-collection-table');
-    if (!table) return null;
-    var headCells = table.querySelectorAll('thead .notion-collection-table__head-cell');
-    if (!headCells.length) return null;
-    var idx = {};
-    headCells.forEach(function (th, i) {
-      var t = th.textContent;
-      if (t.indexOf('제목') !== -1) idx.title = i;
-      else if (t.indexOf('제작사') !== -1) idx.brand = i;
-      else if (t.indexOf('상태') !== -1) idx.status = i;
-      else if (t.indexOf('사진') !== -1) idx.photo = i;
-      else if (t.indexOf('생성') !== -1) idx.created = i;
-    });
-    if (idx.title === undefined || idx.status === undefined) return null;
-
-    var items = [];
-    var statusColor = {};
-    table.querySelectorAll('tbody tr').forEach(function (tr) {
-      var cells = tr.children;
-      if (!cells.length) return;
-      var cell = function (i) { return i !== undefined && cells[i] ? cells[i] : null; };
-
-      var titleCell = cell(idx.title);
-      var title = titleCell ? titleCell.textContent.trim() : '';
-      if (!title) return;
-
-      var statusEl = cell(idx.status) ? cell(idx.status).querySelector('.notion-pill') : null;
-      var status = statusEl ? statusEl.textContent.trim() : '';
-      if (statusEl && !statusColor[status]) {
-        var cm = statusEl.className.match(/pill-[a-z]+/);
-        if (cm && TR_NOTION_DEEP[cm[0]]) statusColor[status] = TR_NOTION_DEEP[cm[0]];
-      }
-
-      var brandPills = cell(idx.brand) ? cell(idx.brand).querySelectorAll('.notion-pill') : [];
-      var brand = brandPills.length
-        ? Array.prototype.map.call(brandPills, function (p) { return p.textContent.trim(); }).filter(Boolean).join(' · ')
-        : (cell(idx.brand) ? cell(idx.brand).textContent.trim() : '');
-
-      var imgEl = cell(idx.photo) ? cell(idx.photo).querySelector('img') : null;
-      var img = imgEl ? (imgEl.getAttribute('src') || '') : '';
-
-      var createdText = cell(idx.created) ? cell(idx.created).textContent.trim() : '';
-      var created = createdText ? new Date(createdText).getTime() : 0;
-      if (isNaN(created)) created = 0;
-
-      items.push({ title: title, brand: brand, status: status, img: img, created: created, slug: getRowSlug(tr) });
-    });
-    return { items: items, statusColor: statusColor };
+  // ── 데이터 로드 (노션 표 파싱 대신 동기화 JSON 사용) ──
+  var trDataCache = null;
+  function fetchData() {
+    if (trDataCache) return Promise.resolve(trDataCache);
+    return fetch(NZ_ASSET_BASE + 'data/to-review.json')
+      .then(function (res) {
+        if (!res.ok) throw new Error('to-review.json HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (json) {
+        var items = (json.items || []).map(function (it, i) {
+          return {
+            title: it.name || '',
+            brand: (it.maker || '').split(', ').join(' · '),
+            status: it.status || '',
+            img: it.image ? NZ_ASSET_BASE + it.image : '',
+            created: i, // JSON은 생성일 오름차순 정렬이라 인덱스가 곧 들어온 순서
+            slug: it.slug || it.id || null
+          };
+        });
+        trDataCache = { items: items, statusColor: TR_STATUS_COLOR };
+        return trDataCache;
+      });
   }
 
   // ── 렌더 ──
@@ -3195,21 +3134,25 @@ function nzLightboxClose() {
   function render() {
     if (!isTrPage()) return;
     if (document.querySelector('.nz-tr-wrap')) return;
-    var parsed = parseTable();
-    if (!parsed) return;
-    var article = document.querySelector('article.notion-root');
-    if (!article) return;
-    var wrap = buildWrap(parsed);
-    article.insertBefore(wrap, article.firstChild);
-    bindEvents(wrap);
-    loadExpects(wrap);
-    fillRecent(wrap);
+    fetchData().then(function (parsed) {
+      if (!isTrPage()) return;
+      if (document.querySelector('.nz-tr-wrap')) return;
+      var article = document.querySelector('article.notion-root');
+      if (!article) return;
+      var wrap = buildWrap(parsed);
+      article.insertBefore(wrap, article.firstChild);
+      bindEvents(wrap);
+      loadExpects(wrap);
+      fillRecent(wrap);
+    }).catch(function (e) {
+      if (window.console && console.warn) console.warn('[nz-tr] 데이터 로드 실패', e);
+    });
   }
 
   function tryRender(attempt) {
     attempt = attempt || 0;
     if (!isTrPage()) return;
-    if (document.querySelector('.notion-collection-table tbody tr')) {
+    if (document.querySelector('article.notion-root')) {
       render();
     } else if (attempt < 40) {
       setTimeout(function () { tryRender(attempt + 1); }, 200);

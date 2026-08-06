@@ -7,420 +7,480 @@
       "name": "REDBOOK 2025 -TREASURE-",
       "maker": "Tumbleweed",
       "status": "보유중",
-      "image": "data/images/32cd25cb2dd4803eb8a9ebc9c9e5b77b.jpg"
+      "image": "data/images/32cd25cb2dd4803eb8a9ebc9c9e5b77b.jpg",
+      "slug": "redbook-2025-treasure"
     },
     {
       "id": "32cd25cb2dd48032b66bea8013bb1c77",
       "name": "レコード",
       "maker": "ナゾトキアドベンチャー",
       "status": "보유중",
-      "image": "data/images/32cd25cb2dd48032b66bea8013bb1c77.png"
+      "image": "data/images/32cd25cb2dd48032b66bea8013bb1c77.png",
+      "slug": "レコード"
     },
     {
       "id": "32cd25cb2dd4803eb376d4eb15ad78e9",
       "name": "Xワード",
       "maker": "AnotherVision",
       "status": "보유중",
-      "image": "data/images/32cd25cb2dd4803eb376d4eb15ad78e9.png"
+      "image": "data/images/32cd25cb2dd4803eb376d4eb15ad78e9.png",
+      "slug": "xワード"
     },
     {
       "id": "32cd25cb2dd480b9937fd667f3ae2596",
       "name": "Mr.リドルのカレンダー",
       "maker": "Mystery Lunch",
       "status": "보유중",
-      "image": "data/images/32cd25cb2dd480b9937fd667f3ae2596.png"
+      "image": "data/images/32cd25cb2dd480b9937fd667f3ae2596.png",
+      "slug": "mrリドルのカレンダー"
     },
     {
       "id": "335d25cb2dd4804199c1e680daef299a",
       "name": "マトリョーシカ",
       "maker": "タカラッシュ",
       "status": "보유중",
-      "image": "data/images/335d25cb2dd4804199c1e680daef299a.jpg"
+      "image": "data/images/335d25cb2dd4804199c1e680daef299a.jpg",
+      "slug": "マトリョーシカ"
     },
     {
       "id": "335d25cb2dd4803b88f4ded406dc7561",
       "name": "ブラストロック",
       "maker": "タカラッシュ",
       "status": "보유중",
-      "image": "data/images/335d25cb2dd4803b88f4ded406dc7561.webp"
+      "image": "data/images/335d25cb2dd4803b88f4ded406dc7561.webp",
+      "slug": "ブラストロック"
     },
     {
       "id": "33ed25cb2dd4803cb53ae9f9f873ce84",
       "name": "差ガセ！ Star & Moonセット",
       "maker": "Tumbleweed",
       "status": "보유중",
-      "image": "data/images/33ed25cb2dd4803cb53ae9f9f873ce84.jpeg"
+      "image": "data/images/33ed25cb2dd4803cb53ae9f9f873ce84.jpeg",
+      "slug": "差ガセ-star-moonセット"
     },
     {
       "id": "33ed25cb2dd480d7bf27d8d5a3ef2509",
       "name": "REDBOOK 2026 -GAMBLE-",
       "maker": "Tumbleweed",
       "status": "보유중",
-      "image": "data/images/33ed25cb2dd480d7bf27d8d5a3ef2509.jpg"
+      "image": "data/images/33ed25cb2dd480d7bf27d8d5a3ef2509.jpg",
+      "slug": "redbook-2026-gamble"
     },
     {
       "id": "33ed25cb2dd4808fa622eeaa00ca1bd7",
       "name": "あるひとさら",
       "maker": "Mystery Lunch",
       "status": "보유중",
-      "image": "data/images/33ed25cb2dd4808fa622eeaa00ca1bd7.png"
+      "image": "data/images/33ed25cb2dd4808fa622eeaa00ca1bd7.png",
+      "slug": "あるひとさら"
     },
     {
       "id": "33ed25cb2dd48046a304d9331660f66e",
       "name": "そのカフェには猫がいる",
       "maker": "Mystery Lunch",
       "status": "보유중",
-      "image": "data/images/33ed25cb2dd48046a304d9331660f66e.png"
+      "image": "data/images/33ed25cb2dd48046a304d9331660f66e.png",
+      "slug": "そのカフェには猫がいる"
     },
     {
       "id": "33ed25cb2dd4802ba368f81d7a251287",
       "name": "珈琲、盆に返らず。",
       "maker": "Mystery Lunch",
       "status": "보유중",
-      "image": "data/images/33ed25cb2dd4802ba368f81d7a251287.png"
+      "image": "data/images/33ed25cb2dd4802ba368f81d7a251287.png",
+      "slug": "珈琲盆に返らず"
     },
     {
       "id": "344d25cb2dd48070834efbb08659ab8e",
       "name": "ONE SHOT (미포유 24.11 月)",
       "maker": "SCRAP - Mystery For You",
       "status": "보유중",
-      "image": "data/images/344d25cb2dd48070834efbb08659ab8e.png"
+      "image": "data/images/344d25cb2dd48070834efbb08659ab8e.png",
+      "slug": "one-shot-미포유-2411-月"
     },
     {
       "id": "344d25cb2dd480e88b5dc221c120d4da",
       "name": "言葉で戦え!! コトバトル (미포유 24.12 花)",
       "maker": "SCRAP - Mystery For You",
       "status": "보유중",
-      "image": "data/images/344d25cb2dd480e88b5dc221c120d4da.png"
+      "image": "data/images/344d25cb2dd480e88b5dc221c120d4da.png",
+      "slug": "言葉で戦え-コトバトル-미포유-2412-花"
     },
     {
       "id": "344d25cb2dd4801aac94c2211a27dbf7",
       "name": "奇妙な文通 (미포유 25.1 花)",
       "maker": "SCRAP - Mystery For You",
       "status": "보유중",
-      "image": "data/images/344d25cb2dd4801aac94c2211a27dbf7.png"
+      "image": "data/images/344d25cb2dd4801aac94c2211a27dbf7.png",
+      "slug": "奇妙な文通-미포유-251-花"
     },
     {
       "id": "344d25cb2dd480ff9cfbdbc5d3c42d50",
       "name": "トラック横転 (미포유 25.2 月)",
       "maker": "SCRAP - Mystery For You",
       "status": "보유중",
-      "image": "data/images/344d25cb2dd480ff9cfbdbc5d3c42d50.png"
+      "image": "data/images/344d25cb2dd480ff9cfbdbc5d3c42d50.png",
+      "slug": "トラック横転-미포유-252-月"
     },
     {
       "id": "344d25cb2dd480a5be37f4f33a013970",
       "name": "Virtual to Escape (미포유 25.2 花)",
       "maker": "SCRAP - Mystery For You",
       "status": "보유중",
-      "image": "data/images/344d25cb2dd480a5be37f4f33a013970.png"
+      "image": "data/images/344d25cb2dd480a5be37f4f33a013970.png",
+      "slug": "virtual-to-escape-미포유-252-花"
     },
     {
       "id": "344d25cb2dd480759f08f21fed6f2de1",
       "name": "SEVEN (미포유 25.4 花)",
       "maker": "SCRAP - Mystery For You",
       "status": "보유중",
-      "image": "data/images/344d25cb2dd480759f08f21fed6f2de1.png"
+      "image": "data/images/344d25cb2dd480759f08f21fed6f2de1.png",
+      "slug": "seven-미포유-254-花"
     },
     {
       "id": "344d25cb2dd480aca060c6a8921d328b",
       "name": "悪い謎 (미포유 25.6 花)",
       "maker": "SCRAP - Mystery For You",
       "status": "보유중",
-      "image": "data/images/344d25cb2dd480aca060c6a8921d328b.png"
+      "image": "data/images/344d25cb2dd480aca060c6a8921d328b.png",
+      "slug": "悪い謎-미포유-256-花"
     },
     {
       "id": "344d25cb2dd4804a8471d9a4333c0ab3",
       "name": "なぞときであそぼ (미포유 25.7 花)",
       "maker": "SCRAP - Mystery For You",
       "status": "보유중",
-      "image": "data/images/344d25cb2dd4804a8471d9a4333c0ab3.png"
+      "image": "data/images/344d25cb2dd4804a8471d9a4333c0ab3.png",
+      "slug": "なぞときであそぼ-미포유-257-花"
     },
     {
       "id": "344d25cb2dd4800f90c4f4290e525299",
       "name": "夜のリアル脱出ゲーム常設店舗からの脱出 (미포유 25.7 月)",
       "maker": "SCRAP - Mystery For You",
       "status": "보유중",
-      "image": "data/images/344d25cb2dd4800f90c4f4290e525299.png"
+      "image": "data/images/344d25cb2dd4800f90c4f4290e525299.png",
+      "slug": "夜のリアル脱出ゲーム常設店舗からの脱出-미포유-257-月"
     },
     {
       "id": "344d25cb2dd48044b7a2f01b301f0b80",
       "name": "PIECE (미포유 25.12 花)",
       "maker": "SCRAP - Mystery For You",
       "status": "보유중",
-      "image": "data/images/344d25cb2dd48044b7a2f01b301f0b80.jpg"
+      "image": "data/images/344d25cb2dd48044b7a2f01b301f0b80.jpg",
+      "slug": "piece-미포유-2512-花"
     },
     {
       "id": "34dd25cb2dd480f29c2fc20364b9cd3e",
       "name": "LIMINAL ESCAPE",
       "maker": "Tumbleweed",
       "status": "보유중",
-      "image": "data/images/34dd25cb2dd480f29c2fc20364b9cd3e.webp"
+      "image": "data/images/34dd25cb2dd480f29c2fc20364b9cd3e.webp",
+      "slug": "liminal-escape"
     },
     {
       "id": "34dd25cb2dd4807ba3bbf1fe61d63f8f",
       "name": "loop",
       "maker": "Tumbleweed",
       "status": "보유중",
-      "image": "data/images/34dd25cb2dd4807ba3bbf1fe61d63f8f.webp"
+      "image": "data/images/34dd25cb2dd4807ba3bbf1fe61d63f8f.webp",
+      "slug": "loop"
     },
     {
       "id": "34dd25cb2dd480179841c14bc11510c7",
       "name": "カミとミコ　『カミとミコの想世記』",
       "maker": "SCRAP",
       "status": "보유중",
-      "image": "data/images/34dd25cb2dd480179841c14bc11510c7.png"
+      "image": "data/images/34dd25cb2dd480179841c14bc11510c7.png",
+      "slug": "カミとミコ-カミとミコの想世記"
     },
     {
       "id": "34dd25cb2dd4804a889ff80f331462ab",
       "name": "謎検 対策問題集2026春",
       "maker": "SCRAP",
       "status": "보유중",
-      "image": "data/images/34dd25cb2dd4804a889ff80f331462ab.png"
+      "image": "data/images/34dd25cb2dd4804a889ff80f331462ab.png",
+      "slug": "謎検-対策問題集2026春"
     },
     {
       "id": "34dd25cb2dd480ea9e3bd32a1dcb46b3",
       "name": "夜の幽霊アパートからの脱出",
       "maker": "SCRAP",
       "status": "보유중",
-      "image": "data/images/34dd25cb2dd480ea9e3bd32a1dcb46b3.png"
+      "image": "data/images/34dd25cb2dd480ea9e3bd32a1dcb46b3.png",
+      "slug": "夜の幽霊アパートからの脱出"
     },
     {
       "id": "34dd25cb2dd48075b32fcdbb89eef3a2",
       "name": "穴あきパズルアドベンチャー 魔王塔からの脱出",
       "maker": "SCRAP",
       "status": "보유중",
-      "image": "data/images/34dd25cb2dd48075b32fcdbb89eef3a2.png"
+      "image": "data/images/34dd25cb2dd48075b32fcdbb89eef3a2.png",
+      "slug": "穴あきパズルアドベンチャー-魔王塔からの脱出"
     },
     {
       "id": "354d25cb2dd4808e8633cb6fb64c20bc",
       "name": "Premium One vol.1 -THE CARDS-",
       "maker": "リドラ",
       "status": "보유중",
-      "image": "data/images/354d25cb2dd4808e8633cb6fb64c20bc.png"
+      "image": "data/images/354d25cb2dd4808e8633cb6fb64c20bc.png",
+      "slug": "premium-one-vol1-the-cards"
     },
     {
       "id": "354d25cb2dd480139dc9f36f8964d4db",
       "name": "Premium One vol.2 -THE NUMBERS-",
       "maker": "リドラ",
       "status": "보유중",
-      "image": "data/images/354d25cb2dd480139dc9f36f8964d4db.png"
+      "image": "data/images/354d25cb2dd480139dc9f36f8964d4db.png",
+      "slug": "premium-one-vol2-the-numbers"
     },
     {
       "id": "354d25cb2dd48060a09ad0e60636611e",
       "name": "ALPHABETZ",
       "maker": "リドラ",
       "status": "리뷰 작성 중",
-      "image": "data/images/354d25cb2dd48060a09ad0e60636611e.png"
+      "image": "data/images/354d25cb2dd48060a09ad0e60636611e.png",
+      "slug": "alphabetz"
     },
     {
       "id": "354d25cb2dd48097b265e1c4bbc152e7",
       "name": "RIDDLE BOX2!!!",
       "maker": "リドラ",
       "status": "해보고 싶다",
-      "image": "data/images/354d25cb2dd48097b265e1c4bbc152e7.png"
+      "image": "data/images/354d25cb2dd48097b265e1c4bbc152e7.png",
+      "slug": "riddle-box2"
     },
     {
       "id": "354d25cb2dd480efafdcc6837d30f643",
       "name": "Paradox5",
       "maker": "リドラ",
       "status": "보유중",
-      "image": "data/images/354d25cb2dd480efafdcc6837d30f643.png"
+      "image": "data/images/354d25cb2dd480efafdcc6837d30f643.png",
+      "slug": "paradox5"
     },
     {
       "id": "365d25cb2dd480b6af2dc5871de8bede",
       "name": "TUMBLEWEED HITS",
       "maker": "Tumbleweed",
       "status": "보유중",
-      "image": "data/images/365d25cb2dd480b6af2dc5871de8bede.jpg"
+      "image": "data/images/365d25cb2dd480b6af2dc5871de8bede.jpg",
+      "slug": "tumbleweed-hits"
     },
     {
       "id": "367d25cb2dd48030ad75f74c69a6302c",
       "name": "製作者？？？人の壁 season1",
       "maker": "ミステリーケーキ",
       "status": "보유중",
-      "image": null
+      "image": null,
+      "slug": "製作者人の壁-season1"
     },
     {
       "id": "367d25cb2dd48000a37aecd0c1009eba",
       "name": "製作者？？？人の壁 season2",
       "maker": "ミステリーケーキ",
       "status": "보유중",
-      "image": null
+      "image": null,
+      "slug": "製作者人の壁-season2"
     },
     {
       "id": "367d25cb2dd4804ebe9cc59eef9a98eb",
       "name": "ひかがくヒラメキBOX",
       "maker": "SCRAP",
       "status": "보유중",
-      "image": "data/images/367d25cb2dd4804ebe9cc59eef9a98eb.jpg"
+      "image": "data/images/367d25cb2dd4804ebe9cc59eef9a98eb.jpg",
+      "slug": "ひかがくヒラメキbox"
     },
     {
       "id": "369d25cb2dd4804b943bf5b86fef44ab",
       "name": "mistake",
       "maker": "Tumbleweed",
       "status": "보유중",
-      "image": "data/images/369d25cb2dd4804b943bf5b86fef44ab.jpg"
+      "image": "data/images/369d25cb2dd4804b943bf5b86fef44ab.jpg",
+      "slug": "mistake"
     },
     {
       "id": "369d25cb2dd480a1866cd97c6776ab39",
       "name": "Clockworks",
       "maker": "Tumbleweed",
       "status": "보유중",
-      "image": "data/images/369d25cb2dd480a1866cd97c6776ab39.jpg"
+      "image": "data/images/369d25cb2dd480a1866cd97c6776ab39.jpg",
+      "slug": "clockworks"
     },
     {
       "id": "369d25cb2dd480a4bec9da6d78d5c377",
       "name": "folded",
       "maker": "ねずみの巣",
       "status": "보유중",
-      "image": "data/images/369d25cb2dd480a4bec9da6d78d5c377.jpg"
+      "image": "data/images/369d25cb2dd480a4bec9da6d78d5c377.jpg",
+      "slug": "folded"
     },
     {
       "id": "36ed25cb2dd48098b3afd77bfbee243f",
       "name": "謎が好きなら、作ってよ！",
       "maker": "xeoxy",
       "status": "보유중",
-      "image": "data/images/36ed25cb2dd48098b3afd77bfbee243f.png"
+      "image": "data/images/36ed25cb2dd48098b3afd77bfbee243f.png",
+      "slug": "謎が好きなら作ってよ"
     },
     {
       "id": "36ed25cb2dd480bda8eed3889db64e3c",
       "name": "→□→",
       "maker": "xeoxy",
       "status": "보유중",
-      "image": "data/images/36ed25cb2dd480bda8eed3889db64e3c.png"
+      "image": "data/images/36ed25cb2dd480bda8eed3889db64e3c.png",
+      "slug": "block-36ed25cb2dd480bda8eed3889db64e3c"
     },
     {
       "id": "36ed25cb2dd480439558f69088f84b89",
       "name": "LOST",
       "maker": "xeoxy",
       "status": "보유중",
-      "image": "data/images/36ed25cb2dd480439558f69088f84b89.png"
+      "image": "data/images/36ed25cb2dd480439558f69088f84b89.png",
+      "slug": "lost"
     },
     {
       "id": "36ed25cb2dd48015b984f1363220872c",
       "name": "RAndOm",
       "maker": "xeoxy",
       "status": "보유중",
-      "image": "data/images/36ed25cb2dd48015b984f1363220872c.png"
+      "image": "data/images/36ed25cb2dd48015b984f1363220872c.png",
+      "slug": "random"
     },
     {
       "id": "36ed25cb2dd48055bbf0c3151bc73775",
       "name": "パイセンナゾボン",
       "maker": "xeoxy",
       "status": "보유중",
-      "image": "data/images/36ed25cb2dd48055bbf0c3151bc73775.png"
+      "image": "data/images/36ed25cb2dd48055bbf0c3151bc73775.png",
+      "slug": "パイセンナゾボン"
     },
     {
       "id": "36ed25cb2dd480b4afbfe9e1741539ca",
       "name": "■",
       "maker": "xeoxy",
       "status": "보유중",
-      "image": "data/images/36ed25cb2dd480b4afbfe9e1741539ca.png"
+      "image": "data/images/36ed25cb2dd480b4afbfe9e1741539ca.png",
+      "slug": "block-36ed25cb2dd480b4afbfe9e1741539ca"
     },
     {
       "id": "36ed25cb2dd480999a64fe1f63b1d63b",
       "name": "解錠",
       "maker": "xeoxy",
       "status": "보유중",
-      "image": "data/images/36ed25cb2dd480999a64fe1f63b1d63b.png"
+      "image": "data/images/36ed25cb2dd480999a64fe1f63b1d63b.png",
+      "slug": "解錠"
     },
     {
       "id": "371d25cb2dd4805a9e03d974bedd9127",
       "name": "たばこ謎",
       "maker": "THE NAZO STORE",
       "status": "해보고 싶다",
-      "image": "data/images/371d25cb2dd4805a9e03d974bedd9127.jpeg"
+      "image": "data/images/371d25cb2dd4805a9e03d974bedd9127.jpeg",
+      "slug": "たばこ謎"
     },
     {
       "id": "371d25cb2dd480b487f1cab14aee33b3",
       "name": "ナゾサンド　不思議な森の恵み味",
       "maker": "THE NAZO STORE",
       "status": "해보고 싶다",
-      "image": "data/images/371d25cb2dd480b487f1cab14aee33b3.jpeg"
+      "image": "data/images/371d25cb2dd480b487f1cab14aee33b3.jpeg",
+      "slug": "ナゾサンド-不思議な森の恵み味"
     },
     {
       "id": "371d25cb2dd480dd9502e537cabb5661",
       "name": "ナゾサンド　かぐや姫直伝　月の珍味",
       "maker": "THE NAZO STORE",
       "status": "해보고 싶다",
-      "image": "data/images/371d25cb2dd480dd9502e537cabb5661.jpeg"
+      "image": "data/images/371d25cb2dd480dd9502e537cabb5661.jpeg",
+      "slug": "ナゾサンド-かぐや姫直伝-月の珍味"
     },
     {
       "id": "371d25cb2dd480728ee6e4791d417f92",
       "name": "ナゾサンド　桜散る涙味",
       "maker": "THE NAZO STORE",
       "status": "해보고 싶다",
-      "image": "data/images/371d25cb2dd480728ee6e4791d417f92.jpeg"
+      "image": "data/images/371d25cb2dd480728ee6e4791d417f92.jpeg",
+      "slug": "ナゾサンド-桜散る涙味"
     },
     {
       "id": "371d25cb2dd48079af8af56cf0a139ad",
       "name": "ナゾサンド　探せ！究極のバズ味",
       "maker": "THE NAZO STORE",
       "status": "해보고 싶다",
-      "image": "data/images/371d25cb2dd48079af8af56cf0a139ad.jpeg"
+      "image": "data/images/371d25cb2dd48079af8af56cf0a139ad.jpeg",
+      "slug": "ナゾサンド-探せ究極のバズ味"
     },
     {
       "id": "371d25cb2dd4803c8ec5f27b896f8e42",
       "name": "ナゾサンド　ブラック過労味",
       "maker": "THE NAZO STORE",
       "status": "해보고 싶다",
-      "image": "data/images/371d25cb2dd4803c8ec5f27b896f8e42.jpeg"
+      "image": "data/images/371d25cb2dd4803c8ec5f27b896f8e42.jpeg",
+      "slug": "ナゾサンド-ブラック過労味"
     },
     {
       "id": "399d25cb2dd480c4a886dda2701f6e86",
       "name": "ゴロク",
       "maker": "MICHI",
       "status": "보유중",
-      "image": "data/images/399d25cb2dd480c4a886dda2701f6e86.jpeg"
+      "image": "data/images/399d25cb2dd480c4a886dda2701f6e86.jpeg",
+      "slug": "ゴロク"
     },
     {
       "id": "399d25cb2dd480848f69dae162215f9b",
       "name": "CIRCLE",
       "maker": "MICHI",
       "status": "보유중",
-      "image": "data/images/399d25cb2dd480848f69dae162215f9b.jpeg"
+      "image": "data/images/399d25cb2dd480848f69dae162215f9b.jpeg",
+      "slug": "circle"
     },
     {
       "id": "399d25cb2dd4802dac32e4edc9933bfd",
       "name": "D",
       "maker": "MICHI",
       "status": "보유중",
-      "image": "data/images/399d25cb2dd4802dac32e4edc9933bfd.jpeg"
+      "image": "data/images/399d25cb2dd4802dac32e4edc9933bfd.jpeg",
+      "slug": "d"
     },
     {
       "id": "39dd25cb2dd48055ae33ce9d2b1f6d12",
       "name": "ORBIT",
       "maker": "ナゾトキアドベンチャー",
       "status": "보유중",
-      "image": "data/images/39dd25cb2dd48055ae33ce9d2b1f6d12.png"
+      "image": "data/images/39dd25cb2dd48055ae33ce9d2b1f6d12.png",
+      "slug": "orbit"
     },
     {
       "id": "39dd25cb2dd480b3b1fde92a36b824c6",
       "name": "Color Up Treasure",
       "maker": "Tumbleweed",
       "status": "보유중",
-      "image": "data/images/39dd25cb2dd480b3b1fde92a36b824c6.jpeg"
+      "image": "data/images/39dd25cb2dd480b3b1fde92a36b824c6.jpeg",
+      "slug": "color-up-treasure"
     },
     {
       "id": "39dd25cb2dd480cb818bebbb956be67a",
       "name": "サイフアーカイブ",
       "maker": "AnotherVision",
       "status": "보유중",
-      "image": "data/images/39dd25cb2dd480cb818bebbb956be67a.jpeg"
+      "image": "data/images/39dd25cb2dd480cb818bebbb956be67a.jpeg",
+      "slug": "サイフアーカイブ"
     },
     {
       "id": "3a2d25cb2dd480c0812ad22ff10cbeb9",
       "name": "ソードアート・オンライン　浮遊城《アインクラッド》第72層からの脱出 持ち帰り謎",
       "maker": "SCRAP",
       "status": "보유중",
-      "image": "data/images/3a2d25cb2dd480c0812ad22ff10cbeb9.jpeg"
+      "image": "data/images/3a2d25cb2dd480c0812ad22ff10cbeb9.jpeg",
+      "slug": "ソードアートオンライン-浮遊城アインクラッド第72層からの脱出-持ち帰り謎"
     },
     {
       "id": "3a5d25cb2dd480a99531ce23770f9391",
       "name": "ジョジョの奇妙な悪夢からの脱出 謎付きクリアファイルセット",
       "maker": "SCRAP",
       "status": "보유중",
-      "image": "data/images/3a5d25cb2dd480a99531ce23770f9391.jpeg"
+      "image": "data/images/3a5d25cb2dd480a99531ce23770f9391.jpeg",
+      "slug": "ジョジョの奇妙な悪夢からの脱出-謎付きクリアファイルセット"
     }
   ]
 }
