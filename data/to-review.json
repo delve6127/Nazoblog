@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-07T13:06:24.371Z",
+  "updatedAt": "2026-08-07T18:59:12.908Z",
   "count": 60,
   "items": [
     {
@@ -254,7 +254,7 @@
       "id": "354d25cb2dd480efafdcc6837d30f643",
       "name": "Paradox5",
       "maker": "リドラ",
-      "status": "보유중",
+      "status": "플레이 완료",
       "image": "data/images/354d25cb2dd480efafdcc6837d30f643.png",
       "slug": "paradox5"
     },
