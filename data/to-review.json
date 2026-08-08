@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-08-08T12:51:03.041Z",
-  "count": 60,
+  "updatedAt": "2026-08-08T14:20:17.819Z",
+  "count": 59,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -235,14 +235,6 @@
       "slug": "premium-one-vol2-the-numbers"
     },
     {
-      "id": "354d25cb2dd48060a09ad0e60636611e",
-      "name": "ALPHABETZ",
-      "maker": "リドラ",
-      "status": "리뷰 작성 중",
-      "image": "data/images/354d25cb2dd48060a09ad0e60636611e.png",
-      "slug": "alphabetz"
-    },
-    {
       "id": "354d25cb2dd48097b265e1c4bbc152e7",
       "name": "RIDDLE BOX2!!!",
       "maker": "リドラ",
@@ -254,7 +246,7 @@
       "id": "354d25cb2dd480efafdcc6837d30f643",
       "name": "Paradox5",
       "maker": "リドラ",
-      "status": "플레이 완료",
+      "status": "리뷰 작성 중",
       "image": "data/images/354d25cb2dd480efafdcc6837d30f643.png",
       "slug": "paradox5"
     },
