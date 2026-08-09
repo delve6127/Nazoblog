@@ -4605,7 +4605,13 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
 }
 
 /* ── 코스 3단 카드 ── */
-.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-courses { gap: 18px; margin-top: 28px; }
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-courses {
+  display: grid !important; grid-template-columns: repeat(3, 1fr);
+  gap: 18px; margin-top: 28px;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-courses .notion-column {
+  width: auto !important; box-sizing: border-box;
+}
 .super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-courses .notion-column {
   background: #fffdf6; border: 1px solid #e8e0c8; border-radius: 18px; padding: 22px 24px;
 }
@@ -4628,8 +4634,11 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
   background: #f6efd8; border: none; border-radius: 16px; padding: 20px 26px; margin-top: 22px;
 }
 .super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-note > .notion-callout__icon { display: none; }
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-note > .notion-callout__content {
+  margin: 0 !important; padding: 0 !important;
+}
 .super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-note__title {
-  display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px; margin: 0 0 10px;
 }
 .super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-note__title strong {
   font-size: 15.5px; color: #4a4130;
@@ -4637,9 +4646,9 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
 .super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-note__lemon { width: 18px; height: 18px; }
 .super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-lucide { width: 17px; height: 17px; flex: none; }
 .super-content.parent-page__darakbang-note article.notion-root .nz-mfy-note p.notion-text {
-  font-size: 15.5px; line-height: 1.85; color: #5c5540; margin: 0;
+  font-size: 15.5px; line-height: 1.85; color: #5c5540; margin: 0 !important;
 }
-.super-content.parent-page__darakbang-note article.notion-root .nz-mfy-note p.notion-text + p.notion-text { margin-top: 8px; }
+.super-content.parent-page__darakbang-note article.notion-root .nz-mfy-note p.notion-text + p.notion-text { margin-top: 8px !important; }
 
 /* ── 가입 절차 스텝 ── */
 .super-content.parent-page__darakbang-note .nz-mfy ol.nz-mfy-step {
@@ -4736,11 +4745,12 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
 /* ── CTA 버튼 ── */
 .super-content.parent-page__darakbang-note .nz-mfy p.nz-mfy-cta { margin: 48px 0 0; text-align: center; }
 .super-content.parent-page__darakbang-note .nz-mfy p.nz-mfy-cta a {
-  display: inline-block; background: #ffd94a; color: #4a4130; text-decoration: none;
+  display: inline-block; background: #f6efd8; color: #4a4130;
+  text-decoration: none !important;
   font-family: 'Jua', sans-serif; font-size: 18px; padding: 15px 38px; border-radius: 999px;
-  box-shadow: 0 2px 0 #d9b83a; border: none;
+  box-shadow: 0 2px 0 #d9cfa8; border: 1px solid #e5dbb9;
 }
-.super-content.parent-page__darakbang-note .nz-mfy p.nz-mfy-cta a:hover { background: #ffce1f; }
+.super-content.parent-page__darakbang-note .nz-mfy p.nz-mfy-cta a:hover { background: #efe6c8; }
 .super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-cta__lemon {
   display: inline-block; width: 20px; height: 20px; vertical-align: -4px; margin-right: 8px;
   border: none; border-radius: 0;

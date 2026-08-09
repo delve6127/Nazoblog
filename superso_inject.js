@@ -4012,7 +4012,7 @@ function nzLightboxClose() {
       var card = document.createElement('div');
       card.className = 'nz-mfy-price__card' + (hot ? ' nz-mfy-price__card--hot' : '');
       var priceHtml = price.replace(/(\+\s*배송비[^,]*)/, '<span class="nz-mfy-price__ship">$1</span>');
-      card.innerHTML = (hot ? '<span class="nz-mfy-price__badge">한국 나조러의 선택</span>' : '')
+      card.innerHTML = (hot ? '<span class="nz-mfy-price__badge">추천</span>' : '')
         + '<div class="nz-mfy-price__name">' + name + '</div>'
         + '<div class="nz-mfy-price__amount">' + priceHtml + '</div>'
         + (comment ? '<p class="nz-mfy-price__comment">' + comment + '</p>' : '');
