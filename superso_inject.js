@@ -4108,6 +4108,7 @@ function nzLightboxClose() {
       var subs = [];
       var next = p.nextElementSibling;
       while (next && subs.length < 3 && next.tagName === 'P') {
+        if (!next.textContent.trim()) { next = next.nextElementSibling; continue; } // 빈 문단 건너뜀
         var a = next.querySelector('a');
         var isLinkOnly = a && next.textContent.trim() === a.textContent.trim() && a.textContent.trim();
         if (!isLinkOnly) break;
