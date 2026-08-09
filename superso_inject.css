@@ -4815,3 +4815,11 @@ html:has(body.nz-mfy-page) { scroll-behavior: smooth; }
   }
   .super-content.parent-page__darakbang-note .nz-mfy a.nz-mfy-cta-sub__btn { text-align: center; }
 }
+
+/* ── 다락방 노트 NEW 뱃지 ── */
+.nz-dl-card { position: relative; }
+.nz-dl-card .nz-dl-new { top: 10px; left: 10px; z-index: 2; }
+.nz2-note-card .nz2-note-new {
+  position: static !important; display: inline-block;
+  margin-left: 4px; vertical-align: 1px; box-shadow: none !important;
+}

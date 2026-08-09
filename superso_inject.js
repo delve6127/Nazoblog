@@ -1848,18 +1848,21 @@ function nzLightboxClose() {
           if (pill) category = pill.textContent.trim();
           if (category === '공개') category = '';
           var dateText = '';
+          var isNew = false;
           var dateCell = tr.querySelector('td.date, .date');
           if (dateCell) {
             var parsed = new Date(dateCell.textContent.trim());
             if (!isNaN(parsed.getTime())) {
               dateText = parsed.getFullYear() + '.' + ('0' + (parsed.getMonth() + 1)).slice(-2);
+              isNew = (Date.now() - parsed.getTime()) / 86400000 <= 4; // 리뷰와 동일 기준
             }
           }
           items.push({
             title: title,
             href: link.getAttribute('href'),
             meta: [dateText, category].filter(Boolean).join(' · '),
-            sortKey: dateText || ''
+            sortKey: dateText || '',
+            isNew: isNew
           });
         });
         // 최신순 상위 3개
@@ -1880,7 +1883,8 @@ function nzLightboxClose() {
       + '</div>';
     var cardsHtml = items.map(function (it) {
       return '<a class="nz2-note-card" href="' + esc(it.href) + '">'
-        + '<div class="nz2-note-card-title">' + esc(it.title) + '</div>'
+        + '<div class="nz2-note-card-title">' + esc(it.title)
+        + (it.isNew ? ' <span class="nz-new-badge nz2-note-new">NEW</span>' : '') + '</div>'
         + (it.meta ? '<div class="nz2-note-card-meta">' + esc(it.meta) + '</div>' : '')
         + '</a>';
     }).join('');
@@ -2773,7 +2777,9 @@ function nzLightboxClose() {
       return wrap;
     }
     wrap.innerHTML = items.map(function (it) {
+      var isNew = it.ts && (Date.now() - it.ts) / 86400000 <= 4; // 리뷰와 동일: 4일 이내 NEW
       return '<a class="nz-dl-card" href="' + esc(it.href) + '">'
+        + (isNew ? '<span class="nz-new-badge nz-dl-new">NEW</span>' : '')
         + '<div class="nz-dl-card__img"><img class="nz-dl-card__ph" src="' + DL_LEMON + '" alt=""></div>'
         + '<div class="nz-dl-card__body">'
         + '<div class="nz-dl-card__badges">' + it.cats.map(function (c) {
