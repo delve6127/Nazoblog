@@ -4105,23 +4105,27 @@ function nzLightboxClose() {
     }
     // 주 버튼 뒤의 링크 전용 문단들 → 보조 알약 버튼 줄로 묶기
     if (!p.parentNode.querySelector('.nz-mfy-cta-sub')) {
-      var subs = [];
+      // 링크로만 이루어진 문단들 수집 (한 문단에 링크 여러 개여도 허용)
+      var squash = function (s) { return s.replace(/\s+/g, ''); };
+      var linkPs = [];
       var next = p.nextElementSibling;
-      while (next && subs.length < 3 && next.tagName === 'P') {
+      while (next && linkPs.length < 3 && next.tagName === 'P') {
         if (!next.textContent.trim()) { next = next.nextElementSibling; continue; } // 빈 문단 건너뜀
-        var a = next.querySelector('a');
-        var isLinkOnly = a && next.textContent.trim() === a.textContent.trim() && a.textContent.trim();
+        var as = Array.prototype.slice.call(next.querySelectorAll('a'));
+        var joined = as.map(function (a) { return a.textContent; }).join('');
+        var isLinkOnly = as.length && squash(next.textContent) === squash(joined);
         if (!isLinkOnly) break;
-        subs.push(next);
+        linkPs.push(next);
         next = next.nextElementSibling;
       }
-      if (subs.length) {
+      if (linkPs.length) {
         var row = document.createElement('div');
         row.className = 'nz-mfy-cta-sub';
-        subs.forEach(function (sp) {
-          var sa = sp.querySelector('a');
-          sa.classList.add('nz-mfy-cta-sub__btn');
-          row.appendChild(sa);
+        linkPs.forEach(function (sp) {
+          sp.querySelectorAll('a').forEach(function (sa) {
+            sa.classList.add('nz-mfy-cta-sub__btn');
+            row.appendChild(sa);
+          });
           sp.remove();
         });
         p.parentNode.insertBefore(row, p.nextElementSibling);
