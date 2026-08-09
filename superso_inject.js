@@ -4103,6 +4103,29 @@ function nzLightboxClose() {
       link.innerHTML = '<img class="nz-mfy-cta__lemon" src="' + NZ_ASSET_BASE + 'assets/lemon.png" alt="">'
         + link.textContent.trim() + ' →';
     }
+    // 주 버튼 뒤의 링크 전용 문단들 → 보조 알약 버튼 줄로 묶기
+    if (!p.parentNode.querySelector('.nz-mfy-cta-sub')) {
+      var subs = [];
+      var next = p.nextElementSibling;
+      while (next && subs.length < 3 && next.tagName === 'P') {
+        var a = next.querySelector('a');
+        var isLinkOnly = a && next.textContent.trim() === a.textContent.trim() && a.textContent.trim();
+        if (!isLinkOnly) break;
+        subs.push(next);
+        next = next.nextElementSibling;
+      }
+      if (subs.length) {
+        var row = document.createElement('div');
+        row.className = 'nz-mfy-cta-sub';
+        subs.forEach(function (sp) {
+          var sa = sp.querySelector('a');
+          sa.classList.add('nz-mfy-cta-sub__btn');
+          row.appendChild(sa);
+          sp.remove();
+        });
+        p.parentNode.insertBefore(row, p.nextElementSibling);
+      }
+    }
   }
 
   // ── 10) 리드: 시안은 일반 문단 + 2px 구분선 (nz-dn 오뮤 리드 해제) ──
