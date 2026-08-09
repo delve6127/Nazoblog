@@ -3855,6 +3855,308 @@ function nzLightboxClose() {
   }
 })();
 
+/* ============================================================
+ *  nz-mfy — 미포유 구독 가이드 전용 장식 (slug: /darakbang-note/mfy-guide)
+ *  nz-dn(공통 노트 장식)이 먼저 돈 뒤 그 위에 얹는다.
+ *  시안: 미포유 구독 가이드 디자인/design_handoff_mifoyu_guide/README.md
+ * ============================================================ */
+(function () {
+  'use strict';
+
+  function isMfyPage() {
+    return location.pathname.replace(/\/$/, '') === '/darakbang-note/mfy-guide';
+  }
+
+  var COURSE_COLORS = { '雪の謎': '#4d79b8', '花の謎': '#c25b8a', '月の謎': '#8a63b8' };
+
+  // Lucide 아이콘 (stroke #b48a1e, stroke-width 2.75 — 시안 규칙)
+  var LUCIDE_ATTR = 'fill="none" stroke="#b48a1e" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"';
+  var ICON_CALENDAR = '<svg class="nz-mfy-lucide" ' + LUCIDE_ATTR + '><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>';
+  var ICON_CLIPBOARD = '<svg class="nz-mfy-lucide" ' + LUCIDE_ATTR + '><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg>';
+  var ICON_PACKAGE = '<svg class="nz-mfy-lucide" ' + LUCIDE_ATTR + '><path d="M16 16h6"/><path d="M19 13v6"/><path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14"/><path d="m7.5 4.27 9 5.15"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" x2="12" y1="22" y2="12"/></svg>';
+
+  // ── 1) 정보 콜아웃 3종: 갈색 → nz-dn 맺음 분류 해제 + 아이콘 타이틀 ──
+  function decorateNotes(art) {
+    art.querySelectorAll(':scope > .notion-callout[class*="bg-brown"]').forEach(function (co) {
+      co.classList.remove('nz-dn-close');
+      co.classList.add('nz-mfy-note');
+      if (co.querySelector('.nz-mfy-note__title')) return;
+      var content = co.querySelector('.notion-callout__content');
+      if (!content) return;
+      var firstP = content.querySelector('p');
+      var strong = firstP && firstP.querySelector('strong');
+      if (!strong) return;
+      var title = strong.textContent.trim();
+      var icon;
+      if (title.indexOf('날짜') !== -1) icon = ICON_CALENDAR;
+      else if (title.indexOf('요약') !== -1 || title.indexOf('정리') !== -1) icon = ICON_CLIPBOARD;
+      else icon = '<img class="nz-mfy-note__lemon" src="' + NZ_ASSET_BASE + 'assets/lemon.png" alt="">';
+      var row = document.createElement('div');
+      row.className = 'nz-mfy-note__title';
+      row.innerHTML = icon + '<strong>' + title + '</strong>';
+      firstP.remove();
+      content.insertBefore(row, content.firstChild);
+    });
+  }
+
+  // ── 2) 목차: h2 9개 기반 자동 생성, 첫 h2 앞 삽입 ──
+  function buildToc(art) {
+    if (art.querySelector('.nz-mfy-toc')) return;
+    var h2s = Array.prototype.slice.call(art.querySelectorAll(':scope > h2.notion-heading'));
+    if (h2s.length < 2) return;
+    var rows = Math.ceil(h2s.length / 2);
+    var links = h2s.map(function (h, i) {
+      return '<a href="#' + h.id + '">'
+        + '<span class="nz-mfy-toc__num">' + ('0' + (i + 1)).slice(-2) + '</span>'
+        + '<span class="nz-mfy-toc__label">' + h.textContent.trim() + '</span>'
+        + '<span class="nz-mfy-toc__dots"></span></a>';
+    }).join('');
+    var toc = document.createElement('div');
+    toc.className = 'nz-mfy-toc';
+    toc.innerHTML = '<div class="nz-mfy-toc__head"><span>목차</span></div>'
+      + '<div class="nz-mfy-toc__grid" style="grid-template-rows:repeat(' + rows + ',auto)">' + links + '</div>';
+    art.insertBefore(toc, h2s[0]);
+  }
+
+  // ── 3) 코스 3단 카드 ──
+  function decorateCourses(art) {
+    var colList = art.querySelector(':scope > .notion-column-list');
+    if (!colList) return;
+    colList.classList.add('nz-mfy-courses');
+    colList.querySelectorAll('.notion-column').forEach(function (col) {
+      if (col.querySelector('.nz-mfy-course__head')) return;
+      var firstP = col.querySelector('p');
+      if (!firstP) return;
+      var m = firstP.textContent.trim().match(/^(.+?)\((.+?)\)\s*:?\s*(.*)$/);
+      if (!m) return;
+      var name = m[1].trim();
+      var head = document.createElement('div');
+      head.className = 'nz-mfy-course__head';
+      head.innerHTML = '<span class="nz-mfy-course__name" style="color:' + (COURSE_COLORS[name] || '#4a4130') + '">' + name + '</span>'
+        + '<span class="nz-mfy-course__alias">' + m[2].trim() + '</span>';
+      var feat = document.createElement('div');
+      feat.className = 'nz-mfy-course__feat';
+      feat.textContent = m[3].trim();
+      firstP.remove();
+      col.insertBefore(feat, col.firstChild);
+      col.insertBefore(head, col.firstChild);
+    });
+  }
+
+  // ── 4) 가입 절차: 낱개 ol들에 연속 스텝 번호 부여 ──
+  function decorateSteps(art) {
+    var n = 0;
+    art.querySelectorAll(':scope > ol.notion-numbered-list').forEach(function (ol) {
+      n++;
+      ol.classList.add('nz-mfy-step');
+      var li = ol.querySelector('li');
+      if (li) li.setAttribute('data-nzstep', n);
+    });
+  }
+
+  // ── 5) 타임라인: 글머리 목록 → 세로 타임라인 (마지막 = 노랑 점 + 택배 아이콘) ──
+  function buildTimeline(art) {
+    if (art.querySelector('.nz-mfy-tl')) return;
+    var ul = art.querySelector(':scope > ul.notion-bulleted-list');
+    if (!ul) return;
+    var items = Array.prototype.slice.call(ul.querySelectorAll(':scope > li'));
+    if (!items.length) return;
+    var tl = document.createElement('div');
+    tl.className = 'nz-mfy-tl';
+    items.forEach(function (li, i) {
+      var txt = li.textContent.trim();
+      var pos = txt.indexOf(':');
+      var label = pos > -1 ? txt.slice(0, pos).trim() : '';
+      var desc = pos > -1 ? txt.slice(pos + 1).trim() : txt;
+      var last = i === items.length - 1;
+      var row = document.createElement('div');
+      row.className = 'nz-mfy-tl__row' + (last ? ' nz-mfy-tl__row--last' : '');
+      var bodyHtml;
+      if (label) {
+        bodyHtml = '<div class="nz-mfy-tl__label">' + label + (last ? ICON_PACKAGE : '') + '</div>'
+          + '<p class="nz-mfy-tl__desc">' + desc + '</p>';
+      } else {
+        // 라벨 없는 항목(마무리 코멘트): 아이콘을 문장 앞에 인라인으로
+        bodyHtml = '<p class="nz-mfy-tl__desc nz-mfy-tl__desc--solo">' + (last ? ICON_PACKAGE : '') + desc + '</p>';
+      }
+      row.innerHTML =
+        '<div class="nz-mfy-tl__rail"><span class="nz-mfy-tl__dot"></span><span class="nz-mfy-tl__line"></span></div>'
+        + '<div class="nz-mfy-tl__body">' + bodyHtml + '</div>';
+      tl.appendChild(row);
+    });
+    ul.parentNode.insertBefore(tl, ul);
+    ul.classList.add('nz-mfy-hide');
+  }
+
+  // ── 6·7) 표 2개 → 요금 비교 카드 / 통계 칩 ──
+  function tableCells(tbl) {
+    return Array.prototype.slice.call(tbl.querySelectorAll('tr')).map(function (tr) {
+      return Array.prototype.slice.call(tr.querySelectorAll('td, th')).map(function (c) { return c.innerText.trim(); });
+    });
+  }
+
+  function buildPriceCards(art) {
+    if (art.querySelector('.nz-mfy-price')) return;
+    var tables = Array.prototype.slice.call(art.querySelectorAll(':scope > .notion-table__wrapper'));
+    var tbl = tables.filter(function (t) { return t.innerText.indexOf('플랜') !== -1; })[0];
+    if (!tbl) return;
+    var rows = tableCells(tbl.querySelector('table') || tbl);
+    if (rows.length < 2) return;
+    var wrap = document.createElement('div');
+    wrap.className = 'nz-mfy-price';
+    for (var c = 0; c < (rows[0] || []).length; c++) {
+      var name = rows[0][c] || '';
+      var price = (rows[1] || [])[c] || '';
+      var comment = (rows[2] || [])[c] || '';
+      var hot = name.indexOf('3개') !== -1;
+      var card = document.createElement('div');
+      card.className = 'nz-mfy-price__card' + (hot ? ' nz-mfy-price__card--hot' : '');
+      var priceHtml = price.replace(/(\+\s*배송비[^,]*)/, '<span class="nz-mfy-price__ship">$1</span>');
+      card.innerHTML = (hot ? '<span class="nz-mfy-price__badge">한국 나조러의 선택</span>' : '')
+        + '<div class="nz-mfy-price__name">' + name + '</div>'
+        + '<div class="nz-mfy-price__amount">' + priceHtml + '</div>'
+        + (comment ? '<p class="nz-mfy-price__comment">' + comment + '</p>' : '');
+      wrap.appendChild(card);
+    }
+    tbl.parentNode.insertBefore(wrap, tbl);
+    tbl.classList.add('nz-mfy-hide');
+  }
+
+  function buildStatChips(art) {
+    if (art.querySelector('.nz-mfy-stats')) return;
+    var tables = Array.prototype.slice.call(art.querySelectorAll(':scope > .notion-table__wrapper'));
+    var tbl = tables.filter(function (t) { return t.innerText.indexOf('시간') !== -1 && t.innerText.indexOf('플랜') === -1; })[0];
+    if (!tbl) return;
+    var rows = tableCells(tbl.querySelector('table') || tbl);
+    if (rows.length < 2) return;
+    var wrap = document.createElement('div');
+    wrap.className = 'nz-mfy-stats';
+    for (var c = 0; c < (rows[0] || []).length; c++) {
+      var label = rows[0][c] || '';
+      var big = (rows[1] || [])[c] || '';
+      var sub = (rows[2] || [])[c] || '';
+      var bm = big.match(/^(.*?)\s*(\/\s*.+)$/); // "평균 517엔 /시간" → 본체 + 단위
+      var bigHtml = bm ? bm[1] + '<span class="nz-mfy-stats__unit">' + bm[2].replace(/\s+/g, '') + '</span>' : big;
+      var chip = document.createElement('div');
+      chip.className = 'nz-mfy-stats__chip';
+      chip.innerHTML = '<div class="nz-mfy-stats__label">' + label + '</div>'
+        + '<div class="nz-mfy-stats__big">' + bigHtml + '</div>'
+        + (sub ? '<div class="nz-mfy-stats__sub">' + sub + '</div>' : '');
+      wrap.appendChild(chip);
+    }
+    tbl.parentNode.insertBefore(wrap, tbl);
+    tbl.classList.add('nz-mfy-hide');
+  }
+
+  // ── 8) FAQ: "Q." 문단 + 이어지는 답변 문단들 → 카드 ──
+  function buildFaq(art) {
+    if (art.querySelector('.nz-mfy-faq')) return;
+    var kids = Array.prototype.slice.call(art.children);
+    var qs = kids.filter(function (el) {
+      return el.tagName === 'P' && /^Q[.．]/.test(el.textContent.trim());
+    });
+    qs.forEach(function (qp) {
+      var card = document.createElement('div');
+      card.className = 'nz-mfy-faq';
+      qp.parentNode.insertBefore(card, qp);
+      // 질문 행
+      var qText = qp.textContent.trim().replace(/^Q[.．]\s*/, '');
+      var qRow = document.createElement('div');
+      qRow.className = 'nz-mfy-faq__q';
+      qRow.innerHTML = '<span class="nz-mfy-faq__marker">Q.</span><span>' + qText + '</span>';
+      card.appendChild(qRow);
+      qp.remove();
+      // 답변 문단들: 다음 Q/비문단 블록 전까지
+      var next = card.nextElementSibling;
+      while (next && next.tagName === 'P' && !/^Q[.．]/.test(next.textContent.trim())
+             && next.textContent.trim() && !next.querySelector('a[href*="scrapticket"]')) {
+        var move = next;
+        next = next.nextElementSibling;
+        move.classList.add('nz-mfy-faq__a');
+        move.innerHTML = move.innerHTML.replace(/^(\s*)(→|&rarr;)\s*/, '$1');
+        card.appendChild(move);
+      }
+    });
+  }
+
+  // ── 9) CTA 버튼 ──
+  function decorateCta(art) {
+    var link = art.querySelector('p a[href*="mystery-for-you.scrapticket.jp"]');
+    if (!link) return;
+    var p = link.closest('p');
+    if (!p || p.classList.contains('nz-mfy-cta')) return;
+    if (link.textContent.indexOf('구독하러') === -1) return; // 가입 절차 속 링크는 제외
+    p.classList.add('nz-mfy-cta');
+    if (!link.querySelector('.nz-mfy-cta__lemon')) {
+      link.innerHTML = '<img class="nz-mfy-cta__lemon" src="' + NZ_ASSET_BASE + 'assets/lemon.png" alt="">'
+        + link.textContent.trim() + ' →';
+    }
+  }
+
+  // ── 10) 리드: 시안은 일반 문단 + 2px 구분선 (nz-dn 오뮤 리드 해제) ──
+  function fixLead(art) {
+    var lead = art.querySelector('.nz-dn-lead');
+    if (lead) lead.classList.remove('nz-dn-lead');
+    // 첫 h2 이전의 숨김 처리된 구분선 복원 (시안의 2px 골드 실선)
+    var kids = Array.prototype.slice.call(art.children);
+    for (var i = 0; i < kids.length; i++) {
+      if (kids[i].tagName === 'H2') break;
+      if (kids[i].classList.contains('notion-divider')) {
+        kids[i].classList.remove('nz-dn-hide');
+        kids[i].classList.add('nz-mfy-rule');
+      }
+    }
+  }
+
+  function decorate() {
+    if (!isMfyPage()) return;
+    var art = document.querySelector('article.notion-root');
+    if (!art) return;
+    // nz-dn(공통 장식)이 먼저 완료되어야 함
+    if (!document.querySelector('.nz-dn-head') || !art.classList.contains('nz-dn-article')) return;
+    if (art.classList.contains('nz-mfy-done')) return;
+    art.classList.add('nz-mfy-done');
+    art.classList.add('nz-mfy');
+    document.body.classList.add('nz-mfy-page');
+    fixLead(art);
+    decorateNotes(art);
+    buildToc(art);
+    decorateCourses(art);
+    decorateSteps(art);
+    buildTimeline(art);
+    buildPriceCards(art);
+    buildStatChips(art);
+    buildFaq(art);
+    decorateCta(art);
+  }
+
+  // 하이드레이션이 장식을 갈아엎으면 재적용 (nz-dn 완료 후에만 동작)
+  var mfyObserver = new MutationObserver(function () {
+    if (isMfyPage()) decorate();
+  });
+
+  // SPA 이동 대응
+  var mfyLastUrl = location.href;
+  setInterval(function () {
+    if (location.href !== mfyLastUrl) {
+      mfyLastUrl = location.href;
+      if (!isMfyPage()) document.body.classList.remove('nz-mfy-page');
+    }
+    if (isMfyPage()) decorate();
+  }, 400);
+
+  function boot() {
+    decorate();
+    mfyObserver.observe(document.body || document.documentElement, { childList: true, subtree: true });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();
+
 // ── 전역 크롬 v2: 네비 레몬 홈버튼 + 모바일 ☰ 드롭다운 + 푸터 문구 ──
 (function () {
   var LEMON_URL = 'https://assets.super.so/b529abf1-8288-44d9-87eb-38228677c041/images/bcc6ec8e-275b-4bfc-b598-b2108922863e/noname.png';

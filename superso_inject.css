@@ -4560,3 +4560,218 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
   .nz-snsf__x { width: 14px; height: 14px; }
   .nz-snsf__copy { font-size: 14px; }
 }
+
+/* ============================================================
+ *  nz-mfy — 미포유 구독 가이드 전용 (slug: mfy-guide)
+ *  시안: design_handoff_mifoyu_guide/README.md (신규 부품만 시안 색, 바탕은 기존 토큰)
+ * ============================================================ */
+
+/* 리드 구분선 (2px 골드 실선) */
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-rule {
+  height: 2px; background: #d8c9a2; border: none; margin: 36px 0; opacity: 1;
+}
+
+/* 본문 이미지 공통 프레임 (스텝 스크린샷 등) + 모바일 가로 넘침 방지 */
+.super-content.parent-page__darakbang-note .nz-mfy .notion-image img {
+  border: 1px solid #e8e0c8; border-radius: 16px;
+  max-width: 100%; height: auto;
+}
+
+/* 숨김 유틸 (원본 표·목록) */
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-hide { display: none !important; }
+
+/* ── 목차 ── */
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-toc { margin: 40px 0 0; padding: 6px 4px; }
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-toc__head {
+  font-family: 'Jua', sans-serif; font-size: 19px; color: #453e2d; margin-bottom: 18px;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-toc__head span {
+  background: linear-gradient(180deg, transparent 62%, #ffdd55 62%); padding: 0 5px;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-toc__grid {
+  display: grid; grid-template-columns: 1fr 1fr; grid-auto-flow: column;
+  column-gap: 56px; row-gap: 13px;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-toc__grid a {
+  display: flex; align-items: baseline; gap: 12px; text-decoration: none;
+  font-weight: 500; font-size: 16px; color: #55503c; border: none;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-toc__grid a:hover { color: #a3802a; }
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-toc__num {
+  font-family: 'Jua', sans-serif; font-size: 13.5px; color: #c6a94e; flex: none;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-toc__dots {
+  flex: 1; border-bottom: 2px dotted #ddd0a8; transform: translateY(-4px);
+}
+
+/* ── 코스 3단 카드 ── */
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-courses { gap: 18px; margin-top: 28px; }
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-courses .notion-column {
+  background: #fffdf6; border: 1px solid #e8e0c8; border-radius: 18px; padding: 22px 24px;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-course__head {
+  display: flex; align-items: baseline; gap: 10px;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-course__name {
+  font-family: 'Jua', sans-serif; font-size: 20px;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-course__alias { font-size: 14px; color: #8b8467; }
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-course__feat {
+  font-size: 15.5px; font-weight: 700; color: #4a4130; margin-top: 8px;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-courses .notion-column p.notion-text {
+  font-size: 14.5px; line-height: 1.75; color: #6b6448; margin: 6px 0 0;
+}
+
+/* ── 정보 콜아웃 (배대지 메모·날짜 예시·간단 요약) ── */
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-note {
+  background: #f6efd8; border: none; border-radius: 16px; padding: 20px 26px; margin-top: 22px;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-note > .notion-callout__icon { display: none; }
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-note__title {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-note__title strong {
+  font-size: 15.5px; color: #4a4130;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-note__lemon { width: 18px; height: 18px; }
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-lucide { width: 17px; height: 17px; flex: none; }
+.super-content.parent-page__darakbang-note article.notion-root .nz-mfy-note p.notion-text {
+  font-size: 15.5px; line-height: 1.85; color: #5c5540; margin: 0;
+}
+.super-content.parent-page__darakbang-note article.notion-root .nz-mfy-note p.notion-text + p.notion-text { margin-top: 8px; }
+
+/* ── 가입 절차 스텝 ── */
+.super-content.parent-page__darakbang-note .nz-mfy ol.nz-mfy-step {
+  list-style: none; padding-left: 0; margin: 22px 0 0;
+}
+.super-content.parent-page__darakbang-note .nz-mfy ol.nz-mfy-step > li {
+  display: flex; gap: 20px; align-items: flex-start; padding-left: 0;
+}
+.super-content.parent-page__darakbang-note .nz-mfy ol.nz-mfy-step > li::before {
+  content: attr(data-nzstep);
+  flex: none; width: 38px; height: 38px; border-radius: 50%;
+  background: #ffd94a; color: #4a4130; font-family: 'Jua', sans-serif; font-size: 18px;
+  display: flex; align-items: center; justify-content: center; margin-top: -4px;
+}
+
+/* ── 타임라인 ── */
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-tl { margin: 26px 0 0; display: flex; flex-direction: column; }
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-tl__row { display: flex; gap: 18px; }
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-tl__rail {
+  flex: none; display: flex; flex-direction: column; align-items: center;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-tl__dot {
+  width: 14px; height: 14px; border-radius: 50%; background: #c6a94e; margin-top: 7px; flex: none;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-tl__row--last .nz-mfy-tl__dot {
+  background: #ffd94a; border: 2px solid #c6a94e;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-tl__line { flex: 1; width: 2px; background: #e2d6b2; }
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-tl__row--last .nz-mfy-tl__line { display: none; }
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-tl__body { padding-bottom: 26px; }
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-tl__row--last .nz-mfy-tl__body { padding-bottom: 0; }
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-tl__label {
+  font-family: 'Jua', sans-serif; font-size: 17px; color: #4a4130;
+  display: flex; align-items: center; gap: 7px;
+}
+.super-content.parent-page__darakbang-note article.notion-root .nz-mfy-tl p.nz-mfy-tl__desc {
+  font-size: 16.5px; line-height: 1.85; color: #55503c; margin: 6px 0 0;
+}
+
+/* ── 요금 비교 카드 ── */
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-price {
+  display: grid; grid-template-columns: 1fr 1.2fr; gap: 18px; margin: 24px 0 0;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-price__card {
+  background: #fffdf6; border: 1px solid #e8e0c8; border-radius: 18px; padding: 26px 28px; position: relative;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-price__card--hot {
+  background: #fff8dd; border: 2px solid #ecca4e;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-price__badge {
+  position: absolute; top: -13px; left: 24px; background: #ffd94a; border-radius: 999px;
+  padding: 4px 14px; font-family: 'Jua', sans-serif; font-size: 13px; color: #4a4130;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-price__name {
+  font-family: 'Jua', sans-serif; font-size: 18px; color: #6b6448;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-price__amount {
+  margin-top: 12px; font-family: 'Jua', sans-serif; font-size: 30px; color: #4a4130;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-price__ship { font-size: 17px; color: #8b8467; }
+.super-content.parent-page__darakbang-note article.notion-root .nz-mfy-price p.nz-mfy-price__comment {
+  font-size: 14.5px; line-height: 1.75; color: #8b8467; margin: 12px 0 0;
+}
+
+/* ── 통계 칩 ── */
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-stats {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 24px 0 0;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-stats__chip {
+  background: #f8f2df; border-radius: 18px; padding: 24px 28px; text-align: center;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-stats__label { font-size: 14px; color: #8b8467; }
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-stats__big {
+  font-family: 'Jua', sans-serif; font-size: 34px; color: #4a4130; margin-top: 8px;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-stats__unit { font-size: 17px; color: #8b8467; }
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-stats__sub { font-size: 13.5px; color: #8b8467; margin-top: 6px; }
+
+/* ── FAQ 카드 ── */
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-faq {
+  background: #fffdf6; border: 1px solid #e8e0c8; border-radius: 18px; padding: 24px 28px; margin: 20px 0 0;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-faq__q {
+  display: flex; gap: 12px; align-items: baseline;
+  font-family: 'Jua', sans-serif; font-size: 18px; color: #4a4130;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-faq__marker {
+  flex: none; font-size: 17px; color: #b48a1e;
+}
+.super-content.parent-page__darakbang-note article.notion-root .nz-mfy-faq p.nz-mfy-faq__a {
+  font-size: 16px; line-height: 1.9; color: #55503c; margin: 14px 0 0;
+}
+
+/* ── CTA 버튼 ── */
+.super-content.parent-page__darakbang-note .nz-mfy p.nz-mfy-cta { margin: 48px 0 0; text-align: center; }
+.super-content.parent-page__darakbang-note .nz-mfy p.nz-mfy-cta a {
+  display: inline-block; background: #ffd94a; color: #4a4130; text-decoration: none;
+  font-family: 'Jua', sans-serif; font-size: 18px; padding: 15px 38px; border-radius: 999px;
+  box-shadow: 0 2px 0 #d9b83a; border: none;
+}
+.super-content.parent-page__darakbang-note .nz-mfy p.nz-mfy-cta a:hover { background: #ffce1f; }
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-cta__lemon {
+  display: inline-block; width: 20px; height: 20px; vertical-align: -4px; margin-right: 8px;
+  border: none; border-radius: 0;
+}
+
+/* ── 모바일 (390 기준) ── */
+@media (max-width: 768px) {
+  .super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-rule { margin: 26px 0; }
+  .super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-toc__grid {
+    grid-template-columns: 1fr; grid-auto-flow: row; grid-template-rows: none !important; row-gap: 11px;
+  }
+  .super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-toc__grid a { font-size: 15px; }
+  .super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-courses .notion-column { padding: 16px 18px; }
+  .super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-course__name { font-size: 17px; }
+  .super-content.parent-page__darakbang-note .nz-mfy ol.nz-mfy-step > li { gap: 14px; }
+  .super-content.parent-page__darakbang-note .nz-mfy ol.nz-mfy-step > li::before {
+    width: 30px; height: 30px; font-size: 15px;
+  }
+  .super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-price { grid-template-columns: 1fr; }
+  .super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-stats { grid-template-columns: 1fr; }
+  .super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-note { padding: 16px 18px; }
+  .super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-note__title strong { font-size: 14px; }
+  .super-content.parent-page__darakbang-note article.notion-root .nz-mfy-note p.notion-text { font-size: 14px; }
+  .super-content.parent-page__darakbang-note .nz-mfy p.nz-mfy-cta a { display: block; }
+  .super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-faq { padding: 18px 20px; }
+}
+
+/* 타임라인 라벨 없는 마무리 항목: 아이콘 인라인 */
+.super-content.parent-page__darakbang-note article.notion-root .nz-mfy-tl p.nz-mfy-tl__desc--solo {
+  margin-top: 2px; display: flex; align-items: flex-start; gap: 7px;
+}
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-tl__desc--solo .nz-mfy-lucide {
+  margin-top: 4px;
+}
