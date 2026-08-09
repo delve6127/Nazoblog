@@ -3630,7 +3630,8 @@ function nzLightboxClose() {
         if (m) parsed = new Date(m[0]);
       }
       if (!isNaN(parsed.getTime())) {
-        dateText = parsed.getFullYear() + '.' + ('0' + (parsed.getMonth() + 1)).slice(-2);
+        dateText = parsed.getFullYear() + '.' + ('0' + (parsed.getMonth() + 1)).slice(-2)
+          + '.' + ('0' + parsed.getDate()).slice(-2);
       }
     }
     return { categories: cats, date: dateText };
