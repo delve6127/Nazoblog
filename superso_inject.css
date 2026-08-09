@@ -4588,7 +4588,7 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
 }
 
 /* ── 목차 ── */
-.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-toc { margin: 40px 0 0; padding: 6px 4px; }
+.super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-toc { margin: 40px 0 42px; padding: 6px 4px; }
 .super-content.parent-page__darakbang-note .nz-mfy .nz-mfy-toc__head {
   font-family: 'Jua', sans-serif; font-size: 19px; color: #453e2d; margin-bottom: 18px;
 }
