@@ -396,6 +396,15 @@ function ensureMastheadLoop() {
 (function() {
   var lastUrl = location.href;
 
+  // 해시(#)만 바뀐 같은 페이지 내 이동(목차 앵커 등)은 페이지 전환이 아니다
+  function pagePart(u) {
+    try { var a = document.createElement('a'); a.href = u; return a.pathname + a.search; }
+    catch (e) { return u; }
+  }
+  function isRealNavigation() {
+    return pagePart(location.href) !== pagePart(lastUrl);
+  }
+
   function onNavigate() {
     // SPA 전환: 이전 페이지에서 켜둔 '화면 열림' 상태를 되돌려
     // 새 내용이 꾸며지기 전까지 CSS 선가림이 다시 작동하게 한다
@@ -413,8 +422,9 @@ function ensureMastheadLoop() {
   // popstate (뒤로/앞으로 가기)
   window.addEventListener('popstate', function() {
     if (location.href !== lastUrl) {
+      var real = isRealNavigation();
       lastUrl = location.href;
-      onNavigate();
+      if (real) onNavigate();
     }
   });
 
@@ -424,15 +434,17 @@ function ensureMastheadLoop() {
   history.pushState = function() {
     origPush.apply(this, arguments);
     if (location.href !== lastUrl) {
+      var real = isRealNavigation();
       lastUrl = location.href;
-      onNavigate();
+      if (real) onNavigate();
     }
   };
   history.replaceState = function() {
     origReplace.apply(this, arguments);
     if (location.href !== lastUrl) {
+      var real = isRealNavigation();
       lastUrl = location.href;
-      onNavigate();
+      if (real) onNavigate();
     }
   };
 })();
