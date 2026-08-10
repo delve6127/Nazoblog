@@ -850,6 +850,7 @@ function nzLightboxClose() {
     if (web.text.trim() === 'O')     infoChips.push('<span class="nz4-info" style="background:#EDF2F9;border-color:#D5DFEC;color:#5A78A0">WEB 사용</span>');
     if (line.text.trim() === 'O')    infoChips.push('<span class="nz4-info" style="background:#F3F0F9;border-color:#DED6EC;color:#7A6B9D">LINE 사용 필요</span>');
     if (audio.text.trim() === 'O')   infoChips.push('<span class="nz4-info" style="background:#FBF3E7;border-color:#EEDFC5;color:#A8834A">듣기 필요</span>');
+    if (recycle.text.trim() === 'O') infoChips.push('<span class="nz4-info" style="background:#E9F4EF;border-color:#CBE3D6;color:#4E8A66">재활용 가능</span>');
     if (recycle.text.trim() === 'X') infoChips.push('<span class="nz4-info" style="background:#F8F0EA;border-color:#EBD9CF;color:#A0705C">재활용 불가</span>');
     if (pad.text.trim() === 'O')     infoChips.push('<span class="nz4-info" style="background:#EEF4EF;border-color:#D7E3DA;color:#5E7F6A">패드 사용 권장</span>');
     if (purchase.text)               infoChips.push('<span class="nz4-info nz4-info--buy">&#128722; ' + purchase.text + '</span>');
