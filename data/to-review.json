@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-08-10T13:11:29.924Z",
-  "count": 59,
+  "updatedAt": "2026-08-10T18:59:08.581Z",
+  "count": 60,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -222,7 +222,7 @@
       "id": "354d25cb2dd4808e8633cb6fb64c20bc",
       "name": "Premium One vol.1 -THE CARDS-",
       "maker": "リドラ",
-      "status": "보유중",
+      "status": "리뷰 작성 중",
       "image": "data/images/354d25cb2dd4808e8633cb6fb64c20bc.png",
       "slug": "premium-one-vol1-the-cards"
     },
@@ -230,7 +230,7 @@
       "id": "354d25cb2dd480139dc9f36f8964d4db",
       "name": "Premium One vol.2 -THE NUMBERS-",
       "maker": "リドラ",
-      "status": "보유중",
+      "status": "플레이 완료",
       "image": "data/images/354d25cb2dd480139dc9f36f8964d4db.png",
       "slug": "premium-one-vol2-the-numbers"
     },
@@ -241,14 +241,6 @@
       "status": "해보고 싶다",
       "image": "data/images/354d25cb2dd48097b265e1c4bbc152e7.png",
       "slug": "riddle-box2"
-    },
-    {
-      "id": "354d25cb2dd480efafdcc6837d30f643",
-      "name": "Paradox5",
-      "maker": "リドラ",
-      "status": "리뷰 작성 중",
-      "image": "data/images/354d25cb2dd480efafdcc6837d30f643.png",
-      "slug": "paradox5"
     },
     {
       "id": "365d25cb2dd480b6af2dc5871de8bede",
@@ -473,6 +465,22 @@
       "status": "보유중",
       "image": "data/images/3a5d25cb2dd480a99531ce23770f9391.jpeg",
       "slug": "ジョジョの奇妙な悪夢からの脱出-謎付きクリアファイルセット"
+    },
+    {
+      "id": "3b8d25cb2dd480e69f50d9081ae35fca",
+      "name": "select",
+      "maker": "街ハック！",
+      "status": "보유중",
+      "image": "data/images/3b8d25cb2dd480e69f50d9081ae35fca.png",
+      "slug": "3b8d25cb2dd480e69f50d9081ae35fca"
+    },
+    {
+      "id": "3b8d25cb2dd4803aabc7d6b79c87a3c7",
+      "name": "棘 -おどろ-",
+      "maker": "街ハック！",
+      "status": "보유중",
+      "image": "data/images/3b8d25cb2dd4803aabc7d6b79c87a3c7.png",
+      "slug": "3b8d25cb2dd4803aabc7d6b79c87a3c7"
     }
   ]
 }
