@@ -4438,3 +4438,43 @@ function nzLightboxClose() {
   setTimeout(run, 1200);
   setTimeout(run, 3500);
 })();
+
+
+// ── 리뷰 상세: 일본어 시놉시스 콜아웃을 검색 스니펫에서 제외 (data-nosnippet) ──
+(function () {
+  'use strict';
+
+  function isReviewDetailPage() {
+    return /^\/nazotoki-reviews\/.+/.test(window.location.pathname);
+  }
+
+  function applyNosnippet() {
+    if (!isReviewDetailPage()) return;
+    var callouts = document.querySelectorAll('.notion-callout:not([data-nosnippet])');
+    for (var i = 0; i < callouts.length; i++) {
+      var text = callouts[i].textContent || '';
+      // 시놉시스 콜아웃엔 일본어 원문+한국어 번역문이 함께 들어있어
+      // 가나(히라가나+가타카나)가 한글의 30% 이상이면 시놉시스로 판별
+      var kana = (text.match(/[぀-ヿ]/g) || []).length;
+      var hangul = (text.match(/[가-힣]/g) || []).length;
+      if (kana > 0 && kana >= hangul * 0.3) callouts[i].setAttribute('data-nosnippet', '');
+    }
+  }
+
+  // 하이드레이션·SPA 전환으로 콜아웃이 다시 그려지면 재적용
+  var nosnippetDebounce = null;
+  var nosnippetObserver = new MutationObserver(function () {
+    if (nosnippetDebounce) return;
+    nosnippetDebounce = setTimeout(function () {
+      nosnippetDebounce = null;
+      applyNosnippet();
+    }, 200);
+  });
+  nosnippetObserver.observe(document.body, { childList: true, subtree: true });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applyNosnippet);
+  } else {
+    applyNosnippet();
+  }
+})();
