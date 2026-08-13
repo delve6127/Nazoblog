@@ -2471,6 +2471,13 @@ function nzLightboxClose() {
     return location.pathname.replace(/\/$/, '') || '/';
   }
 
+  // Umami 커스텀 이벤트 전송 — 실패해도 좋아요 기능에는 영향 없음
+  function nzTrack(event, props) {
+    try {
+      if (typeof umami !== 'undefined' && umami.track) umami.track(event, props);
+    } catch (e) {}
+  }
+
   function supabaseRequest(method, endpoint, body) {
     var opts = {
       method: method,
@@ -2611,6 +2618,11 @@ function nzLightboxClose() {
         nzBurstParticles(pill.querySelector('.nz-like-particles'));
         req = supabaseRequest('POST', 'likes', { page_slug: slug, session_id: sessionId });
       }
+
+      // Supabase 기록이 성공했을 때만 Umami 이벤트 전송
+      req.then(function (res) {
+        if (res && res.ok) nzTrack(isActive ? 'unlike' : 'like', { page: slug });
+      }).catch(function () {});
 
       // 요청이 끝나면(성공/실패 모두) 서버 진실로 표시를 맞춘다
       req.catch(function () {}).then(function () {
