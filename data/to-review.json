@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-08-15T06:39:54.913Z",
-  "count": 60,
+  "updatedAt": "2026-08-15T12:39:28.429Z",
+  "count": 59,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -219,18 +219,10 @@
       "slug": "穴あきパズルアドベンチャー-魔王塔からの脱出"
     },
     {
-      "id": "354d25cb2dd4808e8633cb6fb64c20bc",
-      "name": "Premium One vol.1 -THE CARDS-",
-      "maker": "リドラ",
-      "status": "리뷰 작성 중",
-      "image": "data/images/354d25cb2dd4808e8633cb6fb64c20bc.png",
-      "slug": "premium-one-vol1-the-cards"
-    },
-    {
       "id": "354d25cb2dd480139dc9f36f8964d4db",
       "name": "Premium One vol.2 -THE NUMBERS-",
       "maker": "リドラ",
-      "status": "플레이 완료",
+      "status": "리뷰 작성 중",
       "image": "data/images/354d25cb2dd480139dc9f36f8964d4db.png",
       "slug": "premium-one-vol2-the-numbers"
     },
