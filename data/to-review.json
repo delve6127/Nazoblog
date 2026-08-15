@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-15T12:39:28.429Z",
+  "updatedAt": "2026-08-15T18:31:17.592Z",
   "count": 59,
   "items": [
     {
@@ -342,7 +342,7 @@
       "id": "36ed25cb2dd480999a64fe1f63b1d63b",
       "name": "解錠",
       "maker": "xeoxy",
-      "status": "보유중",
+      "status": "플레이 완료",
       "image": "data/images/36ed25cb2dd480999a64fe1f63b1d63b.png",
       "slug": "解錠"
     },
@@ -438,7 +438,7 @@
       "id": "39dd25cb2dd480cb818bebbb956be67a",
       "name": "サイフアーカイブ",
       "maker": "AnotherVision",
-      "status": "보유중",
+      "status": "플레이 완료",
       "image": "data/images/39dd25cb2dd480cb818bebbb956be67a.jpeg",
       "slug": "サイフアーカイブ"
     },
