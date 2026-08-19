@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-08-19T12:49:48.570Z",
-  "count": 59,
+  "updatedAt": "2026-08-19T18:37:00.019Z",
+  "count": 58,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -219,14 +219,6 @@
       "slug": "穴あきパズルアドベンチャー-魔王塔からの脱出"
     },
     {
-      "id": "354d25cb2dd480139dc9f36f8964d4db",
-      "name": "Premium One vol.2 -THE NUMBERS-",
-      "maker": "リドラ",
-      "status": "리뷰 작성 중",
-      "image": "data/images/354d25cb2dd480139dc9f36f8964d4db.png",
-      "slug": "premium-one-vol2-the-numbers"
-    },
-    {
       "id": "354d25cb2dd48097b265e1c4bbc152e7",
       "name": "RIDDLE BOX2!!!",
       "maker": "リドラ",
@@ -342,7 +334,7 @@
       "id": "36ed25cb2dd480999a64fe1f63b1d63b",
       "name": "解錠",
       "maker": "xeoxy",
-      "status": "플레이 완료",
+      "status": "리뷰 작성 중",
       "image": "data/images/36ed25cb2dd480999a64fe1f63b1d63b.png",
       "slug": "解錠"
     },
