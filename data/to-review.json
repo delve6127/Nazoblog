@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-08-20T12:52:08.591Z",
-  "count": 58,
+  "updatedAt": "2026-08-20T14:15:38.722Z",
+  "count": 56,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -331,14 +331,6 @@
       "slug": "block-36ed25cb2dd480b4afbfe9e1741539ca"
     },
     {
-      "id": "36ed25cb2dd480999a64fe1f63b1d63b",
-      "name": "解錠",
-      "maker": "xeoxy",
-      "status": "리뷰 작성 중",
-      "image": "data/images/36ed25cb2dd480999a64fe1f63b1d63b.png",
-      "slug": "解錠"
-    },
-    {
       "id": "371d25cb2dd4805a9e03d974bedd9127",
       "name": "たばこ謎",
       "maker": "THE NAZO STORE",
@@ -425,14 +417,6 @@
       "status": "보유중",
       "image": "data/images/39dd25cb2dd480b3b1fde92a36b824c6.jpeg",
       "slug": "color-up-treasure"
-    },
-    {
-      "id": "39dd25cb2dd480cb818bebbb956be67a",
-      "name": "サイフアーカイブ",
-      "maker": "AnotherVision",
-      "status": "플레이 완료",
-      "image": "data/images/39dd25cb2dd480cb818bebbb956be67a.jpeg",
-      "slug": "サイフアーカイブ"
     },
     {
       "id": "3a2d25cb2dd480c0812ad22ff10cbeb9",
