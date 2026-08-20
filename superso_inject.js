@@ -1,3 +1,94 @@
+// ── Umami 추적 제외 스위치 (독립 모듈: 다른 기능과 상호작용 없음) ──
+// 사용법: 주소 끝에 ?disable-umami=1 (내 방문 통계 제외) / ?enable-umami=1 (다시 집계)
+// Umami 공식 트래커는 localStorage의 'umami.disabled' 값이 있으면 전송을 건너뛰므로,
+// 이 스위치는 Umami 스크립트가 로드됐는지 여부와 무관하게 항상 동작한다.
+// (파일 맨 앞에 두어 Umami의 첫 페이지뷰 전송보다 먼저 실행되게 한다)
+(function () {
+  'use strict';
+
+  var KEY = 'umami.disabled';
+
+  function readParam(name) {
+    try {
+      return new URLSearchParams(window.location.search).get(name);
+    } catch (e) {
+      // URLSearchParams 미지원 구형 브라우저 대비
+      var m = window.location.search.match(new RegExp('[?&]' + name + '=([^&]*)'));
+      return m ? decodeURIComponent(m[1]) : null;
+    }
+  }
+
+  var wantDisable = readParam('disable-umami') === '1';
+  var wantEnable = readParam('enable-umami') === '1';
+  if (!wantDisable && !wantEnable) return; // 평소 방문에는 아무 일도 하지 않음
+
+  var message;
+  try {
+    if (wantDisable) {
+      localStorage.setItem(KEY, '1');
+      message = '추적 제외 완료 — 이 브라우저의 방문은 통계에 잡히지 않습니다.';
+    } else {
+      localStorage.removeItem(KEY);
+      message = '추적 재개 — 이 브라우저의 방문이 다시 통계에 집계됩니다.';
+    }
+  } catch (e) {
+    // 시크릿 모드·저장소 차단 등으로 localStorage를 못 쓰는 경우
+    message = '설정을 바꾸지 못했습니다. 브라우저 저장소가 차단된 상태입니다.';
+  }
+
+  // 주소창에서 스위치용 쿼리스트링만 지우고 나머지 파라미터는 보존
+  function cleanUrl() {
+    if (!window.history || !history.replaceState) return;
+    try {
+      var url = new URL(window.location.href);
+      url.searchParams.delete('disable-umami');
+      url.searchParams.delete('enable-umami');
+      var qs = url.searchParams.toString();
+      history.replaceState(null, '', url.pathname + (qs ? '?' + qs : '') + url.hash);
+    } catch (e) {}
+  }
+
+  // 화면 하단 토스트로 알림 (body가 없으면 alert로 대체)
+  function notify(text) {
+    function paint() {
+      if (!document.body) { alert(text); return; }
+      var box = document.createElement('div');
+      box.setAttribute('role', 'status');
+      box.style.cssText = [
+        'position:fixed',
+        'left:16px',
+        'right:16px',
+        'bottom:20px',
+        'margin:0 auto',
+        'max-width:420px',
+        'padding:14px 18px',
+        'border-radius:12px',
+        'background:rgba(28,28,30,0.94)',
+        'color:#fff',
+        'font-size:14px',
+        'line-height:1.5',
+        'text-align:center',
+        'box-shadow:0 6px 24px rgba(0,0,0,0.28)',
+        'opacity:1',
+        'transition:opacity 0.4s ease',
+        'z-index:2147483647'
+      ].join(';');
+      box.textContent = text;
+      document.body.appendChild(box);
+      setTimeout(function () { box.style.opacity = '0'; }, 3500);
+      setTimeout(function () { if (box.parentNode) box.parentNode.removeChild(box); }, 4000);
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', paint);
+    } else {
+      paint();
+    }
+  }
+
+  notify(message);
+  cleanUrl();
+})();
+
 // ── 메인 히어로 카피 (문구 수정은 여기서) ──
 var NZ_HERO_COPY = {
   tagline: '한국인의 시선으로 기록하는 일본 나조토키',
