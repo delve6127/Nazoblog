@@ -4581,3 +4581,95 @@ function nzLightboxClose() {
     applyNosnippet();
   }
 })();
+
+
+// ── 외부 링크 클릭 추적 (독립 모듈: 다른 기능과 상호작용 없음) ──
+// 구매처·SNS 등 바깥 사이트로 나가는 링크 클릭을 Umami 커스텀 이벤트로 남긴다.
+//   outbound … 구매처 등 일반 외부 링크   props: { site, from, text }
+//   social   … 인스타·X 등 SNS 링크
+// 문서 전체에 감지기 하나만 두는 '이벤트 위임' 방식이라
+// SPA 전환·나중에 그려지는 링크도 자동으로 잡히고 중복 부착이 생기지 않는다.
+(function () {
+  'use strict';
+
+  // 내 사이트로 취급할 도메인 — 여기 걸리면 아무 이벤트도 보내지 않는다
+  var INTERNAL = [
+    'monbbang.me',        // nazo.monbbang.me 포함
+    'super.so',           // assets.super.so 등
+    'github.io',
+    'notion.so',          // 노션 이미지·링크
+    'notion-static.com',
+    'amazonaws.com',      // 노션이 쓰는 이미지 저장소
+    'supabase.co'         // 좋아요 기능이 쓰는 서버
+  ];
+
+  // SNS는 outbound가 아니라 social 이벤트로 따로 집계
+  var SOCIAL = [
+    'instagram.com',
+    'x.com',
+    'twitter.com',
+    'threads.net',
+    'threads.com',
+    'facebook.com',
+    'tiktok.com'
+  ];
+
+  // host가 목록 중 하나이거나 그 하위 도메인이면 true
+  // (예: 'buyee.jp' 목록에 대해 'shop.buyee.jp'도 true)
+  function hostMatches(host, list) {
+    for (var i = 0; i < list.length; i++) {
+      if (host === list[i] || host.slice(-(list[i].length + 1)) === '.' + list[i]) return true;
+    }
+    return false;
+  }
+
+  // ?disable-umami=1 로 꺼둔 브라우저인지 확인
+  function isTrackingDisabled() {
+    try { return localStorage.getItem('umami.disabled') === '1'; } catch (e) { return false; }
+  }
+
+  // 링크 텍스트 앞 30자 (글자가 없으면 이미지 alt·aria-label로 대체)
+  function linkText(a) {
+    var t = (a.textContent || '').replace(/\s+/g, ' ').trim();
+    if (!t) {
+      var img = a.querySelector('img');
+      t = (a.getAttribute('aria-label') || a.getAttribute('title') ||
+           (img && img.getAttribute('alt')) || '').replace(/\s+/g, ' ').trim();
+    }
+    return t.slice(0, 30);
+  }
+
+  function handleClick(e) {
+    try {
+      // auxclick은 중간버튼(새 탭 열기)만 취급 — 오른쪽 클릭은 제외
+      if (e.type === 'auxclick' && e.button !== 1) return;
+
+      var t = e.target;
+      var a = (t && typeof t.closest === 'function') ? t.closest('a[href]') : null;
+      if (!a) return;
+
+      var url;
+      try { url = new URL(a.href, location.href); } catch (err) { return; }
+      if (url.protocol !== 'http:' && url.protocol !== 'https:') return; // mailto:·tel: 제외
+
+      var host = url.hostname.replace(/^www\./, '');
+      if (host === location.hostname.replace(/^www\./, '')) return; // 지금 보고 있는 사이트
+      if (hostMatches(host, INTERNAL)) return;
+
+      if (isTrackingDisabled()) return;
+      if (typeof umami === 'undefined' || !umami.track) return; // 아직 안 실렸으면 조용히 넘어감
+
+      umami.track(hostMatches(host, SOCIAL) ? 'social' : 'outbound', {
+        site: host,
+        from: location.pathname.replace(/\/$/, '') || '/',
+        text: linkText(a)
+      });
+    } catch (err) {
+      // 추적이 실패해도 링크 이동에는 절대 영향 없음
+    }
+  }
+
+  // capture 단계(true)로 달아, 중간에 클릭을 가로채는 코드가 있어도 놓치지 않는다
+  document.addEventListener('click', handleClick, true);
+  document.addEventListener('auxclick', handleClick, true);   // 중간버튼 새 탭
+})();
