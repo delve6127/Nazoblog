@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-08-24T07:00:30.737Z",
-  "count": 56,
+  "updatedAt": "2026-08-24T11:56:25.085Z",
+  "count": 58,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -230,7 +230,7 @@
       "id": "365d25cb2dd480b6af2dc5871de8bede",
       "name": "TUMBLEWEED HITS",
       "maker": "Tumbleweed",
-      "status": "보유중",
+      "status": "리뷰 작성 중",
       "image": "data/images/365d25cb2dd480b6af2dc5871de8bede.jpg",
       "slug": "tumbleweed-hits"
     },
@@ -449,6 +449,22 @@
       "status": "보유중",
       "image": "data/images/3b8d25cb2dd4803aabc7d6b79c87a3c7.png",
       "slug": "3b8d25cb2dd4803aabc7d6b79c87a3c7"
+    },
+    {
+      "id": "3c6d25cb2dd48036819df0b80cb1068d",
+      "name": "ようこそ恋愛創造ラボ",
+      "maker": "SCRAP - Mystery For You",
+      "status": "플레이 완료",
+      "image": "data/images/3c6d25cb2dd48036819df0b80cb1068d.jpg",
+      "slug": "3c6d25cb2dd48036819df0b80cb1068d"
+    },
+    {
+      "id": "3c6d25cb2dd48055b235c25c92329cf0",
+      "name": "SCRAPPIESといっしょ",
+      "maker": "SCRAP - Mystery For You",
+      "status": "플레이 완료",
+      "image": "data/images/3c6d25cb2dd48055b235c25c92329cf0.jpg",
+      "slug": "3c6d25cb2dd48055b235c25c92329cf0"
     }
   ]
 }
