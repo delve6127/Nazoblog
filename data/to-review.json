@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-08-29T06:05:14.003Z",
-  "count": 58,
+  "updatedAt": "2026-08-29T16:21:08.374Z",
+  "count": 57,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -227,14 +227,6 @@
       "slug": "riddle-box2"
     },
     {
-      "id": "365d25cb2dd480b6af2dc5871de8bede",
-      "name": "TUMBLEWEED HITS",
-      "maker": "Tumbleweed",
-      "status": "리뷰 작성 중",
-      "image": "data/images/365d25cb2dd480b6af2dc5871de8bede.jpg",
-      "slug": "tumbleweed-hits"
-    },
-    {
       "id": "367d25cb2dd48030ad75f74c69a6302c",
       "name": "製作者？？？人の壁 season1",
       "maker": "ミステリーケーキ",
@@ -454,7 +446,7 @@
       "id": "3c6d25cb2dd48036819df0b80cb1068d",
       "name": "ようこそ恋愛創造ラボ",
       "maker": "SCRAP - Mystery For You",
-      "status": "플레이 완료",
+      "status": "리뷰 작성 중",
       "image": "data/images/3c6d25cb2dd48036819df0b80cb1068d.jpg",
       "slug": "3c6d25cb2dd48036819df0b80cb1068d"
     },
