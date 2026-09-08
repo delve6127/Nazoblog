@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-09-07T21:13:38.326Z",
-  "count": 57,
+  "updatedAt": "2026-09-08T03:32:23.418Z",
+  "count": 56,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -443,18 +443,10 @@
       "slug": "3b8d25cb2dd4803aabc7d6b79c87a3c7"
     },
     {
-      "id": "3c6d25cb2dd48036819df0b80cb1068d",
-      "name": "ようこそ恋愛創造ラボ",
-      "maker": "SCRAP - Mystery For You",
-      "status": "리뷰 작성 중",
-      "image": "data/images/3c6d25cb2dd48036819df0b80cb1068d.jpg",
-      "slug": "3c6d25cb2dd48036819df0b80cb1068d"
-    },
-    {
       "id": "3c6d25cb2dd48055b235c25c92329cf0",
       "name": "SCRAPPIESといっしょ",
       "maker": "SCRAP - Mystery For You",
-      "status": "플레이 완료",
+      "status": "리뷰 작성 중",
       "image": "data/images/3c6d25cb2dd48055b235c25c92329cf0.jpg",
       "slug": "3c6d25cb2dd48055b235c25c92329cf0"
     }
