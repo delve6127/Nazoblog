@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-09-16T03:49:08.644Z",
-  "count": 56,
+  "updatedAt": "2026-09-16T10:50:27.144Z",
+  "count": 60,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -443,12 +443,44 @@
       "slug": "3b8d25cb2dd4803aabc7d6b79c87a3c7"
     },
     {
-      "id": "3c6d25cb2dd48055b235c25c92329cf0",
-      "name": "SCRAPPIESといっしょ",
-      "maker": "SCRAP - Mystery For You",
-      "status": "리뷰 작성 중",
-      "image": "data/images/3c6d25cb2dd48055b235c25c92329cf0.jpg",
-      "slug": "3c6d25cb2dd48055b235c25c92329cf0"
+      "id": "3ddd25cb2dd480d49a6ff2ad01d9b807",
+      "name": "RIDDLE BOX2!!!",
+      "maker": "リドラ",
+      "status": "구입 완료",
+      "image": "data/images/3ddd25cb2dd480d49a6ff2ad01d9b807.jpg",
+      "slug": "3ddd25cb2dd480d49a6ff2ad01d9b807"
+    },
+    {
+      "id": "3ddd25cb2dd480f486e5c690447d9944",
+      "name": "鮮烈",
+      "maker": "リドラ",
+      "status": "구입 완료",
+      "image": "data/images/3ddd25cb2dd480f486e5c690447d9944.png",
+      "slug": "3ddd25cb2dd480f486e5c690447d9944"
+    },
+    {
+      "id": "3ddd25cb2dd4807a81d2edab6bac0c91",
+      "name": "FLY HIGH!",
+      "maker": "リドラ",
+      "status": "구입 완료",
+      "image": "data/images/3ddd25cb2dd4807a81d2edab6bac0c91.jpg",
+      "slug": "3ddd25cb2dd4807a81d2edab6bac0c91"
+    },
+    {
+      "id": "3ddd25cb2dd4806a86f1ebc5ac9e8312",
+      "name": "ナゾノアソビ",
+      "maker": "街ハック！",
+      "status": "구입 완료",
+      "image": "data/images/3ddd25cb2dd4806a86f1ebc5ac9e8312.webp",
+      "slug": "3ddd25cb2dd4806a86f1ebc5ac9e8312"
+    },
+    {
+      "id": "3ddd25cb2dd480d0b689c356404ab326",
+      "name": "『TUMBLEWEED ALLSTAR THE LAST』",
+      "maker": "Tumbleweed",
+      "status": "구입 완료",
+      "image": "data/images/3ddd25cb2dd480d0b689c356404ab326.jpg",
+      "slug": "3ddd25cb2dd480d0b689c356404ab326"
     }
   ]
 }
