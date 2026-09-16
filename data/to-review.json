@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-16T10:50:27.144Z",
+  "updatedAt": "2026-09-16T10:57:00.918Z",
   "count": 60,
   "items": [
     {
@@ -217,14 +217,6 @@
       "status": "보유중",
       "image": "data/images/34dd25cb2dd48075b32fcdbb89eef3a2.png",
       "slug": "穴あきパズルアドベンチャー-魔王塔からの脱出"
-    },
-    {
-      "id": "354d25cb2dd48097b265e1c4bbc152e7",
-      "name": "RIDDLE BOX2!!!",
-      "maker": "リドラ",
-      "status": "해보고 싶다",
-      "image": "data/images/354d25cb2dd48097b265e1c4bbc152e7.png",
-      "slug": "riddle-box2"
     },
     {
       "id": "367d25cb2dd48030ad75f74c69a6302c",
@@ -481,6 +473,14 @@
       "status": "구입 완료",
       "image": "data/images/3ddd25cb2dd480d0b689c356404ab326.jpg",
       "slug": "3ddd25cb2dd480d0b689c356404ab326"
+    },
+    {
+      "id": "3ddd25cb2dd4805da250d514c0c1a7b6",
+      "name": "100FRAME",
+      "maker": "4CE Dimension",
+      "status": "구입 완료",
+      "image": "data/images/3ddd25cb2dd4805da250d514c0c1a7b6.jpg",
+      "slug": "3ddd25cb2dd4805da250d514c0c1a7b6"
     }
   ]
 }
