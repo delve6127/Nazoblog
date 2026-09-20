@@ -387,12 +387,59 @@ function convertDates() {
     const text = el.innerText.trim();
     const date = new Date(text);
     if (!isNaN(date)) {
+      // 한글로 덮어쓰기 전 원본 값을 보관 → NEW 뱃지·마스트헤드가 nzParseDateEl()로 읽음
+      if (!el.hasAttribute('data-nz-iso')) el.setAttribute('data-nz-iso', date.toISOString());
       const year = date.getFullYear();
       const month = date.getMonth() + 1;
       const day = date.getDate();
       el.innerText = year + "년 " + month + "월 " + day + "일";
     }
   });
+}
+
+// ── 카드 기준 날짜 읽기 (NEW 뱃지 · 마스트헤드 "마지막 업데이트" 공용) ──
+// 아래 셀렉터는 Super.so가 노션 속성의 내부 ID로 만드는 해시 클래스다.
+// 노션에서 속성 "이름"을 바꿔도 깨지지 않지만, 속성을 삭제하고 다시 만들면 해시가 바뀌므로
+// 그때는 여기와 superso_inject.css의 같은 클래스를 함께 갱신할 것.
+var NZ_FIRST_LINE_DATE_SEL = '.property-3e40515e'; // 노션 "한줄평 최초 기입일" (date) — 1순위
+var NZ_CREATED_DATE_SEL    = '.property-57636b4d'; // 노션 "작성일" (created_time) — 폴백
+
+// Super.so 날짜 텍스트 파싱: "Sep 12, 2026 7:41 AM" / "September 12, 2026 7:41 AM (UTC)" 둘 다 처리.
+// 괄호 안 시간대 표기는 무시하고, 브라우저별 Date 파서 차이를 피하려고 직접 조립한다.
+function nzParseDateText(text) {
+  var t = (text || '').replace(/\([^)]*\)/g, '').trim();
+  if (!t) return null;
+  var m = t.match(/^([A-Za-z]{3})[A-Za-z]*\.? (\d{1,2}), (\d{4})(?: (\d{1,2}):(\d{2}) ?(AM|PM)?)?/i);
+  if (m) {
+    var months = { jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5, jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11 };
+    var mo = months[m[1].toLowerCase()];
+    if (mo === undefined) return null;
+    var h = m[4] ? parseInt(m[4], 10) : 0;
+    var ap = (m[6] || '').toUpperCase();
+    if (ap === 'PM' && h < 12) h += 12;
+    if (ap === 'AM' && h === 12) h = 0;
+    var d = new Date(parseInt(m[3], 10), mo, parseInt(m[2], 10), h, m[5] ? parseInt(m[5], 10) : 0);
+    return isNaN(d.getTime()) ? null : d;
+  }
+  var f = new Date(t);
+  return isNaN(f.getTime()) ? null : f;
+}
+
+// 날짜 속성 요소 → Date (없거나 비어 있거나 파싱 실패면 null)
+function nzParseDateEl(el) {
+  if (!el) return null;
+  var stash = el.hasAttribute('data-nz-iso') ? el : el.querySelector('[data-nz-iso]');
+  if (stash) {
+    var d = new Date(stash.getAttribute('data-nz-iso'));
+    if (!isNaN(d.getTime())) return d;
+  }
+  return nzParseDateText(el.textContent);
+}
+
+// 카드의 기준 날짜: 한줄평 최초 기입일 → 비어 있거나 파싱 실패 시 작성일 폴백
+function nzCardDate(card) {
+  return nzParseDateEl(card.querySelector(NZ_FIRST_LINE_DATE_SEL))
+      || nzParseDateEl(card.querySelector(NZ_CREATED_DATE_SEL));
 }
 
 // ── 메인 페이지 마스트헤드 (v2): 타이틀 이미지 → 오뮤 태그라인 → 업데이트 → 담백 CTA ──
@@ -449,17 +496,15 @@ function replaceMainTitle() {
     if (!cards.length) return;
     clearInterval(counterInterval);
     var publishSel = '.property-54495c70';
-    var dateSel = '.property-57636b4d';
     var visibleCount = 0;
     var latestDate = null;
     cards.forEach(function (card) {
       var pubEl = card.querySelector(publishSel);
       if (pubEl && pubEl.textContent.trim() === '비공개') return;
       visibleCount++;
-      var dateEl = card.querySelector(dateSel);
-      if (!dateEl) return;
-      var parsed = new Date(dateEl.textContent.trim());
-      if (!isNaN(parsed.getTime()) && (!latestDate || parsed > latestDate)) latestDate = parsed;
+      // 한줄평 최초 기입일 우선, 없으면 작성일 (셀렉터·폴백 규칙은 nzCardDate 참고)
+      var parsed = nzCardDate(card);
+      if (parsed && (!latestDate || parsed > latestDate)) latestDate = parsed;
     });
     nzMastheadCountText = NZ_HERO_COPY.tagline_count.replace('{N}', visibleCount);
     countEl.textContent = nzMastheadCountText;
@@ -2495,10 +2540,9 @@ function nzLightboxClose() {
   }
 })();
 
-// ── 갤러리 카드 NEW 뱃지 (작성일 4일 이내) ──
+// ── 갤러리 카드 NEW 뱃지 (한줄평 최초 기입일 4일 이내 · 없으면 작성일 폴백) ──
 (function () {
   'use strict';
-  var DATE_SEL = '.property-57636b4d';
   var CARD_SEL = '.notion-collection-card';
   var NEW_DAYS = 4;
   var MARKER  = 'data-nz-new';
@@ -2510,11 +2554,9 @@ function nzLightboxClose() {
     cards.forEach(function (card) {
       if (card.hasAttribute(MARKER)) return;
       card.setAttribute(MARKER, '');
-      var dateEl = card.querySelector(DATE_SEL);
-      if (!dateEl) return;
-      var dateText = dateEl.textContent.trim();
-      var parsed = new Date(dateText);
-      if (isNaN(parsed.getTime())) return;
+      // 셀렉터·폴백 규칙은 nzCardDate 참고 (속성 내부 ID 해시 기반)
+      var parsed = nzCardDate(card);
+      if (!parsed) return;
       var diff = (now - parsed) / (1000 * 60 * 60 * 24);
       if (diff <= NEW_DAYS) {
         var coverImg = card.querySelector('img.notion-collection-card__cover');
