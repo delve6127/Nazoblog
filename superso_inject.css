@@ -361,6 +361,11 @@ a.notion-page[href="/test"] {
   display: none !important;
 }
 
+/* 메인 갤러리 상단의 노션 뷰 이름("갤러리 보기") 숨김 */
+body.nz-home .notion-collection__header-wrapper {
+  display: none !important;
+}
+
 @media (max-width: 768px) {
   /* 갤러리 2칸 */
   .notion-collection-gallery {
@@ -3033,7 +3038,8 @@ a.nz2-chip--link:hover { color: var(--nz-ink) !important; }
     flex-wrap: wrap;
     max-width: 1520px;
     margin: 0 auto;
-    padding: 12px 40px;
+    /* 노션 뷰 이름을 숨기면서 사라진 상단 여백을 패딩으로 보완 */
+    padding: 22px 40px;
     box-sizing: border-box;
   }
   #nz2-chips { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; flex: 1; min-width: 0; }
