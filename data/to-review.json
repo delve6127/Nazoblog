@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-09-23T03:46:58.097Z",
-  "count": 61,
+  "updatedAt": "2026-09-23T10:58:08.385Z",
+  "count": 60,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -425,14 +425,6 @@
       "status": "보유중",
       "image": "data/images/3b8d25cb2dd480e69f50d9081ae35fca.png",
       "slug": "3b8d25cb2dd480e69f50d9081ae35fca"
-    },
-    {
-      "id": "3b8d25cb2dd4803aabc7d6b79c87a3c7",
-      "name": "棘 -おどろ-",
-      "maker": "街ハック！",
-      "status": "리뷰 작성 중",
-      "image": "data/images/3b8d25cb2dd4803aabc7d6b79c87a3c7.png",
-      "slug": "3b8d25cb2dd4803aabc7d6b79c87a3c7"
     },
     {
       "id": "3ddd25cb2dd480d49a6ff2ad01d9b807",
