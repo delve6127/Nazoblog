@@ -3039,7 +3039,7 @@ a.nz2-chip--link:hover { color: var(--nz-ink) !important; }
     max-width: 1520px;
     margin: 0 auto;
     /* 노션 뷰 이름을 숨기면서 사라진 상단 여백을 패딩으로 보완 */
-    padding: 22px 40px;
+    padding: 15px 40px;
     box-sizing: border-box;
   }
   #nz2-chips { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; flex: 1; min-width: 0; }
