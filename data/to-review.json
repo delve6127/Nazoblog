@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-09-23T10:58:08.385Z",
-  "count": 60,
+  "updatedAt": "2026-09-23T12:34:42.563Z",
+  "count": 59,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -473,14 +473,6 @@
       "status": "구입 완료",
       "image": "data/images/3ddd25cb2dd4805da250d514c0c1a7b6.jpg",
       "slug": "3ddd25cb2dd4805da250d514c0c1a7b6"
-    },
-    {
-      "id": "3e3d25cb2dd480048161eb46c6f1a6ba",
-      "name": "電脳都市Acrossの謎",
-      "maker": "SCRAP - Mystery For You",
-      "status": "플레이 완료",
-      "image": "data/images/3e3d25cb2dd480048161eb46c6f1a6ba.jpg",
-      "slug": "3e3d25cb2dd480048161eb46c6f1a6ba"
     }
   ]
 }
