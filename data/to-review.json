@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-09-23T12:34:42.563Z",
-  "count": 59,
+  "updatedAt": "2026-09-23T12:59:30.124Z",
+  "count": 61,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -318,7 +318,7 @@
       "id": "371d25cb2dd4805a9e03d974bedd9127",
       "name": "たばこ謎",
       "maker": "THE NAZO STORE",
-      "status": "해보고 싶다",
+      "status": "구입 완료",
       "image": "data/images/371d25cb2dd4805a9e03d974bedd9127.jpeg",
       "slug": "たばこ謎"
     },
@@ -326,7 +326,7 @@
       "id": "371d25cb2dd480b487f1cab14aee33b3",
       "name": "ナゾサンド　不思議な森の恵み味",
       "maker": "THE NAZO STORE",
-      "status": "해보고 싶다",
+      "status": "구입 완료",
       "image": "data/images/371d25cb2dd480b487f1cab14aee33b3.jpeg",
       "slug": "ナゾサンド-不思議な森の恵み味"
     },
@@ -334,7 +334,7 @@
       "id": "371d25cb2dd480dd9502e537cabb5661",
       "name": "ナゾサンド　かぐや姫直伝　月の珍味",
       "maker": "THE NAZO STORE",
-      "status": "해보고 싶다",
+      "status": "구입 완료",
       "image": "data/images/371d25cb2dd480dd9502e537cabb5661.jpeg",
       "slug": "ナゾサンド-かぐや姫直伝-月の珍味"
     },
@@ -342,7 +342,7 @@
       "id": "371d25cb2dd480728ee6e4791d417f92",
       "name": "ナゾサンド　桜散る涙味",
       "maker": "THE NAZO STORE",
-      "status": "해보고 싶다",
+      "status": "구입 완료",
       "image": "data/images/371d25cb2dd480728ee6e4791d417f92.jpeg",
       "slug": "ナゾサンド-桜散る涙味"
     },
@@ -350,7 +350,7 @@
       "id": "371d25cb2dd48079af8af56cf0a139ad",
       "name": "ナゾサンド　探せ！究極のバズ味",
       "maker": "THE NAZO STORE",
-      "status": "해보고 싶다",
+      "status": "구입 완료",
       "image": "data/images/371d25cb2dd48079af8af56cf0a139ad.jpeg",
       "slug": "ナゾサンド-探せ究極のバズ味"
     },
@@ -358,7 +358,7 @@
       "id": "371d25cb2dd4803c8ec5f27b896f8e42",
       "name": "ナゾサンド　ブラック過労味",
       "maker": "THE NAZO STORE",
-      "status": "해보고 싶다",
+      "status": "구입 완료",
       "image": "data/images/371d25cb2dd4803c8ec5f27b896f8e42.jpeg",
       "slug": "ナゾサンド-ブラック過労味"
     },
@@ -473,6 +473,22 @@
       "status": "구입 완료",
       "image": "data/images/3ddd25cb2dd4805da250d514c0c1a7b6.jpg",
       "slug": "3ddd25cb2dd4805da250d514c0c1a7b6"
+    },
+    {
+      "id": "3e4d25cb2dd48087aeb8db35b8d2636e",
+      "name": "ナゾサンド それいけ！究極の魔王味",
+      "maker": "THE NAZO STORE",
+      "status": "구입 완료",
+      "image": "data/images/3e4d25cb2dd48087aeb8db35b8d2636e.png",
+      "slug": "3e4d25cb2dd48087aeb8db35b8d2636e"
+    },
+    {
+      "id": "3e4d25cb2dd4801ebea7fcc930a3c8df",
+      "name": "オーダーの少ないファミリーレストラン",
+      "maker": "THE NAZO STORE",
+      "status": "구입 완료",
+      "image": "data/images/3e4d25cb2dd4801ebea7fcc930a3c8df.webp",
+      "slug": "3e4d25cb2dd4801ebea7fcc930a3c8df"
     }
   ]
 }
