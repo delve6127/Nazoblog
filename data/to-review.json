@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-09-30T12:05:08.788Z",
-  "count": 61,
+  "updatedAt": "2026-09-30T14:51:07.927Z",
+  "count": 62,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -9,14 +9,6 @@
       "status": "보유중",
       "image": "data/images/32cd25cb2dd4803eb8a9ebc9c9e5b77b.jpg",
       "slug": "redbook-2025-treasure"
-    },
-    {
-      "id": "32cd25cb2dd48032b66bea8013bb1c77",
-      "name": "レコード",
-      "maker": "ナゾトキアドベンチャー",
-      "status": "플레이 완료",
-      "image": "data/images/32cd25cb2dd48032b66bea8013bb1c77.png",
-      "slug": "レコード"
     },
     {
       "id": "32cd25cb2dd4803eb376d4eb15ad78e9",
@@ -489,6 +481,22 @@
       "status": "구입 완료",
       "image": "data/images/3e4d25cb2dd4801ebea7fcc930a3c8df.webp",
       "slug": "3e4d25cb2dd4801ebea7fcc930a3c8df"
+    },
+    {
+      "id": "3ebd25cb2dd4808b8623f862a29ff60d",
+      "name": "世界を救え SCRAPPIES (26.9 雪)",
+      "maker": "SCRAP - Mystery For You",
+      "status": "플레이 완료",
+      "image": "data/images/3ebd25cb2dd4808b8623f862a29ff60d.jpg",
+      "slug": "3ebd25cb2dd4808b8623f862a29ff60d"
+    },
+    {
+      "id": "3ebd25cb2dd480f9a312d519ff1b007f",
+      "name": "No image Enigma (26.9 月)",
+      "maker": "SCRAP - Mystery For You",
+      "status": "플레이 완료",
+      "image": "data/images/3ebd25cb2dd480f9a312d519ff1b007f.jpg",
+      "slug": "3ebd25cb2dd480f9a312d519ff1b007f"
     }
   ]
 }
