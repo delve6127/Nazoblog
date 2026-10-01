@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-10-01T13:39:01.708Z",
-  "count": 61,
+  "updatedAt": "2026-10-01T13:52:02.407Z",
+  "count": 71,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -489,6 +489,86 @@
       "status": "리뷰 작성 중",
       "image": "data/images/3ebd25cb2dd480f9a312d519ff1b007f.jpg",
       "slug": "3ebd25cb2dd480f9a312d519ff1b007f"
+    },
+    {
+      "id": "3ecd25cb2dd48000ad7ef38571b567b9",
+      "name": "DeTESTive",
+      "maker": "AnotherVision",
+      "status": "구입 완료",
+      "image": "data/images/3ecd25cb2dd48000ad7ef38571b567b9.png",
+      "slug": "3ecd25cb2dd48000ad7ef38571b567b9"
+    },
+    {
+      "id": "3ecd25cb2dd480d081cbee5b994a65f3",
+      "name": "いとおし",
+      "maker": "AnotherVision",
+      "status": "구입 완료",
+      "image": "data/images/3ecd25cb2dd480d081cbee5b994a65f3.jpg",
+      "slug": "3ecd25cb2dd480d081cbee5b994a65f3"
+    },
+    {
+      "id": "3ecd25cb2dd480c89b5dfa3bf7d68fb1",
+      "name": "case:P",
+      "maker": "AnotherVision",
+      "status": "구입 완료",
+      "image": "data/images/3ecd25cb2dd480c89b5dfa3bf7d68fb1.jpg",
+      "slug": "3ecd25cb2dd480c89b5dfa3bf7d68fb1"
+    },
+    {
+      "id": "3ecd25cb2dd48084981bc88a36a3ded4",
+      "name": "アケ_テ",
+      "maker": "AnotherVision",
+      "status": "구입 완료",
+      "image": "data/images/3ecd25cb2dd48084981bc88a36a3ded4.png",
+      "slug": "3ecd25cb2dd48084981bc88a36a3ded4"
+    },
+    {
+      "id": "3ecd25cb2dd480588524d62c4f322dc2",
+      "name": "トライズ",
+      "maker": "AnotherVision",
+      "status": "구입 완료",
+      "image": "data/images/3ecd25cb2dd480588524d62c4f322dc2.png",
+      "slug": "3ecd25cb2dd480588524d62c4f322dc2"
+    },
+    {
+      "id": "3ecd25cb2dd480058a44e841b28057ca",
+      "name": "近見知新聞解読依頼",
+      "maker": "AnotherVision",
+      "status": "구입 완료",
+      "image": "data/images/3ecd25cb2dd480058a44e841b28057ca.jpg",
+      "slug": "3ecd25cb2dd480058a44e841b28057ca"
+    },
+    {
+      "id": "3ecd25cb2dd480eb85cce0c0671f08c3",
+      "name": "コウサク",
+      "maker": "AnotherVision",
+      "status": "구입 완료",
+      "image": "data/images/3ecd25cb2dd480eb85cce0c0671f08c3.jpg",
+      "slug": "3ecd25cb2dd480eb85cce0c0671f08c3"
+    },
+    {
+      "id": "3ecd25cb2dd4802b9ba8da4acab00213",
+      "name": "メモリドル0",
+      "maker": "AnotherVision",
+      "status": "구입 완료",
+      "image": "data/images/3ecd25cb2dd4802b9ba8da4acab00213.jpg",
+      "slug": "3ecd25cb2dd4802b9ba8da4acab00213"
+    },
+    {
+      "id": "3ecd25cb2dd480329391d7f4a1ca3bb7",
+      "name": "IneviTable Game",
+      "maker": "AnotherVision",
+      "status": "구입 완료",
+      "image": "data/images/3ecd25cb2dd480329391d7f4a1ca3bb7.jpg",
+      "slug": "3ecd25cb2dd480329391d7f4a1ca3bb7"
+    },
+    {
+      "id": "3ecd25cb2dd480538272db585e52cc9d",
+      "name": "Top Secret",
+      "maker": "AnotherVision",
+      "status": "구입 완료",
+      "image": "data/images/3ecd25cb2dd480538272db585e52cc9d.jpeg",
+      "slug": "3ecd25cb2dd480538272db585e52cc9d"
     }
   ]
 }
