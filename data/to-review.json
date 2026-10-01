@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-10-01T12:38:29.646Z",
-  "count": 62,
+  "updatedAt": "2026-10-01T13:39:01.708Z",
+  "count": 61,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -483,18 +483,10 @@
       "slug": "3e4d25cb2dd4801ebea7fcc930a3c8df"
     },
     {
-      "id": "3ebd25cb2dd4808b8623f862a29ff60d",
-      "name": "世界を救え SCRAPPIES (26.9 雪)",
-      "maker": "SCRAP - Mystery For You",
-      "status": "플레이 완료",
-      "image": "data/images/3ebd25cb2dd4808b8623f862a29ff60d.jpg",
-      "slug": "3ebd25cb2dd4808b8623f862a29ff60d"
-    },
-    {
       "id": "3ebd25cb2dd480f9a312d519ff1b007f",
       "name": "No image Enigma (26.9 月)",
       "maker": "SCRAP - Mystery For You",
-      "status": "플레이 완료",
+      "status": "리뷰 작성 중",
       "image": "data/images/3ebd25cb2dd480f9a312d519ff1b007f.jpg",
       "slug": "3ebd25cb2dd480f9a312d519ff1b007f"
     }
