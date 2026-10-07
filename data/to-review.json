@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-10-07T12:50:15.645Z",
-  "count": 71,
+  "updatedAt": "2026-10-07T14:01:17.084Z",
+  "count": 70,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -310,7 +310,7 @@
       "id": "371d25cb2dd4805a9e03d974bedd9127",
       "name": "たばこ謎",
       "maker": "THE NAZO STORE",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/371d25cb2dd4805a9e03d974bedd9127.jpeg",
       "slug": "たばこ謎"
     },
@@ -318,7 +318,7 @@
       "id": "371d25cb2dd480b487f1cab14aee33b3",
       "name": "ナゾサンド　不思議な森の恵み味",
       "maker": "THE NAZO STORE",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/371d25cb2dd480b487f1cab14aee33b3.jpeg",
       "slug": "ナゾサンド-不思議な森の恵み味"
     },
@@ -326,7 +326,7 @@
       "id": "371d25cb2dd480dd9502e537cabb5661",
       "name": "ナゾサンド　かぐや姫直伝　月の珍味",
       "maker": "THE NAZO STORE",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/371d25cb2dd480dd9502e537cabb5661.jpeg",
       "slug": "ナゾサンド-かぐや姫直伝-月の珍味"
     },
@@ -334,7 +334,7 @@
       "id": "371d25cb2dd480728ee6e4791d417f92",
       "name": "ナゾサンド　桜散る涙味",
       "maker": "THE NAZO STORE",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/371d25cb2dd480728ee6e4791d417f92.jpeg",
       "slug": "ナゾサンド-桜散る涙味"
     },
@@ -342,7 +342,7 @@
       "id": "371d25cb2dd48079af8af56cf0a139ad",
       "name": "ナゾサンド　探せ！究極のバズ味",
       "maker": "THE NAZO STORE",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/371d25cb2dd48079af8af56cf0a139ad.jpeg",
       "slug": "ナゾサンド-探せ究極のバズ味"
     },
@@ -350,7 +350,7 @@
       "id": "371d25cb2dd4803c8ec5f27b896f8e42",
       "name": "ナゾサンド　ブラック過労味",
       "maker": "THE NAZO STORE",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/371d25cb2dd4803c8ec5f27b896f8e42.jpeg",
       "slug": "ナゾサンド-ブラック過労味"
     },
@@ -422,7 +422,7 @@
       "id": "3ddd25cb2dd480d49a6ff2ad01d9b807",
       "name": "RIDDLE BOX2!!!",
       "maker": "リドラ",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/3ddd25cb2dd480d49a6ff2ad01d9b807.jpg",
       "slug": "3ddd25cb2dd480d49a6ff2ad01d9b807"
     },
@@ -430,7 +430,7 @@
       "id": "3ddd25cb2dd480f486e5c690447d9944",
       "name": "鮮烈",
       "maker": "リドラ",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/3ddd25cb2dd480f486e5c690447d9944.png",
       "slug": "3ddd25cb2dd480f486e5c690447d9944"
     },
@@ -438,7 +438,7 @@
       "id": "3ddd25cb2dd4807a81d2edab6bac0c91",
       "name": "FLY HIGH!",
       "maker": "リドラ",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/3ddd25cb2dd4807a81d2edab6bac0c91.jpg",
       "slug": "3ddd25cb2dd4807a81d2edab6bac0c91"
     },
@@ -446,7 +446,7 @@
       "id": "3ddd25cb2dd4806a86f1ebc5ac9e8312",
       "name": "ナゾノアソビ",
       "maker": "街ハック！",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/3ddd25cb2dd4806a86f1ebc5ac9e8312.webp",
       "slug": "3ddd25cb2dd4806a86f1ebc5ac9e8312"
     },
@@ -454,7 +454,7 @@
       "id": "3ddd25cb2dd480d0b689c356404ab326",
       "name": "『TUMBLEWEED ALLSTAR THE LAST』",
       "maker": "Tumbleweed",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/3ddd25cb2dd480d0b689c356404ab326.jpg",
       "slug": "3ddd25cb2dd480d0b689c356404ab326"
     },
@@ -462,7 +462,7 @@
       "id": "3ddd25cb2dd4805da250d514c0c1a7b6",
       "name": "100FRAME",
       "maker": "4CE Dimension",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/3ddd25cb2dd4805da250d514c0c1a7b6.jpg",
       "slug": "3ddd25cb2dd4805da250d514c0c1a7b6"
     },
@@ -470,7 +470,7 @@
       "id": "3e4d25cb2dd48087aeb8db35b8d2636e",
       "name": "ナゾサンド それいけ！究極の魔王味",
       "maker": "THE NAZO STORE",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/3e4d25cb2dd48087aeb8db35b8d2636e.png",
       "slug": "3e4d25cb2dd48087aeb8db35b8d2636e"
     },
@@ -478,23 +478,15 @@
       "id": "3e4d25cb2dd4801ebea7fcc930a3c8df",
       "name": "オーダーの少ないファミリーレストラン",
       "maker": "THE NAZO STORE",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/3e4d25cb2dd4801ebea7fcc930a3c8df.webp",
       "slug": "3e4d25cb2dd4801ebea7fcc930a3c8df"
-    },
-    {
-      "id": "3ebd25cb2dd480f9a312d519ff1b007f",
-      "name": "No image Enigma (26.9 月)",
-      "maker": "SCRAP - Mystery For You",
-      "status": "리뷰 작성 중",
-      "image": "data/images/3ebd25cb2dd480f9a312d519ff1b007f.jpg",
-      "slug": "3ebd25cb2dd480f9a312d519ff1b007f"
     },
     {
       "id": "3ecd25cb2dd48000ad7ef38571b567b9",
       "name": "DeTESTive",
       "maker": "AnotherVision",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/3ecd25cb2dd48000ad7ef38571b567b9.png",
       "slug": "3ecd25cb2dd48000ad7ef38571b567b9"
     },
@@ -502,7 +494,7 @@
       "id": "3ecd25cb2dd480d081cbee5b994a65f3",
       "name": "いとおし",
       "maker": "AnotherVision",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/3ecd25cb2dd480d081cbee5b994a65f3.jpg",
       "slug": "3ecd25cb2dd480d081cbee5b994a65f3"
     },
@@ -510,7 +502,7 @@
       "id": "3ecd25cb2dd480c89b5dfa3bf7d68fb1",
       "name": "case:P",
       "maker": "AnotherVision",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/3ecd25cb2dd480c89b5dfa3bf7d68fb1.jpg",
       "slug": "3ecd25cb2dd480c89b5dfa3bf7d68fb1"
     },
@@ -518,7 +510,7 @@
       "id": "3ecd25cb2dd48084981bc88a36a3ded4",
       "name": "アケ_テ",
       "maker": "AnotherVision",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/3ecd25cb2dd48084981bc88a36a3ded4.png",
       "slug": "3ecd25cb2dd48084981bc88a36a3ded4"
     },
@@ -526,7 +518,7 @@
       "id": "3ecd25cb2dd480588524d62c4f322dc2",
       "name": "トライズ",
       "maker": "AnotherVision",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/3ecd25cb2dd480588524d62c4f322dc2.png",
       "slug": "3ecd25cb2dd480588524d62c4f322dc2"
     },
@@ -534,7 +526,7 @@
       "id": "3ecd25cb2dd480058a44e841b28057ca",
       "name": "近見知新聞解読依頼",
       "maker": "AnotherVision",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/3ecd25cb2dd480058a44e841b28057ca.jpg",
       "slug": "3ecd25cb2dd480058a44e841b28057ca"
     },
@@ -542,7 +534,7 @@
       "id": "3ecd25cb2dd480eb85cce0c0671f08c3",
       "name": "コウサク",
       "maker": "AnotherVision",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/3ecd25cb2dd480eb85cce0c0671f08c3.jpg",
       "slug": "3ecd25cb2dd480eb85cce0c0671f08c3"
     },
@@ -550,7 +542,7 @@
       "id": "3ecd25cb2dd4802b9ba8da4acab00213",
       "name": "メモリドル0",
       "maker": "AnotherVision",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/3ecd25cb2dd4802b9ba8da4acab00213.jpg",
       "slug": "3ecd25cb2dd4802b9ba8da4acab00213"
     },
@@ -558,7 +550,7 @@
       "id": "3ecd25cb2dd480329391d7f4a1ca3bb7",
       "name": "IneviTable Game",
       "maker": "AnotherVision",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/3ecd25cb2dd480329391d7f4a1ca3bb7.jpg",
       "slug": "3ecd25cb2dd480329391d7f4a1ca3bb7"
     },
@@ -566,7 +558,7 @@
       "id": "3ecd25cb2dd480538272db585e52cc9d",
       "name": "Top Secret",
       "maker": "AnotherVision",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/3ecd25cb2dd480538272db585e52cc9d.jpeg",
       "slug": "3ecd25cb2dd480538272db585e52cc9d"
     }
