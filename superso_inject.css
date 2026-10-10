@@ -3164,6 +3164,7 @@ a.nz2-chip--link:hover { color: var(--nz-ink) !important; }
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 0 34px !important;
     padding: 0 !important;
+    border: none !important; /* Super가 갤러리 상단에 새로 넣은 1px 회색 선 제거 (2026-10) */
   }
 
   /* 큰 카드: 투명 카드 + 종이 프레임 사진 ── */
