@@ -11,5 +11,25 @@
     "IBM Plex Sans KR",
     "OmyuPretty"
   ],
-  "readmeHeader": ".design-sync/conventions.md"
+  "readmeHeader": ".design-sync/conventions.md",
+  "overrides": {
+    "NzPaperSheet": {
+      "cardMode": "column"
+    },
+    "NzSheetHead": {
+      "cardMode": "column"
+    },
+    "NzLead": {
+      "cardMode": "column"
+    },
+    "NzCard": {
+      "cardMode": "column"
+    },
+    "NzExtra": {
+      "cardMode": "column"
+    },
+    "NzEndingBox": {
+      "cardMode": "column"
+    }
+  }
 }

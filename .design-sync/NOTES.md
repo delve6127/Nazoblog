@@ -25,3 +25,11 @@
 - **에셋 미포함.** 레몬/배너 PNG는 번들에 없고 URL만 문서에 있다. GitHub Pages(delve6127.github.io/Nazoblog)가 내려가면 이미지가 깨진다 — 리포 public 유지 필수(별도 메모리 참조).
 - **검증 범위.** 컴포넌트 0개라 스크린샷 채점 없음. 검증은 "CSS가 파싱되고 @import가 전부 resolve된다"까지. 디자인 에이전트가 클래스를 올바르게 조합하는지는 사용 중 확인해야 한다.
 - 툴체인: node v24.14.0, esbuild/ts-morph는 .ds-sync 설치 당시 최신, playwright chromium-headless-shell v1248.
+
+## 경로 2 (컴포넌트 포장) 메모 — 2026-10-10
+- 미리보기 `.design-sync/previews/<Name>.tsx`의 **export 이름은 반드시 영문 대문자로 시작**해야 한다. 카드 하네스가 `/^[A-Z]/`로 셀을 고르므로 한글 export는 조용히 무시되어 `[RENDER] root empty`가 난다 (첫 시도에서 8/8 실패한 원인).
+- 컴포넌트는 `design-system/src/*.tsx` 얇은 래퍼. 빌드: `npm run build` = tsc(d.ts) + esbuild(dist/index.js) + CSS 복사. 진입점 `--entry ./design-system/dist/index.js`.
+- `.nz-wn-tag`, `.nz-wn-ending` 규칙은 `.super-content.page__what-is-nazo` 스코프 전용이라 NzTag/NzEndingBox가 **자체 스코프 래퍼**를 렌더한다. NzCard/NzExtra/NzLead/NzSheetHead는 `.super-content.parent-page__darakbang-note` 스코프(= NzPaperSheet) 안에서만 스타일이 켜진다 → 미리보기는 NzPaperSheet로 감싸서 작성.
+- 카드 하네스 body 배경은 #fff (우리 CSS의 html 배경 #FAF7F2는 뒤에 깔림). 시트가 흰 바탕 위에 보이는 건 하네스 특성, 결함 아님.
+- NzEndingBox CTA 기본 라벨은 실제 사이트 JS 문구 '리뷰 구경하러 가기 →' (superso_inject.js:3639 부근).
+- docs frontmatter `category`는 `[a-z0-9]`로 정규화되므로 **한글 카테고리는 빈 문자열이 되어 group이 general로 떨어진다**. 영문 사용: Paper Sheet / Body Blocks / Accents.

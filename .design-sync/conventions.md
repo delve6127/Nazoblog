@@ -1,6 +1,6 @@
 # 몬빵의 나조토키 다락방 — 사용 규약 (design agent용)
 
-**이 시스템은 React 컴포넌트가 아니라 CSS 클래스 + CSS 변수로만 이루어져 있다.** `window.NazoDarakbang`에는 컴포넌트가 없다. 디자인은 평범한 HTML에 아래 클래스와 `var(--nz-*)` 토큰을 써서 만든다. 다른 라이브러리의 컴포넌트·유틸리티 클래스(Tailwind 등)는 쓰지 않는다.
+**문서형 페이지는 `window.NazoDarakbang`의 8개 컴포넌트로 조립한다** — `NzPaperSheet`(종이 시트 그릇) · `NzSheetHead`(뱃지+날짜+pill 버튼) · `NzLead`(손글씨 리드문+실선) · `NzCard`(작품 카드) · `NzExtra`(번외 왼쪽 기둥) · `NzTag`(파스텔 태그) · `NzEndingBox`(맺음 박스+레몬 CTA) · `NzCtaLink`(레몬 밑줄 링크). 각각의 props와 예시는 `components/<group>/<Name>/<Name>.prompt.md`에 있다. 컴포넌트가 없는 요소(본문 문단·소제목·구분선·갤러리 카드·칩 등)는 아래 CSS 클래스와 `var(--nz-*)` 토큰을 직접 쓴다. 다른 라이브러리의 컴포넌트·유틸리티 클래스(Tailwind 등)는 쓰지 않는다.
 
 ## 1. 셋업 — 필수 2가지
 
@@ -11,7 +11,7 @@
 
 **토큰**: 색·폰트는 반드시 `var(--nz-*)`로. 주요 이름 — 배경 `--nz-bg-page` `--nz-paper` `--nz-paper-warm`, 글자 `--nz-ink` `--nz-muted-1` `--nz-muted-3` `--nz-muted-4`, 선 `--nz-line` `--nz-line-soft` `--nz-card-border` `--nz-rule-brown`, 포인트 `--nz-lemon` `--nz-lemon-hi` `--nz-lemon-hover` `--nz-chip-hover` `--nz-featured-bg` `--nz-featured-border`, 링크 `--nz-link` `--nz-link-hover`, 폰트 `--nz-font-display`(Jua, 제목) `--nz-font-hand`(OmyuPretty, 리드문·한줄평) `--nz-font-body`(IBM Plex Sans KR, 본문). 토큰에 없는 실사용 값 3개: 칩 테두리 `#DCD2BA`, 본문 글자 `#4A4335`, 링크 밑줄 `#D9C46A`.
 
-**스코프 클래스 — 가장 중요한 규칙.** 거의 모든 규칙이 페이지 스코프 조상 아래에서만 켜진다. 스코프 없이 클래스만 쓰면 아무 스타일도 안 붙는다.
+**스코프 클래스 — 가장 중요한 규칙.** 거의 모든 규칙이 페이지 스코프 조상 아래에서만 켜진다. 스코프 없이 클래스만 쓰면 아무 스타일도 안 붙는다. **`NzPaperSheet`가 이 스코프(`super-content parent-page__darakbang-note` + `header.notion-header` + `article.notion-root`)를 대신 렌더하므로, 시트 안에서는 래퍼를 손으로 붙이지 않는다.** `NzCard`·`NzExtra`·`NzLead`·`NzSheetHead`는 `NzPaperSheet` 안에서만 스타일이 켜지고, `NzTag`·`NzEndingBox`·`NzCtaLink`는 자체 스코프를 포함해 어디서든 쓸 수 있다. 아래 표는 시트 밖 요소(갤러리 등)나 컴포넌트 없는 페이지 타입을 직접 짤 때의 래퍼다.
 
 | 만들 것 | 바깥 래퍼에 반드시 붙일 클래스 | 그 안의 구조 |
 |---|---|---|
@@ -32,29 +32,26 @@
 - `guidelines/DESIGN_SYSTEM.md` — 토큰·19개 프리미티브·간격 리듬·반응형 규칙·금지사항·신규 포맷 체크리스트(§9). 새 포맷은 §9부터.
 - 에셋: 레몬 아이콘 `https://delve6127.github.io/Nazoblog/assets/lemon.png` (50×50), 타이틀 배너 `https://delve6127.github.io/Nazoblog/assets/masthead-title.png` (1057×174).
 
-## 4. 예시 — 다락방 노트 시트 뼈대
+## 4. 예시 — 다락방 노트 한 장 (검증된 미리보기 축약판)
 
-```html
-<div class="super-content parent-page__darakbang-note">
-  <header class="notion-header">
-    <div class="nz-dn-head">
-      <span class="nz-dn-badge">입문작 5선</span>
-      <span class="nz-dn-date">2026. 10. 10</span>
-      <a class="nz-dn-listbtn" href="#"><img src="https://delve6127.github.io/Nazoblog/assets/lemon.png" alt="">노트 목록으로</a>
-    </div>
-    <h1 class="notion-header__title">처음 사는 나조토키, 뭘 고를까</h1>
-  </header>
-  <article class="notion-root">
-    <p class="notion-text nz-dn-lead">손글씨 리드문 — 아래에 갈색 실선이 자동으로 깔린다.</p>
-    <p class="notion-text">본문 14.5px / 1.95. <a class="notion-link" href="#">링크</a>.</p>
-    <div class="nz-dn-card"><div class="notion-callout__content">
-      <h3 class="notion-heading">작품 제목 <span class="nz-dn-card__sub">제작사</span></h3>
-      <p class="notion-text nz-dn-card__meta">난이도 · 인원 · 가격</p>
-      <p class="notion-text">카드 설명 문단.</p>
-    </div></div>
-    <div class="nz-dn-extra"><div class="notion-callout__content">
-      <h3>번외 항목</h3><p class="notion-text">왼쪽 세로선 스타일의 부가 항목.</p>
-    </div></div>
-  </article>
-</div>
+```tsx
+const { NzPaperSheet, NzCard, NzExtra, NzTag, NzCtaLink, NzEndingBox } = window.NazoDarakbang;
+
+<NzPaperSheet
+  title="처음 사는 나조토키, 뭘 고를까"
+  badge="입문작 5선" date="2026. 10. 10" listHref="/darakbang-note"
+  lead={<>퍼즐 좋아하는 친구가 "하나만 추천해줘" 했을 때 꺼내는 다섯 개.</>}
+>
+  <p className="notion-text">첫 작품은 머리보다 손이 즐거운 쪽이 좋습니다. <a className="notion-link" href="#how">고르는 기준</a>은 따로 적어두었어요.</p>
+  <h2>1. 가볍게 시작하기</h2>
+  <NzCard title="무비무드 디저트 퍼즐 팩" sub="MovieMood" meta="난이도 ★★☆ · 1~2인 · 약 2시간"
+    image="/img/moviemood.jpg" description={["디저트 조각을 맞추면 영화 제목이 떠오르는 구조.", "막혀도 손이 계속 움직입니다."]} href="/reviews/moviemood">
+    <p className="notion-text"><NzTag variant="pad">종이</NzTag> <NzTag variant="recycle">재플레이 가능</NzTag></p>
+  </NzCard>
+  <hr className="notion-divider" />
+  <h3>번외</h3>
+  <NzExtra title="지금은 구할 수 없는 명작" meta="2021 · 절판" description="보이면 사세요." href="/reviews/old" />
+  <p className="notion-text">궁금한 작품이 있다면 <NzCtaLink href="/reviews">리뷰 목록에서 찾아보기 →</NzCtaLink></p>
+  <NzEndingBox lead={["여기까지 읽으셨다면 이미 반은 고른 거예요.", "나머지 반은 다락방에서."]} href="/" />
+</NzPaperSheet>
 ```

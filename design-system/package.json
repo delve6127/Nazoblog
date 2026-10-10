@@ -1,19 +1,25 @@
 {
   "name": "nazo-darakbang-ds",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
-  "description": "몬빵의 나조토키 다락방 디자인 시스템 — Claude Design 동기화용 래퍼. 실제 스타일은 ../superso_inject.css (읽기 전용 원본).",
-  "main": "index.js",
-  "module": "index.js",
-  "types": "index.d.ts",
+  "description": "몬빵의 나조토키 다락방 디자인 시스템 — Claude Design 동기화용 패키지. 스타일은 ../superso_inject.css(원본, 읽기 전용)를 복사하고, 컴포넌트는 그 CSS 클래스를 입히는 얇은 React 래퍼.",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "sideEffects": false,
   "scripts": {
-    "build": "cp ../superso_inject.css ./styles.css"
+    "build": "rm -rf dist && tsc -p tsconfig.json && esbuild src/index.ts --bundle --format=esm --jsx=automatic --external:react --external:react-dom --external:react/jsx-runtime --outfile=dist/index.js && cp ../superso_inject.css ./styles.css"
   },
-  "dependencies": {
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0"
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
   },
   "devDependencies": {
-    "@types/react": "^19.3.0"
+    "@types/react": "*",
+    "esbuild": "*",
+    "react": "*",
+    "react-dom": "*",
+    "typescript": "*"
   }
 }
