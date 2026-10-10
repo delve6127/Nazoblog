@@ -1,0 +1,15 @@
+{
+  "projectId": "7c284119-ca86-4dd1-a9b3-11754690fc37",
+  "shape": "package",
+  "pkg": "nazo-darakbang-ds",
+  "globalName": "NazoDarakbang",
+  "buildCmd": "npm run build",
+  "cssEntry": "./styles.css",
+  "guidelinesGlob": "../DESIGN_SYSTEM.md",
+  "runtimeFontPrefixes": [
+    "Jua",
+    "IBM Plex Sans KR",
+    "OmyuPretty"
+  ],
+  "readmeHeader": ".design-sync/conventions.md"
+}

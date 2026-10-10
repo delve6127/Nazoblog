@@ -4,3 +4,10 @@
 # 혹시 모를 실수로 레포 안에 같은 이름 파일이 생겨도 git에 안 올라가도록 방어
 .notion_nazo_token
 *notion*token*
+.ds-sync/
+ds-bundle/
+.design-sync/.cache/
+.design-sync/learnings/
+.design-sync/node_modules
+design-system/node_modules/
+design-system/styles.css
