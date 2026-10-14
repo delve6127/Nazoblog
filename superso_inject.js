@@ -597,15 +597,6 @@ function replaceMainTitle() {
   }, 200);
 }
 
-// 마스트헤드 보장 루프: 하이드레이션이 지워도 150ms 내 복구 (있으면 즉시 통과)
-function ensureMastheadLoop() {
-  var started = Date.now();
-  var iv = setInterval(function () {
-    replaceMainTitle();
-    if (Date.now() - started > 3000) clearInterval(iv);
-  }, 150);
-}
-
 // ── SPA 네비게이션 감지 ──
 (function() {
   var lastUrl = location.href;
@@ -619,20 +610,45 @@ function ensureMastheadLoop() {
     return pagePart(location.href) !== pagePart(lastUrl);
   }
 
+  function articleId() {
+    var a = document.querySelector('article.notion-root');
+    return a ? (a.id || '') : '';
+  }
+
+  // 새 페이지 내용이 실제로 들어왔는지 판정: article 요소의 id(노션 페이지 id)나 제목이 바뀌고,
+  // 그 요소가 React가 그린 것(fiber 키 보유)이면 완료. SPA 전환은 클라이언트 렌더라 하이드레이션 대조가 없다.
+  function whenPageSwapped(prevId, prevTitle, cb) {
+    var started = Date.now();
+    (function poll() {
+      var a = document.querySelector('article.notion-root');
+      var swapped = !!a && ((a.id && a.id !== prevId) || nzPageTitleText() !== prevTitle);
+      if (swapped && nzIsHydrated(a)) { cb(); return; }
+      if (Date.now() - started > 5000) {
+        console.warn('[나조토키] SPA 전환 감지 페일세이프 통과');
+        cb();
+        return;
+      }
+      setTimeout(poll, 50);
+    })();
+  }
+
   function onNavigate() {
     // SPA 전환: 이전 페이지에서 켜둔 '화면 열림' 상태를 되돌려
     // 새 내용이 꾸며지기 전까지 CSS 선가림이 다시 작동하게 한다
     window.__nzReadyOnce = false;
     if (document.body) document.body.classList.remove('nz-ready');
     var prevTitle = nzPageTitleText(); // 아직 옛 페이지 제목 — 교체 감지 기준
+    var prevId = articleId();
     showLoader();
     startLoaderGuard(); // 첫 공개 때 해제된 로더 감시자 재가동
-    setTimeout(convertDates, 500);
-    setTimeout(convertDates, 1500);
-    ensureMastheadLoop();
     waitAndHideLoader(prevTitle);
-    // 게이트 뒤로 옮긴 모듈들이 SPA 이동을 알 수 있게 공용 이벤트 발신 (A-2)
-    try { document.dispatchEvent(new CustomEvent('nz:navigate')); } catch (e) {}
+    // 새 내용이 들어온 뒤에 공용 작업 1회 + 각 모듈에 알림 (A-2 5단계)
+    // 예전의 0.5/1.5초 날짜 변환 재예약, 150ms 마스트헤드 루프, 모듈별 0.3초 지연 재실행을 이것 하나로 대체
+    whenPageSwapped(prevId, prevTitle, function () {
+      convertDates();
+      replaceMainTitle();
+      try { document.dispatchEvent(new CustomEvent('nz:navigate')); } catch (e) {}
+    });
   }
 
   // popstate (뒤로/앞으로 가기)
@@ -1436,10 +1452,9 @@ function nzLightboxClose() {
     nzWhenHydrated(function () { tryRender(); });
   });
 
-  // SPA 이동(클라이언트 렌더) 뒤 재적용 — 5단계에서 공용 훅으로 통합 예정
+  // SPA 이동 뒤 재적용 (새 내용이 들어온 시점에 공용 훅이 발신)
   document.addEventListener('nz:navigate', function () {
-    if (location.pathname.indexOf('/nazotoki-reviews/') !== 0) return;
-    setTimeout(function () { tryRender(); }, 300);
+    if (location.pathname.indexOf('/nazotoki-reviews/') === 0) tryRender();
   });
 
 })();
@@ -2389,7 +2404,7 @@ function nzLightboxClose() {
 
   // 게이트 뒤 1회 + SPA 이동 뒤 재적용 (A-2 4단계; 예전 즉시 실행 + body 감시는 구매 페이지 #418 확정 범인)
   nzWhenHydrated(function () { tryRun(); });
-  document.addEventListener('nz:navigate', function () { setTimeout(function () { tryRun(); }, 300); });
+  document.addEventListener('nz:navigate', function () { tryRun(); });
 })();
 
 // ── 리뷰 예정 목록 페이지 커스터마이징 ────────────────────────
@@ -2550,7 +2565,7 @@ function nzLightboxClose() {
 
   // 게이트 뒤 1회 + SPA 이동 뒤 재적용 (A-2 4단계; body 감시 제거)
   nzWhenHydrated(function () { tryRun(); });
-  document.addEventListener('nz:navigate', function () { setTimeout(function () { tryRun(); }, 300); });
+  document.addEventListener('nz:navigate', function () { tryRun(); });
 })();
 
 // ── 갤러리 카드 NEW 뱃지 (한줄평 최초 기입일 4일 이내 · 없으면 작성일 폴백) ──
@@ -2825,7 +2840,7 @@ function nzLightboxClose() {
     }, 300);
   }
   nzWhenHydrated(startLikeRender);
-  document.addEventListener('nz:navigate', function () { setTimeout(startLikeRender, 300); });
+  document.addEventListener('nz:navigate', startLikeRender);
 })();
 
 // ── 다락방 노트 목록 (nz-dl): 노트목록_핸드오프.md 스펙 ────────
@@ -2978,7 +2993,7 @@ function nzLightboxClose() {
 
   // 게이트 뒤 1회 + SPA 이동 뒤 재적용 (A-2 4단계; body 감시·0.3초 URL 폴링 제거. 예전 즉시 실행은 노트 목록 #418 확정 범인)
   nzWhenHydrated(function () { tryRender(); });
-  document.addEventListener('nz:navigate', function () { setTimeout(function () { tryRender(); }, 300); });
+  document.addEventListener('nz:navigate', function () { tryRender(); });
 })();
 
 // ── 리뷰 예정 목록 v2 (nz-tr): 상태 그룹 재조립 + 기대돼요 ────
@@ -3320,7 +3335,7 @@ function nzLightboxClose() {
 
   // 게이트 뒤 1회 + SPA 이동 뒤 재적용 (A-2 4단계; body 감시·0.3초 URL 폴링 제거)
   nzWhenHydrated(function () { tryRender(); });
-  document.addEventListener('nz:navigate', function () { setTimeout(function () { tryRender(); }, 300); });
+  document.addEventListener('nz:navigate', function () { tryRender(); });
 })();
 
 
@@ -3650,13 +3665,6 @@ function nzLightboxClose() {
     }
   }
 
-  // React hydration 완료 후 실행 (Super.so/Next.js 환경)
-  function start(delay) {
-    if (!isWhatIsNazoPage()) return;
-    showCover();
-    setTimeout(function () { tryDecorate(); }, delay || 1200);
-  }
-
   // 우리가 장식한 DOM을 React가 리렌더링으로 덮어쓰는 경우 대비해 재적용
   var wnReapplyObserver = null;
   function startReapplyGuard() {
@@ -3679,23 +3687,11 @@ function nzLightboxClose() {
     wnReapplyObserver.observe(article, { childList: true, subtree: false });
   }
 
-  // SPA 내비게이션 대응 (History API 훅 방식; MutationObserver보다 가벼움)
-  var wnLastUrl = location.href;
-  function wnOnRouteChange() {
-    if (location.href === wnLastUrl) return;
-    wnLastUrl = location.href;
+  // SPA 이동 대응: 공용 훅(nz:navigate)이 새 내용이 들어온 뒤 알려준다 (A-2 5단계; 자체 History 훅 제거)
+  document.addEventListener('nz:navigate', function () {
     if (wnReapplyObserver) { wnReapplyObserver.disconnect(); wnReapplyObserver = null; }
-    if (isWhatIsNazoPage()) start(600);
-  }
-  ['pushState', 'replaceState'].forEach(function (m) {
-    var orig = history[m];
-    history[m] = function () {
-      var rv = orig.apply(this, arguments);
-      setTimeout(wnOnRouteChange, 0);
-      return rv;
-    };
+    if (isWhatIsNazoPage()) { showCover(); tryDecorate(); }
   });
-  window.addEventListener('popstate', wnOnRouteChange);
 
   // 최초 진입: 가능한 한 빨리 커버 띄우고, 하이드레이션 게이트 뒤 장식 (A-2 4단계; 예전 고정 1.2초 대기 대체)
   showCover();
@@ -3967,7 +3963,7 @@ function nzLightboxClose() {
 
   // 게이트 뒤 1회 + SPA 이동 뒤 재적용 (A-2 4단계; body 감시·0.3초 URL 폴링 제거. 예전 즉시 실행은 노트 상세 #418 확정 범인)
   nzWhenHydrated(function () { tryRender(); });
-  document.addEventListener('nz:navigate', function () { setTimeout(function () { tryRender(); }, 300); });
+  document.addEventListener('nz:navigate', function () { tryRender(); });
 })();
 
 /* ============================================================
@@ -4289,7 +4285,7 @@ function nzLightboxClose() {
     }, 200);
   }
   nzWhenHydrated(startMfy);
-  document.addEventListener('nz:navigate', function () { setTimeout(startMfy, 300); });
+  document.addEventListener('nz:navigate', startMfy);
 })();
 
 // ── 전역 크롬 v2: 네비 레몬 홈버튼 + 모바일 ☰ 드롭다운 + 푸터 문구 ──
@@ -4456,11 +4452,8 @@ function nzLightboxClose() {
     runAll();
     watchBodyClass();
   });
-  // SPA 이동(클라이언트 렌더, 하이드레이션 아님) 뒤 재적용 — 5단계에서 공용 훅으로 통합 예정
-  document.addEventListener('nz:navigate', function () {
-    setTimeout(function () { runAll(); watchBodyClass(); }, 300);
-    setTimeout(function () { runAll(); watchBodyClass(); }, 1200);
-  });
+  // SPA 이동 뒤 재적용 (새 내용이 들어온 시점에 공용 훅이 발신)
+  document.addEventListener('nz:navigate', function () { runAll(); watchBodyClass(); });
 
   // 페이지 이동 시 열린 메뉴 정리
   window.addEventListener('popstate', closeMenu);
@@ -4496,7 +4489,7 @@ function nzLightboxClose() {
 
   // 게이트 뒤 1회 + SPA 이동 뒤 재적용 (A-2 4단계; body 감시·1.2/3.5초 재실행 제거. 예전 즉시 실행은 레몬빵 #418 확정 범인)
   nzWhenHydrated(run);
-  document.addEventListener('nz:navigate', function () { setTimeout(run, 300); });
+  document.addEventListener('nz:navigate', run);
 })();
 
 
@@ -4523,7 +4516,7 @@ function nzLightboxClose() {
 
   // 게이트 뒤 1회 + SPA 이동 뒤 재적용 (A-2 3단계; 예전 body 전체 감시 제거)
   nzWhenHydrated(applyNosnippet);
-  document.addEventListener('nz:navigate', function () { setTimeout(applyNosnippet, 1500); });
+  document.addEventListener('nz:navigate', applyNosnippet);
 })();
 
 
