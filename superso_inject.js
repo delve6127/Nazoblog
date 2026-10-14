@@ -340,6 +340,78 @@ showLoader();
 startLoaderGuard();
 waitAndHideLoader();
 
+// ── 하이드레이션 게이트 (A-2) ──
+// Super(Next.js App Router)의 React가 서버 HTML 대조(하이드레이션)를 끝낸 뒤에만
+// DOM을 바꾸는 모듈을 실행한다. 끝나기 전에 요소를 끼워 넣거나 내용을 바꾸면
+// React가 불일치(#418)를 내고 문서를 통째로 다시 그려, 우리 결과물이 지워지고
+// 감시자가 다시 붙이는 "싸움"이 반복된다 (구글 렌더러에서 특히 길어짐).
+// 판정: 푸터(.super-footer__footnote)에 React 내부 키(__reactFiber…)가 생기면 완료.
+//   하이드레이션은 위→아래로 진행되므로 맨 아래 푸터가 끝났으면 위는 전부 끝난 상태.
+//   측정상 DOMContentLoaded 후 20~180ms, load 이벤트보다 먼저 도달한다.
+// 페일세이프: 8초가 지나면 무조건 통과 (Super 구조·React 버전 변경 대비).
+// 설계·측정 근거: nazoblog-hydration-gate-design.md
+var NZ_GATE_ANCHORS = ['.super-footer__footnote', '.super-root'];
+var NZ_GATE_TIMEOUT = 8000;
+var _nzGateOpen = false;
+var _nzGateCbs = [];
+var _nzGatePolling = false;
+
+function nzIsHydrated(el) {
+  if (!el) return false;
+  var keys = Object.keys(el);
+  for (var i = 0; i < keys.length; i++) {
+    if (keys[i].indexOf('__reactFiber') === 0) return true;
+  }
+  return false;
+}
+
+function nzHydrationAnchor() {
+  for (var i = 0; i < NZ_GATE_ANCHORS.length; i++) {
+    var el = document.querySelector(NZ_GATE_ANCHORS[i]);
+    if (el) return el;
+  }
+  return null;
+}
+
+// cb는 게이트가 열린 뒤 정확히 한 번 호출된다. 이미 열려 있으면 즉시 호출.
+function nzWhenHydrated(cb) {
+  if (_nzGateOpen) { cb(); return; }
+  _nzGateCbs.push(cb);
+  if (_nzGatePolling) return;
+  _nzGatePolling = true;
+  var started = Date.now();
+
+  function open(reason) {
+    if (_nzGateOpen) return;
+    _nzGateOpen = true;
+    window.__nzGateOpened = true;
+    if (reason !== 'fiber') console.warn('[나조토키] 하이드레이션 게이트 페일세이프 통과: ' + reason);
+    else console.log('[나조토키] 하이드레이션 완료 감지 (' + (Date.now() - started) + 'ms 대기)');
+    // React가 커밋을 마무리하도록 한 프레임 양보한 뒤 실행
+    var run = function () {
+      var cbs = _nzGateCbs; _nzGateCbs = [];
+      cbs.forEach(function (fn) {
+        try { fn(); } catch (e) { console.error('[나조토키] 게이트 콜백 오류', e); }
+      });
+    };
+    if (window.requestAnimationFrame) requestAnimationFrame(run); else setTimeout(run, 16);
+  }
+
+  function poll() {
+    if (_nzGateOpen) return;
+    if (nzIsHydrated(nzHydrationAnchor())) { open('fiber'); return; }
+    if (Date.now() - started > NZ_GATE_TIMEOUT) { open('timeout'); return; }
+    setTimeout(poll, 50);
+  }
+
+  // 파싱이 끝나기 전엔 fiber가 생길 수 없으므로 DOMContentLoaded 이후부터 본다
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', poll);
+  } else {
+    poll();
+  }
+}
+
 // ── 본 CSS 이탈 감시: 하이드레이션이 <link>를 재부착하는 동안 화면을 닫아 원본 노출 차단 ──
 // 폴링이 아니라 DOM 변경 즉시(페인트 전 microtask) 반응해야 원본이 한 프레임도 안 보인다
 (function () {
@@ -553,6 +625,8 @@ function ensureMastheadLoop() {
     setTimeout(convertDates, 1500);
     ensureMastheadLoop();
     waitAndHideLoader(prevTitle);
+    // 게이트 뒤로 옮긴 모듈들이 SPA 이동을 알 수 있게 공용 이벤트 발신 (A-2)
+    try { document.dispatchEvent(new CustomEvent('nz:navigate')); } catch (e) {}
   }
 
   // popstate (뒤로/앞으로 가기)
@@ -4507,20 +4581,18 @@ function nzLightboxClose() {
       .observe(watchedBody, { attributes: true, attributeFilter: ['class'] });
   }
 
-  // 초기 실행 + hydration/SPA 대응 재적용
-  runAll();
-  watchBodyClass();
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () { runAll(); watchBodyClass(); });
-  }
-  setTimeout(runAll, 800);
-  setTimeout(runAll, 2000);
-  setTimeout(runAll, 4500);
-  var chromeObserver = new MutationObserver(function () {
+  // 하이드레이션 게이트 통과 후 1회 실행 (A-2 1단계)
+  // 예전엔 즉시 실행 + 0.8/2/4.5초 재실행 + 문서 전체 감시로 React 재렌더를 뒤따라갔으나,
+  // 그 "즉시 실행"이 전 페이지 공통으로 #418을 일으키는 원인이었다 (nazoblog-hydration-gate-design.md).
+  nzWhenHydrated(function () {
     runAll();
-    watchBodyClass(); // body 요소 자체가 교체됐을 수도 있으니 감시 재설치
+    watchBodyClass();
   });
-  chromeObserver.observe(document.documentElement, { childList: true, subtree: true });
+  // SPA 이동(클라이언트 렌더, 하이드레이션 아님) 뒤 재적용 — 5단계에서 공용 훅으로 통합 예정
+  document.addEventListener('nz:navigate', function () {
+    setTimeout(function () { runAll(); watchBodyClass(); }, 300);
+    setTimeout(function () { runAll(); watchBodyClass(); }, 1200);
+  });
 
   // 페이지 이동 시 열린 메뉴 정리
   window.addEventListener('popstate', closeMenu);
