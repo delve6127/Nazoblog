@@ -481,6 +481,12 @@ var NZ_CREATED_DATE_SEL    = '.property-57636b4d'; // 노션 "작성일" (create
 function nzParseDateText(text) {
   var t = (text || '').replace(/\([^)]*\)/g, '').trim();
   if (!t) return null;
+  // convertDates()가 이미 한글로 바꾼 뒤("2026년 8월 9일")에도 읽을 수 있게 (A-2: 날짜 변환이 게이트 뒤 1회로 옮겨지며 실행 순서가 바뀜)
+  var k = t.match(/^(\d{4})년 (\d{1,2})월 (\d{1,2})일/);
+  if (k) {
+    var kd = new Date(parseInt(k[1], 10), parseInt(k[2], 10) - 1, parseInt(k[3], 10));
+    return isNaN(kd.getTime()) ? null : kd;
+  }
   var m = t.match(/^([A-Za-z]{3})[A-Za-z]*\.? (\d{1,2}), (\d{4})(?: (\d{1,2}):(\d{2}) ?(AM|PM)?)?/i);
   if (m) {
     var months = { jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5, jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11 };
@@ -2381,28 +2387,9 @@ function nzLightboxClose() {
     }
   }
 
-  // SPA 감지 + 하이드레이션 후 재적용
-  var lastUrl = location.href;
-  var debounceTimer = null;
-  var purchaseObserver = new MutationObserver(function () {
-    if (location.href !== lastUrl) {
-      lastUrl = location.href;
-      tryRun();
-      return;
-    }
-    if (debounceTimer) return;
-    debounceTimer = setTimeout(function () {
-      debounceTimer = null;
-      if (needsRun()) run();
-    }, 200);
-  });
-  purchaseObserver.observe(document.body, { childList: true, subtree: true });
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () { tryRun(); });
-  } else {
-    tryRun();
-  }
+  // 게이트 뒤 1회 + SPA 이동 뒤 재적용 (A-2 4단계; 예전 즉시 실행 + body 감시는 구매 페이지 #418 확정 범인)
+  nzWhenHydrated(function () { tryRun(); });
+  document.addEventListener('nz:navigate', function () { setTimeout(function () { tryRun(); }, 300); });
 })();
 
 // ── 리뷰 예정 목록 페이지 커스터마이징 ────────────────────────
@@ -2561,27 +2548,9 @@ function nzLightboxClose() {
     }
   }
 
-  var lastUrl = location.href;
-  var debounceTimer = null;
-  var reviewObserver = new MutationObserver(function () {
-    if (location.href !== lastUrl) {
-      lastUrl = location.href;
-      tryRun();
-      return;
-    }
-    if (debounceTimer) return;
-    debounceTimer = setTimeout(function () {
-      debounceTimer = null;
-      if (needsRun()) run();
-    }, 200);
-  });
-  reviewObserver.observe(document.body, { childList: true, subtree: true });
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () { tryRun(); });
-  } else {
-    tryRun();
-  }
+  // 게이트 뒤 1회 + SPA 이동 뒤 재적용 (A-2 4단계; body 감시 제거)
+  nzWhenHydrated(function () { tryRun(); });
+  document.addEventListener('nz:navigate', function () { setTimeout(function () { tryRun(); }, 300); });
 })();
 
 // ── 갤러리 카드 NEW 뱃지 (한줄평 최초 기입일 4일 이내 · 없으면 작성일 폴백) ──
@@ -2892,6 +2861,7 @@ function nzLightboxClose() {
       var title = '';
       var cats = [];
       var dateText = '';
+      var dateEl = null;
       var isPublic = false;
       var cells = tr.children;
       for (var i = 0; i < cells.length; i++) {
@@ -2909,10 +2879,12 @@ function nzLightboxClose() {
           isPublic = true;
         } else if (/\d{4}/.test(text)) {
           dateText = text;
+          dateEl = cell;
         }
       }
       if (!title || !isPublic) return;
-      var parsed = new Date(dateText);
+      // 날짜 변환(convertDates)이 먼저 지나가 한글이 됐어도 읽히도록 공용 파서 사용 (data-nz-iso 우선)
+      var parsed = (dateEl && nzParseDateEl(dateEl)) || new Date(dateText);
       var ts = isNaN(parsed.getTime()) ? 0 : parsed.getTime();
       var dateFmt = ts
         ? parsed.getFullYear() + '.' + ('0' + (parsed.getMonth() + 1)).slice(-2) + '.' + ('0' + parsed.getDate()).slice(-2)
@@ -3004,28 +2976,9 @@ function nzLightboxClose() {
     }
   }
 
-  var dlObserver = new MutationObserver(function () {
-    if (isDlPage() && !document.querySelector('.nz-dl-wrap')) tryRender();
-  });
-
-  function boot() {
-    tryRender();
-    dlObserver.observe(document.body || document.documentElement, { childList: true, subtree: true });
-  }
-
-  var dlLastUrl = location.href;
-  setInterval(function () {
-    if (location.href !== dlLastUrl) {
-      dlLastUrl = location.href;
-      if (isDlPage()) tryRender();
-    }
-  }, 300);
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', boot);
-  } else {
-    boot();
-  }
+  // 게이트 뒤 1회 + SPA 이동 뒤 재적용 (A-2 4단계; body 감시·0.3초 URL 폴링 제거. 예전 즉시 실행은 노트 목록 #418 확정 범인)
+  nzWhenHydrated(function () { tryRender(); });
+  document.addEventListener('nz:navigate', function () { setTimeout(function () { tryRender(); }, 300); });
 })();
 
 // ── 리뷰 예정 목록 v2 (nz-tr): 상태 그룹 재조립 + 기대돼요 ────
@@ -3365,30 +3318,9 @@ function nzLightboxClose() {
     }
   }
 
-  // 하이드레이션이 커스텀을 갈아엎으면 재적용
-  var trObserver = new MutationObserver(function () {
-    if (isTrPage() && !document.querySelector('.nz-tr-wrap')) tryRender();
-  });
-
-  function boot() {
-    tryRender();
-    trObserver.observe(document.body || document.documentElement, { childList: true, subtree: true });
-  }
-
-  // SPA 이동 대응
-  var trLastUrl = location.href;
-  setInterval(function () {
-    if (location.href !== trLastUrl) {
-      trLastUrl = location.href;
-      if (isTrPage()) tryRender();
-    }
-  }, 300);
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', boot);
-  } else {
-    boot();
-  }
+  // 게이트 뒤 1회 + SPA 이동 뒤 재적용 (A-2 4단계; body 감시·0.3초 URL 폴링 제거)
+  nzWhenHydrated(function () { tryRender(); });
+  document.addEventListener('nz:navigate', function () { setTimeout(function () { tryRender(); }, 300); });
 })();
 
 
@@ -3765,13 +3697,9 @@ function nzLightboxClose() {
   });
   window.addEventListener('popstate', wnOnRouteChange);
 
-  // 최초 진입: 가능한 한 빨리 커버 띄우고, hydration 대기 후 장식
+  // 최초 진입: 가능한 한 빨리 커버 띄우고, 하이드레이션 게이트 뒤 장식 (A-2 4단계; 예전 고정 1.2초 대기 대체)
   showCover();
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () { start(1200); });
-  } else {
-    start(1200);
-  }
+  nzWhenHydrated(function () { if (isWhatIsNazoPage()) tryDecorate(); });
   // decorateAll 종료 후 재적용 감시 켜기
   var _origDecorate = decorateAll;
   decorateAll = function () {
@@ -3817,7 +3745,8 @@ function nzLightboxClose() {
     var cats = leafTexts(catCell).filter(function (v) { return v !== '카테고리'; });
     var dateText = '';
     if (dateCell) {
-      var parsed = new Date(dateCell.textContent.trim().replace(/^[^A-Z가-힣0-9]*/, ''));
+      // 날짜 변환(convertDates)이 먼저 지나가 한글이 됐어도 읽히도록 공용 파서 우선 (data-nz-iso → 텍스트)
+      var parsed = nzParseDateEl(dateCell) || new Date(dateCell.textContent.trim().replace(/^[^A-Z가-힣0-9]*/, ''));
       // 셀 텍스트에 라벨이 섞여도 날짜 부분만 파싱 시도
       if (isNaN(parsed.getTime())) {
         var m = dateCell.textContent.match(/[A-Z][a-z]+ \d{1,2}, \d{4}/);
@@ -4036,30 +3965,9 @@ function nzLightboxClose() {
     }
   }
 
-  // 하이드레이션이 장식을 갈아엎으면 재적용
-  var dnObserver = new MutationObserver(function () {
-    if (isNotePage() && !isDecorated()) tryRender();
-  });
-
-  function boot() {
-    tryRender();
-    dnObserver.observe(document.body || document.documentElement, { childList: true, subtree: true });
-  }
-
-  // SPA 이동 대응
-  var dnLastUrl = location.href;
-  setInterval(function () {
-    if (location.href !== dnLastUrl) {
-      dnLastUrl = location.href;
-      if (isNotePage()) tryRender();
-    }
-  }, 300);
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', boot);
-  } else {
-    boot();
-  }
+  // 게이트 뒤 1회 + SPA 이동 뒤 재적용 (A-2 4단계; body 감시·0.3초 URL 폴링 제거. 예전 즉시 실행은 노트 상세 #418 확정 범인)
+  nzWhenHydrated(function () { tryRender(); });
+  document.addEventListener('nz:navigate', function () { setTimeout(function () { tryRender(); }, 300); });
 })();
 
 /* ============================================================
@@ -4365,31 +4273,23 @@ function nzLightboxClose() {
     decorateCta(art);
   }
 
-  // 하이드레이션이 장식을 갈아엎으면 재적용 (nz-dn 완료 후에만 동작)
-  var mfyObserver = new MutationObserver(function () {
-    if (isMfyPage()) decorate();
-  });
-
-  // SPA 이동 대응
-  var mfyLastUrl = location.href;
-  setInterval(function () {
-    if (location.href !== mfyLastUrl) {
-      mfyLastUrl = location.href;
-      if (!isMfyPage()) document.body.classList.remove('nz-mfy-page');
-    }
-    if (isMfyPage()) decorate();
-  }, 400);
-
-  function boot() {
-    decorate();
-    mfyObserver.observe(document.body || document.documentElement, { childList: true, subtree: true });
+  // 게이트 뒤, 공통 노트 장식(nz-dn)이 끝날 때까지 0.2초 간격 재시도 (최대 10초) — A-2 4단계
+  // 예전의 body 감시 + 0.4초 영구 폴링은 제거.
+  var mfyTimer = null;
+  function startMfy() {
+    if (mfyTimer) clearInterval(mfyTimer);
+    if (!isMfyPage()) { document.body.classList.remove('nz-mfy-page'); return; }
+    var started = Date.now();
+    mfyTimer = setInterval(function () {
+      decorate();
+      var art = document.querySelector('article.notion-root');
+      if ((art && art.classList.contains('nz-mfy-done')) || Date.now() - started > 10000) {
+        clearInterval(mfyTimer); mfyTimer = null;
+      }
+    }, 200);
   }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', boot);
-  } else {
-    boot();
-  }
+  nzWhenHydrated(startMfy);
+  document.addEventListener('nz:navigate', function () { setTimeout(startMfy, 300); });
 })();
 
 // ── 전역 크롬 v2: 네비 레몬 홈버튼 + 모바일 ☰ 드롭다운 + 푸터 문구 ──
@@ -4594,34 +4494,9 @@ function nzLightboxClose() {
     blocks.forEach(function (el) { card.appendChild(el); });
   }
 
-  // 하이드레이션이 카드를 해체하면 재적용 (결과물 존재 기준)
-  var aboutDebounce = null;
-  var aboutObserver = new MutationObserver(function () {
-    if (!isAboutPage()) return;
-    if (aboutDebounce) return;
-    aboutDebounce = setTimeout(function () {
-      aboutDebounce = null;
-      var card = document.querySelector('.nz-about-card');
-      var root = document.querySelector('.notion-root');
-      if (!root) return;
-      var strayText = Array.from(root.children).some(function (el) {
-        return el.classList.contains('notion-text') || el.classList.contains('notion-bulleted-list');
-      });
-      if (!card || strayText) {
-        if (card && strayText) card.parentNode.removeChild(card);
-        run();
-      }
-    }, 250);
-  });
-  aboutObserver.observe(document.body, { childList: true, subtree: true });
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', run);
-  } else {
-    run();
-  }
-  setTimeout(run, 1200);
-  setTimeout(run, 3500);
+  // 게이트 뒤 1회 + SPA 이동 뒤 재적용 (A-2 4단계; body 감시·1.2/3.5초 재실행 제거. 예전 즉시 실행은 레몬빵 #418 확정 범인)
+  nzWhenHydrated(run);
+  document.addEventListener('nz:navigate', function () { setTimeout(run, 300); });
 })();
 
 
