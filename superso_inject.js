@@ -271,6 +271,7 @@ function waitAndHideLoader(prevTitle) {
   var isNoteList = path.replace(/\/$/, '') === '/darakbang-note';
   var isAbout = path.indexOf('/lemonbread') === 0;
   var isShop = path.indexOf('/how-to-buy-nazotokis') === 0;
+  var stableSince = null;
   var opened = false;
   function openScreen() {
     if (opened) return;
@@ -314,17 +315,22 @@ function waitAndHideLoader(prevTitle) {
     if (ready && needTitleChange && nzPageTitleText() === prevTitle) ready = false;
     // 본 CSS가 (재부착 등으로) 빠져 있는 동안엔 열지 않는다
     if (ready && !nzMainCssActive()) ready = false;
-    // 커스텀은 하이드레이션 게이트 뒤에만 그려지므로 React가 갈아엎는 일이 없다.
-    // 예전의 "준비 상태 400ms 연속 유지" 대기는 순수 지연이 되어 제거 (A-2 6단계).
+    // 하이드레이션이 커스텀을 갈아엎는 순간이 있으므로,
+    // 준비 상태가 400ms 연속 유지될 때만 화면을 연다
     if (ready) {
-      clearInterval(checkReady);
-      // 폰트가 아직이면 시스템 글씨로 떴다가 확 바뀌므로, 완료를 기다린다 (최대 2.5초)
-      if (document.fonts && document.fonts.status === 'loading') {
-        var fontCap = setTimeout(openScreen, 2500);
-        document.fonts.ready.then(function () { clearTimeout(fontCap); openScreen(); });
-      } else {
-        openScreen();
+      if (stableSince === null) stableSince = Date.now();
+      if (Date.now() - stableSince >= 400) {
+        clearInterval(checkReady);
+        // 폰트가 아직이면 시스템 글씨로 떴다가 확 바뀌므로, 완료를 기다린다 (최대 2.5초)
+        if (document.fonts && document.fonts.status === 'loading') {
+          var fontCap = setTimeout(openScreen, 2500);
+          document.fonts.ready.then(function () { clearTimeout(fontCap); openScreen(); });
+        } else {
+          openScreen();
+        }
       }
+    } else {
+      stableSince = null;
     }
   }, 100);
 }
@@ -333,78 +339,6 @@ function waitAndHideLoader(prevTitle) {
 showLoader();
 startLoaderGuard();
 waitAndHideLoader();
-
-// ── 하이드레이션 게이트 (A-2) ──
-// Super(Next.js App Router)의 React가 서버 HTML 대조(하이드레이션)를 끝낸 뒤에만
-// DOM을 바꾸는 모듈을 실행한다. 끝나기 전에 요소를 끼워 넣거나 내용을 바꾸면
-// React가 불일치(#418)를 내고 문서를 통째로 다시 그려, 우리 결과물이 지워지고
-// 감시자가 다시 붙이는 "싸움"이 반복된다 (구글 렌더러에서 특히 길어짐).
-// 판정: 푸터(.super-footer__footnote)에 React 내부 키(__reactFiber…)가 생기면 완료.
-//   하이드레이션은 위→아래로 진행되므로 맨 아래 푸터가 끝났으면 위는 전부 끝난 상태.
-//   측정상 DOMContentLoaded 후 20~180ms, load 이벤트보다 먼저 도달한다.
-// 페일세이프: 8초가 지나면 무조건 통과 (Super 구조·React 버전 변경 대비).
-// 설계·측정 근거: nazoblog-hydration-gate-design.md
-var NZ_GATE_ANCHORS = ['.super-footer__footnote', '.super-root'];
-var NZ_GATE_TIMEOUT = 8000;
-var _nzGateOpen = false;
-var _nzGateCbs = [];
-var _nzGatePolling = false;
-
-function nzIsHydrated(el) {
-  if (!el) return false;
-  var keys = Object.keys(el);
-  for (var i = 0; i < keys.length; i++) {
-    if (keys[i].indexOf('__reactFiber') === 0) return true;
-  }
-  return false;
-}
-
-function nzHydrationAnchor() {
-  for (var i = 0; i < NZ_GATE_ANCHORS.length; i++) {
-    var el = document.querySelector(NZ_GATE_ANCHORS[i]);
-    if (el) return el;
-  }
-  return null;
-}
-
-// cb는 게이트가 열린 뒤 정확히 한 번 호출된다. 이미 열려 있으면 즉시 호출.
-function nzWhenHydrated(cb) {
-  if (_nzGateOpen) { cb(); return; }
-  _nzGateCbs.push(cb);
-  if (_nzGatePolling) return;
-  _nzGatePolling = true;
-  var started = Date.now();
-
-  function open(reason) {
-    if (_nzGateOpen) return;
-    _nzGateOpen = true;
-    window.__nzGateOpened = true;
-    if (reason !== 'fiber') console.warn('[나조토키] 하이드레이션 게이트 페일세이프 통과: ' + reason);
-    else console.log('[나조토키] 하이드레이션 완료 감지 (' + (Date.now() - started) + 'ms 대기)');
-    // React가 커밋을 마무리하도록 한 프레임 양보한 뒤 실행
-    var run = function () {
-      var cbs = _nzGateCbs; _nzGateCbs = [];
-      cbs.forEach(function (fn) {
-        try { fn(); } catch (e) { console.error('[나조토키] 게이트 콜백 오류', e); }
-      });
-    };
-    if (window.requestAnimationFrame) requestAnimationFrame(run); else setTimeout(run, 16);
-  }
-
-  function poll() {
-    if (_nzGateOpen) return;
-    if (nzIsHydrated(nzHydrationAnchor())) { open('fiber'); return; }
-    if (Date.now() - started > NZ_GATE_TIMEOUT) { open('timeout'); return; }
-    setTimeout(poll, 50);
-  }
-
-  // 파싱이 끝나기 전엔 fiber가 생길 수 없으므로 DOMContentLoaded 이후부터 본다
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', poll);
-  } else {
-    poll();
-  }
-}
 
 // ── 본 CSS 이탈 감시: 하이드레이션이 <link>를 재부착하는 동안 화면을 닫아 원본 노출 차단 ──
 // 폴링이 아니라 DOM 변경 즉시(페인트 전 microtask) 반응해야 원본이 한 프레임도 안 보인다
@@ -441,9 +375,10 @@ function nzWhenHydrated(cb) {
   }
 
   // head/문서 변경 즉시 확인 — mutation microtask는 페인트보다 먼저 실행된다
-  // (예전의 300ms 영구 폴링 보험은 제거: DOM 변경은 감시자가 놓치지 않는다 — A-2 6단계)
   var mo = new MutationObserver(checkNow);
   mo.observe(document.documentElement, { childList: true, subtree: true });
+  // 보험: 저빈도 폴링 (감시자가 놓치는 경우 대비)
+  setInterval(checkNow, 300);
 })();
 
 // ── 날짜 변환 ──
@@ -474,12 +409,6 @@ var NZ_CREATED_DATE_SEL    = '.property-57636b4d'; // 노션 "작성일" (create
 function nzParseDateText(text) {
   var t = (text || '').replace(/\([^)]*\)/g, '').trim();
   if (!t) return null;
-  // convertDates()가 이미 한글로 바꾼 뒤("2026년 8월 9일")에도 읽을 수 있게 (A-2: 날짜 변환이 게이트 뒤 1회로 옮겨지며 실행 순서가 바뀜)
-  var k = t.match(/^(\d{4})년 (\d{1,2})월 (\d{1,2})일/);
-  if (k) {
-    var kd = new Date(parseInt(k[1], 10), parseInt(k[2], 10) - 1, parseInt(k[3], 10));
-    return isNaN(kd.getTime()) ? null : kd;
-  }
   var m = t.match(/^([A-Za-z]{3})[A-Za-z]*\.? (\d{1,2}), (\d{4})(?: (\d{1,2}):(\d{2}) ?(AM|PM)?)?/i);
   if (m) {
     var months = { jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5, jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11 };
@@ -590,6 +519,15 @@ function replaceMainTitle() {
   }, 200);
 }
 
+// 마스트헤드 보장 루프: 하이드레이션이 지워도 150ms 내 복구 (있으면 즉시 통과)
+function ensureMastheadLoop() {
+  var started = Date.now();
+  var iv = setInterval(function () {
+    replaceMainTitle();
+    if (Date.now() - started > 3000) clearInterval(iv);
+  }, 150);
+}
+
 // ── SPA 네비게이션 감지 ──
 (function() {
   var lastUrl = location.href;
@@ -603,45 +541,18 @@ function replaceMainTitle() {
     return pagePart(location.href) !== pagePart(lastUrl);
   }
 
-  function articleId() {
-    var a = document.querySelector('article.notion-root');
-    return a ? (a.id || '') : '';
-  }
-
-  // 새 페이지 내용이 실제로 들어왔는지 판정: article 요소의 id(노션 페이지 id)나 제목이 바뀌고,
-  // 그 요소가 React가 그린 것(fiber 키 보유)이면 완료. SPA 전환은 클라이언트 렌더라 하이드레이션 대조가 없다.
-  function whenPageSwapped(prevId, prevTitle, cb) {
-    var started = Date.now();
-    (function poll() {
-      var a = document.querySelector('article.notion-root');
-      var swapped = !!a && ((a.id && a.id !== prevId) || nzPageTitleText() !== prevTitle);
-      if (swapped && nzIsHydrated(a)) { cb(); return; }
-      if (Date.now() - started > 5000) {
-        console.warn('[나조토키] SPA 전환 감지 페일세이프 통과');
-        cb();
-        return;
-      }
-      setTimeout(poll, 50);
-    })();
-  }
-
   function onNavigate() {
     // SPA 전환: 이전 페이지에서 켜둔 '화면 열림' 상태를 되돌려
     // 새 내용이 꾸며지기 전까지 CSS 선가림이 다시 작동하게 한다
     window.__nzReadyOnce = false;
     if (document.body) document.body.classList.remove('nz-ready');
     var prevTitle = nzPageTitleText(); // 아직 옛 페이지 제목 — 교체 감지 기준
-    var prevId = articleId();
     showLoader();
     startLoaderGuard(); // 첫 공개 때 해제된 로더 감시자 재가동
+    setTimeout(convertDates, 500);
+    setTimeout(convertDates, 1500);
+    ensureMastheadLoop();
     waitAndHideLoader(prevTitle);
-    // 새 내용이 들어온 뒤에 공용 작업 1회 + 각 모듈에 알림 (A-2 5단계)
-    // 예전의 0.5/1.5초 날짜 변환 재예약, 150ms 마스트헤드 루프, 모듈별 0.3초 지연 재실행을 이것 하나로 대체
-    whenPageSwapped(prevId, prevTitle, function () {
-      convertDates();
-      replaceMainTitle();
-      try { document.dispatchEvent(new CustomEvent('nz:navigate')); } catch (e) {}
-    });
   }
 
   // popstate (뒤로/앞으로 가기)
@@ -674,12 +585,12 @@ function replaceMainTitle() {
   };
 })();
 
-// 최초 로드: 하이드레이션 게이트 뒤 1회 (A-2 2단계)
-// 예전의 0.5/1/2/3초 4회 예약과 150ms 마스트헤드 루프는 React 재렌더를 뒤따라가던 방식.
-nzWhenHydrated(function () {
-  convertDates();
-  replaceMainTitle();
-});
+// 최초 로드 시 실행
+setTimeout(convertDates, 500);
+setTimeout(convertDates, 1000);
+setTimeout(convertDates, 2000);
+setTimeout(convertDates, 3000);
+ensureMastheadLoop();
 
 // ── 공용 라이트박스 ────────────────────────────────────────
 function nzLightboxInit() {
@@ -1424,11 +1335,35 @@ function nzLightboxClose() {
     console.log('[나조토키] 브랜드 다른 리뷰 표시: ' + brand + ' (' + totalCount + '개)');
   }
 
-  // ── 초기 실행 (A-2 3단계) ──────────────────────────────
-  // 예전엔 body 전체 감시자가 ".nz-review-wrap이 사라지면 0.2초 뒤 다시 그리기"를 반복했다.
-  // 데이터가 하이드레이션보다 먼저 오면 React 영역을 먼저 바꿔 #418을 내고, React가 지운 뒤
-  // 감시자가 다시 그렸다 (로그에 "리뷰 레이아웃 적용 완료"가 두 번 찍히던 원인).
-  // 이제는 데이터 도착 AND 하이드레이션 완료 후 1회만 그린다.
+  // ── DOM 변경 감지 (hydration 대응) ─────────────────────
+  var nzObserver = null;
+  var nzRendering = false;
+  var nzDebounceTimer = null;
+
+  function startObserver() {
+    if (nzObserver) nzObserver.disconnect();
+
+    nzObserver = new MutationObserver(function () {
+      if (nzDebounceTimer) clearTimeout(nzDebounceTimer);
+      nzDebounceTimer = setTimeout(function () {
+        if (!document.querySelector('.nz-review-wrap') &&
+            document.querySelector('.' + ID.satisfaction) &&
+            !nzRendering) {
+          nzRendering = true;
+          nzObserver.disconnect();
+          render();
+          wrapDiary();
+          renderBrandReviews();
+          nzRendering = false;
+          startObserver();
+        }
+      }, 200);
+    });
+
+    nzObserver.observe(document.body, { childList: true, subtree: true });
+  }
+
+  // ── 초기 실행 ─────────────────────────────────────────
   function tryRender(attempt) {
     attempt = attempt || 0;
     if (document.querySelector('.nz-review-wrap')) return; // 이미 적용됨
@@ -1436,19 +1371,33 @@ function nzLightboxClose() {
       render();
       wrapDiary();
       renderBrandReviews();
+      startObserver();
     } else if (attempt < 30) {
       setTimeout(function () { tryRender(attempt + 1); }, 300);
     }
   }
 
-  loadNazoData(function () {
-    nzWhenHydrated(function () { tryRender(); });
+  // SPA 네비게이션 감지 → URL 변경 시 tryRender 재실행
+  var lastUrl = location.href;
+  var spaObserver = new MutationObserver(function () {
+    if (location.href !== lastUrl) {
+      lastUrl = location.href;
+      tryRender();
+    }
   });
+  spaObserver.observe(document.body, { childList: true, subtree: true });
 
-  // SPA 이동 뒤 재적용 (새 내용이 들어온 시점에 공용 훅이 발신)
-  document.addEventListener('nz:navigate', function () {
-    if (location.pathname.indexOf('/nazotoki-reviews/') === 0) tryRender();
-  });
+  // 데이터 로드 후 렌더링 시작
+  function startAfterDataLoad() {
+    loadNazoData(function () {
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function () { tryRender(); });
+      } else {
+        tryRender();
+      }
+    });
+  }
+  startAfterDataLoad();
 
 })();
 
@@ -1461,9 +1410,7 @@ function nzLightboxClose() {
 
   document.body.classList.add('nz-home');
 
-  // 데이터 도착 AND 하이드레이션 완료 둘 다 만족할 때 1회 (A-2 2단계)
-  // 예전엔 데이터가 하이드레이션보다 먼저 오면 React 영역을 먼저 바꿔 #418을 냈다 (타이밍 범인)
-  loadNazoData(function () { nzWhenHydrated(initGallery); });
+  loadNazoData(function () { initGallery(); });
 
   function initGallery() {
   var GALLERY_SEL   = '.notion-collection-gallery';
@@ -2158,13 +2105,17 @@ function nzLightboxClose() {
     }
   });
 
-  // 카드 지연 렌더 대응: 갤러리 요소만 감시 (A-2 2단계)
-  // 예전의 문서 전체 감시 + "컨트롤이 사라지면 destroyAll→buildAll" 재구축 분기는
-  // 하이드레이션 복구용이었으므로 제거. 게이트 뒤에 그리면 React가 지우지 않는다.
   var galleryDebounce = null;
   var galleryObserver = new MutationObserver(function () {
     var gallery = document.querySelector(GALLERY_SEL);
     if (!gallery) return;
+    var controls = document.getElementById('nz2-controls');
+    var left = document.getElementById('nz2-left');
+    if (!controls || !left || !left.contains(gallery)) {
+      destroyAll();
+      buildAll();
+      return;
+    }
     var uncustomized = gallery.querySelector(CARD_SEL + ':not(.nz-card-custom)');
     if (uncustomized) {
       customizeCards();
@@ -2175,18 +2126,9 @@ function nzLightboxClose() {
       }, 150);
     }
   });
+  galleryObserver.observe(document.body, { childList: true, subtree: true });
 
-  function startGallery(attempt) {
-    var gallery = document.querySelector(GALLERY_SEL);
-    if (gallery) {
-      buildAll();
-      galleryObserver.observe(gallery, { childList: true, subtree: true });
-      return;
-    }
-    // 갤러리가 아직 없으면 잠시 기다린다 (최대 3초)
-    if (attempt < 20) setTimeout(function () { startGallery(attempt + 1); }, 150);
-  }
-  startGallery(0);
+  if (document.querySelector(GALLERY_SEL)) buildAll();
   } // initGallery 끝
 })();
 
@@ -2395,9 +2337,28 @@ function nzLightboxClose() {
     }
   }
 
-  // 게이트 뒤 1회 + SPA 이동 뒤 재적용 (A-2 4단계; 예전 즉시 실행 + body 감시는 구매 페이지 #418 확정 범인)
-  nzWhenHydrated(function () { tryRun(); });
-  document.addEventListener('nz:navigate', function () { tryRun(); });
+  // SPA 감지 + 하이드레이션 후 재적용
+  var lastUrl = location.href;
+  var debounceTimer = null;
+  var purchaseObserver = new MutationObserver(function () {
+    if (location.href !== lastUrl) {
+      lastUrl = location.href;
+      tryRun();
+      return;
+    }
+    if (debounceTimer) return;
+    debounceTimer = setTimeout(function () {
+      debounceTimer = null;
+      if (needsRun()) run();
+    }, 200);
+  });
+  purchaseObserver.observe(document.body, { childList: true, subtree: true });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { tryRun(); });
+  } else {
+    tryRun();
+  }
 })();
 
 // ── 리뷰 예정 목록 페이지 커스터마이징 ────────────────────────
@@ -2556,9 +2517,27 @@ function nzLightboxClose() {
     }
   }
 
-  // 게이트 뒤 1회 + SPA 이동 뒤 재적용 (A-2 4단계; body 감시 제거)
-  nzWhenHydrated(function () { tryRun(); });
-  document.addEventListener('nz:navigate', function () { tryRun(); });
+  var lastUrl = location.href;
+  var debounceTimer = null;
+  var reviewObserver = new MutationObserver(function () {
+    if (location.href !== lastUrl) {
+      lastUrl = location.href;
+      tryRun();
+      return;
+    }
+    if (debounceTimer) return;
+    debounceTimer = setTimeout(function () {
+      debounceTimer = null;
+      if (needsRun()) run();
+    }, 200);
+  });
+  reviewObserver.observe(document.body, { childList: true, subtree: true });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { tryRun(); });
+  } else {
+    tryRun();
+  }
 })();
 
 // ── 갤러리 카드 NEW 뱃지 (한줄평 최초 기입일 4일 이내 · 없으면 작성일 폴백) ──
@@ -2591,15 +2570,9 @@ function nzLightboxClose() {
     });
   }
 
-  // 게이트 뒤 1회 + 갤러리 요소만 감시 (A-2 2단계; 예전 즉시 실행은 홈 #418 확정 범인)
-  nzWhenHydrated(function () {
-    addNewBadges();
-    var gallery = document.querySelector('.notion-collection-gallery');
-    if (gallery) {
-      new MutationObserver(function () { addNewBadges(); })
-        .observe(gallery, { childList: true, subtree: true });
-    }
-  });
+  var newObserver = new MutationObserver(function () { addNewBadges(); });
+  newObserver.observe(document.body, { childList: true, subtree: true });
+  addNewBadges();
 })();
 
 // ── 좋아요 버튼 (독립 모듈) ──────────────────────────────
@@ -2820,20 +2793,28 @@ function nzLightboxClose() {
     setTimeout(function () { container.innerHTML = ''; }, 600);
   }
 
-  // 게이트 뒤, 부착 지점(리뷰 레이아웃·노트 본문)이 생길 때까지 0.3초 간격 재시도 (최대 10초) — A-2 3단계
-  // 예전의 body 전체 감시 + 1/3/5초 재시도 + 0.5초 URL 폴링은 제거.
-  var likeTimer = null;
-  function startLikeRender() {
-    if (likeTimer) clearInterval(likeTimer);
-    if (location.pathname.indexOf('/nazotoki-reviews/') === -1 && !isNoteDetailPage()) return;
-    var started = Date.now();
-    likeTimer = setInterval(function () {
+  // 자체 옵저버: 보이는 DOM에 좋아요 버튼이 없으면 계속 시도
+  var likeObserver = new MutationObserver(function () {
+    if (!hasVisibleLikeButton() &&
+        (location.pathname.indexOf('/nazotoki-reviews/') > -1 || isNoteDetailPage())) {
       renderLikeButton();
-      if (hasVisibleLikeButton() || Date.now() - started > 10000) { clearInterval(likeTimer); likeTimer = null; }
-    }, 300);
-  }
-  nzWhenHydrated(startLikeRender);
-  document.addEventListener('nz:navigate', startLikeRender);
+    }
+  });
+  likeObserver.observe(document.body, { childList: true, subtree: true });
+
+  // 초기 시도 (약간의 딜레이 후)
+  setTimeout(function () { renderLikeButton(); }, 1000);
+  setTimeout(function () { renderLikeButton(); }, 3000);
+  setTimeout(function () { renderLikeButton(); }, 5000);
+
+  // SPA 네비게이션 대응
+  var likeLastUrl = location.href;
+  setInterval(function () {
+    if (location.href !== likeLastUrl) {
+      likeLastUrl = location.href;
+      setTimeout(function () { renderLikeButton(); }, 1500);
+    }
+  }, 500);
 })();
 
 // ── 다락방 노트 목록 (nz-dl): 노트목록_핸드오프.md 스펙 ────────
@@ -2869,7 +2850,6 @@ function nzLightboxClose() {
       var title = '';
       var cats = [];
       var dateText = '';
-      var dateEl = null;
       var isPublic = false;
       var cells = tr.children;
       for (var i = 0; i < cells.length; i++) {
@@ -2887,12 +2867,10 @@ function nzLightboxClose() {
           isPublic = true;
         } else if (/\d{4}/.test(text)) {
           dateText = text;
-          dateEl = cell;
         }
       }
       if (!title || !isPublic) return;
-      // 날짜 변환(convertDates)이 먼저 지나가 한글이 됐어도 읽히도록 공용 파서 사용 (data-nz-iso 우선)
-      var parsed = (dateEl && nzParseDateEl(dateEl)) || new Date(dateText);
+      var parsed = new Date(dateText);
       var ts = isNaN(parsed.getTime()) ? 0 : parsed.getTime();
       var dateFmt = ts
         ? parsed.getFullYear() + '.' + ('0' + (parsed.getMonth() + 1)).slice(-2) + '.' + ('0' + parsed.getDate()).slice(-2)
@@ -2984,9 +2962,28 @@ function nzLightboxClose() {
     }
   }
 
-  // 게이트 뒤 1회 + SPA 이동 뒤 재적용 (A-2 4단계; body 감시·0.3초 URL 폴링 제거. 예전 즉시 실행은 노트 목록 #418 확정 범인)
-  nzWhenHydrated(function () { tryRender(); });
-  document.addEventListener('nz:navigate', function () { tryRender(); });
+  var dlObserver = new MutationObserver(function () {
+    if (isDlPage() && !document.querySelector('.nz-dl-wrap')) tryRender();
+  });
+
+  function boot() {
+    tryRender();
+    dlObserver.observe(document.body || document.documentElement, { childList: true, subtree: true });
+  }
+
+  var dlLastUrl = location.href;
+  setInterval(function () {
+    if (location.href !== dlLastUrl) {
+      dlLastUrl = location.href;
+      if (isDlPage()) tryRender();
+    }
+  }, 300);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
 })();
 
 // ── 리뷰 예정 목록 v2 (nz-tr): 상태 그룹 재조립 + 기대돼요 ────
@@ -3326,9 +3323,30 @@ function nzLightboxClose() {
     }
   }
 
-  // 게이트 뒤 1회 + SPA 이동 뒤 재적용 (A-2 4단계; body 감시·0.3초 URL 폴링 제거)
-  nzWhenHydrated(function () { tryRender(); });
-  document.addEventListener('nz:navigate', function () { tryRender(); });
+  // 하이드레이션이 커스텀을 갈아엎으면 재적용
+  var trObserver = new MutationObserver(function () {
+    if (isTrPage() && !document.querySelector('.nz-tr-wrap')) tryRender();
+  });
+
+  function boot() {
+    tryRender();
+    trObserver.observe(document.body || document.documentElement, { childList: true, subtree: true });
+  }
+
+  // SPA 이동 대응
+  var trLastUrl = location.href;
+  setInterval(function () {
+    if (location.href !== trLastUrl) {
+      trLastUrl = location.href;
+      if (isTrPage()) tryRender();
+    }
+  }, 300);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
 })();
 
 
@@ -3658,6 +3676,13 @@ function nzLightboxClose() {
     }
   }
 
+  // React hydration 완료 후 실행 (Super.so/Next.js 환경)
+  function start(delay) {
+    if (!isWhatIsNazoPage()) return;
+    showCover();
+    setTimeout(function () { tryDecorate(); }, delay || 1200);
+  }
+
   // 우리가 장식한 DOM을 React가 리렌더링으로 덮어쓰는 경우 대비해 재적용
   var wnReapplyObserver = null;
   function startReapplyGuard() {
@@ -3680,15 +3705,31 @@ function nzLightboxClose() {
     wnReapplyObserver.observe(article, { childList: true, subtree: false });
   }
 
-  // SPA 이동 대응: 공용 훅(nz:navigate)이 새 내용이 들어온 뒤 알려준다 (A-2 5단계; 자체 History 훅 제거)
-  document.addEventListener('nz:navigate', function () {
+  // SPA 내비게이션 대응 (History API 훅 방식; MutationObserver보다 가벼움)
+  var wnLastUrl = location.href;
+  function wnOnRouteChange() {
+    if (location.href === wnLastUrl) return;
+    wnLastUrl = location.href;
     if (wnReapplyObserver) { wnReapplyObserver.disconnect(); wnReapplyObserver = null; }
-    if (isWhatIsNazoPage()) { showCover(); tryDecorate(); }
+    if (isWhatIsNazoPage()) start(600);
+  }
+  ['pushState', 'replaceState'].forEach(function (m) {
+    var orig = history[m];
+    history[m] = function () {
+      var rv = orig.apply(this, arguments);
+      setTimeout(wnOnRouteChange, 0);
+      return rv;
+    };
   });
+  window.addEventListener('popstate', wnOnRouteChange);
 
-  // 최초 진입: 가능한 한 빨리 커버 띄우고, 하이드레이션 게이트 뒤 장식 (A-2 4단계; 예전 고정 1.2초 대기 대체)
+  // 최초 진입: 가능한 한 빨리 커버 띄우고, hydration 대기 후 장식
   showCover();
-  nzWhenHydrated(function () { if (isWhatIsNazoPage()) tryDecorate(); });
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { start(1200); });
+  } else {
+    start(1200);
+  }
   // decorateAll 종료 후 재적용 감시 켜기
   var _origDecorate = decorateAll;
   decorateAll = function () {
@@ -3734,8 +3775,7 @@ function nzLightboxClose() {
     var cats = leafTexts(catCell).filter(function (v) { return v !== '카테고리'; });
     var dateText = '';
     if (dateCell) {
-      // 날짜 변환(convertDates)이 먼저 지나가 한글이 됐어도 읽히도록 공용 파서 우선 (data-nz-iso → 텍스트)
-      var parsed = nzParseDateEl(dateCell) || new Date(dateCell.textContent.trim().replace(/^[^A-Z가-힣0-9]*/, ''));
+      var parsed = new Date(dateCell.textContent.trim().replace(/^[^A-Z가-힣0-9]*/, ''));
       // 셀 텍스트에 라벨이 섞여도 날짜 부분만 파싱 시도
       if (isNaN(parsed.getTime())) {
         var m = dateCell.textContent.match(/[A-Z][a-z]+ \d{1,2}, \d{4}/);
@@ -3954,9 +3994,30 @@ function nzLightboxClose() {
     }
   }
 
-  // 게이트 뒤 1회 + SPA 이동 뒤 재적용 (A-2 4단계; body 감시·0.3초 URL 폴링 제거. 예전 즉시 실행은 노트 상세 #418 확정 범인)
-  nzWhenHydrated(function () { tryRender(); });
-  document.addEventListener('nz:navigate', function () { tryRender(); });
+  // 하이드레이션이 장식을 갈아엎으면 재적용
+  var dnObserver = new MutationObserver(function () {
+    if (isNotePage() && !isDecorated()) tryRender();
+  });
+
+  function boot() {
+    tryRender();
+    dnObserver.observe(document.body || document.documentElement, { childList: true, subtree: true });
+  }
+
+  // SPA 이동 대응
+  var dnLastUrl = location.href;
+  setInterval(function () {
+    if (location.href !== dnLastUrl) {
+      dnLastUrl = location.href;
+      if (isNotePage()) tryRender();
+    }
+  }, 300);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
 })();
 
 /* ============================================================
@@ -4262,23 +4323,31 @@ function nzLightboxClose() {
     decorateCta(art);
   }
 
-  // 게이트 뒤, 공통 노트 장식(nz-dn)이 끝날 때까지 0.2초 간격 재시도 (최대 10초) — A-2 4단계
-  // 예전의 body 감시 + 0.4초 영구 폴링은 제거.
-  var mfyTimer = null;
-  function startMfy() {
-    if (mfyTimer) clearInterval(mfyTimer);
-    if (!isMfyPage()) { document.body.classList.remove('nz-mfy-page'); return; }
-    var started = Date.now();
-    mfyTimer = setInterval(function () {
-      decorate();
-      var art = document.querySelector('article.notion-root');
-      if ((art && art.classList.contains('nz-mfy-done')) || Date.now() - started > 10000) {
-        clearInterval(mfyTimer); mfyTimer = null;
-      }
-    }, 200);
+  // 하이드레이션이 장식을 갈아엎으면 재적용 (nz-dn 완료 후에만 동작)
+  var mfyObserver = new MutationObserver(function () {
+    if (isMfyPage()) decorate();
+  });
+
+  // SPA 이동 대응
+  var mfyLastUrl = location.href;
+  setInterval(function () {
+    if (location.href !== mfyLastUrl) {
+      mfyLastUrl = location.href;
+      if (!isMfyPage()) document.body.classList.remove('nz-mfy-page');
+    }
+    if (isMfyPage()) decorate();
+  }, 400);
+
+  function boot() {
+    decorate();
+    mfyObserver.observe(document.body || document.documentElement, { childList: true, subtree: true });
   }
-  nzWhenHydrated(startMfy);
-  document.addEventListener('nz:navigate', startMfy);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
 })();
 
 // ── 전역 크롬 v2: 네비 레몬 홈버튼 + 모바일 ☰ 드롭다운 + 푸터 문구 ──
@@ -4438,15 +4507,20 @@ function nzLightboxClose() {
       .observe(watchedBody, { attributes: true, attributeFilter: ['class'] });
   }
 
-  // 하이드레이션 게이트 통과 후 1회 실행 (A-2 1단계)
-  // 예전엔 즉시 실행 + 0.8/2/4.5초 재실행 + 문서 전체 감시로 React 재렌더를 뒤따라갔으나,
-  // 그 "즉시 실행"이 전 페이지 공통으로 #418을 일으키는 원인이었다 (nazoblog-hydration-gate-design.md).
-  nzWhenHydrated(function () {
+  // 초기 실행 + hydration/SPA 대응 재적용
+  runAll();
+  watchBodyClass();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { runAll(); watchBodyClass(); });
+  }
+  setTimeout(runAll, 800);
+  setTimeout(runAll, 2000);
+  setTimeout(runAll, 4500);
+  var chromeObserver = new MutationObserver(function () {
     runAll();
-    watchBodyClass();
+    watchBodyClass(); // body 요소 자체가 교체됐을 수도 있으니 감시 재설치
   });
-  // SPA 이동 뒤 재적용 (새 내용이 들어온 시점에 공용 훅이 발신)
-  document.addEventListener('nz:navigate', function () { runAll(); watchBodyClass(); });
+  chromeObserver.observe(document.documentElement, { childList: true, subtree: true });
 
   // 페이지 이동 시 열린 메뉴 정리
   window.addEventListener('popstate', closeMenu);
@@ -4480,9 +4554,34 @@ function nzLightboxClose() {
     blocks.forEach(function (el) { card.appendChild(el); });
   }
 
-  // 게이트 뒤 1회 + SPA 이동 뒤 재적용 (A-2 4단계; body 감시·1.2/3.5초 재실행 제거. 예전 즉시 실행은 레몬빵 #418 확정 범인)
-  nzWhenHydrated(run);
-  document.addEventListener('nz:navigate', run);
+  // 하이드레이션이 카드를 해체하면 재적용 (결과물 존재 기준)
+  var aboutDebounce = null;
+  var aboutObserver = new MutationObserver(function () {
+    if (!isAboutPage()) return;
+    if (aboutDebounce) return;
+    aboutDebounce = setTimeout(function () {
+      aboutDebounce = null;
+      var card = document.querySelector('.nz-about-card');
+      var root = document.querySelector('.notion-root');
+      if (!root) return;
+      var strayText = Array.from(root.children).some(function (el) {
+        return el.classList.contains('notion-text') || el.classList.contains('notion-bulleted-list');
+      });
+      if (!card || strayText) {
+        if (card && strayText) card.parentNode.removeChild(card);
+        run();
+      }
+    }, 250);
+  });
+  aboutObserver.observe(document.body, { childList: true, subtree: true });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  setTimeout(run, 1200);
+  setTimeout(run, 3500);
 })();
 
 
@@ -4507,9 +4606,22 @@ function nzLightboxClose() {
     }
   }
 
-  // 게이트 뒤 1회 + SPA 이동 뒤 재적용 (A-2 3단계; 예전 body 전체 감시 제거)
-  nzWhenHydrated(applyNosnippet);
-  document.addEventListener('nz:navigate', applyNosnippet);
+  // 하이드레이션·SPA 전환으로 콜아웃이 다시 그려지면 재적용
+  var nosnippetDebounce = null;
+  var nosnippetObserver = new MutationObserver(function () {
+    if (nosnippetDebounce) return;
+    nosnippetDebounce = setTimeout(function () {
+      nosnippetDebounce = null;
+      applyNosnippet();
+    }, 200);
+  });
+  nosnippetObserver.observe(document.body, { childList: true, subtree: true });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applyNosnippet);
+  } else {
+    applyNosnippet();
+  }
 })();
 
 
