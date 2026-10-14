@@ -659,12 +659,12 @@ function ensureMastheadLoop() {
   };
 })();
 
-// 최초 로드 시 실행
-setTimeout(convertDates, 500);
-setTimeout(convertDates, 1000);
-setTimeout(convertDates, 2000);
-setTimeout(convertDates, 3000);
-ensureMastheadLoop();
+// 최초 로드: 하이드레이션 게이트 뒤 1회 (A-2 2단계)
+// 예전의 0.5/1/2/3초 4회 예약과 150ms 마스트헤드 루프는 React 재렌더를 뒤따라가던 방식.
+nzWhenHydrated(function () {
+  convertDates();
+  replaceMainTitle();
+});
 
 // ── 공용 라이트박스 ────────────────────────────────────────
 function nzLightboxInit() {
@@ -1484,7 +1484,9 @@ function nzLightboxClose() {
 
   document.body.classList.add('nz-home');
 
-  loadNazoData(function () { initGallery(); });
+  // 데이터 도착 AND 하이드레이션 완료 둘 다 만족할 때 1회 (A-2 2단계)
+  // 예전엔 데이터가 하이드레이션보다 먼저 오면 React 영역을 먼저 바꿔 #418을 냈다 (타이밍 범인)
+  loadNazoData(function () { nzWhenHydrated(initGallery); });
 
   function initGallery() {
   var GALLERY_SEL   = '.notion-collection-gallery';
@@ -2179,17 +2181,13 @@ function nzLightboxClose() {
     }
   });
 
+  // 카드 지연 렌더 대응: 갤러리 요소만 감시 (A-2 2단계)
+  // 예전의 문서 전체 감시 + "컨트롤이 사라지면 destroyAll→buildAll" 재구축 분기는
+  // 하이드레이션 복구용이었으므로 제거. 게이트 뒤에 그리면 React가 지우지 않는다.
   var galleryDebounce = null;
   var galleryObserver = new MutationObserver(function () {
     var gallery = document.querySelector(GALLERY_SEL);
     if (!gallery) return;
-    var controls = document.getElementById('nz2-controls');
-    var left = document.getElementById('nz2-left');
-    if (!controls || !left || !left.contains(gallery)) {
-      destroyAll();
-      buildAll();
-      return;
-    }
     var uncustomized = gallery.querySelector(CARD_SEL + ':not(.nz-card-custom)');
     if (uncustomized) {
       customizeCards();
@@ -2200,9 +2198,18 @@ function nzLightboxClose() {
       }, 150);
     }
   });
-  galleryObserver.observe(document.body, { childList: true, subtree: true });
 
-  if (document.querySelector(GALLERY_SEL)) buildAll();
+  function startGallery(attempt) {
+    var gallery = document.querySelector(GALLERY_SEL);
+    if (gallery) {
+      buildAll();
+      galleryObserver.observe(gallery, { childList: true, subtree: true });
+      return;
+    }
+    // 갤러리가 아직 없으면 잠시 기다린다 (최대 3초)
+    if (attempt < 20) setTimeout(function () { startGallery(attempt + 1); }, 150);
+  }
+  startGallery(0);
   } // initGallery 끝
 })();
 
@@ -2644,9 +2651,15 @@ function nzLightboxClose() {
     });
   }
 
-  var newObserver = new MutationObserver(function () { addNewBadges(); });
-  newObserver.observe(document.body, { childList: true, subtree: true });
-  addNewBadges();
+  // 게이트 뒤 1회 + 갤러리 요소만 감시 (A-2 2단계; 예전 즉시 실행은 홈 #418 확정 범인)
+  nzWhenHydrated(function () {
+    addNewBadges();
+    var gallery = document.querySelector('.notion-collection-gallery');
+    if (gallery) {
+      new MutationObserver(function () { addNewBadges(); })
+        .observe(gallery, { childList: true, subtree: true });
+    }
+  });
 })();
 
 // ── 좋아요 버튼 (독립 모듈) ──────────────────────────────
