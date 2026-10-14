@@ -271,7 +271,6 @@ function waitAndHideLoader(prevTitle) {
   var isNoteList = path.replace(/\/$/, '') === '/darakbang-note';
   var isAbout = path.indexOf('/lemonbread') === 0;
   var isShop = path.indexOf('/how-to-buy-nazotokis') === 0;
-  var stableSince = null;
   var opened = false;
   function openScreen() {
     if (opened) return;
@@ -315,22 +314,17 @@ function waitAndHideLoader(prevTitle) {
     if (ready && needTitleChange && nzPageTitleText() === prevTitle) ready = false;
     // 본 CSS가 (재부착 등으로) 빠져 있는 동안엔 열지 않는다
     if (ready && !nzMainCssActive()) ready = false;
-    // 하이드레이션이 커스텀을 갈아엎는 순간이 있으므로,
-    // 준비 상태가 400ms 연속 유지될 때만 화면을 연다
+    // 커스텀은 하이드레이션 게이트 뒤에만 그려지므로 React가 갈아엎는 일이 없다.
+    // 예전의 "준비 상태 400ms 연속 유지" 대기는 순수 지연이 되어 제거 (A-2 6단계).
     if (ready) {
-      if (stableSince === null) stableSince = Date.now();
-      if (Date.now() - stableSince >= 400) {
-        clearInterval(checkReady);
-        // 폰트가 아직이면 시스템 글씨로 떴다가 확 바뀌므로, 완료를 기다린다 (최대 2.5초)
-        if (document.fonts && document.fonts.status === 'loading') {
-          var fontCap = setTimeout(openScreen, 2500);
-          document.fonts.ready.then(function () { clearTimeout(fontCap); openScreen(); });
-        } else {
-          openScreen();
-        }
+      clearInterval(checkReady);
+      // 폰트가 아직이면 시스템 글씨로 떴다가 확 바뀌므로, 완료를 기다린다 (최대 2.5초)
+      if (document.fonts && document.fonts.status === 'loading') {
+        var fontCap = setTimeout(openScreen, 2500);
+        document.fonts.ready.then(function () { clearTimeout(fontCap); openScreen(); });
+      } else {
+        openScreen();
       }
-    } else {
-      stableSince = null;
     }
   }, 100);
 }
@@ -447,10 +441,9 @@ function nzWhenHydrated(cb) {
   }
 
   // head/문서 변경 즉시 확인 — mutation microtask는 페인트보다 먼저 실행된다
+  // (예전의 300ms 영구 폴링 보험은 제거: DOM 변경은 감시자가 놓치지 않는다 — A-2 6단계)
   var mo = new MutationObserver(checkNow);
   mo.observe(document.documentElement, { childList: true, subtree: true });
-  // 보험: 저빈도 폴링 (감시자가 놓치는 경우 대비)
-  setInterval(checkNow, 300);
 })();
 
 // ── 날짜 변환 ──
