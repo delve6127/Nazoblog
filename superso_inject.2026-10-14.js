@@ -217,7 +217,7 @@ function showLoader() {
   if (document.body) document.body.classList.add('nz-loading');
   var loader = document.createElement('div');
   loader.id = 'nz-loader';
-  loader.innerHTML = '<div id="nz-loader-lemon"><img src="https://assets.super.so/b529abf1-8288-44d9-87eb-38228677c041/images/bcc6ec8e-275b-4bfc-b598-b2108922863e/noname.png" alt="lemon" /></div><div id="nz-loader-spinner"></div>';
+  loader.innerHTML = '<div id="nz-loader-lemon"><img src="' + NZ_ASSET_BASE + 'assets/lemon.png" alt="lemon" /></div><div id="nz-loader-spinner"></div>';
   // 하이드레이션이 body를 갈아끼우는 찰나에는 html에 붙인다 (position:fixed라 위치 동일)
   (document.body || document.documentElement).appendChild(loader);
 }
@@ -2502,7 +2502,7 @@ function nzLightboxClose() {
         } else {
           thumb.classList.add('nz-thumb--empty');
           var logo = document.createElement('img');
-          logo.src = 'https://assets.super.so/b529abf1-8288-44d9-87eb-38228677c041/images/bcc6ec8e-275b-4bfc-b598-b2108922863e/noname.png';
+          logo.src = NZ_ASSET_BASE + 'assets/lemon.png';
           logo.alt = '';
           logo.className = 'nz-thumb-logo';
           thumb.appendChild(logo);
@@ -3354,7 +3354,7 @@ function nzLightboxClose() {
     cover.id = 'nz-wn-cover';
     cover.innerHTML =
       '<div class="nz-wn-cover__inner">' +
-        '<div class="nz-wn-cover__lemon"><img src="https://assets.super.so/b529abf1-8288-44d9-87eb-38228677c041/images/bcc6ec8e-275b-4bfc-b598-b2108922863e/noname.png" alt=""/></div>' +
+        '<div class="nz-wn-cover__lemon"><img src="' + NZ_ASSET_BASE + 'assets/lemon.png" alt=""/></div>' +
         '<div class="nz-wn-cover__spinner"></div>' +
       '</div>';
     document.body.appendChild(cover);
@@ -4286,7 +4286,7 @@ function nzLightboxClose() {
 
 // ── 전역 크롬 v2: 네비 레몬 홈버튼 + 모바일 ☰ 드롭다운 + 푸터 문구 ──
 (function () {
-  var LEMON_URL = 'https://assets.super.so/b529abf1-8288-44d9-87eb-38228677c041/images/bcc6ec8e-275b-4bfc-b598-b2108922863e/noname.png';
+  var LEMON_URL = NZ_ASSET_BASE + 'assets/lemon.png';
   var NAV_LINKS = [
     { label: '나조토키란?', href: '/what-is-nazo' },
     { label: '리뷰 예정 목록', href: '/to-review' },
