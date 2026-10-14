@@ -1409,35 +1409,11 @@ function nzLightboxClose() {
     console.log('[나조토키] 브랜드 다른 리뷰 표시: ' + brand + ' (' + totalCount + '개)');
   }
 
-  // ── DOM 변경 감지 (hydration 대응) ─────────────────────
-  var nzObserver = null;
-  var nzRendering = false;
-  var nzDebounceTimer = null;
-
-  function startObserver() {
-    if (nzObserver) nzObserver.disconnect();
-
-    nzObserver = new MutationObserver(function () {
-      if (nzDebounceTimer) clearTimeout(nzDebounceTimer);
-      nzDebounceTimer = setTimeout(function () {
-        if (!document.querySelector('.nz-review-wrap') &&
-            document.querySelector('.' + ID.satisfaction) &&
-            !nzRendering) {
-          nzRendering = true;
-          nzObserver.disconnect();
-          render();
-          wrapDiary();
-          renderBrandReviews();
-          nzRendering = false;
-          startObserver();
-        }
-      }, 200);
-    });
-
-    nzObserver.observe(document.body, { childList: true, subtree: true });
-  }
-
-  // ── 초기 실행 ─────────────────────────────────────────
+  // ── 초기 실행 (A-2 3단계) ──────────────────────────────
+  // 예전엔 body 전체 감시자가 ".nz-review-wrap이 사라지면 0.2초 뒤 다시 그리기"를 반복했다.
+  // 데이터가 하이드레이션보다 먼저 오면 React 영역을 먼저 바꿔 #418을 내고, React가 지운 뒤
+  // 감시자가 다시 그렸다 (로그에 "리뷰 레이아웃 적용 완료"가 두 번 찍히던 원인).
+  // 이제는 데이터 도착 AND 하이드레이션 완료 후 1회만 그린다.
   function tryRender(attempt) {
     attempt = attempt || 0;
     if (document.querySelector('.nz-review-wrap')) return; // 이미 적용됨
@@ -1445,33 +1421,20 @@ function nzLightboxClose() {
       render();
       wrapDiary();
       renderBrandReviews();
-      startObserver();
     } else if (attempt < 30) {
       setTimeout(function () { tryRender(attempt + 1); }, 300);
     }
   }
 
-  // SPA 네비게이션 감지 → URL 변경 시 tryRender 재실행
-  var lastUrl = location.href;
-  var spaObserver = new MutationObserver(function () {
-    if (location.href !== lastUrl) {
-      lastUrl = location.href;
-      tryRender();
-    }
+  loadNazoData(function () {
+    nzWhenHydrated(function () { tryRender(); });
   });
-  spaObserver.observe(document.body, { childList: true, subtree: true });
 
-  // 데이터 로드 후 렌더링 시작
-  function startAfterDataLoad() {
-    loadNazoData(function () {
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function () { tryRender(); });
-      } else {
-        tryRender();
-      }
-    });
-  }
-  startAfterDataLoad();
+  // SPA 이동(클라이언트 렌더) 뒤 재적용 — 5단계에서 공용 훅으로 통합 예정
+  document.addEventListener('nz:navigate', function () {
+    if (location.pathname.indexOf('/nazotoki-reviews/') !== 0) return;
+    setTimeout(function () { tryRender(); }, 300);
+  });
 
 })();
 
@@ -2880,28 +2843,20 @@ function nzLightboxClose() {
     setTimeout(function () { container.innerHTML = ''; }, 600);
   }
 
-  // 자체 옵저버: 보이는 DOM에 좋아요 버튼이 없으면 계속 시도
-  var likeObserver = new MutationObserver(function () {
-    if (!hasVisibleLikeButton() &&
-        (location.pathname.indexOf('/nazotoki-reviews/') > -1 || isNoteDetailPage())) {
+  // 게이트 뒤, 부착 지점(리뷰 레이아웃·노트 본문)이 생길 때까지 0.3초 간격 재시도 (최대 10초) — A-2 3단계
+  // 예전의 body 전체 감시 + 1/3/5초 재시도 + 0.5초 URL 폴링은 제거.
+  var likeTimer = null;
+  function startLikeRender() {
+    if (likeTimer) clearInterval(likeTimer);
+    if (location.pathname.indexOf('/nazotoki-reviews/') === -1 && !isNoteDetailPage()) return;
+    var started = Date.now();
+    likeTimer = setInterval(function () {
       renderLikeButton();
-    }
-  });
-  likeObserver.observe(document.body, { childList: true, subtree: true });
-
-  // 초기 시도 (약간의 딜레이 후)
-  setTimeout(function () { renderLikeButton(); }, 1000);
-  setTimeout(function () { renderLikeButton(); }, 3000);
-  setTimeout(function () { renderLikeButton(); }, 5000);
-
-  // SPA 네비게이션 대응
-  var likeLastUrl = location.href;
-  setInterval(function () {
-    if (location.href !== likeLastUrl) {
-      likeLastUrl = location.href;
-      setTimeout(function () { renderLikeButton(); }, 1500);
-    }
-  }, 500);
+      if (hasVisibleLikeButton() || Date.now() - started > 10000) { clearInterval(likeTimer); likeTimer = null; }
+    }, 300);
+  }
+  nzWhenHydrated(startLikeRender);
+  document.addEventListener('nz:navigate', function () { setTimeout(startLikeRender, 300); });
 })();
 
 // ── 다락방 노트 목록 (nz-dl): 노트목록_핸드오프.md 스펙 ────────
@@ -4691,22 +4646,9 @@ function nzLightboxClose() {
     }
   }
 
-  // 하이드레이션·SPA 전환으로 콜아웃이 다시 그려지면 재적용
-  var nosnippetDebounce = null;
-  var nosnippetObserver = new MutationObserver(function () {
-    if (nosnippetDebounce) return;
-    nosnippetDebounce = setTimeout(function () {
-      nosnippetDebounce = null;
-      applyNosnippet();
-    }, 200);
-  });
-  nosnippetObserver.observe(document.body, { childList: true, subtree: true });
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', applyNosnippet);
-  } else {
-    applyNosnippet();
-  }
+  // 게이트 뒤 1회 + SPA 이동 뒤 재적용 (A-2 3단계; 예전 body 전체 감시 제거)
+  nzWhenHydrated(applyNosnippet);
+  document.addEventListener('nz:navigate', function () { setTimeout(applyNosnippet, 1500); });
 })();
 
 
