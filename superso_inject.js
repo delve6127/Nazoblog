@@ -4355,6 +4355,7 @@ function nzLightboxClose() {
   var LEMON_URL = 'https://assets.super.so/b529abf1-8288-44d9-87eb-38228677c041/images/bcc6ec8e-275b-4bfc-b598-b2108922863e/noname.png';
   var NAV_LINKS = [
     { label: '나조토키란?', href: '/what-is-nazo' },
+    { label: '다락방 노트', href: '/darakbang-note' },
     { label: '리뷰 예정 목록', href: '/to-review' },
     { label: '나조 구매 정보', href: '/how-to-buy-nazotokis' },
     { label: '레몬빵?', href: '/lemonbread' }
