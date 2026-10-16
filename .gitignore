@@ -12,3 +12,4 @@ ds-bundle/
 design-system/node_modules/
 design-system/styles.css
 design-system/dist/
+.DS_Store

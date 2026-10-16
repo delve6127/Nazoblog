@@ -1,6 +1,6 @@
 # 몬빵의 나조토키 다락방 — 사용 규약 (design agent용)
 
-**문서형 페이지는 `window.NazoDarakbang`의 8개 컴포넌트로 조립한다** — `NzPaperSheet`(종이 시트 그릇) · `NzSheetHead`(뱃지+날짜+pill 버튼) · `NzLead`(손글씨 리드문+실선) · `NzCard`(작품 카드) · `NzExtra`(번외 왼쪽 기둥) · `NzTag`(파스텔 태그) · `NzEndingBox`(맺음 박스+레몬 CTA) · `NzCtaLink`(레몬 밑줄 링크). 각각의 props와 예시는 `components/<group>/<Name>/<Name>.prompt.md`에 있다. 컴포넌트가 없는 요소(본문 문단·소제목·구분선·갤러리 카드·칩 등)는 아래 CSS 클래스와 `var(--nz-*)` 토큰을 직접 쓴다. 다른 라이브러리의 컴포넌트·유틸리티 클래스(Tailwind 등)는 쓰지 않는다.
+**문서형 페이지는 `window.NazoDarakbang`의 9개 컴포넌트로 조립한다** — `NzPaperSheet`(종이 시트 그릇) · `NzSheetHead`(뱃지+날짜+pill 버튼) · `NzLead`(손글씨 리드문+실선) · `NzCard`(작품 카드) · `NzExtra`(번외 왼쪽 기둥) · `NzTag`(파스텔 태그) · `NzEndingBox`(맺음 박스+레몬 CTA) · `NzCtaLink`(레몬 밑줄 링크) · `NzRecBadge`(추천도 4단계 뱃지: 강력추천/추천/괜찮음/음..). 각각의 props와 예시는 `components/<group>/<Name>/<Name>.prompt.md`에 있다. 컴포넌트가 없는 요소(본문 문단·소제목·구분선·갤러리 카드·칩 등)는 아래 CSS 클래스와 `var(--nz-*)` 토큰을 직접 쓴다. 다른 라이브러리의 컴포넌트·유틸리티 클래스(Tailwind 등)는 쓰지 않는다.
 
 ## 1. 셋업 — 필수 2가지
 
@@ -11,7 +11,7 @@
 
 **토큰**: 색·폰트는 반드시 `var(--nz-*)`로. 주요 이름 — 배경 `--nz-bg-page` `--nz-paper` `--nz-paper-warm`, 글자 `--nz-ink` `--nz-muted-1` `--nz-muted-3` `--nz-muted-4`, 선 `--nz-line` `--nz-line-soft` `--nz-card-border` `--nz-rule-brown`, 포인트 `--nz-lemon` `--nz-lemon-hi` `--nz-lemon-hover` `--nz-chip-hover` `--nz-featured-bg` `--nz-featured-border`, 링크 `--nz-link` `--nz-link-hover`, 폰트 `--nz-font-display`(Jua, 제목) `--nz-font-hand`(OmyuPretty, 리드문·한줄평) `--nz-font-body`(IBM Plex Sans KR, 본문). 토큰에 없는 실사용 값 3개: 칩 테두리 `#DCD2BA`, 본문 글자 `#4A4335`, 링크 밑줄 `#D9C46A`.
 
-**스코프 클래스 — 가장 중요한 규칙.** 거의 모든 규칙이 페이지 스코프 조상 아래에서만 켜진다. 스코프 없이 클래스만 쓰면 아무 스타일도 안 붙는다. **`NzPaperSheet`가 이 스코프(`super-content parent-page__darakbang-note` + `header.notion-header` + `article.notion-root`)를 대신 렌더하므로, 시트 안에서는 래퍼를 손으로 붙이지 않는다.** `NzCard`·`NzExtra`·`NzLead`·`NzSheetHead`는 `NzPaperSheet` 안에서만 스타일이 켜지고, `NzTag`·`NzEndingBox`·`NzCtaLink`는 자체 스코프를 포함해 어디서든 쓸 수 있다. 아래 표는 시트 밖 요소(갤러리 등)나 컴포넌트 없는 페이지 타입을 직접 짤 때의 래퍼다.
+**스코프 클래스 — 가장 중요한 규칙.** 거의 모든 규칙이 페이지 스코프 조상 아래에서만 켜진다. 스코프 없이 클래스만 쓰면 아무 스타일도 안 붙는다. **`NzPaperSheet`가 이 스코프(`super-content parent-page__darakbang-note` + `header.notion-header` + `article.notion-root`)를 대신 렌더하므로, 시트 안에서는 래퍼를 손으로 붙이지 않는다.** `NzCard`·`NzExtra`·`NzLead`·`NzSheetHead`는 `NzPaperSheet` 안에서만 스타일이 켜지고, `NzTag`·`NzEndingBox`·`NzCtaLink`·`NzRecBadge`는 자체 스코프를 포함하거나 전역 규칙이라 어디서든 쓸 수 있다. 아래 표는 시트 밖 요소(갤러리 등)나 컴포넌트 없는 페이지 타입을 직접 짤 때의 래퍼다.
 
 | 만들 것 | 바깥 래퍼에 반드시 붙일 클래스 | 그 안의 구조 |
 |---|---|---|
@@ -23,6 +23,8 @@
 **종이 시트 안의 부품 클래스** (스코프 `parent-page__darakbang-note` 안에서): 머리글 행 `.nz-dn-head` > 뱃지 `.nz-dn-badge` + 날짜 `.nz-dn-date` + 우측 pill 버튼 `a.nz-dn-listbtn`; 리드문 `p.notion-text.nz-dn-lead`; 작품 카드 `.nz-dn-card` (내부 `.notion-callout__content`, `.nz-dn-card__sub`, `.nz-dn-card__meta`, `.nz-dn-card__img`, `.nz-dn-card__go`); 번외 항목 `.nz-dn-extra` (`.nz-dn-extra__img`, `.nz-dn-extra__meta`); 인용 `.notion-quote`; 구분선 `.notion-divider`; 소제목 `h2`/`h3`를 `article.notion-root` 직속으로. 넓은 리스트형은 `article.notion-root.nz-dn-list`.
 
 **갤러리 부품**: 필터 칩 `.nz2-chip` / `.nz2-chip--active`, 검색바 `#nz2-search`, 추천도 뱃지 `.nz2-rec--strong|--rec|--ok|--meh`, 브랜드 칩 `.nz2-brand-chip`, 페이지 버튼 `.nz2-page-btn` / `.nz2-page-btn--active`, NEW 뱃지 `.nz-new-badge`. 메인 히어로 `.nz-masthead`와 CTA 링크 `.nz-masthead__cta-link`.
+
+**모바일 카드 썸네일**: NzCard의 `image`는 모바일(≤768px)에서 124px로 오른쪽에 떠서 본문 기둥이 좁아진다(사이트 동작 그대로). 모바일 우선 포맷에서는 썸네일을 생략하거나 핵심 카드 1장에만 둔다. **NzEndingBox의 CTA 라벨**은 기본값 '리뷰 구경하러 가기 →'를 유지한다(사이트 문구).
 
 **새 레이아웃 글루**를 쓸 때는 `guidelines/DESIGN_SYSTEM.md` §5 간격표(섹션 40px · 문단 16px · 카드 16px · 카드 내부 12px)와 §7 모양(pill 99px · 카드 12px · 시트 카드 radius 0)만 쓴다. 그림자는 `0 4px 14px rgba(61,55,46,.07)` 계열만, 시트 안 카드는 그림자 없음. 브레이크포인트는 `768px` 하나. 모바일에서 시트는 배경·테두리·그림자가 사라지고 좌우 20px만 남는다 — CSS가 자동으로 처리하니 래퍼 구조만 지키면 된다.
 

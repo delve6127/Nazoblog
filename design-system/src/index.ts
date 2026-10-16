@@ -15,3 +15,5 @@ export type { NzEndingBoxProps } from './NzEndingBox';
 export { NzCtaLink } from './NzCtaLink';
 export type { NzCtaLinkProps } from './NzCtaLink';
 export { LEMON_URL, MASTHEAD_URL } from './assets';
+export { NzRecBadge } from './NzRecBadge';
+export type { NzRecBadgeProps } from './NzRecBadge';
