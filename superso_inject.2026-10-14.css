@@ -2746,6 +2746,7 @@ a.nz2-chip--link:hover { color: var(--nz-ink) !important; }
 .nz2-badges { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; min-width: 0; }
 .nz2-brand-chip { display: none; }
 .nz2-rec { font-size: 14px; font-weight: 700; border-radius: 5px; padding: 2px 8px; flex-shrink: 0; }
+.nz2-rec--life   { background: #6D4FC2; color: #FFFFFF; }
 .nz2-rec--strong { background: #1D5FD6; color: #FFFFFF; }
 .nz2-rec--rec    { background: #D6E6FF; color: #1D5FD6; }
 .nz2-rec--ok     { background: #EDF2F7; color: #5E7186; }

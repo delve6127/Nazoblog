@@ -893,6 +893,7 @@ function nzLightboxClose() {
 
   // ── 추천도 색상 매핑 ─────────────────────────────────
   var REC_COLORS = {
+    '인생나조': { bg: '#6d4fc2', color: '#fff', weight: '700' },
     '강력추천': { bg: '#3b82f6', color: '#fff', weight: '700' },
     '추천':     { bg: '#dbeafe', color: '#1d4ed8', weight: '600' },
     '괜찮음':   { bg: '#e8e0d5', color: '#78716c', weight: '600' },
@@ -1068,7 +1069,7 @@ function nzLightboxClose() {
       : officialPill({ text: '표기 없음', cls: '' });
 
     // 추천도 뱃지 (메인 카드와 동일 클래스 재사용)
-    var REC_CLASS_V2 = { '강력추천': 'nz2-rec--strong', '추천': 'nz2-rec--rec', '괜찮음': 'nz2-rec--ok', '음..': 'nz2-rec--meh' };
+    var REC_CLASS_V2 = { '인생나조': 'nz2-rec--life', '강력추천': 'nz2-rec--strong', '추천': 'nz2-rec--rec', '괜찮음': 'nz2-rec--ok', '음..': 'nz2-rec--meh' };
     var recHtml = recommend.text
       ? '<span class="nz4-rec nz2-rec ' + (REC_CLASS_V2[recommend.text] || 'nz2-rec--meh') + '">' + recommend.text + '</span>'
       : '';
@@ -1488,6 +1489,7 @@ function nzLightboxClose() {
     '아주 어려움': '#B85742'
   };
   var REC_CLASS = {
+    '인생나조': 'nz2-rec--life',
     '강력추천': 'nz2-rec--strong',
     '추천':    'nz2-rec--rec',
     '괜찮음':  'nz2-rec--ok',
@@ -1625,7 +1627,7 @@ function nzLightboxClose() {
       || companyPhonetics.some(function (p) { return p.indexOf(q) > -1; });
 
     var filterMatch = state.filter === 'all'
-      || (state.filter === 'strong' && rating === '강력추천')
+      || (state.filter === 'strong' && (rating === '인생나조' || rating === '강력추천'))
       || (state.filter === 'beginner' && data.beginner === true);
     var diffMatch = state.diff === '전체' || diff === state.diff;
     var brandMatch = state.brand === '전체' || brands.indexOf(state.brand) > -1;
@@ -1784,8 +1786,8 @@ function nzLightboxClose() {
       + '<div id="nz2-chips">'
       + '<button type="button" class="nz2-chip" data-f="all">전체 리뷰</button>'
       + (NZ_NOTES_READY ? '<a class="nz2-chip nz2-chip--link" href="/darakbang-note">다락방 노트</a>' : '')
-      + '<button type="button" class="nz2-chip" data-f="strong">강력추천</button>'
-      + '<button type="button" class="nz2-chip" data-f="beginner">입문 추천</button>'
+      + '<button type="button" class="nz2-chip" data-f="strong">몬빵픽</button>'
+      + '<button type="button" class="nz2-chip" data-f="beginner">입문픽</button>'
       + '<div class="nz2-chip nz2-chip--diff" id="nz2-chip-diff">'
       +   '<span id="nz2-diff-label">난이도 ▾</span>'
       +   '<select id="nz2-diff-select" aria-label="체감 난이도 필터">'
