@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-17T10:17:23.919Z",
+  "updatedAt": "2026-10-17T14:24:52.624Z",
   "count": 73,
   "items": [
     {
@@ -238,7 +238,7 @@
       "id": "369d25cb2dd4804b943bf5b86fef44ab",
       "name": "mistake",
       "maker": "Tumbleweed",
-      "status": "보유중",
+      "status": "플레이 완료",
       "image": "data/images/369d25cb2dd4804b943bf5b86fef44ab.jpg",
       "slug": "mistake"
     },
@@ -574,7 +574,7 @@
       "id": "3f9d25cb2dd480879fa4da8a908da8d3",
       "name": "WILD JUNGLE RATS' ADVENTURE SERIES VOL.1",
       "maker": "ねずみの巣",
-      "status": "보유중",
+      "status": "플레이 완료",
       "image": "data/images/3f9d25cb2dd480879fa4da8a908da8d3.jpeg",
       "slug": "3f9d25cb2dd480879fa4da8a908da8d3"
     },
