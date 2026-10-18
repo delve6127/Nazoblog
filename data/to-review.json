@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-18T10:33:11.747Z",
+  "updatedAt": "2026-10-18T13:06:07.215Z",
   "count": 73,
   "items": [
     {
@@ -166,7 +166,7 @@
       "id": "34dd25cb2dd480f29c2fc20364b9cd3e",
       "name": "LIMINAL ESCAPE",
       "maker": "Tumbleweed",
-      "status": "보유중",
+      "status": "플레이 완료",
       "image": "data/images/34dd25cb2dd480f29c2fc20364b9cd3e.webp",
       "slug": "liminal-escape"
     },
@@ -238,7 +238,7 @@
       "id": "369d25cb2dd4804b943bf5b86fef44ab",
       "name": "mistake",
       "maker": "Tumbleweed",
-      "status": "플레이 완료",
+      "status": "리뷰 작성 중",
       "image": "data/images/369d25cb2dd4804b943bf5b86fef44ab.jpg",
       "slug": "mistake"
     },
@@ -566,7 +566,7 @@
       "id": "3f9d25cb2dd4807b9f6cfda70299ed2a",
       "name": "Unlock!",
       "maker": "QuizKnock, Tumbleweed",
-      "status": "보유중",
+      "status": "플레이 완료",
       "image": "data/images/3f9d25cb2dd4807b9f6cfda70299ed2a.jpg",
       "slug": "3f9d25cb2dd4807b9f6cfda70299ed2a"
     },
