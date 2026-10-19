@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-10-19T03:42:11.043Z",
-  "count": 73,
+  "updatedAt": "2026-10-19T12:09:17.020Z",
+  "count": 72,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -233,14 +233,6 @@
       "status": "보유중",
       "image": "data/images/367d25cb2dd4804ebe9cc59eef9a98eb.jpg",
       "slug": "ひかがくヒラメキbox"
-    },
-    {
-      "id": "369d25cb2dd4804b943bf5b86fef44ab",
-      "name": "mistake",
-      "maker": "Tumbleweed",
-      "status": "리뷰 작성 중",
-      "image": "data/images/369d25cb2dd4804b943bf5b86fef44ab.jpg",
-      "slug": "mistake"
     },
     {
       "id": "369d25cb2dd480a1866cd97c6776ab39",
@@ -574,7 +566,7 @@
       "id": "3f9d25cb2dd480879fa4da8a908da8d3",
       "name": "WILD JUNGLE RATS' ADVENTURE SERIES VOL.1",
       "maker": "ねずみの巣",
-      "status": "플레이 완료",
+      "status": "리뷰 작성 중",
       "image": "data/images/3f9d25cb2dd480879fa4da8a908da8d3.jpeg",
       "slug": "3f9d25cb2dd480879fa4da8a908da8d3"
     },
