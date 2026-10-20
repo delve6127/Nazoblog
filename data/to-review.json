@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-10-20T11:03:44.793Z",
-  "count": 72,
+  "updatedAt": "2026-10-20T13:29:30.656Z",
+  "count": 71,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -558,17 +558,9 @@
       "id": "3f9d25cb2dd4807b9f6cfda70299ed2a",
       "name": "Unlock!",
       "maker": "QuizKnock, Tumbleweed",
-      "status": "플레이 완료",
+      "status": "리뷰 작성 중",
       "image": "data/images/3f9d25cb2dd4807b9f6cfda70299ed2a.jpg",
       "slug": "3f9d25cb2dd4807b9f6cfda70299ed2a"
-    },
-    {
-      "id": "3f9d25cb2dd480879fa4da8a908da8d3",
-      "name": "WILD JUNGLE RATS' ADVENTURE SERIES VOL.1",
-      "maker": "ねずみの巣",
-      "status": "리뷰 작성 중",
-      "image": "data/images/3f9d25cb2dd480879fa4da8a908da8d3.jpeg",
-      "slug": "3f9d25cb2dd480879fa4da8a908da8d3"
     },
     {
       "id": "3f9d25cb2dd4807fb8caf43ef819d4ec",
