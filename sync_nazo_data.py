@@ -8,7 +8,8 @@
 
 사용법:
     python3 sync_nazo_data.py              # 실제 실행 (파일 저장)
-    python3 sync_nazo_data.py --dry-run    # 변경사항 미리보기만 (파일 저장 X)
+    python3 sync_nazo_data.py --dry-run    # 변경사항 미리보기만 (파일 저장 X, 노션에 쓰지 않음)
+    python3 sync_nazo_data.py --no-related # 관련 리뷰 연결 단계 건너뛰기
 """
 import json
 import re
@@ -32,6 +33,17 @@ def utc_iso_to_kst_date(iso_str: str) -> str:
 
 # ─── 설정 ───────────────────────────────────────────────────────────
 DATA_SOURCE_ID = "327d25cb-2dd4-804d-97eb-000b2dd5e5c8"
+
+# ── 관련 리뷰 자동 연결 (구글 색인용 서버사이드 내부 링크) ──
+# 노션 리뷰 DB의 자기참조 관계 속성. Super가 이 속성을 리뷰 페이지 서버 HTML의 <a href> 로 내보내므로
+# 검색엔진이 JS 없이도 리뷰→리뷰 링크를 발견한다. 화면에는 보이지 않음(리뷰 레이아웃이 속성 블록을 숨김).
+# 이 속성은 '대칭'이라 A에 B를 넣으면 B에도 A가 자동으로 생긴다. 관계가 비어 있는 공개 리뷰만 채운다.
+# 규칙: 같은 브랜드 추천도 상위 2 + 같은 브랜드 중 링크 적게 받은 3 (부족하면 다른 브랜드에서 링크 적게 받은 순).
+# 토큰에 "콘텐츠 업데이트" 권한이 필요하다. --no-related 로 건너뛸 수 있음.
+RELATION_PROP = "관계된 나조토키 리뷰모음"
+RELATED_COUNT = 5
+RELATED_TOP = 2
+REC_RANK = {"인생나조": 4, "강력추천": 3, "추천": 2, "괜찮음": 1, "음..": 0}
 TOKEN_PATH = Path.home() / ".notion_nazo_token"
 PROJECT_DIR = Path(__file__).parent
 JSON_PATH = PROJECT_DIR / "nazo_data.json"
@@ -525,6 +537,95 @@ def print_report(changes, missing_phonetic, missing_company, dry_run=False, map_
 
 
 # ─── git 동기화 ─────────────────────────────────────────────────────
+def fill_related_reviews(token: str, pages: list, dry_run: bool = False) -> list:
+    """관계 속성이 비어 있는 공개 리뷰에 관련 리뷰 5개를 채운다. 반환: [(제목, [연결된 제목들]), ...]"""
+    import time
+
+    def rel_ids(page):
+        return [r["id"] for r in page["properties"].get(RELATION_PROP, {}).get("relation", [])]
+
+    def rec(page):
+        return REC_RANK.get((page["properties"].get("추천여부", {}).get("select") or {}).get("name") or "", -1)
+
+    def sat(page):
+        return page["properties"].get("개인 만족도", {}).get("number") or 0
+
+    def brand(page):
+        b = page["properties"].get("제작사", {}).get("multi_select", [])
+        return b[0]["name"] if b else None
+
+    def title(page):
+        return "".join(t.get("plain_text", "") for t in page["properties"].get("이름", {}).get("title", []))
+
+    def first_date(page):
+        d = (page["properties"].get("한줄평 최초 기입일", {}).get("date") or {}).get("start")
+        return d or page.get("created_time", "")
+
+    public = [pg for pg in pages
+              if (pg["properties"].get("공개여부", {}).get("select") or {}).get("name") == "공개"
+              and title(pg)]
+    if RELATION_PROP not in (pages[0]["properties"] if pages else {}):
+        print(f"⚠️ 관계 속성 '{RELATION_PROP}' 이 DB에 없어 관련 리뷰 연결을 건너뜁니다.")
+        return []
+    links = {pg["id"]: set(rel_ids(pg)) for pg in public}   # 현재 연결 상태 (대칭)
+    by_id = {pg["id"]: pg for pg in public}
+    # 대상: 연결이 RELATED_COUNT 미만인 공개 리뷰 (새 리뷰·비공개→공개 전환 리뷰). 기존 연결은 유지하고 모자란 만큼만 보탠다.
+    # (대칭 관계라 다른 리뷰를 채우는 과정에서 이 리뷰의 연결이 바뀔 수 있으므로 매 리뷰마다 현재 상태를 다시 본다)
+    targets = [pg for pg in public if len(links[pg["id"]]) < RELATED_COUNT]
+    if not targets:
+        return []
+
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Notion-Version": NOTION_API_VERSION,
+        "Content-Type": "application/json",
+    }
+    done = []
+    failed = []
+    for pg in targets:
+        me = pg["id"]
+        existing = set(links[me])
+        need = RELATED_COUNT - len(existing)
+        if need <= 0:
+            continue
+        others = [o for o in public if o["id"] != me and o["id"] not in existing]
+        mates = [o for o in others if brand(o) and brand(o) == brand(pg)]
+        top = sorted(mates, key=lambda o: (-rec(o), -sat(o)))[:RELATED_TOP]
+        rest = sorted([o for o in mates if o not in top], key=lambda o: (len(links[o["id"]]), -rec(o)))
+        picks = (top + rest)[:need]
+        if len(picks) < need:
+            pool = [o for o in others if o not in picks]
+            pool.sort(key=lambda o: (len(links[o["id"]]), 0 if rec(o) == rec(pg) else 1))
+            picks += pool[:need - len(picks)]
+        names = [title(o) for o in picks]
+        all_ids = list(existing) + [o["id"] for o in picks]
+        if not dry_run:
+            body = {"properties": {RELATION_PROP: {"relation": [{"id": i} for i in all_ids]}}}
+            req = urllib.request.Request(
+                f"https://api.notion.com/v1/pages/{me}",
+                data=json.dumps(body).encode(), headers=headers, method="PATCH",
+            )
+            try:
+                with urllib.request.urlopen(req) as resp:
+                    resp.read()
+            except urllib.error.HTTPError as e:
+                try:
+                    code = json.loads(e.read()).get("code", "")
+                except Exception:
+                    code = ""
+                hint = " — 노션 연동의 '콘텐츠 업데이트' 권한이 꺼져 있습니다" if e.code == 403 else ""
+                failed.append(f"{title(pg)} ({e.code} {code}){hint}")
+                continue
+            time.sleep(0.35)  # 노션 API 초당 3회 제한
+        # 대칭 관계: 내 쪽과 상대 쪽을 모두 갱신해 다음 리뷰 배정 때 반영
+        links[me] = set(all_ids)
+        for o in picks:
+            links[o["id"]].add(me)
+        done.append((title(pg), names))
+    fill_related_reviews.failed = failed
+    return done
+
+
 def git_pull_rebase() -> None:
     """origin/main과 먼저 동기화. 충돌하면 즉시 중단."""
     print("🔄 git pull --rebase 실행 중...")
@@ -573,6 +674,11 @@ def main() -> int:
         notion_reviews[props["title"]] = props
     print(f"   공개 리뷰 {len(notion_reviews)}건 수신")
 
+    # 관계 속성이 비어 있는 공개 리뷰에 관련 리뷰 연결 (구글용 서버사이드 링크)
+    related_done = []
+    if "--no-related" not in sys.argv:
+        related_done = fill_related_reviews(token, pages, dry_run=dry_run)
+
     print("📡 사이트맵 조회 중...")
     sitemap_paths = [f"/nazotoki-reviews/{s}" for s in fetch_sitemap_slugs()]
 
@@ -612,6 +718,21 @@ def main() -> int:
         missing_phonetic, missing_company = detect_missing(data)
 
     print_report(changes, missing_phonetic, missing_company, dry_run=dry_run, map_result=map_result)
+
+    if related_done:
+        print()
+        print("🔗 관련 리뷰 연결" + (" (DRY RUN — 노션에 쓰지 않음)" if dry_run else "") + f": {len(related_done)}건")
+        for t, names in related_done:
+            print(f"   {t} → " + ", ".join(names))
+    failed = getattr(fill_related_reviews, "failed", [])
+    if failed:
+        print()
+        print(f"⚠️  관련 리뷰 연결 실패: {len(failed)}건")
+        for f_ in failed:
+            print(f"   {f_}")
+    elif not related_done and "--no-related" not in sys.argv:
+        print()
+        print("🔗 관련 리뷰 연결: 비어 있는 리뷰 없음")
 
     if changes["new"] or changes["updated"] or map_result["phonetic"] or map_result["company"]:
         return 1  # 변경 있음 → 호출자가 git commit 처리
