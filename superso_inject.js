@@ -680,7 +680,8 @@ function nzLightboxClose() {
     photo:        'property-3e44474d',
     purchase:     'property-48527e3b',
     pad:          'property-46464855',
-    mfyRelease:   'property-517d3b40'
+    mfyRelease:   'property-517d3b40',
+    quote:        'property-447d5a43'
   };
 
   // ── 값 읽기 헬퍼 ─────────────────────────────────────
@@ -737,6 +738,18 @@ function nzLightboxClose() {
   function getNumVal(id) {
     var el = document.querySelector('.' + id + ' .notion-property__number__progress-value');
     return el ? (parseFloat(el.textContent.trim()) || 0) : 0;
+  }
+
+  // 텍스트 속성 값 읽기 (라벨 제외) — 한줄평 라이브 반영용
+  function getTextVal(id) {
+    var el = getEl(id);
+    if (!el) return '';
+    var v = el.querySelector('.notion-property__text, p.notion-property, p');
+    if (v) return v.textContent.trim();
+    var clone = el.cloneNode(true);
+    var label = clone.querySelector('.notion-page__property-name');
+    if (label) label.remove();
+    return clone.textContent.trim();
   }
 
   // ── pill 색상 → badge 색상 변환 ──────────────────────
@@ -945,7 +958,7 @@ function nzLightboxClose() {
 
     // ── v2 (4단계): 시안 리뷰 페이지.dc.html 구조 ──
     var data = (typeof SORT_DATA !== 'undefined' && SORT_DATA[nazoTitle]) ? SORT_DATA[nazoTitle] : {};
-    var quote = data.quote || '';
+    var quote = getTextVal(ID.quote) || data.quote || ''; // 노션 라이브 값 우선, 동기화 파일은 보조
     var reviewNum = data.num || null;
     var brandDisplay = (company.text || '').replace(/ - /g, ' · ');
 
@@ -1499,8 +1512,11 @@ function nzLightboxClose() {
         + (diff ? '<span class="nz2-diff"><span class="nz2-diff-dot" style="background:' + dColor + '"></span>' + esc(diff) + '</span>' : '')
         + '<span class="nz2-mfy-slot">' + (mfy ? renderMfyChip(mfy) : '') + '</span>'
         + '</div>'
-        + '<div class="nz2-brand-line">' + esc(brand) + '</div>'
-        + (data.quote ? '<div class="nz2-quote">&ldquo;' + esc(data.quote) + '&rdquo;</div>' : '');
+        + '<div class="nz2-brand-line">' + esc(brand) + '</div>';
+      // 한줄평: 카드에 실려온 노션 라이브 값 우선, 동기화 파일은 보조
+      var liveQuoteEl = card.querySelector('.property-447d5a43');
+      var cardQuote = (liveQuoteEl ? liveQuoteEl.textContent.trim() : '') || data.quote || '';
+      html += (cardQuote ? '<div class="nz2-quote">&ldquo;' + esc(cardQuote) + '&rdquo;</div>' : '');
 
       var div = document.createElement('div');
       div.className = 'nz-card-props nz2-card-props';

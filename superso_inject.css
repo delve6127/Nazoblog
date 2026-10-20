@@ -307,6 +307,11 @@ a.notion-page[href="/test"] {
 .notion-collection-card .property-57636b4d {
   display: none !important;
 }
+
+/* 갤러리 카드 한줄평 원본 숨김 (라이브 값은 JS가 nz2-quote로 재표시) */
+.notion-collection-card .property-447d5a43 {
+  display: none !important;
+}
 /* ── 갤러리 카드 "한줄평 최초 기입일" 숨김 (NEW 뱃지·마지막 업데이트 판별용으로 DOM에만 유지) ──
    속성 내부 ID 해시 클래스: 노션에서 속성 이름 변경은 안전, 삭제 후 재생성 시 클래스가 바뀜
    → 그때는 superso_inject.js의 NZ_FIRST_LINE_DATE_SEL과 함께 갱신 */
