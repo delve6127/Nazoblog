@@ -4837,3 +4837,8 @@ html:has(body.nz-mfy-page) { scroll-behavior: smooth; }
   position: static !important; display: inline-block;
   margin-left: 4px; vertical-align: 1px; box-shadow: none !important;
 }
+
+/* 갤러리 카드 한줄평 원본 숨김 (라이브 값은 JS가 nz2-quote로 재표시) */
+.notion-collection-card .property-447d5a43 {
+  display: none !important;
+}
