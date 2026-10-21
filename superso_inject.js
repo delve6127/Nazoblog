@@ -2102,6 +2102,23 @@ function nzLightboxClose() {
     document.querySelectorAll('.nz-card-custom').forEach(function (el) { el.classList.remove('nz-card-custom'); });
   }
 
+  // 한줄평 뒤늦은 도착 보정: 카드 장식(1회) 시점엔 노션 라이브 값이
+  // 아직 하이드레이션 전이라 비어 있을 수 있다 → 도착하면 채워 넣는다
+  function fillLiveQuotes() {
+    document.querySelectorAll('.nz-card-custom').forEach(function (card) {
+      if (card.querySelector('.nz2-quote')) return; // 이미 표시됨
+      var props = card.querySelector('.nz2-card-props');
+      if (!props) return;
+      var el = card.querySelector('.property-447d5a43');
+      var q = el ? el.textContent.trim() : '';
+      if (!q) return;
+      var div = document.createElement('div');
+      div.className = 'nz2-quote';
+      div.innerHTML = '&ldquo;' + esc(q) + '&rdquo;';
+      props.appendChild(div);
+    });
+  }
+
   function buildAll() {
     buildLayout();
     buildControls();
@@ -2111,6 +2128,7 @@ function nzLightboxClose() {
     applyUrlSearch();
     applyVisibility();
     buildNotesBox();
+    [800, 2000, 4500].forEach(function (ms) { setTimeout(fillLiveQuotes, ms); });
   }
 
   // 화면 폭이 모바일↔PC 경계를 넘으면 페이지 크기 재계산
@@ -2134,6 +2152,7 @@ function nzLightboxClose() {
       buildAll();
       return;
     }
+    fillLiveQuotes(); // 하이드레이션으로 한줄평이 뒤늦게 실려오면 보정
     var uncustomized = gallery.querySelector(CARD_SEL + ':not(.nz-card-custom)');
     if (uncustomized) {
       customizeCards();
