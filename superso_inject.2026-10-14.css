@@ -3268,6 +3268,9 @@ a.nz2-chip--link:hover { color: var(--nz-ink) !important; }
     background: var(--nz-paper);
   }
   .nz-home .notion-collection-card.gallery:not(.nz2-card--big) .nz2-brand-line { font-size: 13.5px; margin-top: 6px; }
+  /* NEW 뱃지: Super의 display:contents 래퍼 탓에 뱃지가 카드 기준으로 잡히므로
+     작은 카드의 위 패딩(22px)+테두리(1px)만큼 내려 사진 액자 안쪽에 넣음 (2026-10-23) */
+  .nz-home .notion-collection-card.gallery:not(.nz2-card--big) .nz-new-badge { top: 30px; left: 7px; }
 
   /* ── 페이지네이션 PC ── */
   #nz-pagination { margin: 0; padding-top: 20px; gap: 7px; }
