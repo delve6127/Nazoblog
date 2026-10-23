@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-10-23T03:47:20.827Z",
-  "count": 70,
+  "updatedAt": "2026-10-23T10:19:55.332Z",
+  "count": 69,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -161,14 +161,6 @@
       "status": "보유중",
       "image": "data/images/344d25cb2dd48044b7a2f01b301f0b80.jpg",
       "slug": "piece-미포유-2512-花"
-    },
-    {
-      "id": "34dd25cb2dd480f29c2fc20364b9cd3e",
-      "name": "LIMINAL ESCAPE",
-      "maker": "Tumbleweed",
-      "status": "리뷰 작성 중",
-      "image": "data/images/34dd25cb2dd480f29c2fc20364b9cd3e.webp",
-      "slug": "liminal-escape"
     },
     {
       "id": "34dd25cb2dd4807ba3bbf1fe61d63f8f",
