@@ -7,7 +7,7 @@ GitHub Pages(main 루트)가 파일을 서빙하고, Super 코드 인젝션(Head
 ## 어느 파일이 라이브인가
 
 - 사이트가 읽는 파일: `superso_inject.2026-10-14.js` / `superso_inject.2026-10-14.css` (날짜 파일). **코드 수정은 반드시 날짜 파일에.**
-- `superso_inject.js` / `superso_inject.css`는 10-14 이전 구본(롤백용). 수정 금지. `_preview/superso_inject.js`도 구본 복사본.
+- `superso_inject.js` / `superso_inject.css`는 10-14 이전 구본(롤백용). 수정 금지. **`_preview/superso_inject.js`·`.css`는 복사본이 아니라 이 구본으로 가는 심볼릭 링크(바로가기)** → 거기에 cp로 덮어쓰면 루트 구본이 바뀐다. 프리뷰에 수정본을 보려면 날짜 파일명 그대로 `_preview/`에 복사하고 `_preview/index.html` 참조를 바꿀 것 (2026-10-28 덮어쓰기 사고).
 - 의심되면 실제 참조를 확인: `curl -s https://nazo.monbbang.me | grep -oE 'superso_inject[^"]*'`
 - JS 안의 `NZ_CSS_FILE` 상수는 CSS 파일명과 항상 짝이 맞아야 한다.
 
