@@ -95,7 +95,10 @@ var NZ_HERO_COPY = {
   tagline_count: '지금까지 {N}작품을 풀었어요',   // {N} 자리에 리뷰 수가 들어감
   cta_before: '나조토키가 처음이라면',
   cta_link: '나조토키란?',
-  cta_url: '/what-is-nazo'
+  cta_url: '/what-is-nazo',
+  cta2_before: '나조 추천과 가이드 글은',   // 둘째 줄 (다락방 노트 진입, 2026-10-28)
+  cta2_link: '다락방 노트',
+  cta2_url: '/darakbang-note'
 };
 
 // ── 다락방 노트 공개 스위치 (5단계 완료 시 true로 바꾸면 칩·박스·사이드바 노출) ──
@@ -549,9 +552,14 @@ function replaceMainTitle() {
       '<span class="nz-masthead__dot"> · </span><br class="nz-masthead__br">' +
       '<span id="nz-masthead-count">' + (nzMastheadCountText || NZ_HERO_COPY.tagline_count.replace('{N}', '…')) + '</span></p>' +
     '<p class="nz-masthead__updated" id="nz-masthead-updated">' + (nzMastheadUpdatedText || '') + '</p>' +
-    '<p class="nz-masthead__cta">' + NZ_HERO_COPY.cta_before +
-      ' <span class="nz-masthead__cta-arrow">→</span> ' +
-      '<a class="nz-masthead__cta-link" href="' + NZ_HERO_COPY.cta_url + '">' + NZ_HERO_COPY.cta_link + '</a></p>';
+    '<div class="nz-masthead__ctas">' +
+      '<p class="nz-masthead__cta">' + NZ_HERO_COPY.cta_before +
+        ' <span class="nz-masthead__cta-arrow">→</span> ' +
+        '<a class="nz-masthead__cta-link" href="' + NZ_HERO_COPY.cta_url + '">' + NZ_HERO_COPY.cta_link + '</a></p>' +
+      '<p class="nz-masthead__cta">' + NZ_HERO_COPY.cta2_before +
+        ' <span class="nz-masthead__cta-arrow">→</span> ' +
+        '<a class="nz-masthead__cta-link" href="' + NZ_HERO_COPY.cta2_url + '">' + NZ_HERO_COPY.cta2_link + '</a></p>' +
+    '</div>';
 
   titleEl.parentNode.insertBefore(wrap, titleEl);
 

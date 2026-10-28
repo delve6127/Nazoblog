@@ -265,10 +265,18 @@ a.notion-page[href="/test"] {
   color: var(--nz-muted-1);
   margin: -6px 0 0;
 }
+/* CTA 두 줄 묶음: 마스트헤드 gap(14/9px)보다 촘촘하게 */
+.nz-masthead__ctas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  margin: 2px 0 0;
+}
 .nz-masthead__cta {
   font-size: 15px;
   color: var(--nz-muted-3);
-  margin: 2px 0 0;
+  margin: 0;
 }
 .nz-masthead__cta-arrow {
   color: #B5AC94;
