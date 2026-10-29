@@ -4862,9 +4862,9 @@ html:has(body.nz-mfy-page) { scroll-behavior: smooth; }
 .super-content.parent-page__darakbang-note .nz-gl-src { display: none !important; }
 html:has(.nz-gl-root) { scroll-behavior: smooth; }
 
-/* ── ① 버전 뱃지 ── */
+/* ── ① 버전 뱃지 (제목과의 간격 6px = 본문 시트 윗여백 8px - 2px) ── */
 .super-content.parent-page__darakbang-note .nz-gl-ver {
-  display: flex; align-items: center; gap: 8px; margin-top: 18px;
+  display: flex; align-items: center; gap: 8px; margin-top: -2px;
 }
 .super-content.parent-page__darakbang-note .nz-gl-ver__pill {
   font-family: var(--nz-font-hand); font-size: 15px; font-weight: 700; color: #5C554A;
@@ -4948,6 +4948,7 @@ html:has(.nz-gl-root) { scroll-behavior: smooth; }
 @media (max-width: 768px) {
   .super-content.parent-page__darakbang-note .nz-gl-item { grid-template-columns: minmax(0, 1fr); gap: 6px; }
   .super-content.parent-page__darakbang-note .nz-gl-h2 { margin-top: 48px !important; }
+  .super-content.parent-page__darakbang-note .nz-gl-ver { margin-top: 0; } /* 모바일 시트 윗여백이 6px */
 }
 
 /* ── 해시태그(노션 인라인 코드 #단어) → 사이트 공통 뱃지 ── */
