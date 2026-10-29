@@ -4342,6 +4342,31 @@ function nzLightboxClose() {
 
   var NZ_GL_LINK_PILLS = true; // 뜻풀이 끝에 몰린 링크를 문장에서 빼고 항목 아래 알약으로 보여줄지
 
+  // 해시태그(인라인 코드) → 사이트 공통 뱃지. bg = 공식 난이도 색(리뷰 페이지 MOTIF_FIXED와 동일), cls = 추천 등급 클래스 재사용
+  // WEB/LINE 사용은 리뷰 페이지 추가 정보 칩(nz4-info)과 같은 파스텔. 키는 대문자로 찾는다(#Web 사용 = #WEB 사용)
+  var NZ_GL_BADGES = {
+    '花の謎': { bg: '#B0616E' }, '月の謎': { bg: '#8171A8' }, '雪の謎': { bg: '#5F8CA3' },
+    '인생나조': { cls: 'nz2-rec nz2-rec--life' }, '강력추천': { cls: 'nz2-rec nz2-rec--strong' },
+    'WEB 사용': { bg: '#EDF2F9', color: '#5A78A0', border: '#D5DFEC' },
+    'LINE 사용': { bg: '#F3F0F9', color: '#7A6B9D', border: '#DED6EC' }
+  };
+
+  // 복사본 안의 인라인 코드(code.code)만 뱃지로 바꾼다. Super 원본은 nz-gl-src로 숨겨진 채 그대로 남음
+  function badgeCodes(clone) {
+    clone.querySelectorAll('code.code').forEach(function (c) {
+      var t = c.textContent.trim().replace(/^#/, '');
+      if (!t) return;
+      var d = NZ_GL_BADGES[t.toUpperCase()];
+      var s = document.createElement('span');
+      s.className = 'nz-gl-badge' + (d && d.cls ? ' ' + d.cls : '') + (d ? '' : ' nz-gl-badge--plain');
+      if (d && d.bg) s.style.background = d.bg;
+      if (d && d.color) s.style.color = d.color;
+      if (d && d.border) s.style.borderColor = d.border;
+      s.textContent = t;
+      c.parentNode.replaceChild(s, c);
+    });
+  }
+
   function isGlPage() {
     var p = location.pathname;
     try { p = decodeURIComponent(p); } catch (e) {}
@@ -4414,6 +4439,7 @@ function nzLightboxClose() {
       clone.removeChild(clone.firstChild);
     }
     var links = NZ_GL_LINK_PILLS ? takeTailLinks(clone) : [];
+    badgeCodes(clone);
     var m = head.match(/^(.*?)\s*[(（]([^()（）]*)[)）]\s*$/);
     return {
       term: m ? m[1] : head,
@@ -4454,7 +4480,11 @@ function nzLightboxClose() {
   }
 
   function paras(list) {
-    return list.map(function (el) { return '<p class="notion-text">' + el.innerHTML + '</p>'; }).join('');
+    return list.map(function (el) {
+      var c = el.cloneNode(true);
+      badgeCodes(c);
+      return '<p class="notion-text">' + c.innerHTML + '</p>';
+    }).join('');
   }
 
   function render(art) {

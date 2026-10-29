@@ -4949,3 +4949,11 @@ html:has(.nz-gl-root) { scroll-behavior: smooth; }
   .super-content.parent-page__darakbang-note .nz-gl-item { grid-template-columns: minmax(0, 1fr); gap: 6px; }
   .super-content.parent-page__darakbang-note .nz-gl-h2 { margin-top: 48px !important; }
 }
+
+/* ── 해시태그(노션 인라인 코드 #단어) → 사이트 공통 뱃지 ── */
+.super-content.parent-page__darakbang-note .nz-gl-badge {
+  display: inline-block; font-family: var(--nz-font-body); font-size: 12px; font-weight: 700;
+  line-height: 1.4; padding: 2px 8px; border-radius: 6px; border: 1px solid transparent; color: #FFFFFF;
+  margin: 0 2px; white-space: nowrap; vertical-align: 1px;
+}
+.super-content.parent-page__darakbang-note .nz-gl-badge--plain { background: #ECE7DB; color: #5C554A; }
