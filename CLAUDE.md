@@ -6,8 +6,8 @@ GitHub Pages(main 루트)가 파일을 서빙하고, Super 코드 인젝션(Head
 
 ## 어느 파일이 라이브인가
 
-- 사이트가 읽는 파일: `superso_inject.2026-10-14.js` / `superso_inject.2026-10-14.css` (날짜 파일). **코드 수정은 반드시 날짜 파일에.**
-- `superso_inject.js` / `superso_inject.css`는 10-14 이전 구본(롤백용). 수정 금지. **`_preview/superso_inject.js`·`.css`는 복사본이 아니라 이 구본으로 가는 심볼릭 링크(바로가기)** → 거기에 cp로 덮어쓰면 루트 구본이 바뀐다. 프리뷰에 수정본을 보려면 날짜 파일명 그대로 `_preview/`에 복사하고 `_preview/index.html` 참조를 바꿀 것 (2026-10-28 덮어쓰기 사고).
+- 사이트가 읽는 파일: `superso_inject.2026-10-29.js` / `superso_inject.2026-10-29.css` (날짜 파일, 2026-10-29 교체). **코드 수정은 반드시 이 최신 날짜 파일에.**
+- `superso_inject.2026-10-14.*`는 직전 라이브본, `superso_inject.js` / `superso_inject.css`는 10-14 이전 구본. 둘 다 롤백용이라 수정 금지. **`_preview/superso_inject.js`·`.css`는 복사본이 아니라 이 구본으로 가는 심볼릭 링크(바로가기)** → 거기에 cp로 덮어쓰면 루트 구본이 바뀐다. 프리뷰에 수정본을 보려면 날짜 파일명 그대로 `_preview/`에 복사하고 `_preview/index.html` 참조를 바꿀 것 (2026-10-28 덮어쓰기 사고).
 - 의심되면 실제 참조를 확인: `curl -s https://nazo.monbbang.me | grep -oE 'superso_inject[^"]*'`
 - JS 안의 `NZ_CSS_FILE` 상수는 CSS 파일명과 항상 짝이 맞아야 한다.
 
@@ -34,7 +34,7 @@ GitHub Pages(main 루트)가 파일을 서빙하고, Super 코드 인젝션(Head
 2. **원본 보존**: Super가 그린 노드를 제거·교체(replace)하지 않는다. 숨기고(display:none) 옆에 새로 그리는 방식만.
 3. **멱등성**: 두 번 실행돼도 두 번 그리지 않는다(플래그·마커 확인).
 4. **감시자 절제**: 문서 전체(`documentElement`/`body` + `subtree`) 감시자를 새로 만들지 않는다. 감시는 대상 요소로 범위를 좁히고, 용도가 끝나면 `disconnect()`. 영구 setInterval 금지.
-5. **파일명 갱신**: 구글 검색 결과·색인에 영향 주는 변경(SEO, 구조, 서버 HTML에 보이는 내용)이면 날짜 접미사를 올리고(예: `superso_inject.2026-11-02.js`), `NZ_CSS_FILE`도 맞추고, Super Head 태그 교체가 필요하다고 나에게 알릴 것. 구글 WRS가 JS를 최대 30일 캐시하기 때문. 디자인 미세조정은 같은 이름 덮어쓰기 허용.
+5. **파일명 갱신**: 구글 검색 결과·색인에 영향 주는 변경(SEO, 구조, 서버 HTML에 보이는 내용)이면 날짜 접미사를 올리고(예: `superso_inject.2026-11-02.js`), `NZ_CSS_FILE`도 맞추고, Super Head 태그 교체가 필요하다고 나에게 알릴 것. 교체는 내가 요청하면 Super MCP(`get_code`/`patch_code`, slot `head`)로 직접 해도 된다(저장 즉시 라이브, `publish_site` 불필요). 교체 후 이 문서의 "사이트가 읽는 파일"도 갱신. 구글 WRS가 JS를 최대 30일 캐시하기 때문. 디자인 미세조정은 같은 이름 덮어쓰기 허용.
 6. **공개 키만**: JS에 들어가는 Supabase 키는 `sb_publishable_`로 시작하는 공개용만. Umami website-id도 공개 OK.
 
 ## Super Head 스니펫을 써 줄 때 (저장소 밖 코드)
