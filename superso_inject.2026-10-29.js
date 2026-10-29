@@ -4340,7 +4340,7 @@ function nzLightboxClose() {
 (function () {
   'use strict';
 
-  var NZ_GL_LINK_PILLS = true; // 뜻풀이 속 링크를 항목 아래 알약으로도 보여줄지
+  var NZ_GL_LINK_PILLS = true; // 뜻풀이 끝에 몰린 링크를 문장에서 빼고 항목 아래 알약으로 보여줄지
 
   function isGlPage() {
     var p = location.pathname;
@@ -4355,7 +4355,7 @@ function nzLightboxClose() {
   }
 
   function plainText(el) {
-    return el.textContent.replace(/ /g, ' ');
+    return el.textContent.replace(/\u00a0/g, ' ');
   }
 
   function termCut(text) {
@@ -4366,11 +4366,34 @@ function nzLightboxClose() {
   // 목차 칩·공유 링크용 앵커: 첫 표기만 (예: "나조 / 나조토키" → term-나조)
   function slug(term) {
     var s = term.split(/\s*[\/·>›]\s*/)[0].trim().replace(/\s+/g, '-')
-      .replace(/[^0-9A-Za-z가-힣ㄱ-ㅎ぀-ヿ一-鿿-]/g, '');
+      .replace(/[^0-9A-Za-z가-힣ㄱ-ㅎ\u3040-\u30ff\u4e00-\u9fff-]/g, '');
     return s || 'item';
   }
 
-  // 용어 문단 → { term, orig, desc(innerHTML) }. " - " 앞까지를 복제본에서 잘라내 뒤쪽 서식·링크를 보존
+  // 뜻풀이 맨 끝에 몰린 링크(쉼표·공백으로만 이어진 꼬리)를 문장에서 떼어 돌려준다.
+  // 문장 중간 링크(예: "자세한 내용은 [링크] 참조.")는 문장이 깨지므로 그대로 둔다.
+  function takeTailLinks(box) {
+    var links = [], tail = [], node = box.lastChild;
+    while (node) {
+      if (node.nodeType === 8 || (node.nodeType === 3 && /^[\s,、]*$/.test(node.data))) {
+        tail.push(node);
+      } else if (node.nodeType === 1) {
+        var as = node.matches('a[href]') ? [node] : Array.prototype.slice.call(node.querySelectorAll('a[href]'));
+        var linkText = as.map(function (a) { return a.textContent; }).join('').replace(/\s+/g, '');
+        if (!as.length || node.textContent.replace(/\s+/g, '') !== linkText) break; // 링크 말고 다른 글자가 섞임
+        tail.push(node);
+        links = as.concat(links);
+      } else {
+        break;
+      }
+      node = node.previousSibling;
+    }
+    if (!links.length) return [];
+    tail.forEach(function (n) { box.removeChild(n); });
+    return links;
+  }
+
+  // 용어 문단 → { term, orig, desc(innerHTML), links }. " - " 앞까지를 복제본에서 잘라내 뒤쪽 서식·링크를 보존
   function parseTerm(p, text, cut) {
     var head = text.slice(0, cut).trim();
     var clone = p.cloneNode(true);
@@ -4390,20 +4413,19 @@ function nzLightboxClose() {
         : !clone.firstChild.textContent.trim() && !clone.firstChild.querySelector('img'))) {
       clone.removeChild(clone.firstChild);
     }
+    var links = NZ_GL_LINK_PILLS ? takeTailLinks(clone) : [];
     var m = head.match(/^(.*?)\s*[(（]([^()（）]*)[)）]\s*$/);
     return {
       term: m ? m[1] : head,
       orig: m ? m[2].trim().replace(/\s*;\s*/g, ' · ') : '',
-      desc: clone.innerHTML
+      desc: clone.innerHTML.replace(/\s+$/, ''),
+      links: links
     };
   }
 
-  function linkPills(desc) {
-    if (!NZ_GL_LINK_PILLS) return '';
-    var box = document.createElement('div');
-    box.innerHTML = desc;
+  function linkPills(links) {
     var html = '';
-    box.querySelectorAll('a[href]').forEach(function (a) {
+    links.forEach(function (a) {
       var href = a.getAttribute('href');
       var label = a.textContent.trim().replace(/\s*(리뷰|링크)$/, '');
       if (!label) return;
@@ -4486,7 +4508,7 @@ function nzLightboxClose() {
             + '<dt class="nz-gl-item__head"><div class="nz-gl-item__term">' + esc(it.term) + '</div>'
             + (it.orig ? '<div class="nz-gl-item__orig">' + esc(it.orig) + '</div>' : '') + '</dt>'
             + '<dd class="nz-gl-item__body"><p class="nz-gl-item__desc">' + it.desc + '</p>'
-            + linkPills(it.desc) + '</dd></div>';
+            + linkPills(it.links) + '</dd></div>';
         }).join('') + '</dl>'
         + paras(s.outro) + '</section>';
     });
