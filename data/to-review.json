@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-10-29T04:48:36.183Z",
-  "count": 69,
+  "updatedAt": "2026-10-29T12:27:44.331Z",
+  "count": 68,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -545,14 +545,6 @@
       "status": "보유중",
       "image": "data/images/3ecd25cb2dd480538272db585e52cc9d.jpeg",
       "slug": "3ecd25cb2dd480538272db585e52cc9d"
-    },
-    {
-      "id": "3f9d25cb2dd4807fb8caf43ef819d4ec",
-      "name": "ゲームは続く",
-      "maker": "Tumbleweed",
-      "status": "리뷰 작성 중",
-      "image": "data/images/3f9d25cb2dd4807fb8caf43ef819d4ec.jpg",
-      "slug": "3f9d25cb2dd4807fb8caf43ef819d4ec"
     }
   ]
 }
