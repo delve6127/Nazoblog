@@ -725,6 +725,14 @@ def main() -> int:
 
     print_report(changes, missing_phonetic, missing_company, dry_run=dry_run, map_result=map_result)
 
+    # 동기화는 추가·수정만 한다. 노션에서 제목이 바뀌었거나 비공개로 바뀐 리뷰는 데이터에 남아
+    # 사이트의 이전/다음·브랜드 다른 리뷰 링크에 계속 나오므로, 자동 삭제 대신 알려만 준다
+    stale = sorted(t for t in data["SORT_DATA"] if t not in notion_reviews)
+    if stale:
+        print(f"⚠️  노션 공개 리뷰에 없는 데이터 {len(stale)}건 — 제목 변경 또는 비공개 전환. nazo_data.json에서 정리 필요")
+        for t in stale:
+            print(f"  - {t}")
+
     if related_done:
         print()
         print("🔗 관련 리뷰 연결" + (" (DRY RUN — 노션에 쓰지 않음)" if dry_run else "") + f": {len(related_done)}건")
