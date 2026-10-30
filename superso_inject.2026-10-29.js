@@ -1234,6 +1234,11 @@ function nzLightboxClose() {
         var descDiv = document.createElement('div');
         descDiv.className = 'nz-desc';
         descDiv.innerHTML = contentEl.innerHTML;
+        // 일본어 원문 문단 표시 (가나가 한글보다 많으면) → CSS가 흐리게. 원문이 여러 문단이라 :first-child로는 못 잡음
+        descDiv.querySelectorAll('p').forEach(function (p) {
+          var t = p.textContent;
+          if ((t.match(/[぀-ヿ]/g) || []).length > (t.match(/[가-힣]/g) || []).length) p.classList.add('nz-desc-ja');
+        });
         section.appendChild(descDiv);
         document.querySelector('.nz4-body').appendChild(section);
       }
