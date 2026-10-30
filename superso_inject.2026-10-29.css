@@ -322,18 +322,13 @@ a.notion-page[href="/test"] {
   display: none !important;
 }
 
-/* ── 갤러리 카드 NEW 뱃지 ── */
+/* ── 갤러리 카드 NEW 뱃지 (색·크기·모서리는 아래 "NEW 뱃지 (v2 톤)"이 정함) ── */
 .nz-new-badge {
   position: absolute;
   top: 8px;
   left: 8px;
-  background: #FF3B30;
   color: #fff;
-  font-size: 11px;
   font-weight: 700;
-  padding: 3px 10px;
-  border-radius: 12px;
-  letter-spacing: 0.5px;
   z-index: 1;
   box-shadow: 0 1px 3px rgba(0,0,0,0.2);
   pointer-events: none;
@@ -342,9 +337,6 @@ a.notion-page[href="/test"] {
   .nz-new-badge {
     top: 6px;
     left: 6px;
-    font-size: 9px;
-    padding: 2px 7px;
-    border-radius: 10px;
   }
 }
 
@@ -1609,26 +1601,15 @@ a[href*="%EC%A0%90%EC%88%98-%EC%A1%B0%EC%A0%88%EC%9A%A9-%ED%8E%98%EC%9D%B4%EC%A7
   justify-content: center;
   padding: 20px 0;
 }
+/* 테두리·배경·간격·여백·글자 크기와 색은 아래 "잘 읽었어요: 레몬 버전 (v4)"이 정함 */
 .nz-like-pill {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 8px 20px;
   border-radius: 40px;
-  border: 1px solid #e8e6e1;
   cursor: pointer;
   transition: all 0.2s;
-  background: #fff;
   user-select: none;
   position: relative;
-}
-.nz-like-pill:hover {
-  border-color: #E24B4A;
-  background: #fef5f5;
-}
-.nz-like-pill.active {
-  border-color: #E24B4A;
-  background: #fef5f5;
 }
 .nz-like-pill .nz-like-icon {
   display: flex;
@@ -1638,17 +1619,9 @@ a[href*="%EC%A0%90%EC%88%98-%EC%A1%B0%EC%A0%88%EC%9A%A9-%ED%8E%98%EC%9D%B4%EC%A7
   animation: nzHeartPop 0.4s ease;
 }
 .nz-like-pill .nz-like-text {
-  font-size: 13px;
-  color: #999;
   transition: color 0.2s;
 }
-.nz-like-pill.active .nz-like-text {
-  color: #E24B4A;
-}
 .nz-like-pill .nz-like-count {
-  font-size: 13px;
-  font-weight: 600;
-  color: #E24B4A;
   transition: transform 0.2s;
 }
 .nz-like-pill.active .nz-like-count {
@@ -1681,14 +1654,6 @@ a[href*="%EC%A0%90%EC%88%98-%EC%A1%B0%EC%A0%88%EC%9A%A9-%ED%8E%98%EC%9D%B4%EC%A7
   100% { transform: translateY(0); }
 }
 
-@media (min-width: 768px) {
-  .nz-like-pill {
-    gap: 8px;
-    padding: 10px 24px;
-  }
-  .nz-like-pill .nz-like-text { font-size: 14px; }
-  .nz-like-pill .nz-like-count { font-size: 14px; }
-}
 
 /* ── 브랜드 다른 리뷰 ── */
 .nz-brand-reviews {
