@@ -467,7 +467,6 @@ body.nz-home .notion-collection__header-wrapper {
   max-width: 390px;
   margin: 0 auto;
   padding: 0 0 24px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .nz-card {
@@ -629,13 +628,11 @@ body.nz-home .notion-collection__header-wrapper {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin: 0 0 12px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 .nz-diary-content {
   font-size: 14px;
   line-height: 1.85;
   color: #3c3c3a;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 .nz-diary-content p { margin: 0 0 10px; }
 .nz-diary-content p:last-child { margin: 0; }
