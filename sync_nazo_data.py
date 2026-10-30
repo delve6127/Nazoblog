@@ -290,7 +290,8 @@ def write_json_in_place(json_path: Path, sort_data: dict, updated_titles: list, 
         title_json = json.dumps(title, ensure_ascii=False)
         new_value = _format_entry_value(sort_data[title])
         pattern = re.compile(re.escape(title_json) + r":\s*\{[^{}\n]*\}")
-        text, n = pattern.subn(title_json + ": " + new_value, text, count=1)
+        # 함수형 replacement: 문자열로 넘기면 한줄평의 \n·\\ 같은 이스케이프를 re가 풀어 JSON이 깨진다
+        text, n = pattern.subn(lambda m: title_json + ": " + new_value, text, count=1)
         if n != 1:
             raise RuntimeError(f"기존 엔트리 매칭 실패: {title}")
 
