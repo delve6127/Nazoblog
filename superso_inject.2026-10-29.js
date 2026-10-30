@@ -2230,6 +2230,7 @@ function nzLightboxClose() {
     var uncustomized = gallery.querySelector(CARD_SEL + ':not(.nz-card-custom)');
     if (uncustomized) {
       customizeCards();
+      if (window.nzAddNewBadges) window.nzAddNewBadges(); // NEW 뱃지도 같은 감시자에서 (별도 감시자 제거)
       if (galleryDebounce) clearTimeout(galleryDebounce);
       galleryDebounce = setTimeout(function () {
         sortCardsByRecent();
@@ -2653,15 +2654,10 @@ function nzLightboxClose() {
     });
   }
 
-  // 게이트 뒤 1회 + 갤러리 요소만 감시 (A-2 2단계; 예전 즉시 실행은 홈 #418 확정 범인)
-  nzWhenHydrated(function () {
-    addNewBadges();
-    var gallery = document.querySelector('.notion-collection-gallery');
-    if (gallery) {
-      new MutationObserver(function () { addNewBadges(); })
-        .observe(gallery, { childList: true, subtree: true });
-    }
-  });
+  // 게이트 뒤 1회 (A-2 2단계; 예전 즉시 실행은 홈 #418 확정 범인)
+  // 늦게 그려지는 카드는 홈 갤러리 감시자(galleryObserver)가 이 함수를 다시 부른다 — 같은 갤러리에 감시자 둘을 두지 않음
+  window.nzAddNewBadges = addNewBadges;
+  nzWhenHydrated(addNewBadges);
 })();
 
 // ── 좋아요 버튼 (독립 모듈) ──────────────────────────────
