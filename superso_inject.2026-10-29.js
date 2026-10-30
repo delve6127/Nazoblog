@@ -791,14 +791,6 @@ function nzLightboxClose() {
     return document.querySelector('.' + id);
   }
 
-  function getTextVal(id) {
-    var el = getEl(id);
-    if (!el) return '';
-    var inner = el.querySelector('span, p, div:not([class*="notion-page__property-icon"])');
-    var val = inner ? inner.textContent.trim() : el.textContent.trim();
-    return val;
-  }
-
   // 날짜 → "2026년 3월 22일" 형식 변환
   var MONTHS = { Jan:1, Feb:2, Mar:3, Apr:4, May:5, Jun:6,
                  Jul:7, Aug:8, Sep:9, Oct:10, Nov:11, Dec:12 };
@@ -854,75 +846,6 @@ function nzLightboxClose() {
     return clone.textContent.trim();
   }
 
-  // ── pill 색상 → badge 색상 변환 ──────────────────────
-  function pillToColor(cls) {
-    if (cls.indexOf('pill-red')    > -1) return 'badge-red';
-    if (cls.indexOf('pill-blue')   > -1) return 'badge-blue';
-    if (cls.indexOf('pill-green')  > -1) return 'badge-green';
-    if (cls.indexOf('pill-purple') > -1) return 'badge-purple';
-    if (cls.indexOf('pill-orange') > -1) return 'badge-orange';
-    if (cls.indexOf('pill-yellow') > -1) return 'badge-yellow';
-    if (cls.indexOf('pill-pink')   > -1) return 'badge-pink';
-    if (cls.indexOf('pill-brown')  > -1) return 'badge-brown';
-    return 'badge-gray';
-  }
-
-  // ── badge 색상값 매핑 (파스텔) ──────────────────────────
-  var BADGE_COLORS = {
-    'badge-red':    { bg: '#fde8e8', color: '#c05050' },
-    'badge-blue':   { bg: '#dbeafe', color: '#2563a0' },
-    'badge-green':  { bg: '#dcfce7', color: '#3a7a55' },
-    'badge-purple': { bg: '#ede9fe', color: '#7c5db0' },
-    'badge-orange': { bg: '#fed7aa', color: '#b06830' },
-    'badge-yellow': { bg: '#fef3c7', color: '#92700e' },
-    'badge-pink':   { bg: '#fce7f3', color: '#b04880' },
-    'badge-gray':   { bg: '#f0eeec', color: '#78716c' },
-    'badge-brown':  { bg: '#f2e8e0', color: '#8a6a50' }
-  };
-
-  var BADGE_BORDERS = {
-    'badge-red': '#f0a0a0', 'badge-blue': '#93b8e0', 'badge-green': '#86e5a0',
-    'badge-purple': '#c4b5f0', 'badge-orange': '#f0b080', 'badge-yellow': '#f0d87a',
-    'badge-pink': '#f0b4d0', 'badge-gray': '#d6d3d1', 'badge-brown': '#d4c0b0'
-  };
-
-  var DIFF_LEVEL_COLORS = {
-    'ROOKIE': 'badge-gray', 'BEGINNER': 'badge-gray', 'EASY': 'badge-green',
-    'MEDIUM': 'badge-blue', 'NORMAL': 'badge-blue', 'HARD': 'badge-orange',
-    'DIFFICULT': 'badge-red', 'EXPERT': 'badge-purple', 'MASTER': 'badge-pink'
-  };
-
-  function buildGradBadge(text, sizeClass) {
-    var sep = text.indexOf('/') > -1 ? '/' : '&';
-    var parts = text.split(sep).map(function(p) { return p.trim(); });
-    var pd = parts.map(function(p) {
-      var key = DIFF_LEVEL_COLORS[p.toUpperCase()] || 'badge-gray';
-      var bc = BADGE_COLORS[key] || BADGE_COLORS['badge-gray'];
-      return { text: p, color: bc.color, bg: bc.bg, border: BADGE_BORDERS[key] || '#d6d3d1' };
-    });
-    var bgStops = pd.map(function(d, i) {
-      return d.bg + ' ' + Math.round(i * 100 / (pd.length - 1)) + '%';
-    }).join(',');
-    var borderStops = pd.map(function(d, i) {
-      return d.border + ' ' + Math.round(i * 100 / (pd.length - 1)) + '%';
-    }).join(',');
-    var html = pd.map(function(d) {
-      return '<span style="color:' + d.color + '">' + d.text + '</span>';
-    }).join('<span class="nz-diff-sep">' + sep + '</span>');
-    return '<div class="nz-diff-grad-border" style="background:linear-gradient(90deg,' + borderStops + ')">'
-         + '<div class="nz-diff-grad-inner badge-lg' + sizeClass + '" style="background:linear-gradient(90deg,' + bgStops + ')">'
-         + html + '</div></div>';
-  }
-
-  // ── 추천도 색상 매핑 ─────────────────────────────────
-  var REC_COLORS = {
-    '인생나조': { bg: '#6d4fc2', color: '#fff', weight: '700' },
-    '강력추천': { bg: '#3b82f6', color: '#fff', weight: '700' },
-    '추천':     { bg: '#dbeafe', color: '#1d4ed8', weight: '600' },
-    '괜찮음':   { bg: '#e8e0d5', color: '#78716c', weight: '600' },
-    '음..':     { bg: '#f0eeec', color: '#78716c', weight: '600' }
-  };
-
   // ── 체감 난이도 단계별 색상 (v2: 그라데이션 솔리드) ──
   var DIFF_STEP_COLORS = {
     '아주 쉬움':  '#8FB05E',
@@ -931,19 +854,6 @@ function nzLightboxClose() {
     '어려움':     '#CD7A45',
     '아주 어려움': '#B85742'
   };
-
-  // ── O/X 사용여부 뱃지 생성 ───────────────────────────
-  function usageBadge(type, val) {
-    if (!val.text) return '';
-    var isO = val.text.trim() === 'O';
-    var color = isO ? 'badge-teal' : 'badge-red';
-    var label = type === 'line'    ? (isO ? 'LINE 사용'   : '')
-              : type === 'web'     ? (isO ? 'WEB 사용'    : 'WEB 미사용')
-              : type === 'audio'   ? (isO ? '음성 듣기 필요'   : '')
-              :                      (isO ? '재활용 가능' : '재활용 불가');
-    if (!label) return '';
-    return '<span class="badge ' + color + '">' + label + '</span>';
-  }
 
   // ── 체감 난이도 5단계 인디케이터 ────────────────────
   var DIFF_STEPS = ['아주 쉬움', '쉬움', '보통', '어려움', '아주 어려움'];
@@ -1197,32 +1107,6 @@ function nzLightboxClose() {
     propsContainer.parentNode.insertBefore(wrapper, propsContainer);
     propsContainer.style.display = 'none';
     if (titleEl) titleEl.style.display = 'none';
-
-    // MFY 발매 시기: 렌더 시점에 속성이 아직 안 떴으면 폴링으로 뒤늦게 삽입
-    if (!mfyRelease && company.text && company.text.toLowerCase().indexOf('mystery for you') > -1) {
-      (function pollMfyRelease(tries) {
-        if (tries <= 0) return;
-        setTimeout(function () {
-          var val = getTextVal(ID.mfyRelease);
-          if (val) {
-            var badges = document.querySelector('.nz-review-wrap .nz-badges');
-            if (badges && !badges.querySelector('.badge-mfy-release')) {
-              var companyBadge = badges.querySelector('.badge');
-              var span = document.createElement('span');
-              span.className = 'badge badge-mfy-release';
-              span.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg> ' + val;
-              if (companyBadge && companyBadge.nextSibling) {
-                badges.insertBefore(span, companyBadge.nextSibling);
-              } else {
-                badges.appendChild(span);
-              }
-            }
-          } else {
-            pollMfyRelease(tries - 1);
-          }
-        }, 300);
-      })(20);
-    }
 
     var calloutEl = document.querySelector('.notion-callout');
     if (calloutEl) {
@@ -2145,41 +2029,7 @@ function nzLightboxClose() {
     history.replaceState(null, '', window.location.pathname);
   }
 
-  // ── 홈 로고 클릭 시 새로고침 (필터 초기화) ──
-  var logoRefreshDone = false;
-  function setupLogoRefresh() {
-    if (logoRefreshDone) return;
-    logoRefreshDone = true;
-    document.addEventListener('click', function (e) {
-      var link = e.target.closest('a');
-      if (!link) return;
-      var href = link.href;
-      if (href === window.location.origin + '/' || href === window.location.origin) {
-        if (window.location.pathname === '/') {
-          e.preventDefault();
-          e.stopPropagation();
-          window.location.reload();
-        }
-      }
-    }, true);
-  }
-
   // ── 조립 + SPA/lazy 대응 ──
-  function destroyAll() {
-    var gallery = document.querySelector(GALLERY_SEL);
-    var layout = document.getElementById('nz2-layout');
-    if (layout) {
-      if (gallery && layout.contains(gallery)) layout.parentNode.insertBefore(gallery, layout);
-      layout.parentNode.removeChild(layout);
-    }
-    ['nz2-controls', 'nz2-result-comment', 'nz-pagination', 'nz2-empty', 'nz2-notes'].forEach(function (id) {
-      var el = document.getElementById(id);
-      if (el && el.parentNode) el.parentNode.removeChild(el);
-    });
-    document.querySelectorAll('.nz-card-props').forEach(function (el) { el.parentNode.removeChild(el); });
-    document.querySelectorAll('.nz-card-custom').forEach(function (el) { el.classList.remove('nz-card-custom'); });
-  }
-
   // 한줄평 뒤늦은 도착 보정: 카드 장식(1회) 시점엔 노션 라이브 값이
   // 아직 하이드레이션 전이라 비어 있을 수 있다 → 도착하면 채워 넣는다
   function fillLiveQuotes() {
@@ -2419,8 +2269,6 @@ function nzLightboxClose() {
     customizeSectionHeadings();
 
     var currentSection = '1';
-    var headings = document.querySelectorAll('h2.notion-heading');
-    var callouts = document.querySelectorAll('.notion-callout');
 
     // 각 callout에 해당 섹션 번호 매핑
     var allElements = document.querySelectorAll('h2.notion-heading, .notion-callout');
@@ -2434,20 +2282,6 @@ function nzLightboxClose() {
     });
   }
 
-  function needsRun() {
-    if (!isPurchasePage()) return false;
-    if (!document.querySelector('.notion-callout')) return false;
-    // 하이드레이션이 마커(data-nz-done)만 남기고 꾸민 내용을 날리는 경우가 있어
-    // 마커가 아니라 실제 결과물(꾸며진 헤더) 존재 여부로 판단
-    if (!document.querySelector('.nz-shop-header')) {
-      document.querySelectorAll('[data-nz-done]').forEach(function (el) {
-        el.removeAttribute('data-nz-done');
-      });
-      return true;
-    }
-    return false;
-  }
-
   function tryRun(attempt) {
     attempt = attempt || 0;
     if (!isPurchasePage()) return;
@@ -2459,167 +2293,6 @@ function nzLightboxClose() {
   }
 
   // 게이트 뒤 1회 + SPA 이동 뒤 재적용 (A-2 4단계; 예전 즉시 실행 + body 감시는 구매 페이지 #418 확정 범인)
-  nzWhenHydrated(function () { tryRun(); });
-  document.addEventListener('nz:navigate', function () { tryRun(); });
-})();
-
-// ── 리뷰 예정 목록 페이지 커스터마이징 ────────────────────────
-(function () {
-  'use strict';
-
-  function isReviewListPage() {
-    return false; // nz-tr 모듈(시안 3a)이 대체 — 구 표 재스타일 비활성화
-  }
-
-  function run() {
-    if (!isReviewListPage()) {
-      document.body.classList.remove('nz-review-list-page');
-      return;
-    }
-    document.body.classList.add('nz-review-list-page');
-
-    // 서브타이틀 삽입
-    if (!document.querySelector('.nz-review-subtitle')) {
-      var title = document.querySelector('h1.notion-header__title');
-      if (title) {
-        var subtitle = document.createElement('p');
-        subtitle.className = 'nz-review-subtitle';
-        subtitle.textContent = '언젠가 플레이하여 리뷰 예정인 나조토키들';
-        title.parentNode.insertBefore(subtitle, title.nextSibling);
-      }
-    }
-
-    // 제목 열 헤더 텍스트 변경: '나조토키 제목' → '나조토키'
-    var titleHead = document.querySelector('.notion-collection-table__head-cell.title .notion-collection-table__head-cell-content');
-    if (titleHead && titleHead.textContent.trim() === '나조토키 제목') {
-      titleHead.textContent = '나조토키';
-    }
-
-    // 제작사 열 → 제목 셀 아래로 병합 (2열화)
-    if (!document.querySelector('[data-nz-2col]')) {
-      var rows = document.querySelectorAll('.notion-collection-table tbody tr');
-      rows.forEach(function (row) {
-        var titleCell = row.querySelector('.notion-collection-table__cell.title');
-        var makerCell = row.querySelector('.notion-collection-table__cell.multi_select');
-        if (!titleCell || !makerCell) return;
-        var pills = makerCell.querySelectorAll('.notion-pill');
-        if (pills.length === 0) return;
-        var makerRow = document.createElement('div');
-        makerRow.className = 'nz-maker-row';
-        pills.forEach(function (p) {
-          makerRow.appendChild(p.cloneNode(true));
-        });
-        var innerDiv = titleCell.querySelector('div');
-        if (innerDiv) {
-          innerDiv.style.flexDirection = 'column';
-          innerDiv.style.alignItems = 'flex-start';
-          innerDiv.style.gap = '4px';
-          innerDiv.appendChild(makerRow);
-        } else {
-          titleCell.appendChild(makerRow);
-        }
-      });
-      // 제작사 헤더 + 셀 숨기기
-      var table = document.querySelector('.notion-collection-table');
-      if (table) table.setAttribute('data-nz-2col', '1');
-    }
-
-    // 사진 열 → 제목 셀에 썸네일로 표시
-    var thumbRows = document.querySelectorAll('.notion-collection-table tbody tr:not([data-nz-thumb])');
-    if (thumbRows.length > 0) {
-      thumbRows.forEach(function (row) {
-        var titleCell = row.querySelector('.notion-collection-table__cell.title');
-        var fileCell = row.querySelector('.notion-collection-table__cell.file');
-        if (!titleCell) return;
-
-        // 이미지 URL 추출
-        var imgSrc = null;
-        if (fileCell) {
-          var img = fileCell.querySelector('img');
-          var link = fileCell.querySelector('a');
-          if (img && img.src) imgSrc = img.src;
-          else if (link && link.href) imgSrc = link.href;
-        }
-
-        // 썸네일 div 생성
-        var thumb = document.createElement('div');
-        thumb.className = 'nz-thumb';
-        if (imgSrc) {
-          thumb.style.backgroundImage = "url('" + imgSrc + "')";
-          thumb.style.cursor = 'pointer';
-          // 원본 이미지 URL 저장 (라이트박스용)
-          var origUrl = null;
-          if (fileCell) {
-            var link = fileCell.querySelector('a');
-            if (link && link.href) origUrl = link.href;
-          }
-          if (origUrl) {
-            thumb.setAttribute('data-nz-full', origUrl);
-            thumb.addEventListener('click', function () {
-              nzLightboxOpen(this.getAttribute('data-nz-full'));
-            });
-          }
-        } else {
-          thumb.classList.add('nz-thumb--empty');
-          var logo = document.createElement('img');
-          logo.src = NZ_ASSET_BASE + 'assets/lemon.png';
-          logo.alt = '';
-          logo.className = 'nz-thumb-logo';
-          thumb.appendChild(logo);
-        }
-
-        // 제목 셀 내부 재구성: [thumb] [info(title + maker)]
-        var innerDiv = titleCell.querySelector('div');
-        if (innerDiv) {
-          var infoWrap = document.createElement('div');
-          infoWrap.className = 'nz-thumb-info';
-          while (innerDiv.firstChild) {
-            infoWrap.appendChild(innerDiv.firstChild);
-          }
-          innerDiv.appendChild(thumb);
-          innerDiv.appendChild(infoWrap);
-          innerDiv.classList.add('nz-thumb-row');
-        }
-
-        // NEW 뱃지: 생성일시 4일 이내면 표시
-        var timeCell = row.querySelector('.notion-collection-table__cell.created_time');
-        if (timeCell) {
-          var dateText = timeCell.textContent.trim();
-          var created = new Date(dateText);
-          if (!isNaN(created.getTime())) {
-            var now = new Date();
-            var diffDays = (now - created) / (1000 * 60 * 60 * 24);
-            if (diffDays <= 4) {
-              var badge = document.createElement('span');
-              badge.className = 'nz-new-badge';
-              badge.textContent = 'NEW';
-              thumb.appendChild(badge);
-            }
-          }
-        }
-
-        row.setAttribute('data-nz-thumb', '1');
-      });
-    }
-  }
-
-  function needsRun() {
-    return isReviewListPage() &&
-      document.querySelector('.notion-collection-table') &&
-      (!document.querySelector('.nz-review-subtitle') || !document.querySelector('[data-nz-2col]') || document.querySelector('.notion-collection-table tbody tr:not([data-nz-thumb])'));
-  }
-
-  function tryRun(attempt) {
-    attempt = attempt || 0;
-    if (!isReviewListPage()) return;
-    if (document.querySelector('.notion-collection-table')) {
-      run();
-    } else if (attempt < 20) {
-      setTimeout(function () { tryRun(attempt + 1); }, 300);
-    }
-  }
-
-  // 게이트 뒤 1회 + SPA 이동 뒤 재적용 (A-2 4단계; body 감시 제거)
   nzWhenHydrated(function () { tryRun(); });
   document.addEventListener('nz:navigate', function () { tryRun(); });
 })();
@@ -3938,11 +3611,6 @@ function nzLightboxClose() {
         if (a) ensureOrder(a);
       }, ms);
     });
-  }
-
-  function isDecorated() {
-    return !!document.querySelector('.nz-dn-head') &&
-           !!document.querySelector('.nz-dn-article');
   }
 
   function tryRender(attempt) {
