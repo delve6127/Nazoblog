@@ -211,8 +211,12 @@ async function downloadImage(rowId, fileInfo, existingFiles) {
 
   let filename = `${rowId}${ext}`;
   let buffer = Buffer.from(await res.arrayBuffer());
-  // sharp가 있으면 리사이즈 과정에서 메타데이터가 제거되므로, 없을 때만 직접 제거
-  if (!sharp && /\.(jpg|jpeg)$/i.test(filename)) buffer = stripJpegMetadata(buffer);
+  // sharp는 480px 넘는 사진만 회전 보정 후 메타데이터 없이 다시 만든다 → 그 밖의 JPEG(작은 사진, sharp 없음)은 여기서 직접 제거
+  // (큰 사진은 sharp가 회전 정보를 읽어야 하므로 남겨 둔다)
+  if (/\.(jpg|jpeg)$/i.test(filename)) {
+    const meta = sharp ? await sharp(buffer).metadata().catch(() => null) : null;
+    if (!meta || Math.max(meta.width || 0, meta.height || 0) <= 480) buffer = stripJpegMetadata(buffer);
+  }
   fs.writeFileSync(path.join(IMAGES_DIR, filename), buffer);
   console.log(`  이미지 저장: ${filename} (${Math.round(buffer.length / 1024)}KB)`);
   filename = await toJpegIfHeic(filename);
