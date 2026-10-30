@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: '20'
       - name: 이미지 변환 패키지 설치
-        run: npm install --no-save heic-convert sharp
+        run: npm install --no-save heic-convert@2.1.0 sharp@0.35.5
       - name: Notion DB 동기화 스크립트 실행
         run: node scripts/fetch-to-review.js
         env:
