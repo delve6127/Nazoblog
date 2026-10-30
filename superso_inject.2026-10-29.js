@@ -2849,12 +2849,12 @@ function nzLightboxClose() {
       particle.style.height = size + 'px';
       particle.style.background = LIKE_COLORS[Math.floor(Math.random() * LIKE_COLORS.length)];
 
-      var animName = 'nzPb' + i + '_' + Date.now();
-      var s = document.createElement('style');
-      s.textContent = '@keyframes ' + animName + '{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(' + tx + 'px,' + ty + 'px) scale(0);opacity:0}}';
-      document.head.appendChild(s);
-      particle.style.animation = animName + ' 0.45s ease-out forwards';
       container.appendChild(particle);
+      // 브라우저 기본 애니메이션 사용: 예전엔 클릭마다 <style> 8개를 head에 만들고 지우지 않았다
+      particle.animate([
+        { transform: 'translate(0,0) scale(1)', opacity: 1 },
+        { transform: 'translate(' + tx + 'px,' + ty + 'px) scale(0)', opacity: 0 }
+      ], { duration: 450, easing: 'ease-out', fill: 'forwards' });
     }
     setTimeout(function () { container.innerHTML = ''; }, 600);
   }
