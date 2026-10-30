@@ -278,8 +278,8 @@ async function main() {
     }
   }
 
+  // 실행 시각은 넣지 않는다: 내용이 같으면 파일도 같아야 봇이 빈 커밋을 만들지 않음
   const output = {
-    updatedAt: new Date().toISOString(),
     count: items.length,
     items,
   };
