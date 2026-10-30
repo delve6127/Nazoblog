@@ -3393,32 +3393,7 @@ function nzLightboxClose() {
     return location.pathname.indexOf('/what-is-nazo') !== -1;
   }
 
-  // ── 커버 (플레인 노션 레이아웃 깜빡임 가림용) ──
-  function _createCover() {
-    if (document.getElementById('nz-wn-cover')) return;
-    if (!document.body) return;
-    var cover = document.createElement('div');
-    cover.id = 'nz-wn-cover';
-    cover.innerHTML =
-      '<div class="nz-wn-cover__inner">' +
-        '<div class="nz-wn-cover__lemon"><img src="' + NZ_ASSET_BASE + 'assets/lemon.png" alt=""/></div>' +
-        '<div class="nz-wn-cover__spinner"></div>' +
-      '</div>';
-    document.body.appendChild(cover);
-  }
-  function showCover() {
-    if (!isWhatIsNazoPage()) return;
-    if (document.body) _createCover();
-    else document.addEventListener('DOMContentLoaded', _createCover);
-  }
-  function hideCover() {
-    var cover = document.getElementById('nz-wn-cover');
-    if (!cover) return;
-    cover.classList.add('nz-wn-cover--fade');
-    setTimeout(function () {
-      if (cover.parentNode) cover.parentNode.removeChild(cover);
-    }, 420);
-  }
+  // (전용 가림막은 제거: 메인 로더가 장식 완료(.nz-wn-ending)까지 가리고 4.5초 페일세이프도 갖고 있음)
 
   // ── Lucide 인라인 SVG (필요한 8개만) ──
   var LUCIDE = {
@@ -3693,9 +3668,6 @@ function nzLightboxClose() {
     }
 
     injectEnding(article);
-
-    // 장식 완료 → 다음 프레임에 커버 페이드아웃 (페인트 이후 제거)
-    requestAnimationFrame(function () { hideCover(); });
   }
 
   function tryDecorate(attempt) {
@@ -3733,11 +3705,10 @@ function nzLightboxClose() {
   // SPA 이동 대응: 공용 훅(nz:navigate)이 새 내용이 들어온 뒤 알려준다 (A-2 5단계; 자체 History 훅 제거)
   document.addEventListener('nz:navigate', function () {
     if (wnReapplyObserver) { wnReapplyObserver.disconnect(); wnReapplyObserver = null; }
-    if (isWhatIsNazoPage()) { showCover(); tryDecorate(); }
+    if (isWhatIsNazoPage()) tryDecorate();
   });
 
-  // 최초 진입: 가능한 한 빨리 커버 띄우고, 하이드레이션 게이트 뒤 장식 (A-2 4단계; 예전 고정 1.2초 대기 대체)
-  showCover();
+  // 최초 진입: 하이드레이션 게이트 뒤 장식 (A-2 4단계; 예전 고정 1.2초 대기 대체)
   nzWhenHydrated(function () { if (isWhatIsNazoPage()) tryDecorate(); });
   // decorateAll 종료 후 재적용 감시 켜기
   var _origDecorate = decorateAll;
