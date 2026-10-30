@@ -2780,37 +2780,22 @@ function nzLightboxClose() {
 
     var countEl = pill.querySelector('.nz-like-count');
 
-    // 총 좋아요 수
-    supabaseRequest('GET', 'likes?page_slug=eq.' + encodeURIComponent(slug) + '&select=id')
-      .then(function (res) {
-        var count = res.headers.get('content-range');
-        var total = count ? parseInt(count.split('/')[1]) || 0 : 0;
-        countEl.textContent = total;
-      })
-      .catch(function () { countEl.textContent = 0; });
-
-    // 내가 이미 눌렀는지
-    supabaseRequest('GET', 'likes?page_slug=eq.' + encodeURIComponent(slug) + '&session_id=eq.' + encodeURIComponent(sessionId) + '&select=id')
-      .then(function (res) { return res.json(); })
-      .then(function (rows) {
-        if (rows.length > 0) {
-          pill.classList.add('active');
-        }
-      })
-      .catch(function () {});
-
-    // 서버 진실과 재동기화: 총 개수 + 내 눌림 상태를 다시 받아 표시를 맞춘다
-    var resyncTimer = null;
-    function resyncFromServer() {
-      supabaseRequest('GET', 'likes?page_slug=eq.' + encodeURIComponent(slug) + '&select=session_id')
-        .then(function (res) { return res.json(); })
-        .then(function (rows) {
-          countEl.textContent = rows.length;
-          var mine = rows.some(function (r) { return r.session_id === sessionId; });
-          pill.classList.toggle('active', mine);
+    // 서버 진실로 표시를 맞춘다: 총 개수 + 내 눌림 상태 (처음 그릴 때와 클릭 뒤 공용)
+    // 다른 방문자의 session_id는 받아오지 않는다 (그 값이 곧 좋아요 취소 열쇠라서)
+    function syncFromServer() {
+      supabaseRequest('GET', 'likes?page_slug=eq.' + encodeURIComponent(slug) + '&select=id')
+        .then(function (res) {
+          var count = res.headers.get('content-range');
+          countEl.textContent = count ? parseInt(count.split('/')[1]) || 0 : 0;
         })
+        .catch(function () { countEl.textContent = 0; });
+      supabaseRequest('GET', 'likes?page_slug=eq.' + encodeURIComponent(slug) + '&session_id=eq.' + encodeURIComponent(sessionId) + '&select=id')
+        .then(function (res) { return res.json(); })
+        .then(function (rows) { pill.classList.toggle('active', rows.length > 0); })
         .catch(function () {});
     }
+    syncFromServer();
+    var resyncTimer = null;
 
     // 클릭 이벤트
     pill.addEventListener('click', function () {
@@ -2837,7 +2822,7 @@ function nzLightboxClose() {
       // 요청이 끝나면(성공/실패 모두) 서버 진실로 표시를 맞춘다
       req.catch(function () {}).then(function () {
         if (resyncTimer) clearTimeout(resyncTimer);
-        resyncTimer = setTimeout(resyncFromServer, 800);
+        resyncTimer = setTimeout(syncFromServer, 800);
       });
     });
 
@@ -3252,15 +3237,19 @@ function nzLightboxClose() {
     if (!slugs.length) return;
     var sessionId = getSessionId();
     var slugList = slugs.map(function (s) { return '"' + s + '"'; }).join(',');
-    supaReq('GET', TABLE + '?nazo_slug=in.(' + encodeURIComponent(slugList) + ')&select=nazo_slug,session_id')
-      .then(function (res) { return res.json(); })
-      .then(function (rows) {
+    var json = function (res) { return res.json(); };
+    // 개수는 작품명만, 내 눌림은 내 session_id 행만 받는다 (다른 방문자의 session_id는 받지 않음)
+    Promise.all([
+      supaReq('GET', TABLE + '?nazo_slug=in.(' + encodeURIComponent(slugList) + ')&select=nazo_slug').then(json),
+      supaReq('GET', TABLE + '?session_id=eq.' + encodeURIComponent(sessionId) + '&select=nazo_slug').then(json)
+    ])
+      .then(function (res) {
         var counts = {}, mine = {};
-        if (Array.isArray(rows)) {
-          rows.forEach(function (r) {
-            counts[r.nazo_slug] = (counts[r.nazo_slug] || 0) + 1;
-            if (r.session_id === sessionId) mine[r.nazo_slug] = true;
-          });
+        if (Array.isArray(res[0])) {
+          res[0].forEach(function (r) { counts[r.nazo_slug] = (counts[r.nazo_slug] || 0) + 1; });
+        }
+        if (Array.isArray(res[1])) {
+          res[1].forEach(function (r) { mine[r.nazo_slug] = true; });
         }
         btns.forEach(function (b) {
           applyExpect(b, !!mine[b.dataset.slug], counts[b.dataset.slug] || 0);
