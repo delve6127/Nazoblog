@@ -5,9 +5,6 @@ cd "$(dirname "$0")"
 echo "🍋 나조 데이터 동기화를 시작합니다..."
 echo ""
 
-# 이전 실행이 남긴 엑셀 재저장 노이즈 정리 (내용 변화 없는 재저장)
-git checkout -- 검색어_맵핑.xlsx 2>/dev/null
-
 python3 sync_nazo_data.py
 
 if [[ -n "$(git status --porcelain nazo_data.json 검색어_맵핑.xlsx)" ]]; then

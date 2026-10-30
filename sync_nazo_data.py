@@ -461,18 +461,23 @@ def update_xlsx(new_review_titles: list, new_brand_names: list) -> None:
         print("⚠️  엑셀 분리자(빈 행)를 못 찾음 — 엑셀 업데이트 건너뜀")
         return
 
+    added = False
     for title in new_review_titles:
         if title not in existing_review_keys:
             ws.insert_rows(sep_row)
             ws.cell(row=sep_row, column=1, value="나조 이름")
             ws.cell(row=sep_row, column=2, value=title)
             sep_row += 1
+            added = True
 
     for brand in new_brand_names:
         if brand not in existing_brand_keys:
             ws.append(["브랜드", brand, None])
+            added = True
 
-    wb.save(XLSX_PATH)
+    # 추가할 행이 없으면 저장하지 않는다 (내용 그대로인 재저장이 git 변경으로 잡히는 것 방지)
+    if added:
+        wb.save(XLSX_PATH)
 
 
 # ─── 출력 ───────────────────────────────────────────────────────────
@@ -635,7 +640,8 @@ def git_pull_rebase() -> None:
             cwd=PROJECT_DIR, check=True, capture_output=True, text=True,
         )
         result = subprocess.run(
-            ["git", "pull", "--rebase", "origin", "main"],
+            # --autostash: 엑셀에 입력해 둔 키워드처럼 아직 커밋 안 한 변경을 지키며 받아온다
+            ["git", "pull", "--rebase", "--autostash", "origin", "main"],
             cwd=PROJECT_DIR, check=True, capture_output=True, text=True,
         )
         if "Already up to date" in result.stdout or "up to date" in result.stdout.lower():
