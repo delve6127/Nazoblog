@@ -607,9 +607,9 @@ function replaceMainTitle() {
 (function() {
   var lastUrl = location.href;
 
-  // 해시(#)만 바뀐 같은 페이지 내 이동(목차 앵커 등)은 페이지 전환이 아니다
+  // 해시(#)·쿼리(?)만 바뀐 같은 페이지 내 변화(목차 앵커, 홈 ?search= 정리 등)는 페이지 전환이 아니다
   function pagePart(u) {
-    try { var a = document.createElement('a'); a.href = u; return a.pathname + a.search; }
+    try { var a = document.createElement('a'); a.href = u; return a.pathname; }
     catch (e) { return u; }
   }
   function isRealNavigation() {
