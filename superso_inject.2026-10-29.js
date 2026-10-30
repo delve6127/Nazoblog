@@ -2054,6 +2054,11 @@ function nzLightboxClose() {
 
     if (notesFetched) return;
     notesFetched = true;
+    // 노트 목록 페이지 HTML(약 200KB)을 홈마다 받지 않도록 세션 동안 결과만 보관 (노트 목록 썸네일과 같은 방식)
+    var NOTES_KEY = 'nz_home_notes_v1';
+    var cached = null;
+    try { cached = JSON.parse(sessionStorage.getItem(NOTES_KEY)); } catch (e) {}
+    if (Array.isArray(cached)) { renderNotes(cached); return; }
     fetch('/darakbang-note')
       .then(function (r) { return r.text(); })
       .then(function (html) {
@@ -2093,7 +2098,9 @@ function nzLightboxClose() {
         });
         // 최신순 상위 3개
         items.sort(function (a, b) { return b.sortKey.localeCompare(a.sortKey); });
-        renderNotes(items.slice(0, 3));
+        items = items.slice(0, 3);
+        try { sessionStorage.setItem(NOTES_KEY, JSON.stringify(items)); } catch (e) {}
+        renderNotes(items);
       })
       .catch(function () { renderNotes([]); });
   }
