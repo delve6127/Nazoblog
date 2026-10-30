@@ -1595,8 +1595,8 @@ function nzLightboxClose() {
       card.appendChild(div);
       card.classList.add('nz-card-custom');
 
-      // MFY 발매년월이 늦게 로드되는 경우 폴링
-      if (!mfy) {
+      // MFY 발매년월이 늦게 로드되는 경우 폴링 (발매년월이 있는 미포유 카드만 — 나머지 카드까지 20회씩 헛돌지 않게)
+      if (!mfy && /mystery for you/i.test(brand)) {
         (function pollMfy(c, tries) {
           if (tries <= 0) return;
           setTimeout(function () {
