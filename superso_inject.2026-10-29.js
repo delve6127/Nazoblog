@@ -2781,18 +2781,15 @@ function nzLightboxClose() {
     var countEl = pill.querySelector('.nz-like-count');
 
     // 서버 진실로 표시를 맞춘다: 총 개수 + 내 눌림 상태 (처음 그릴 때와 클릭 뒤 공용)
-    // 다른 방문자의 session_id는 받아오지 않는다 (그 값이 곧 좋아요 취소 열쇠라서)
+    // 표 직접 접근 대신 서버 함수만 쓴다 (supabase/likes-rpc.sql — 남의 session_id는 받지도 지우지도 못함)
     function syncFromServer() {
-      supabaseRequest('GET', 'likes?page_slug=eq.' + encodeURIComponent(slug) + '&select=id')
-        .then(function (res) {
-          var count = res.headers.get('content-range');
-          countEl.textContent = count ? parseInt(count.split('/')[1]) || 0 : 0;
-        })
-        .catch(function () { countEl.textContent = 0; });
-      supabaseRequest('GET', 'likes?page_slug=eq.' + encodeURIComponent(slug) + '&session_id=eq.' + encodeURIComponent(sessionId) + '&select=id')
+      supabaseRequest('POST', 'rpc/nz_like_status', { p_slug: slug, p_sid: sessionId })
         .then(function (res) { return res.json(); })
-        .then(function (rows) { pill.classList.toggle('active', rows.length > 0); })
-        .catch(function () {});
+        .then(function (s) {
+          countEl.textContent = (s && s.count) || 0;
+          pill.classList.toggle('active', !!(s && s.mine));
+        })
+        .catch(function () { if (countEl.textContent === '…') countEl.textContent = 0; });
     }
     syncFromServer();
     var resyncTimer = null;
@@ -2806,13 +2803,12 @@ function nzLightboxClose() {
       if (isActive) {
         pill.classList.remove('active');
         countEl.textContent = Math.max(0, currentCount - 1);
-        req = supabaseRequest('DELETE', 'likes?page_slug=eq.' + encodeURIComponent(slug) + '&session_id=eq.' + encodeURIComponent(sessionId));
       } else {
         pill.classList.add('active');
         countEl.textContent = currentCount + 1;
         nzBurstParticles(pill.querySelector('.nz-like-particles'));
-        req = supabaseRequest('POST', 'likes', { page_slug: slug, session_id: sessionId });
       }
+      req = supabaseRequest('POST', 'rpc/nz_like_set', { p_slug: slug, p_sid: sessionId, p_on: !isActive });
 
       // Supabase 기록이 성공했을 때만 Umami 이벤트 전송
       req.then(function (res) {
@@ -3032,7 +3028,6 @@ function nzLightboxClose() {
 
   var SUPABASE_URL = 'https://llwdqogseeddnffradej.supabase.co';
   var SUPABASE_KEY = 'sb_publishable_8cOoT2cGQ0x7Is57k-VT5A_fqgVKr6f';
-  var TABLE = 'ReviewRequests';
 
   function isTrPage() {
     return location.pathname.replace(/\/$/, '') === '/to-review';
@@ -3062,8 +3057,7 @@ function nzLightboxClose() {
       headers: {
         'apikey': SUPABASE_KEY,
         'Authorization': 'Bearer ' + SUPABASE_KEY,
-        'Content-Type': 'application/json',
-        'Prefer': method === 'GET' ? 'count=exact' : 'return=minimal'
+        'Content-Type': 'application/json'
       }
     };
     if (body) opts.body = JSON.stringify(body);
@@ -3236,21 +3230,12 @@ function nzLightboxClose() {
     btns.forEach(function (b) { if (b.dataset.slug) slugs.push(b.dataset.slug); });
     if (!slugs.length) return;
     var sessionId = getSessionId();
-    var slugList = slugs.map(function (s) { return '"' + s + '"'; }).join(',');
-    var json = function (res) { return res.json(); };
-    // 개수는 작품명만, 내 눌림은 내 session_id 행만 받는다 (다른 방문자의 session_id는 받지 않음)
-    Promise.all([
-      supaReq('GET', TABLE + '?nazo_slug=in.(' + encodeURIComponent(slugList) + ')&select=nazo_slug').then(json),
-      supaReq('GET', TABLE + '?session_id=eq.' + encodeURIComponent(sessionId) + '&select=nazo_slug').then(json)
-    ])
-      .then(function (res) {
-        var counts = {}, mine = {};
-        if (Array.isArray(res[0])) {
-          res[0].forEach(function (r) { counts[r.nazo_slug] = (counts[r.nazo_slug] || 0) + 1; });
-        }
-        if (Array.isArray(res[1])) {
-          res[1].forEach(function (r) { mine[r.nazo_slug] = true; });
-        }
+    // 작품별 개수 + 내가 누른 작품 (서버 함수, supabase/likes-rpc.sql — 다른 방문자의 session_id는 받지 않음)
+    supaReq('POST', 'rpc/nz_expect_status', { p_slugs: slugs, p_sid: sessionId })
+      .then(function (res) { return res.json(); })
+      .then(function (s) {
+        var counts = (s && s.counts) || {}, mine = {};
+        ((s && s.mine) || []).forEach(function (sl) { mine[sl] = true; });
         btns.forEach(function (b) {
           applyExpect(b, !!mine[b.dataset.slug], counts[b.dataset.slug] || 0);
         });
@@ -3285,11 +3270,9 @@ function nzLightboxClose() {
       btn.classList.add('pop');
     }
     var sessionId = getSessionId();
-    var req = wasOn
-      ? supaReq('DELETE', TABLE + '?nazo_slug=eq.' + encodeURIComponent(slug) + '&session_id=eq.' + encodeURIComponent(sessionId))
-      : supaReq('POST', TABLE, { nazo_slug: slug, session_id: sessionId });
+    var req = supaReq('POST', 'rpc/nz_expect_set', { p_slug: slug, p_sid: sessionId, p_on: !wasOn });
     req.then(function (res) {
-      if (!res.ok && res.status !== 409) applyExpect(btn, wasOn, count); // 롤백
+      if (!res.ok) applyExpect(btn, wasOn, count); // 롤백
     }).catch(function () {
       applyExpect(btn, wasOn, count);
     }).then(function () {
