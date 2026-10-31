@@ -350,6 +350,21 @@ a.notion-page[href="/test"] {
   margin-top: -120px;
   margin-bottom: -16px;
 }
+
+/* ── 547~768px 화면 여백 (폴드 커버·아이패드 mini 등) ── */
+/* Super는 546px 이하만 모바일 여백인데 우리 레이아웃은 768px까지 모바일 → 그 사이도 Super 모바일 값으로 맞춤 */
+/* shortcut: super.css·notion.css의 546px 규칙 값을 그대로 옮김, Super가 기준이나 값을 바꾸면 다시 맞출 것 */
+@media (min-width: 547px) and (max-width: 768px) {
+  .notion-root,
+  .notion-header__content,
+  .notion-header__collection-content {
+    padding-left: var(--padding-left-mobile);
+    padding-right: var(--padding-right-mobile);
+  }
+  .notion-header__cover.no-cover { height: 90px; max-height: 90px; }
+  .notion-header__content .notion-header__title-wrapper { margin-top: 100px; }
+  .notion-header__content.no-icon .notion-header__title-wrapper { margin-top: 56px; }
+}
 @media (max-width: 768px) {
   .nz-masthead {
     margin-top: -80px;
@@ -1802,7 +1817,7 @@ a[href*="%EC%A0%90%EC%88%98-%EC%A1%B0%EC%A0%88%EC%9A%A9-%ED%8E%98%EC%9D%B4%EC%A7
 }
 #nz2-chips { display: flex; gap: 5px; }
 .nz2-chip {
-  flex: 1;
+  flex: auto; /* 글자 길이만큼 폭 + 남는 공간 균등 분배 (같은 폭이면 '다락방 노트'가 잘림) */
   min-width: 0;
   background: transparent;
   border: 1px solid #DCD2BA;
