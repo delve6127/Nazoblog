@@ -364,6 +364,8 @@ a.notion-page[href="/test"] {
   .notion-header__cover.no-cover { height: 90px; max-height: 90px; }
   .notion-header__content .notion-header__title-wrapper { margin-top: 100px; }
   .notion-header__content.no-icon .notion-header__title-wrapper { margin-top: 56px; }
+  /* 홈은 노션 2단 안에 있는데 Super는 680px 이하만 단을 꽉 채움 → 681~768px(아이패드 mini)에서 왼쪽 쏠림 */
+  .nz-home .notion-column { width: 100% !important; margin-inline-start: 0 !important; }
 }
 @media (max-width: 768px) {
   .nz-masthead {
@@ -2450,6 +2452,13 @@ a.nz2-chip--link:hover { color: var(--nz-ink) !important; }
   .nz2-page-btn { width: 32px; height: 32px; font-size: 13px; border-radius: 8px; }
   .nz2-page-next { font-size: 13px; }
 }
+/* ── 769~1023px (폴드 펼침·아이패드 세로): 오른쪽 사이드바를 카드 아래로 ── */
+/* 옆에 두면 카드 영역이 380px 안팎이라 가로형 카드 글자가 3~4자씩 끊김 */
+@media (min-width: 769px) and (max-width: 1023px) {
+  #nz2-layout { grid-template-columns: minmax(0, 1fr); }
+  #nz2-left { padding: 38px 56px 44px; border-right: none; border-bottom: 1px solid var(--nz-line); }
+  #nz2-sidebar { padding: 38px 56px 44px; }
+}
 
 /* ════════════════════════════════════════════════════════
    리뷰 상세 v2 (다락방 개편 4단계) — 시안 리뷰 페이지.dc.html
@@ -2531,6 +2540,8 @@ a.nz2-chip--link:hover { color: var(--nz-ink) !important; }
 
 /* ── 2단 ── */
 .nz4-cols { display: grid; grid-template-columns: minmax(0, 1fr) 310px; gap: 28px; }
+/* 1023px 이하(폰·폴드 펼침·아이패드 세로)는 1단 — 820px에서 2단이면 본문이 177px뿐 */
+@media (max-width: 1023px) { .nz4-cols { grid-template-columns: 1fr; gap: 22px; } }
 .nz4-left { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
 .nz4-right { display: flex; flex-direction: column; min-width: 0; }
 .nz4-sec--radar { display: flex; flex-direction: column; flex: 1; }
@@ -2748,7 +2759,6 @@ a.nz4-nav-card:hover { border-color: #C9BE9F; }
   .nz4-head { gap: 10px; padding-bottom: 18px; }
   .nz4-title { font-size: 26px; }
   .nz4-num { font-size: 14px; }
-  .nz4-cols { grid-template-columns: 1fr; gap: 22px; }
   .nz4-diffbox { padding: 14px 14px; gap: 13px; }
   .nz4-difflabel { font-size: 11.5px; }
   .nz4-steps { gap: 3px; }
