@@ -190,12 +190,16 @@ def resolve_new_urls(new_titles: list, sort_data: dict, sitemap_paths: list) -> 
     url_by_title = {}
     # 1차: 정확 일치, 2차: 공백 무시 일치 (Super.so SEO 제목의 띄어쓰기 차이 흡수),
     # 3차: 접미 일치 — 페이지 제목이 "한글 독음 + 원제"(예: "컨트롤러 CONTROLLER")인 경우 흡수
+    # 4차: 줄인 원제 — 한글 독음 뒤 원제가 노션 제목의 앞부분(예: "… ゲームは続く" ↔ "ゲームは続く 公演…")
     squash = lambda s: re.sub(r"\s+", "", s)
+    orig_tail = lambda t: squash(re.sub(r"^.*[가-힣]", "", t))  # 마지막 한글 글자까지 떼어낸 원제
     for title in new_titles:
         exact = [u for u, t in title_by_url.items() if t == title]
         loose = [u for u, t in title_by_url.items() if squash(t) == squash(title)]
         suffix = [u for u, t in title_by_url.items() if squash(t).endswith(squash(title))]
-        match = exact or loose or suffix
+        prefix = [u for u, t in title_by_url.items()
+                  if len(orig_tail(t)) >= 3 and squash(title).startswith(orig_tail(t))]
+        match = exact or loose or suffix or prefix
         if len(match) == 1:
             url_by_title[title] = match[0]
         elif len(match) > 1:

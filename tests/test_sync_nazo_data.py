@@ -96,5 +96,36 @@ class SyncFileWriteTest(unittest.TestCase):
         self.assertIn(NEW_TITLE, names)
 
 
+class ResolveNewUrlsTest(unittest.TestCase):
+    """새 리뷰 제목 ↔ Super 페이지 제목 대조 (실제 사례로)."""
+    PAGES = {
+        "/nazotoki-reviews/controller": "컨트롤러 CONTROLLER",
+        "/nazotoki-reviews/game-continues": "게임은 계속된다 참가자 한정 나조 ゲームは続く",
+        "/nazotoki-reviews/korean": "무비무드 디저트 퍼즐 팩",
+    }
+
+    def fake_urlopen(self, req, timeout=None):
+        path = req.full_url.replace("https://nazo.monbbang.me", "")
+        html = f"<title>{self.PAGES[path]}{sync.PAGE_TITLE_SUFFIX}</title>".encode("utf-8")
+        resp = mock.MagicMock()
+        resp.__enter__.return_value.read.return_value = html
+        return resp
+
+    def resolve(self, titles):
+        with mock.patch.object(sync.urllib.request, "urlopen", self.fake_urlopen):
+            return sync.resolve_new_urls(titles, {}, list(self.PAGES))
+
+    def test_matches_abbreviated_original_title(self):
+        got = self.resolve(["CONTROLLER", "ゲームは続く 公演参加者限定の持ち帰りナゾ", "무비무드 디저트 퍼즐 팩"])
+        self.assertEqual(got, {
+            "CONTROLLER": "/nazotoki-reviews/controller",
+            "ゲームは続く 公演参加者限定の持ち帰りナゾ": "/nazotoki-reviews/game-continues",
+            "무비무드 디저트 퍼즐 팩": "/nazotoki-reviews/korean",
+        })
+
+    def test_unrelated_title_stays_unmatched(self):
+        self.assertEqual(self.resolve(["ゲーム 全く別の作品"]), {})
+
+
 if __name__ == "__main__":
     unittest.main()
