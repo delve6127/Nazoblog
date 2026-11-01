@@ -1528,6 +1528,9 @@ function nzLightboxClose() {
     var brandsLower = brands.map(function (c) { return c.toLowerCase(); });
     var diff = pillTexts(card, DIFF_SEL)[0] || '';
     var rating = pillTexts(card, RECOMMEND_SEL)[0] || data.rating || '';
+    // 입문추천: 카드에 실려온 노션 체크박스 우선, 없으면 동기화 파일 값
+    var beginnerEl = card.querySelector('.property-7058676a');
+    var beginner = beginnerEl ? !!beginnerEl.querySelector('.notion-checkbox.checked') : data.beginner === true;
 
     var q = state.searchQ;
     var phonetics = PHONETIC_MAP[titleLower] || [];
@@ -1543,7 +1546,7 @@ function nzLightboxClose() {
 
     var filterMatch = state.filter === 'all'
       || (state.filter === 'strong' && (rating === '인생나조' || rating === '강력추천'))
-      || (state.filter === 'beginner' && data.beginner === true);
+      || (state.filter === 'beginner' && beginner);
     var diffMatch = state.diff === '전체' || diff === state.diff;
     var brandMatch = state.brand === '전체' || brands.indexOf(state.brand) > -1;
 
