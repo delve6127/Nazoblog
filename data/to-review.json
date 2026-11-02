@@ -1,5 +1,5 @@
 {
-  "count": 71,
+  "count": 72,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -568,6 +568,14 @@
       "status": "보유중",
       "image": "data/images/40bd25cb2dd48017b42ce0d20e75d18c.jpg",
       "slug": "40bd25cb2dd48017b42ce0d20e75d18c"
+    },
+    {
+      "id": "40cd25cb2dd4800f9376f5317daba404",
+      "name": "maze maze maze（まぜまぜメイズ）",
+      "maker": "ナゾロック",
+      "status": "보유중",
+      "image": "data/images/40cd25cb2dd4800f9376f5317daba404.png",
+      "slug": "40cd25cb2dd4800f9376f5317daba404"
     }
   ]
 }
