@@ -1,5 +1,5 @@
 {
-  "count": 71,
+  "count": 76,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -568,6 +568,46 @@
       "status": "보유중",
       "image": "data/images/40cd25cb2dd4800f9376f5317daba404.png",
       "slug": "40cd25cb2dd4800f9376f5317daba404"
+    },
+    {
+      "id": "410d25cb2dd480f58b0afa7371757325",
+      "name": "深海の城 タイタン",
+      "maker": "Tumbleweed",
+      "status": "구입 완료",
+      "image": "data/images/410d25cb2dd480f58b0afa7371757325.jpeg",
+      "slug": "410d25cb2dd480f58b0afa7371757325"
+    },
+    {
+      "id": "410d25cb2dd480cebe8cd6ea47d9748c",
+      "name": "UNSTOPPABLE",
+      "maker": "Tumbleweed",
+      "status": "구입 완료",
+      "image": "data/images/410d25cb2dd480cebe8cd6ea47d9748c.jpg",
+      "slug": "410d25cb2dd480cebe8cd6ea47d9748c"
+    },
+    {
+      "id": "410d25cb2dd48002a1edf8954864fe18",
+      "name": "HIRAMEKI TRUMP WHITE",
+      "maker": "Tumbleweed",
+      "status": "구입 완료",
+      "image": "data/images/410d25cb2dd48002a1edf8954864fe18.jpeg",
+      "slug": "410d25cb2dd48002a1edf8954864fe18"
+    },
+    {
+      "id": "410d25cb2dd480efb40fdd3d97c6dc02",
+      "name": "HIRAMEKI TRUMP BLACK",
+      "maker": "Tumbleweed",
+      "status": "구입 완료",
+      "image": "data/images/410d25cb2dd480efb40fdd3d97c6dc02.jpeg",
+      "slug": "410d25cb2dd480efb40fdd3d97c6dc02"
+    },
+    {
+      "id": "410d25cb2dd48048a10cde943bad0496",
+      "name": "『10』",
+      "maker": "Tumbleweed",
+      "status": "구입 완료",
+      "image": "data/images/410d25cb2dd48048a10cde943bad0496.jpg",
+      "slug": "410d25cb2dd48048a10cde943bad0496"
     }
   ]
 }
