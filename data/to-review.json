@@ -1,5 +1,5 @@
 {
-  "count": 72,
+  "count": 71,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -83,7 +83,7 @@
     },
     {
       "id": "344d25cb2dd48070834efbb08659ab8e",
-      "name": "ONE SHOT (미포유 24.11 月)",
+      "name": "ONE SHOT (24.11 月)",
       "maker": "SCRAP - Mystery For You",
       "status": "보유중",
       "image": "data/images/344d25cb2dd48070834efbb08659ab8e.png",
@@ -91,7 +91,7 @@
     },
     {
       "id": "344d25cb2dd480e88b5dc221c120d4da",
-      "name": "言葉で戦え!! コトバトル (미포유 24.12 花)",
+      "name": "言葉で戦え!! コトバトル (24.12 花)",
       "maker": "SCRAP - Mystery For You",
       "status": "보유중",
       "image": "data/images/344d25cb2dd480e88b5dc221c120d4da.png",
@@ -99,7 +99,7 @@
     },
     {
       "id": "344d25cb2dd4801aac94c2211a27dbf7",
-      "name": "奇妙な文通 (미포유 25.1 花)",
+      "name": "奇妙な文通 (25.1 花)",
       "maker": "SCRAP - Mystery For You",
       "status": "보유중",
       "image": "data/images/344d25cb2dd4801aac94c2211a27dbf7.png",
@@ -107,7 +107,7 @@
     },
     {
       "id": "344d25cb2dd480ff9cfbdbc5d3c42d50",
-      "name": "トラック横転 (미포유 25.2 月)",
+      "name": "トラック横転 (25.2 月)",
       "maker": "SCRAP - Mystery For You",
       "status": "보유중",
       "image": "data/images/344d25cb2dd480ff9cfbdbc5d3c42d50.png",
@@ -115,7 +115,7 @@
     },
     {
       "id": "344d25cb2dd480a5be37f4f33a013970",
-      "name": "Virtual to Escape (미포유 25.2 花)",
+      "name": "Virtual to Escape (25.2 花)",
       "maker": "SCRAP - Mystery For You",
       "status": "보유중",
       "image": "data/images/344d25cb2dd480a5be37f4f33a013970.png",
@@ -123,7 +123,7 @@
     },
     {
       "id": "344d25cb2dd480759f08f21fed6f2de1",
-      "name": "SEVEN (미포유 25.4 花)",
+      "name": "SEVEN (25.4 花)",
       "maker": "SCRAP - Mystery For You",
       "status": "보유중",
       "image": "data/images/344d25cb2dd480759f08f21fed6f2de1.png",
@@ -131,7 +131,7 @@
     },
     {
       "id": "344d25cb2dd480aca060c6a8921d328b",
-      "name": "悪い謎 (미포유 25.6 花)",
+      "name": "悪い謎 (25.6 花)",
       "maker": "SCRAP - Mystery For You",
       "status": "보유중",
       "image": "data/images/344d25cb2dd480aca060c6a8921d328b.png",
@@ -139,7 +139,7 @@
     },
     {
       "id": "344d25cb2dd4804a8471d9a4333c0ab3",
-      "name": "なぞときであそぼ (미포유 25.7 花)",
+      "name": "なぞときであそぼ (25.7 花)",
       "maker": "SCRAP - Mystery For You",
       "status": "보유중",
       "image": "data/images/344d25cb2dd4804a8471d9a4333c0ab3.png",
@@ -147,7 +147,7 @@
     },
     {
       "id": "344d25cb2dd4800f90c4f4290e525299",
-      "name": "夜のリアル脱出ゲーム常設店舗からの脱出 (미포유 25.7 月)",
+      "name": "夜のリアル脱出ゲーム常設店舗からの脱出 (25.7 月)",
       "maker": "SCRAP - Mystery For You",
       "status": "보유중",
       "image": "data/images/344d25cb2dd4800f90c4f4290e525299.png",
@@ -155,7 +155,7 @@
     },
     {
       "id": "344d25cb2dd48044b7a2f01b301f0b80",
-      "name": "PIECE (미포유 25.12 花)",
+      "name": "PIECE (25.12 花)",
       "maker": "SCRAP - Mystery For You",
       "status": "보유중",
       "image": "data/images/344d25cb2dd48044b7a2f01b301f0b80.jpg",
@@ -437,7 +437,7 @@
       "id": "3ddd25cb2dd480d0b689c356404ab326",
       "name": "『TUMBLEWEED ALLSTAR THE LAST』",
       "maker": "Tumbleweed",
-      "status": "보유중",
+      "status": "플레이중",
       "image": "data/images/3ddd25cb2dd480d0b689c356404ab326.jpg",
       "slug": "3ddd25cb2dd480d0b689c356404ab326"
     },
@@ -546,16 +546,8 @@
       "slug": "3ecd25cb2dd480538272db585e52cc9d"
     },
     {
-      "id": "40bd25cb2dd48037bdd6c10b93109bfc",
-      "name": "荷物に隠したラブレター (미포유 26.10 雪)",
-      "maker": "SCRAP - Mystery For You",
-      "status": "리뷰 작성 중",
-      "image": "data/images/40bd25cb2dd48037bdd6c10b93109bfc.jpg",
-      "slug": "40bd25cb2dd48037bdd6c10b93109bfc"
-    },
-    {
       "id": "40bd25cb2dd4801c8de4e52fadc557b9",
-      "name": "古びた館と隠された秘宝 (미포유 26.10 花)",
+      "name": "古びた館と隠された秘宝 (26.10 花)",
       "maker": "SCRAP - Mystery For You",
       "status": "보유중",
       "image": "data/images/40bd25cb2dd4801c8de4e52fadc557b9.jpg",
@@ -563,7 +555,7 @@
     },
     {
       "id": "40bd25cb2dd48017b42ce0d20e75d18c",
-      "name": "忘れられた研究所 (미포유 26.10 月)",
+      "name": "忘れられた研究所 (26.10 月)",
       "maker": "SCRAP - Mystery For You",
       "status": "보유중",
       "image": "data/images/40bd25cb2dd48017b42ce0d20e75d18c.jpg",
