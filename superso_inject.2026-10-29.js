@@ -1874,9 +1874,9 @@ function nzLightboxClose() {
 
   // ── 리뷰 예정 티저: 동기화 JSON 사용 (표시는 /to-review와 동일: 임박 순 + 등록 오래된 순) ──
   var upcomingFetched = false;
-  var UP_PRIORITY = ['리뷰 작성 중', '플레이 완료', '보유중', '구입 완료', '해보고 싶다', '해보고싶다'];
+  var UP_PRIORITY = ['리뷰 작성 중', '플레이 완료', '플레이중', '보유중', '구입 완료', '해보고 싶다', '해보고싶다'];
   var UP_STATUS_COLOR = {
-    '리뷰 작성 중': '#B0616E', '플레이 완료': '#8171A8', '보유중': '#6E9E52',
+    '리뷰 작성 중': '#B0616E', '플레이 완료': '#8171A8', '플레이중': '#C0883A', '보유중': '#6E9E52',
     '구입 완료': '#5F8CA3', '해보고 싶다': '#B25E5E', '해보고싶다': '#B25E5E'
   };
   function fetchUpcoming() {
@@ -2752,13 +2752,14 @@ function nzLightboxClose() {
   var STATUS = [
     { key: '리뷰 작성 중', comment: '며칠 내 리뷰 업로드 예정이에요', shortLabel: '작성 중', fallback: '#B08900', featured: true },
     { key: '플레이 완료', comment: '플레이 완료 되어 리뷰 대기 중인 작품이에요', shortLabel: '플레이', fallback: '#A0705C' },
+    { key: '플레이중', comment: '지금 플레이하고 있는 나조예요', shortLabel: '플레이중', fallback: '#C0883A' },
     { key: '보유중', comment: '나조 책장에 보관 중인 나조예요', shortLabel: '보유', fallback: '#7AA85C' },
     { key: '구입 완료', comment: '배송 중인 나조예요', shortLabel: '구매', fallback: '#5A78A0' },
     { key: '해보고 싶다', comment: '언젠가 꼭 해보고 싶은 나조예요', shortLabel: '위시', fallback: '#A79E8A' }
   ];
   // 상태별 표시색 — 기존 노션 지정색(핑크·퍼플·그린·블루·레드)의 다락방 딥톤 고정값
   var TR_STATUS_COLOR = {
-    '리뷰 작성 중': '#B0616E', '플레이 완료': '#8171A8', '보유중': '#6E9E52',
+    '리뷰 작성 중': '#B0616E', '플레이 완료': '#8171A8', '플레이중': '#C0883A', '보유중': '#6E9E52',
     '구입 완료': '#5F8CA3', '해보고 싶다': '#B25E5E'
   };
 
