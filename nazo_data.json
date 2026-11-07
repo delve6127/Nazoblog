@@ -169,6 +169,7 @@
     "LIMINAL ESCAPE 参加者限定持ち帰りナゾ": { "num": 86, "date": "2026-10-18", "diff": 2, "satisfaction": 3.6, "puzzle": 3.5, "gimmick": 3.6, "design": 3.9, "language": 3.3, "brand": "Tumbleweed", "rating": "추천", "quote": "백룸 느낌 좋아하면 추천? 꼭 PC로 플레이하세요", "beginner": false, "url": "/nazotoki-reviews/liminal-escape" },
     "하테나데일리": { "num": 88, "date": "2026-10-31", "diff": 3, "satisfaction": 4.5, "puzzle": 3.7, "gimmick": 4.1, "design": 4, "language": 5, "brand": "하테나", "rating": "강력추천", "quote": "모국어로 푸는 나조가 이렇게 행복할 줄이야", "beginner": true, "url": "/nazotoki-reviews/hatena-daily" },
     "골드버그": { "num": 89, "date": "2026-10-31", "diff": 3, "satisfaction": 4.4, "puzzle": 4, "gimmick": 4, "design": 3.7, "language": 5, "brand": "하테나", "rating": "강력추천", "quote": "문제로 완성하는 장치, 설계의 정교함이 멋지다.", "beginner": true, "url": "/nazotoki-reviews/goldberg" },
-    "ゲームは続く 公演参加者限定の持ち帰りナゾ": { "num": 87, "date": "2026-10-25", "diff": 2, "satisfaction": 3.5, "puzzle": 3.7, "gimmick": 3.4, "design": 3.4, "language": 3.3, "brand": "Tumbleweed", "rating": "추천", "quote": "아쉽다 아쉽다 해놓고 결국 추천해버렸다", "beginner": false, "url": "/nazotoki-reviews/game-continues" }
+    "ゲームは続く 公演参加者限定の持ち帰りナゾ": { "num": 87, "date": "2026-10-25", "diff": 2, "satisfaction": 3.5, "puzzle": 3.7, "gimmick": 3.4, "design": 3.4, "language": 3.3, "brand": "Tumbleweed", "rating": "추천", "quote": "아쉽다 아쉽다 해놓고 결국 추천해버렸다", "beginner": false, "url": "/nazotoki-reviews/game-continues" },
+    "荷物に隠したラブレター": { "num": 90, "date": "2026-11-01", "diff": 3, "satisfaction": 4.1, "puzzle": 3.7, "gimmick": 3.7, "design": 3.5, "language": 2.9, "brand": "SCRAP - Mystery For You", "rating": "추천", "quote": "해본 설나조 중 1등, 스토리 문제 둘다 좋았다", "beginner": false, "url": "/nazotoki-reviews/a-love-letter-hidden-in-a-package" }
   }
 }
