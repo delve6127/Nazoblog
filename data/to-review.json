@@ -237,7 +237,7 @@
       "id": "369d25cb2dd480a4bec9da6d78d5c377",
       "name": "folded",
       "maker": "ねずみの巣",
-      "status": "보유중",
+      "status": "플레이 완료",
       "image": "data/images/369d25cb2dd480a4bec9da6d78d5c377.jpg",
       "slug": "folded"
     },
@@ -541,7 +541,7 @@
       "id": "40bd25cb2dd48017b42ce0d20e75d18c",
       "name": "忘れられた研究所 (26.10 月)",
       "maker": "SCRAP - Mystery For You",
-      "status": "보유중",
+      "status": "플레이 완료",
       "image": "data/images/40bd25cb2dd48017b42ce0d20e75d18c.jpg",
       "slug": "40bd25cb2dd48017b42ce0d20e75d18c"
     },
