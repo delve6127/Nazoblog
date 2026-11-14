@@ -261,7 +261,7 @@
       "id": "36ed25cb2dd480439558f69088f84b89",
       "name": "LOST",
       "maker": "xeoxy",
-      "status": "보유중",
+      "status": "플레이 완료",
       "image": "data/images/36ed25cb2dd480439558f69088f84b89.png",
       "slug": "lost"
     },
@@ -269,7 +269,7 @@
       "id": "36ed25cb2dd48015b984f1363220872c",
       "name": "RAndOm",
       "maker": "xeoxy",
-      "status": "보유중",
+      "status": "플레이 완료",
       "image": "data/images/36ed25cb2dd48015b984f1363220872c.png",
       "slug": "random"
     },
