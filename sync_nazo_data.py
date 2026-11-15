@@ -457,10 +457,15 @@ def update_xlsx(new_review_titles: list, new_brand_names: list) -> None:
         if row == (None, None, None) and sep_row is None:
             sep_row = i
             continue
-        if sep_row is None and row[1]:
-            existing_review_keys.add(row[1])
-        elif sep_row is not None and row[1]:
-            existing_brand_keys.add(row[1])
+        if not row[1]:
+            continue
+        # read_xlsx_keywords와 같은 분류: '구분' 열 우선, 비어 있으면 구분선 위치. 대소문자·공백 차이는 같은 행으로 본다
+        key = str(row[1]).strip().lower()
+        gubun = row[0].strip() if isinstance(row[0], str) else None
+        if gubun == "브랜드" or (not gubun and sep_row is not None):
+            existing_brand_keys.add(key)
+        else:
+            existing_review_keys.add(key)
 
     if sep_row is None:
         print("⚠️  엑셀 분리자(빈 행)를 못 찾음 — 엑셀 업데이트 건너뜀")
@@ -468,7 +473,7 @@ def update_xlsx(new_review_titles: list, new_brand_names: list) -> None:
 
     added = False
     for title in new_review_titles:
-        if title not in existing_review_keys:
+        if title.strip().lower() not in existing_review_keys:
             ws.insert_rows(sep_row)
             ws.cell(row=sep_row, column=1, value="나조 이름")
             ws.cell(row=sep_row, column=2, value=title)
@@ -476,7 +481,7 @@ def update_xlsx(new_review_titles: list, new_brand_names: list) -> None:
             added = True
 
     for brand in new_brand_names:
-        if brand not in existing_brand_keys:
+        if brand.strip().lower() not in existing_brand_keys:
             ws.append(["브랜드", brand, None])
             added = True
 
@@ -711,8 +716,11 @@ def main() -> int:
             updated_titles=[t for t, _ in changes["updated"]],
             new_titles=[t for t, _ in changes["new"]],
         )
+
+    # 신규만 넣으면 한 번 놓친 리뷰가 엑셀에 영영 안 생긴다 (2026-11-15 8건 누락) → 매번 전체를 대조
+    if not dry_run:
         update_xlsx(
-            new_review_titles=[t for t, _ in changes["new"]],
+            new_review_titles=list(data["SORT_DATA"]),
             new_brand_names=missing_company,
         )
 

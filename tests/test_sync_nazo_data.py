@@ -95,6 +95,21 @@ class SyncFileWriteTest(unittest.TestCase):
         names = [row[1] for row in openpyxl.load_workbook(xlsx).active.iter_rows(values_only=True)]
         self.assertIn(NEW_TITLE, names)
 
+    def test_update_xlsx_with_all_titles_adds_only_missing(self):
+        # main()이 매번 전체 제목을 넘긴다 — 이미 있는 행은 그대로, 빠진 행만 1번 생겨야 한다
+        xlsx = self.tmp / "검색어_맵핑.xlsx"
+        shutil.copy(ROOT / "검색어_맵핑.xlsx", xlsx)
+        rows = lambda: [r[1] for r in openpyxl.load_workbook(xlsx).active.iter_rows(values_only=True)]
+        before = rows()
+        existing = [n for n in before[1:] if n][:5]
+
+        with mock.patch.object(sync, "XLSX_PATH", xlsx):
+            sync.update_xlsx(existing + [NEW_TITLE], [])
+            sync.update_xlsx(existing + [NEW_TITLE], [])
+
+        self.assertEqual(len(rows()), len(before) + 1)
+        self.assertEqual(rows().count(NEW_TITLE), 1)
+
 
 class ResolveNewUrlsTest(unittest.TestCase):
     """새 리뷰 제목 ↔ Super 페이지 제목 대조 (실제 사례로)."""
