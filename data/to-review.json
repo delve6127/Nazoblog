@@ -1,5 +1,5 @@
 {
-  "count": 77,
+  "count": 80,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -616,6 +616,30 @@
       "status": "구입 완료",
       "image": "data/images/410d25cb2dd48003ba4fd83d7934b9c0.png",
       "slug": "410d25cb2dd48003ba4fd83d7934b9c0"
+    },
+    {
+      "id": "41ad25cb2dd48042bd06ccbbeec52427",
+      "name": "HEX-A-GON (26.11)",
+      "maker": "SCRAP - Mystery For You",
+      "status": "보유중",
+      "image": "data/images/41ad25cb2dd48042bd06ccbbeec52427.jpg",
+      "slug": "41ad25cb2dd48042bd06ccbbeec52427"
+    },
+    {
+      "id": "41ad25cb2dd480a4b010f25b87d1efbd",
+      "name": "プランテス研究室 (26.11)",
+      "maker": "SCRAP - Mystery For You",
+      "status": "보유중",
+      "image": "data/images/41ad25cb2dd480a4b010f25b87d1efbd.jpg",
+      "slug": "41ad25cb2dd480a4b010f25b87d1efbd"
+    },
+    {
+      "id": "41ad25cb2dd48039bf73cbb7c90121a8",
+      "name": "謎制作王決定戦2026 (26.11)",
+      "maker": "SCRAP - Mystery For You",
+      "status": "보유중",
+      "image": "data/images/41ad25cb2dd48039bf73cbb7c90121a8.jpg",
+      "slug": "41ad25cb2dd48039bf73cbb7c90121a8"
     }
   ]
 }
