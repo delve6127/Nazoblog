@@ -2160,6 +2160,16 @@ a.nz2-chip--link:hover { color: var(--nz-ink) !important; }
 /* ── 메인: 노션 페이지 링크 블록 전체 숨김 (접근은 유틸 네비로) ── */
 .nz-home a.notion-page { display: none !important; }
 
+/* ── 메인: 노션에서 단 블록을 '전체 너비'로 둬도 홈 모양 유지 ── */
+/* Super가 .full-width 단에 거는 기본값(줄 높이 0·화면 폭·위아래 여백·가운데 정렬)을 원래대로. 줄 높이 0이 상속되면 뱃지가 4px로 눌림 */
+.nz-home .notion-column-list.full-width {
+  line-height: normal;
+  width: auto;
+  margin-top: 0;
+  margin-bottom: 0;
+  align-self: auto;
+}
+
 /* ════════════════════════════════════════════════════════
    갤러리 v2 — PC 메인 (3단계): 필터 바 · 2단 레이아웃 · 카드
    ════════════════════════════════════════════════════════ */
