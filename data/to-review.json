@@ -1,5 +1,5 @@
 {
-  "count": 78,
+  "count": 77,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -250,18 +250,10 @@
       "slug": "block-36ed25cb2dd480bda8eed3889db64e3c"
     },
     {
-      "id": "36ed25cb2dd480439558f69088f84b89",
-      "name": "LOST",
-      "maker": "xeoxy",
-      "status": "리뷰 작성 중",
-      "image": "data/images/36ed25cb2dd480439558f69088f84b89.png",
-      "slug": "lost"
-    },
-    {
       "id": "36ed25cb2dd48015b984f1363220872c",
       "name": "RAndOm",
       "maker": "xeoxy",
-      "status": "플레이 완료",
+      "status": "리뷰 작성 중",
       "image": "data/images/36ed25cb2dd48015b984f1363220872c.png",
       "slug": "random"
     },
