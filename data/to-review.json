@@ -1,5 +1,5 @@
 {
-  "count": 77,
+  "count": 109,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -236,7 +236,7 @@
     {
       "id": "36ed25cb2dd48098b3afd77bfbee243f",
       "name": "謎が好きなら、作ってよ！",
-      "maker": "xeoxy",
+      "maker": "XEOXY",
       "status": "보유중",
       "image": "data/images/36ed25cb2dd48098b3afd77bfbee243f.png",
       "slug": "謎が好きなら作ってよ"
@@ -244,23 +244,15 @@
     {
       "id": "36ed25cb2dd480bda8eed3889db64e3c",
       "name": "→□→",
-      "maker": "xeoxy",
+      "maker": "XEOXY",
       "status": "보유중",
       "image": "data/images/36ed25cb2dd480bda8eed3889db64e3c.png",
       "slug": "block-36ed25cb2dd480bda8eed3889db64e3c"
     },
     {
-      "id": "36ed25cb2dd48015b984f1363220872c",
-      "name": "RAndOm",
-      "maker": "xeoxy",
-      "status": "리뷰 작성 중",
-      "image": "data/images/36ed25cb2dd48015b984f1363220872c.png",
-      "slug": "random"
-    },
-    {
       "id": "36ed25cb2dd48055bbf0c3151bc73775",
       "name": "パイセンナゾボン",
-      "maker": "xeoxy",
+      "maker": "XEOXY",
       "status": "보유중",
       "image": "data/images/36ed25cb2dd48055bbf0c3151bc73775.png",
       "slug": "パイセンナゾボン"
@@ -268,7 +260,7 @@
     {
       "id": "36ed25cb2dd480b4afbfe9e1741539ca",
       "name": "■",
-      "maker": "xeoxy",
+      "maker": "XEOXY",
       "status": "보유중",
       "image": "data/images/36ed25cb2dd480b4afbfe9e1741539ca.png",
       "slug": "block-36ed25cb2dd480b4afbfe9e1741539ca"
@@ -533,7 +525,7 @@
       "id": "410d25cb2dd480f58b0afa7371757325",
       "name": "深海の城 タイタン",
       "maker": "Tumbleweed",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/410d25cb2dd480f58b0afa7371757325.jpeg",
       "slug": "410d25cb2dd480f58b0afa7371757325"
     },
@@ -541,7 +533,7 @@
       "id": "410d25cb2dd480cebe8cd6ea47d9748c",
       "name": "UNSTOPPABLE",
       "maker": "Tumbleweed",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/410d25cb2dd480cebe8cd6ea47d9748c.jpg",
       "slug": "410d25cb2dd480cebe8cd6ea47d9748c"
     },
@@ -549,7 +541,7 @@
       "id": "410d25cb2dd48002a1edf8954864fe18",
       "name": "HIRAMEKI TRUMP WHITE",
       "maker": "Tumbleweed",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/410d25cb2dd48002a1edf8954864fe18.jpeg",
       "slug": "410d25cb2dd48002a1edf8954864fe18"
     },
@@ -557,7 +549,7 @@
       "id": "410d25cb2dd480efb40fdd3d97c6dc02",
       "name": "HIRAMEKI TRUMP BLACK",
       "maker": "Tumbleweed",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/410d25cb2dd480efb40fdd3d97c6dc02.jpeg",
       "slug": "410d25cb2dd480efb40fdd3d97c6dc02"
     },
@@ -565,7 +557,7 @@
       "id": "410d25cb2dd48048a10cde943bad0496",
       "name": "『10』",
       "maker": "Tumbleweed",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/410d25cb2dd48048a10cde943bad0496.jpg",
       "slug": "410d25cb2dd48048a10cde943bad0496"
     },
@@ -573,7 +565,7 @@
       "id": "410d25cb2dd480d2910cc03b2fbb59c4",
       "name": "最初からクライマックス謎解き",
       "maker": "NAZO×NAZO劇団",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/410d25cb2dd480d2910cc03b2fbb59c4.png",
       "slug": "410d25cb2dd480d2910cc03b2fbb59c4"
     },
@@ -581,7 +573,7 @@
       "id": "410d25cb2dd4800b9be6e341bb6cc87b",
       "name": "最初からクライマックス謎解き-comic-",
       "maker": "NAZO×NAZO劇団",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/410d25cb2dd4800b9be6e341bb6cc87b.png",
       "slug": "410d25cb2dd4800b9be6e341bb6cc87b"
     },
@@ -589,7 +581,7 @@
       "id": "410d25cb2dd48003ba4fd83d7934b9c0",
       "name": "最初からクライマックス謎解き-Dead-",
       "maker": "NAZO×NAZO劇団",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/410d25cb2dd48003ba4fd83d7934b9c0.png",
       "slug": "410d25cb2dd48003ba4fd83d7934b9c0"
     },
@@ -616,6 +608,270 @@
       "status": "보유중",
       "image": "data/images/41ad25cb2dd48039bf73cbb7c90121a8.jpg",
       "slug": "41ad25cb2dd48039bf73cbb7c90121a8"
+    },
+    {
+      "id": "41ed25cb2dd480139c52f1f3fff93694",
+      "name": "→［２］→",
+      "maker": "XEOXY",
+      "status": "보유중",
+      "image": "data/images/41ed25cb2dd480139c52f1f3fff93694.png",
+      "slug": "41ed25cb2dd480139c52f1f3fff93694"
+    },
+    {
+      "id": "41ed25cb2dd48095a7ffe10ab7c97020",
+      "name": "COUNT",
+      "maker": "XEOXY",
+      "status": "보유중",
+      "image": "data/images/41ed25cb2dd48095a7ffe10ab7c97020.png",
+      "slug": "41ed25cb2dd48095a7ffe10ab7c97020"
+    },
+    {
+      "id": "41ed25cb2dd480e082d5e7732d022366",
+      "name": "迷路の塔",
+      "maker": "XEOXY",
+      "status": "보유중",
+      "image": "data/images/41ed25cb2dd480e082d5e7732d022366.png",
+      "slug": "41ed25cb2dd480e082d5e7732d022366"
+    },
+    {
+      "id": "41ed25cb2dd480b5a644ce13e780ed86",
+      "name": "RAGING OCEAN",
+      "maker": "ねずみの巣",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd480b5a644ce13e780ed86.webp",
+      "slug": "41ed25cb2dd480b5a644ce13e780ed86"
+    },
+    {
+      "id": "41ed25cb2dd48021afd0c086416667c5",
+      "name": "CRYSTAL SKY",
+      "maker": "ねずみの巣",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd48021afd0c086416667c5.jpeg",
+      "slug": "41ed25cb2dd48021afd0c086416667c5"
+    },
+    {
+      "id": "41ed25cb2dd4802c921dd4425e83a89b",
+      "name": "ゆらぎの奇術師",
+      "maker": "ねずみの巣",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd4802c921dd4425e83a89b.jpeg",
+      "slug": "41ed25cb2dd4802c921dd4425e83a89b"
+    },
+    {
+      "id": "41ed25cb2dd48015825bf664c27c7a91",
+      "name": "トンデモマンションと奇想天外ルームツアー 公演参加者限定持ち帰りナゾ",
+      "maker": "Tumbleweed, ねずみの巣",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd48015825bf664c27c7a91.jpeg",
+      "slug": "41ed25cb2dd48015825bf664c27c7a91"
+    },
+    {
+      "id": "41ed25cb2dd480de972de4f45814f727",
+      "name": "バナナといったらネズミ？",
+      "maker": "ねずみの巣",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd480de972de4f45814f727.jpeg",
+      "slug": "41ed25cb2dd480de972de4f45814f727"
+    },
+    {
+      "id": "41ed25cb2dd4804fa098dfeaffaf4944",
+      "name": "UNKNOX:RED",
+      "maker": "街ハック！",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd4804fa098dfeaffaf4944.jpeg",
+      "slug": "41ed25cb2dd4804fa098dfeaffaf4944"
+    },
+    {
+      "id": "41ed25cb2dd480209a87e78845d2f5d9",
+      "name": "UNKNOX:BLUE",
+      "maker": "街ハック！",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd480209a87e78845d2f5d9.jpeg",
+      "slug": "41ed25cb2dd480209a87e78845d2f5d9"
+    },
+    {
+      "id": "41ed25cb2dd480b787add99311c843e3",
+      "name": "INTO THE TWIN TOWER",
+      "maker": "Tumbleweed",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd480b787add99311c843e3.jpeg",
+      "slug": "41ed25cb2dd480b787add99311c843e3"
+    },
+    {
+      "id": "41ed25cb2dd4804f9246f514e2a71fc7",
+      "name": "それでは、最終解答を提出してください。",
+      "maker": "リドラ, ねずみの巣",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd4804f9246f514e2a71fc7.png",
+      "slug": "41ed25cb2dd4804f9246f514e2a71fc7"
+    },
+    {
+      "id": "41ed25cb2dd480778426ca99f5442684",
+      "name": "『ABYSS』ナゾトキグッズ",
+      "maker": "Tumbleweed",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd480778426ca99f5442684.jpeg",
+      "slug": "41ed25cb2dd480778426ca99f5442684"
+    },
+    {
+      "id": "41ed25cb2dd480cbbc6ace967c9d3ccc",
+      "name": "LIGHT",
+      "maker": "ナゾトキアドベンチャー",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd480cbbc6ace967c9d3ccc.png",
+      "slug": "41ed25cb2dd480cbbc6ace967c9d3ccc"
+    },
+    {
+      "id": "41ed25cb2dd48052a7bbd2189c9326d8",
+      "name": "リドルパーティー",
+      "maker": "ミステリケーキ",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd48052a7bbd2189c9326d8.png",
+      "slug": "41ed25cb2dd48052a7bbd2189c9326d8"
+    },
+    {
+      "id": "41ed25cb2dd480afb806e46282fcba9d",
+      "name": "謎だらけの音楽室からの脱出",
+      "maker": "Coda!",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd480afb806e46282fcba9d.png",
+      "slug": "41ed25cb2dd480afb806e46282fcba9d"
+    },
+    {
+      "id": "41ed25cb2dd4801bbae1d98201ae4911",
+      "name": "シュレディンガーの謎",
+      "maker": "トライメビウス",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd4801bbae1d98201ae4911.png",
+      "slug": "41ed25cb2dd4801bbae1d98201ae4911"
+    },
+    {
+      "id": "41ed25cb2dd480ab909ae7ae5e38a3b8",
+      "name": "Dr.Kのドボロー研究所",
+      "maker": "トライメビウス",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd480ab909ae7ae5e38a3b8.png",
+      "slug": "41ed25cb2dd480ab909ae7ae5e38a3b8"
+    },
+    {
+      "id": "41ed25cb2dd480589c70c30ba50320ba",
+      "name": "交",
+      "maker": "Sheep Rhythm",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd480589c70c30ba50320ba.png",
+      "slug": "41ed25cb2dd480589c70c30ba50320ba"
+    },
+    {
+      "id": "41ed25cb2dd480f59a37de5a00368615",
+      "name": "四枚謎本",
+      "maker": "Sheep Rhythm",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd480f59a37de5a00368615.png",
+      "slug": "41ed25cb2dd480f59a37de5a00368615"
+    },
+    {
+      "id": "41ed25cb2dd480ee80b9dc38ae4b2b17",
+      "name": "PATHCODE",
+      "maker": "Sheep Rhythm",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd480ee80b9dc38ae4b2b17.png",
+      "slug": "41ed25cb2dd480ee80b9dc38ae4b2b17"
+    },
+    {
+      "id": "41ed25cb2dd480e1bf43e0b526539558",
+      "name": "OBENTO",
+      "maker": "NazoLock",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd480e1bf43e0b526539558.png",
+      "slug": "41ed25cb2dd480e1bf43e0b526539558"
+    },
+    {
+      "id": "41ed25cb2dd48018978eff80d0efad93",
+      "name": "Sandwich",
+      "maker": "NazoLock",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd48018978eff80d0efad93.png",
+      "slug": "41ed25cb2dd48018978eff80d0efad93"
+    },
+    {
+      "id": "41ed25cb2dd480918027cc0cc3626d4a",
+      "name": "リドラコレクション",
+      "maker": "リドラ",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd480918027cc0cc3626d4a.png",
+      "slug": "41ed25cb2dd480918027cc0cc3626d4a"
+    },
+    {
+      "id": "41ed25cb2dd480949939ece5b04b1611",
+      "name": "Record 謎付きクリアファイル（クラシック編）",
+      "maker": "AnotherVision",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd480949939ece5b04b1611.jpg",
+      "slug": "41ed25cb2dd480949939ece5b04b1611"
+    },
+    {
+      "id": "41ed25cb2dd480988c3dd6299c9aeb81",
+      "name": "AnotherVision Record 謎付きクリアファイル（モダン編）",
+      "maker": "AnotherVision",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd480988c3dd6299c9aeb81.jpg",
+      "slug": "41ed25cb2dd480988c3dd6299c9aeb81"
+    },
+    {
+      "id": "41ed25cb2dd480008c49d1de92d16464",
+      "name": "StoG",
+      "maker": "AnotherVision",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd480008c49d1de92d16464.jpeg",
+      "slug": "41ed25cb2dd480008c49d1de92d16464"
+    },
+    {
+      "id": "41ed25cb2dd480bba017e469e6ae9eac",
+      "name": "基板謎（仮） 秘密組織Quark（クオーク）の陰謀",
+      "maker": "祝井ゆん/NEPPA",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd480bba017e469e6ae9eac.png",
+      "slug": "41ed25cb2dd480bba017e469e6ae9eac"
+    },
+    {
+      "id": "41ed25cb2dd4804c8c95ee7054fbd46f",
+      "name": "refine",
+      "maker": "ShareKOBE",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd4804c8c95ee7054fbd46f.png",
+      "slug": "41ed25cb2dd4804c8c95ee7054fbd46f"
+    },
+    {
+      "id": "41ed25cb2dd48093aa3cd5c144c360c2",
+      "name": "BEAUTIFUL",
+      "maker": "ナゾトキゼペッツ",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd48093aa3cd5c144c360c2.png",
+      "slug": "41ed25cb2dd48093aa3cd5c144c360c2"
+    },
+    {
+      "id": "41ed25cb2dd4809b9d1ee0a496e8618a",
+      "name": "Lost&Innovate",
+      "maker": "AnotherVision",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd4809b9d1ee0a496e8618a.png",
+      "slug": "41ed25cb2dd4809b9d1ee0a496e8618a"
+    },
+    {
+      "id": "41ed25cb2dd480f1a1b7dd2b40128809",
+      "name": "わがままおてがみ",
+      "maker": "AnotherVision",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd480f1a1b7dd2b40128809.png",
+      "slug": "41ed25cb2dd480f1a1b7dd2b40128809"
+    },
+    {
+      "id": "41ed25cb2dd480f39aa2f70d11a4f714",
+      "name": "謎の古代遺跡を調査せよ 進撃の巨人 謎解きゲーム",
+      "maker": "NAZO×NAZO劇団",
+      "status": "구입 완료",
+      "image": "data/images/41ed25cb2dd480f39aa2f70d11a4f714.png",
+      "slug": "41ed25cb2dd480f39aa2f70d11a4f714"
     }
   ]
 }
