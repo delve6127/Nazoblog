@@ -541,7 +541,7 @@
       "id": "410d25cb2dd48002a1edf8954864fe18",
       "name": "HIRAMEKI TRUMP WHITE",
       "maker": "Tumbleweed",
-      "status": "보유중",
+      "status": "플레이 완료",
       "image": "data/images/410d25cb2dd48002a1edf8954864fe18.jpeg",
       "slug": "410d25cb2dd48002a1edf8954864fe18"
     },
@@ -549,7 +549,7 @@
       "id": "410d25cb2dd480efb40fdd3d97c6dc02",
       "name": "HIRAMEKI TRUMP BLACK",
       "maker": "Tumbleweed",
-      "status": "보유중",
+      "status": "플레이중",
       "image": "data/images/410d25cb2dd480efb40fdd3d97c6dc02.jpeg",
       "slug": "410d25cb2dd480efb40fdd3d97c6dc02"
     },
