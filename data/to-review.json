@@ -538,18 +538,10 @@
       "slug": "410d25cb2dd480cebe8cd6ea47d9748c"
     },
     {
-      "id": "410d25cb2dd48002a1edf8954864fe18",
-      "name": "HIRAMEKI TRUMP WHITE",
-      "maker": "Tumbleweed",
-      "status": "플레이 완료",
-      "image": "data/images/410d25cb2dd48002a1edf8954864fe18.jpeg",
-      "slug": "410d25cb2dd48002a1edf8954864fe18"
-    },
-    {
       "id": "410d25cb2dd480efb40fdd3d97c6dc02",
       "name": "HIRAMEKI TRUMP BLACK",
       "maker": "Tumbleweed",
-      "status": "플레이 완료",
+      "status": "리뷰 작성 중",
       "image": "data/images/410d25cb2dd480efb40fdd3d97c6dc02.jpeg",
       "slug": "410d25cb2dd480efb40fdd3d97c6dc02"
     },
@@ -872,6 +864,14 @@
       "status": "구입 완료",
       "image": "data/images/41ed25cb2dd480f39aa2f70d11a4f714.png",
       "slug": "41ed25cb2dd480f39aa2f70d11a4f714"
+    },
+    {
+      "id": "421d25cb2dd480149930e8f89d922e34",
+      "name": "『Q』",
+      "maker": "NazoLock, Tumbleweed",
+      "status": "플레이 완료",
+      "image": "data/images/421d25cb2dd480149930e8f89d922e34.jpg",
+      "slug": "421d25cb2dd480149930e8f89d922e34"
     }
   ]
 }
