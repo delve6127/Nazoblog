@@ -209,6 +209,7 @@
     "忘れられた研究所": { "num": 93, "date": "2026-11-14", "diff": 3, "satisfaction": 2.7, "puzzle": 3.1, "gimmick": 3.1, "design": 3, "language": 3.1, "brand": "SCRAP - Mystery For You", "rating": "음..", "quote": "기대했기에 더 아쉬운, 10월의 월나조", "beginner": false, "url": "/nazotoki-reviews/forgotten-laboratory" },
     "folded": { "num": 94, "date": "2026-11-14", "diff": 2, "satisfaction": 3.2, "puzzle": 3, "gimmick": 3, "design": 3.5, "language": 4, "brand": "ねずみの巣", "rating": "괜찮음", "quote": "참으로 취향 탈 것 같은 종이 한 장", "beginner": true, "url": "/nazotoki-reviews/folded" },
     "LOST": { "num": 95, "date": "2026-11-15", "diff": 4, "satisfaction": 4, "puzzle": 4, "gimmick": 3.9, "design": 3.1, "language": 3.9, "brand": "XEOXY", "rating": "추천", "quote": "언어는 쉽지만 난이도는 높은, 문풀러를 위한 나조", "beginner": true, "url": "/nazotoki-reviews/lost" },
-    "RAndOm": { "num": 96, "date": "2026-11-15", "diff": 3, "satisfaction": 4.1, "puzzle": 4, "gimmick": 4, "design": 3.1, "language": 3, "brand": "XEOXY", "rating": "추천", "quote": "시행착오 끝에 기다리는 예술 같은 오오나조", "beginner": false, "url": "/nazotoki-reviews/random" }
+    "RAndOm": { "num": 96, "date": "2026-11-15", "diff": 3, "satisfaction": 4.1, "puzzle": 4, "gimmick": 4, "design": 3.1, "language": 3, "brand": "XEOXY", "rating": "추천", "quote": "시행착오 끝에 기다리는 예술 같은 오오나조", "beginner": false, "url": "/nazotoki-reviews/random" },
+    "HIRAMEKI TRUMP WHITE": { "num": 97, "date": "2026-11-21", "diff": 4, "satisfaction": 4.2, "puzzle": 3.8, "gimmick": 3.8, "design": 4, "language": 2.8, "brand": "Tumbleweed", "rating": "강력추천", "quote": "히라메키 트럼프를 하나만 한다면, WHITE", "beginner": false, "url": "/nazotoki-reviews/hirameki-trump-white" }
   }
 }
