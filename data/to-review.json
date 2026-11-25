@@ -629,7 +629,7 @@
       "id": "41ed25cb2dd480b5a644ce13e780ed86",
       "name": "RAGING OCEAN",
       "maker": "ねずみの巣",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/41ed25cb2dd480b5a644ce13e780ed86.webp",
       "slug": "41ed25cb2dd480b5a644ce13e780ed86"
     },
@@ -637,7 +637,7 @@
       "id": "41ed25cb2dd48021afd0c086416667c5",
       "name": "CRYSTAL SKY",
       "maker": "ねずみの巣",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/41ed25cb2dd48021afd0c086416667c5.jpeg",
       "slug": "41ed25cb2dd48021afd0c086416667c5"
     },
@@ -645,7 +645,7 @@
       "id": "41ed25cb2dd4802c921dd4425e83a89b",
       "name": "ゆらぎの奇術師",
       "maker": "ねずみの巣",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/41ed25cb2dd4802c921dd4425e83a89b.jpeg",
       "slug": "41ed25cb2dd4802c921dd4425e83a89b"
     },
@@ -653,7 +653,7 @@
       "id": "41ed25cb2dd48015825bf664c27c7a91",
       "name": "トンデモマンションと奇想天外ルームツアー 公演参加者限定持ち帰りナゾ",
       "maker": "Tumbleweed, ねずみの巣",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/41ed25cb2dd48015825bf664c27c7a91.jpeg",
       "slug": "41ed25cb2dd48015825bf664c27c7a91"
     },
@@ -661,7 +661,7 @@
       "id": "41ed25cb2dd480de972de4f45814f727",
       "name": "バナナといったらネズミ？",
       "maker": "ねずみの巣",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/41ed25cb2dd480de972de4f45814f727.jpeg",
       "slug": "41ed25cb2dd480de972de4f45814f727"
     },
@@ -669,7 +669,7 @@
       "id": "41ed25cb2dd4804fa098dfeaffaf4944",
       "name": "UNKNOX:RED",
       "maker": "街ハック！",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/41ed25cb2dd4804fa098dfeaffaf4944.jpeg",
       "slug": "41ed25cb2dd4804fa098dfeaffaf4944"
     },
@@ -677,7 +677,7 @@
       "id": "41ed25cb2dd480209a87e78845d2f5d9",
       "name": "UNKNOX:BLUE",
       "maker": "街ハック！",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/41ed25cb2dd480209a87e78845d2f5d9.jpeg",
       "slug": "41ed25cb2dd480209a87e78845d2f5d9"
     },
@@ -685,7 +685,7 @@
       "id": "41ed25cb2dd480b787add99311c843e3",
       "name": "INTO THE TWIN TOWER",
       "maker": "Tumbleweed",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/41ed25cb2dd480b787add99311c843e3.jpeg",
       "slug": "41ed25cb2dd480b787add99311c843e3"
     },
@@ -693,7 +693,7 @@
       "id": "41ed25cb2dd4804f9246f514e2a71fc7",
       "name": "それでは、最終解答を提出してください。",
       "maker": "リドラ, ねずみの巣",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/41ed25cb2dd4804f9246f514e2a71fc7.png",
       "slug": "41ed25cb2dd4804f9246f514e2a71fc7"
     },
@@ -701,7 +701,7 @@
       "id": "41ed25cb2dd480778426ca99f5442684",
       "name": "『ABYSS』ナゾトキグッズ",
       "maker": "Tumbleweed",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/41ed25cb2dd480778426ca99f5442684.jpeg",
       "slug": "41ed25cb2dd480778426ca99f5442684"
     },
