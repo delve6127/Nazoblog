@@ -1,5 +1,5 @@
 {
-  "count": 108,
+  "count": 122,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -813,7 +813,7 @@
       "id": "41ed25cb2dd480bba017e469e6ae9eac",
       "name": "基板謎（仮） 秘密組織Quark（クオーク）の陰謀",
       "maker": "祝井ゆん/NEPPA",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/41ed25cb2dd480bba017e469e6ae9eac.png",
       "slug": "41ed25cb2dd480bba017e469e6ae9eac"
     },
@@ -821,7 +821,7 @@
       "id": "41ed25cb2dd4804c8c95ee7054fbd46f",
       "name": "refine",
       "maker": "ShareKOBE",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/41ed25cb2dd4804c8c95ee7054fbd46f.png",
       "slug": "41ed25cb2dd4804c8c95ee7054fbd46f"
     },
@@ -853,7 +853,7 @@
       "id": "41ed25cb2dd480f39aa2f70d11a4f714",
       "name": "謎の古代遺跡を調査せよ 進撃の巨人 謎解きゲーム",
       "maker": "NAZO×NAZO劇団",
-      "status": "구입 완료",
+      "status": "보유중",
       "image": "data/images/41ed25cb2dd480f39aa2f70d11a4f714.png",
       "slug": "41ed25cb2dd480f39aa2f70d11a4f714"
     },
@@ -864,6 +864,118 @@
       "status": "리뷰 작성 중",
       "image": "data/images/421d25cb2dd480149930e8f89d922e34.jpg",
       "slug": "421d25cb2dd480149930e8f89d922e34"
+    },
+    {
+      "id": "425d25cb2dd48133a76df6000fc831fc",
+      "name": "謎検 過去問題＆練習問題集2019春",
+      "maker": "SCRAP",
+      "status": "보유중",
+      "image": "data/images/425d25cb2dd48133a76df6000fc831fc.png",
+      "slug": "425d25cb2dd48133a76df6000fc831fc"
+    },
+    {
+      "id": "425d25cb2dd4811ca26de03eaab0e636",
+      "name": "謎検 対策問題集2024春",
+      "maker": "SCRAP",
+      "status": "보유중",
+      "image": "data/images/425d25cb2dd4811ca26de03eaab0e636.png",
+      "slug": "425d25cb2dd4811ca26de03eaab0e636"
+    },
+    {
+      "id": "425d25cb2dd4811d8946d058af8c1d72",
+      "name": "謎検 対策問題集2021秋",
+      "maker": "SCRAP",
+      "status": "보유중",
+      "image": "data/images/425d25cb2dd4811d8946d058af8c1d72.png",
+      "slug": "425d25cb2dd4811d8946d058af8c1d72"
+    },
+    {
+      "id": "425d25cb2dd481418382e4c076a4feaf",
+      "name": "謎検 対策問題集2025春",
+      "maker": "SCRAP",
+      "status": "보유중",
+      "image": "data/images/425d25cb2dd481418382e4c076a4feaf.png",
+      "slug": "425d25cb2dd481418382e4c076a4feaf"
+    },
+    {
+      "id": "425d25cb2dd481419929d204b0ece12b",
+      "name": "謎検 対策問題集2026秋",
+      "maker": "SCRAP",
+      "status": "보유중",
+      "image": "data/images/425d25cb2dd481419929d204b0ece12b.png",
+      "slug": "425d25cb2dd481419929d204b0ece12b"
+    },
+    {
+      "id": "425d25cb2dd4814889c0e89fe50c64bf",
+      "name": "謎検 対策問題集2022春",
+      "maker": "SCRAP",
+      "status": "보유중",
+      "image": "data/images/425d25cb2dd4814889c0e89fe50c64bf.png",
+      "slug": "425d25cb2dd4814889c0e89fe50c64bf"
+    },
+    {
+      "id": "425d25cb2dd481508d21f773595995d1",
+      "name": "謎検 対策問題集2023春",
+      "maker": "SCRAP",
+      "status": "보유중",
+      "image": "data/images/425d25cb2dd481508d21f773595995d1.png",
+      "slug": "425d25cb2dd481508d21f773595995d1"
+    },
+    {
+      "id": "425d25cb2dd481589892efb96c68f045",
+      "name": "謎検 対策問題集2024秋",
+      "maker": "SCRAP",
+      "status": "보유중",
+      "image": "data/images/425d25cb2dd481589892efb96c68f045.png",
+      "slug": "425d25cb2dd481589892efb96c68f045"
+    },
+    {
+      "id": "425d25cb2dd4815e950bf717520ba25f",
+      "name": "謎検 対策問題集2021春",
+      "maker": "SCRAP",
+      "status": "보유중",
+      "image": "data/images/425d25cb2dd4815e950bf717520ba25f.png",
+      "slug": "425d25cb2dd4815e950bf717520ba25f"
+    },
+    {
+      "id": "425d25cb2dd481bf839ff197e14dfa48",
+      "name": "謎検 対策問題集2025秋",
+      "maker": "SCRAP",
+      "status": "보유중",
+      "image": "data/images/425d25cb2dd481bf839ff197e14dfa48.png",
+      "slug": "425d25cb2dd481bf839ff197e14dfa48"
+    },
+    {
+      "id": "425d25cb2dd481d3b0d1f1920b0b632d",
+      "name": "謎検 対策問題集2022秋",
+      "maker": "SCRAP",
+      "status": "보유중",
+      "image": "data/images/425d25cb2dd481d3b0d1f1920b0b632d.png",
+      "slug": "425d25cb2dd481d3b0d1f1920b0b632d"
+    },
+    {
+      "id": "425d25cb2dd481deb488d6bd53321b7e",
+      "name": "謎検 対策問題集2020",
+      "maker": "SCRAP",
+      "status": "보유중",
+      "image": "data/images/425d25cb2dd481deb488d6bd53321b7e.png",
+      "slug": "425d25cb2dd481deb488d6bd53321b7e"
+    },
+    {
+      "id": "425d25cb2dd481f2950df4c4c8bebc88",
+      "name": "謎検 対策問題集2023秋",
+      "maker": "SCRAP",
+      "status": "보유중",
+      "image": "data/images/425d25cb2dd481f2950df4c4c8bebc88.png",
+      "slug": "425d25cb2dd481f2950df4c4c8bebc88"
+    },
+    {
+      "id": "425d25cb2dd481fba68dceadaf9d6ce6",
+      "name": "謎検 過去問題＆練習問題集2019秋",
+      "maker": "SCRAP",
+      "status": "보유중",
+      "image": "data/images/425d25cb2dd481fba68dceadaf9d6ce6.png",
+      "slug": "425d25cb2dd481fba68dceadaf9d6ce6"
     }
   ]
 }
