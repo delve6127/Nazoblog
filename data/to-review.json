@@ -1,5 +1,5 @@
 {
-  "count": 109,
+  "count": 108,
   "items": [
     {
       "id": "32cd25cb2dd4803eb8a9ebc9c9e5b77b",
@@ -538,14 +538,6 @@
       "slug": "410d25cb2dd480cebe8cd6ea47d9748c"
     },
     {
-      "id": "410d25cb2dd480efb40fdd3d97c6dc02",
-      "name": "HIRAMEKI TRUMP BLACK",
-      "maker": "Tumbleweed",
-      "status": "리뷰 작성 중",
-      "image": "data/images/410d25cb2dd480efb40fdd3d97c6dc02.jpeg",
-      "slug": "410d25cb2dd480efb40fdd3d97c6dc02"
-    },
-    {
       "id": "410d25cb2dd48048a10cde943bad0496",
       "name": "『10』",
       "maker": "Tumbleweed",
@@ -869,7 +861,7 @@
       "id": "421d25cb2dd480149930e8f89d922e34",
       "name": "『Q』",
       "maker": "NazoLock, Tumbleweed",
-      "status": "플레이 완료",
+      "status": "리뷰 작성 중",
       "image": "data/images/421d25cb2dd480149930e8f89d922e34.jpg",
       "slug": "421d25cb2dd480149930e8f89d922e34"
     }
