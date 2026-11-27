@@ -941,8 +941,8 @@ function nzLightboxClose() {
 
     // 값 읽기
     var mNum         = getTextVal(ID.mNumber);
-    var company      = getSelectVal(ID.company);
-    if (!company.text) company = { text: getTextVal(ID.company), cls: '' };
+    var companies    = getMultiSelectVals(ID.company); // 제작사가 여러 곳일 수 있음 (예: NazoLock + Tumbleweed)
+    if (!companies.length) companies = [{ text: getTextVal(ID.company), cls: '' }];
     var playDate     = getDateVal(ID.playDate);
     var officialDiffs = getMultiSelectVals(ID.officialDiff);
     var personalDiff = getSelectVal(ID.personalDiff);
@@ -976,7 +976,9 @@ function nzLightboxClose() {
     var data = (typeof SORT_DATA !== 'undefined' && SORT_DATA[nazoTitle]) ? SORT_DATA[nazoTitle] : {};
     var quote = getTextVal(ID.quote) || data.quote || ''; // 노션 라이브 값 우선, 동기화 파일은 보조
     var reviewNum = data.num || null;
-    var brandDisplay = (company.text || '').replace(/ - /g, ' · ');
+    var brandChips = companies.map(function (c) {
+      return c.text ? '<span class="nz4-chip-brand">' + c.text.replace(/ - /g, ' · ') + '</span>' : '';
+    }).join('');
 
     // 공식 난이도: 노션 지정 색 → 다락방 톤의 짙은 색으로 변환 (표기 없음 = 회색)
     var NOTION_DEEP = {
@@ -1043,7 +1045,7 @@ function nzLightboxClose() {
       +     (reviewNum ? '<span class="nz4-num">#' + reviewNum + '</span>' : (mNum ? '<span class="nz4-num">' + mNum + '</span>' : ''))
       +   '</div>'
       +   '<div class="nz4-badges">'
-      +     (brandDisplay ? '<span class="nz4-chip-brand">' + brandDisplay + '</span>' : '')
+      +     brandChips
       +     recHtml
       +     (mfyRelease ? '<span class="nz4-chip-mfy"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg> ' + mfyRelease + '</span>' : '')
       +   '</div>'
